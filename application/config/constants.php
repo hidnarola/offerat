@@ -102,3 +102,19 @@ define('tbl_store_category', 'store_category');
 define('tbl_store_location', 'store_location');
 define('tbl_sub_category', 'sub_category');
 define('tbl_user', 'user');
+
+
+define('country_img_path', 'assets/images/country/');
+define('category_img_path', 'assets/images/category/');
+define('sub_category_img_path', 'assets/images/subcategory/');
+
+define('SUPER_ADMIN_USER_TYPE', '1');
+define('COUNTRY_ADMIN_USER_TYPE', '2');
+define('STORE_OR_MALL_ADMIN_USER_TYPE', '3');
+define('NORMAL_USER_TYPE', '4');
+
+define('ACTIVE_STATUS', 0);
+define('IN_ACTIVE_STATUS', 1);
+
+define('IS_NOT_DELETED_STATUS', 0);
+define('IS_DELETED_STATUS', 1);

@@ -4,7 +4,7 @@ class Common_model
         extends CI_Model {
 
     function __construct() {
-        parent::__construct();        
+        parent::__construct();
     }
 
     /**
@@ -363,7 +363,86 @@ class Common_model
 
         return $filter_array;
     }
-    
+
+    function master_update($table, $data, $condition, $string = FALSE) {
+        ini_set('max_execution_time', 18000);
+
+        if ($string) {
+            $result = $this->db->query('UPDATE `' . $table . '` SET ' . $data . ' WHERE ' . $condition);
+            if ($result > 0)
+                return $result;
+        }
+        else {
+            $this->db->where($condition);
+            $this->db->update($table, $data);
+            if ($this->db->affected_rows() > 0)
+                return TRUE;
+        }
+
+        return FALSE;
+    }
+
+    function master_update_batch($table, $data, $condition) {
+        $this->db->where($condition);
+        $this->db->update($table, $data);
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+
+    function master_save($table, $fields, $is_batch = FALSE) {
+        if ($is_batch) {
+            $this->db->insert_batch($table, $fields);
+            return true;
+        } else {
+            $this->db->insert($table, $fields);
+            return $this->db->insert_id();
+        }
+    }
+
+    function master_delete($table, $where, $with_sign = NULL) {
+
+        if (!is_null($where)) {
+            foreach ($where as $key => $wh) {
+                if (!is_null($with_sign))
+                    $this->db->where($wh);
+                else
+                    $this->db->where($key, $wh);
+            }
+        }
+
+        $this->db->delete($table);
+        return $this->db->affected_rows();
+    }
+
+    function master_select($array = NULL) {
+        $list1 = $this->return_result($array);
+        if (isset($list1) && sizeof($list1) > 0)
+            return $list1->result_array();
+        else
+            return 0;
+    }
+
+    function master_single_select($array = NULL) {
+
+        $list1 = $this->return_result($array);
+        if (isset($list1) && sizeof($list1) > 0)
+            return $list1->row_array();
+        else
+            return 0;
+    }
+
+    function master_select_result($array = NULL) {
+
+        $list1 = $this->return_result($array);
+        if (isset($list1) && sizeof($list1) > 0)
+            return $list1->result();
+        else
+            return 0;
+    }
+
     function master_count($table, $where = NULL, $with_sign = NULL, $where_str = NULL) {
         if (!is_null($where)) {
             foreach ($where as $key => $wh) {
@@ -377,8 +456,195 @@ class Common_model
         $list = $this->db->get($table);
         return $list->num_rows();
     }
-    
-    function hello() {
-        return "hello";
+
+    function master_count_array($array) {
+
+        $list1 = $this->return_result($array);
+        if (isset($list1) && sizeof($list1) > 0)
+            return $list1->num_rows();
+        else
+            return 0;
     }
+
+    function return_result($array = NULL) {
+        $list = array();
+        if (array_key_exists("where", $array)) {
+            $condition = $array['where'];
+            $this->db->group_start();
+            foreach ($condition as $key => $wh) {
+                $this->db->where($key, $wh);
+            }
+            $this->db->group_end();
+        }
+
+        if (array_key_exists("or_where", $array)) {
+            $condition = $array['or_where'];
+            $this->db->group_start();
+            foreach ($condition as $key => $wh) {
+                $this->db->or_where($key, $wh);
+            }
+            $this->db->group_end();
+        }
+
+        if (array_key_exists("where_with_sign", $array)) {
+            $condition = $array['where_with_sign'];
+            $this->db->group_start();
+            foreach ($condition as $key => $wh) {
+                $this->db->where($wh);
+            }
+            $this->db->group_end();
+        }
+
+        if (array_key_exists("or_where_with_sign", $array)) {
+            $condition = $array['or_where_with_sign'];
+            $this->db->group_start();
+            foreach ($condition as $key => $wh) {
+                $this->db->or_where($wh);
+            }
+            $this->db->group_end();
+        }
+
+        if (array_key_exists("like", $array)) {
+            $condition = $array['like'];
+            $this->db->group_start();
+            foreach ($condition as $key => $wh) {
+                $this->db->like($key, $wh);
+            }
+            $this->db->group_end();
+        }
+
+        if (array_key_exists("like_with_sign", $array)) {
+            $condition = $array['like_with_sign'];
+            $this->db->group_start();
+            foreach ($condition as $key => $wh) {
+                $this->db->where($wh);
+            }
+            $this->db->group_end();
+        }
+
+        if (array_key_exists("or_like", $array)) {
+            $condition = $array['or_like'];
+            $this->db->group_start();
+            foreach ($condition as $key => $wh) {
+                $this->db->or_like($key, $wh);
+            }
+            $this->db->group_end();
+        }
+
+        if (array_key_exists("or_like_with_sign", $array)) {
+            $condition = $array['or_like_with_sign'];
+            $this->db->group_start();
+            foreach ($condition as $key => $wh) {
+                $this->db->or_like($wh);
+            }
+            $this->db->group_end();
+        }
+
+        if (array_key_exists('fields', $array))
+            $this->db->select($array['fields'], FALSE);
+
+        if (array_key_exists('order_by', $array)) {
+            $sort_arr = $array['order_by'];
+            foreach ($sort_arr as $key1 => $by) {
+                $this->db->order_by($key1, $by);
+            }
+        }
+
+        if (array_key_exists('group_by', $array)) {
+            $group_arr = $array['group_by'];
+            foreach ($group_arr as $by) {
+                $this->db->group_by($by);
+            }
+        }
+
+        if (array_key_exists('having', $array)) {
+            $having_arr = $array['having'];
+            foreach ($having_arr as $key => $val) {
+                $this->db->having($key, $by);
+            }
+        }
+
+        if (array_key_exists('having_with_sign', $array)) {
+            $having_sign_arr = $array['having_with_sign'];
+            foreach ($having_sign_arr as $val) {
+                $this->db->having($val);
+            }
+        }
+
+        if (array_key_exists('limit', $array)) {
+            if (!empty($array['start']))
+                $this->db->limit($array['limit'], $array['start']);
+            else
+                $this->db->limit($array['limit']);
+        }
+
+        if (array_key_exists('search', $array) && !empty($array['search'])) {
+            $wh_ere = '(' . $array['search'] . ')';
+            $this->db->where($wh_ere);
+        }
+
+        if (array_key_exists('join', $array)) {
+            foreach ($array['join'] as $key => $val) {
+                if (isset($val['table']) && isset($val['condition']))
+                    $this->db->join($val['table'], $val['condition'], (isset($val['join']) ? $val['join'] : 'left'));
+            }
+        }
+        if (array_key_exists("table", $array))
+            $list = $this->db->get($array['table']);
+
+        return $list;
+    }
+
+    function upload_image($image_name, $image_path, $file_extensions = NULL) {
+        $CI = & get_instance();
+        $extension = substr(strrchr($_FILES[$image_name]['name'], '.'), 1);
+        $randname = time() . '.' . $extension;
+
+        if (is_null($file_extensions))
+            $file_extensions = 'gif|jpg|png|jpeg|pdf';
+
+        $config = array('upload_path' => $image_path,
+            'allowed_types' => $file_extensions,
+            'max_size' => "5120KB",
+            'file_name' => $randname
+        );
+        #Load the upload library
+        $CI->load->library('upload');
+        $CI->upload->initialize($config);
+        if ($CI->upload->do_upload($image_name)) {
+            $img_data = $CI->upload->data();
+            $imgname = $img_data['file_name'];
+        } //if
+        else {
+            $imgname = '';
+        }
+        return $imgname;
+    }
+
+    function remove_image($id, $field, $table_name, $directory_path, $id_field = 'id') {
+        $CI = & get_instance();
+        $CI->db->where($id_field, $id);
+        $CI->db->select($field);
+        $CI->db->from($table_name);
+        $query = $CI->db->get();
+        $result = $query->result();
+        $logo = $result[0]->$field;
+        if (!empty($logo)) {
+            $CI->db->where($id_field, $id);
+            $CI->db->update($table_name, array($field => NULL));
+            $image_path = dirname($_SERVER["SCRIPT_FILENAME"]) . '/' . $directory_path . '/';
+            $image = $image_path . $logo;
+            if (file_exists($image)) {
+                unlink($image);
+            }
+        }
+    }
+
+    function created_directory($path) {
+        if (!is_dir($path)) { //create the folder if it's not already exists
+            mkdir($path, 0777, TRUE);
+        }
+        return true;
+    }
+
 }

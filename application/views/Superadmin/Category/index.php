@@ -1,4 +1,4 @@
-<div id="country_dttable_wrapper_row" class="row">
+<div id="category_dttable_wrapper_row" class="row">
     <div class="col-md-12">
         <div class="panel panel-flat">
             <form id="form" method="post">
@@ -9,28 +9,28 @@
                                 <div class="col-md-12">
                                     <div class="row col-md-12">
                                         <div class="tbl-btn-wrap pull-right">
-                                            <a href="super-admin/country" class="btn bg-teal-400 btn-labeled"><b><i class="icon-sync"></i></b>Refresh</a>
-                                            <a href="super-admin/country/save" class="btn btn-primary btn-labeled"><b><i class="icon-plus22"></i></b>Add Country</a>                                            
+                                            <a href="super-admin/category" class="btn bg-teal-400 btn-labeled"><b><i class="icon-sync"></i></b>Refresh</a>
+                                            <a href="super-admin/category/save" class="btn btn-primary btn-labeled"><b><i class="icon-plus22"></i></b>Add Category</a>                                            
                                         </div>
                                     </div>
 
                                     <div class="table-responsive popular_list dt-first-col-mw nipl_table_listing col-md-12 mt-20">
-                                        <table id="country_dttable" class="table table-striped datatable-basic custom_dt width-100-per">
+                                        <table id="category_dttable" class="table table-striped datatable-basic custom_dt width-100-per">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Country</th>
-                                                    <th>Flag</th>
-                                                    <th>Admin Email Id</th>
+                                                    <th>Category Name</th>
+                                                    <th>Logo</th>
                                                     <th>Status</th>
+                                                    <th>Sub-category</th>
                                                     <th>Actions</th>
                                                 </tr>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Country</th>
-                                                    <th>Flag</th>
-                                                    <th>Admin Email Id</th>
+                                                    <th>Category Name</th>
+                                                    <th>Logo</th>
                                                     <th>Status</th>
+                                                    <th>Sub-category</th>
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
@@ -49,11 +49,6 @@
     </div>
 </div>
 
-<?php
-//$this->load->view('Admin/Common/alert_confirmation');
-//$this->load->view('Admin/Common/alert_information');
-?>
-
 <script type="text/javascript">
     $(document).ready(function () {
         var status_arr = {
@@ -62,14 +57,14 @@
         };
 
         // Setup - add a text input to each footer cell
-        $('#country_dttable thead tr:eq(0) th').each(function () {
+        $('#category_dttable thead tr:eq(0) th').each(function () {
             var title = $(this).text();
             if (title !== 'Actions' && title !== 'Select') {
                 $(this).html('<input type="text" class="form-control" placeholder="' + title + '" />');
             }
         });
 
-        var table = $('#country_dttable').DataTable({
+        var table = $('#category_dttable').DataTable({
             "dom": '<"top"<"dttable_lenth_wrapper"fl>>rt<"bottom"pi><"clear">',
             "processing": true,
             "serverSide": true,
@@ -84,55 +79,58 @@
             },
             "columns": [
                 {
-                    'data': 'country_id_country',
+                    'data': 'category_id_category',
                     "visible": true,
-                    "name": 'country.id_country'
+                    "name": 'category.id_category'
                 },
                 {
-                    'data': 'country_country_name',
+                    'data': 'category_category_name',
                     "visible": true,
-                    "name": 'country.country_name',
+                    "name": 'category.category_name'
                 },
                 {
-                    'data': 'country_country_flag',
+                    'data': 'category_category_logo',
                     "visible": true,
                     "searchable": false,
                     "orderable": false,
-                    "name": 'country.country_flag',
+                    "name": 'category.category_logo',
                     "render": function (data, type, full, meta) {
-                        if (full.country_country_flag != '')
-                            var image_html = '<img height="20px" width="20px" alt="No Image" id="country_image_display" src="<?php echo country_img_path; ?>' + full.country_country_flag + '" />';
+                        if (full.category_category_logo != '')
+                            var image_html = '<img height="20px" width="20px" alt="No Image" id="category_image_display" src="<?php echo category_img_path; ?>' + full.category_category_logo + '" />';
                         else
                             var image_html = '';
                         return image_html;
                     }
                 },
                 {
-                    'data': 'user_email_id',
+                    'data': 'category_status',
                     "visible": true,
-                    "name": 'user.email_id',
-                },
-
-                {
-                    'data': 'country_status',
-                    "visible": true,
-                    "name": 'country.status',
+                    "name": 'category.status',
                     "render": function (data, type, full, meta) {
-                        var status = '<span class="label label-success label-rounded">' + status_arr[full.country_status] + '</span>';
-                        if (full.country_status === '0') {
-                            status = '<span class="label label-danger label-rounded">' + status_arr[full.country_status] + '</span>';
+                        var status = '<span class="label label-success label-rounded">' + status_arr[full.category_status] + '</span>';
+                        if (full.category_status === '0') {
+                            status = '<span class="label label-danger label-rounded">' + status_arr[full.category_status] + '</span>';
                         }
                         return status;
+                    }
+                },
+                {
+                    'data': 'category_id_category',
+                    "visible": true,
+                    "name": 'category.id_category',
+                    "render": function (data, type, full, meta) {                        
+                        var links = '<a href="super-admin/sub-category/' + full.category_id_category + '" class="btn btn-warning btn-labeled btn-xs" data-toggle="tooltip" data-placement="top" title="View Subcategories"><b><i class="icon-eye"></i></b> View </a>   ';
+                        links += '<a href="super-admin/sub-category/save/' + full.category_id_category + '" class="btn btn-info btn-labeled btn-xs" data-toggle="tooltip" data-placement="top" title="Add Subcategory"><b><i class="glyphicon glyphicon-plus"></i></b> Add</a>';
+                        return links;
                     }
                 },
                 {
                     "visible": true,
                     "sortable": false,
                     "searchable": false,
-                    "render": function (data, type, full, meta) {
-                        console.log(full);
-                        var links = '<a href="<?php echo base_url() ?>super-admin/country/save/' + full.country_id_country + '" title="Update" class="btn btn-primary  btn-xs  tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a>   ';
-                        links += '<a href="javascript:void(0);" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" data-path="<?php echo base_url(); ?>admin/banner/delete/' + full.country_id_country + '" id="delete"><i class="icon-bin"></i></a>';
+                    "render": function (data, type, full, meta) {                        
+                        var links = '<a href="<?php echo base_url() ?>super-admin/category/save/' + full.category_id_category + '" title="Update" class="btn btn-primary  btn-xs  tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a>   ';
+                        links += '<a href="javascript:void(0);" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" data-path="<?php echo base_url(); ?>admin/banner/delete/' + full.category_id_category + '" id="delete"><i class="icon-bin"></i></a>';
                         return links;
                     }
                 }
@@ -140,10 +138,10 @@
             initComplete: function () {
                 var tableColumns = table.settings().init().columns;
                 this.api().columns().every(function (index) {
-                    if (tableColumns[index].name == 'country.status') {
+                    if (tableColumns[index].name == 'category.status') {
                         var column = this;
                         var select = $('<select class="form-control"><option value="">Select</option></select>')
-                                .appendTo($('#country_dttable_wrapper_row th:nth-child(' + (index + 1) + '):first').empty())
+                                .appendTo($('#category_dttable_wrapper_row th:nth-child(' + (index + 1) + '):first').empty())
                                 .on('change', function () {
                                     var val = $.fn.dataTable.util.escapeRegex(
                                             $(this).val()
@@ -152,7 +150,7 @@
                                             .search(val ? val : '', true, false)
                                             .draw();
                                 });
-                        if (tableColumns[index].name == 'country.status') {
+                        if (tableColumns[index].name == 'category.status') {
                             for (var key in status_arr) {
                                 if (status_arr.hasOwnProperty(key)) {
                                     select.append('<option value="' + key + '">' + status_arr[key] + '</option>');
@@ -172,7 +170,7 @@
                 $.ajax({
                     'dataType': 'json',
                     'type': 'POST',
-                    'url': "<?php echo base_url() . 'superadmin/country/filter_countries' ?>",
+                    'url': "<?php echo base_url() . 'superadmin/category/filter_categories' ?>",
                     'data': req_obj,
                     'success': function (data) {
                         fnCallback(data);

@@ -52,8 +52,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'home';
 
 //Super Admin Routes
+//Country
 $route['super-admin/country'] = 'superadmin/country';
+$route['super-admin/country/save'] = 'superadmin/country/save';
+$route['super-admin/country/save/(:any)'] = 'superadmin/country/save/$1';
 
+//Category
+$route['super-admin/category'] = 'superadmin/category';
+$route['super-admin/category/save'] = 'superadmin/category/save';
+$route['super-admin/category/save/(:any)'] = 'superadmin/category/save/$1';
+
+//Sub-category
+$route['super-admin/sub-category/(:any)'] = 'superadmin/subcategory/index/$1';
+$route['super-admin/sub-category/save/(:any)'] = 'superadmin/subcategory/save/$1';
+$route['super-admin/sub-category/save/(:any)/(:any)'] = 'superadmin/subcategory/save/$1/$2';
 
 $route['forgot_password'] = 'login/forgot_password';
 $route['reset_password'] = 'login/reset_password';
