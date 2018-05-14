@@ -1,0 +1,14 @@
+.home_page .site_name {color: #26a69a;text-align: center;font-size: 120px;font-weight: 500;font-family: "Times New Roman", Times, serif;}
+body.home_page_body {background: url(http://localhost/offerat/assets/user/images/site/banner_bg.jpg);background-size: cover;background-position: center center;}
+body.home_page_body:After {content: " ";position: absolute;left: 0;top: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.60);    z-index: -1;}
+.home_page .site_name {text-align: center;font-family: muli;font-size: 100px;font-weight: 900;letter-spacing: 5px;color: #fff;line-height: normal;margin: 0;}
+.ul_menu li a {margin: 0;padding: 8px 30px;border: 2px solid #fff;color: #26a69a;font-size: 16px;font-family: muli;font-weight: 600;background: #fff;box-shadow: 0 0 20px 0 rgba(38, 166, 154, 0.52);transition: ease-in-out .5s;border: 2px solid #fff;}
+.ul_menu li a:hover {background: transparent;border: 2px solid #fff;box-shadow: 0 0 20px 0 rgba(255, 255, 255, 0.63);}
+.ul_menu li {display: inline-block;padding: 0 10px;}
+.ul_menu {padding: 0;margin: 0;list-style: none;text-align: center;}
+.header_cstm {margin-bottom: 70px;}
+.home_page {padding-top: 170px;max-width: 1170px;margin: 0 auto;}
+ul.ap_store_btn {padding: 0;margin: 0;list-style: none;text-align: center;margin-top: 80px;}
+ul.ap_store_btn li {display: inline-block;padding: 0 10px;}
+ul.ap_store_btn li a img {max-width: 180px;}
+ul.ap_store_btn li a {display: inline-block;}
