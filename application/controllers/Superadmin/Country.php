@@ -3,12 +3,16 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Country
-        extends CI_Controller {
+        extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
         $this->load->model('Common_model', '', TRUE);
-        $this->data['page_header'] = 'Country';
+        $this->data['title'] = $this->data['page_header'] = 'Country';
+        $this->bread_crum[] = array(
+            'url' => base_url() . 'super-admin/country',
+            'title' => 'Countries',
+        );
     }
 
     /*
@@ -18,7 +22,12 @@ class Country
     public function index() {
 
         $this->data['page'] = 'country_list_page';
-        $this->data['page_header'] = 'Countries';
+        $this->data['title'] = $this->data['page_header'] = 'Countries';
+
+        $this->bread_crum[] = array(
+            'url' => '',
+            'title' => 'List',
+        );
 
         $this->template->load('user', 'Superadmin/Country/index', $this->data);
     }
@@ -31,6 +40,7 @@ class Country
 
         $filter_array['group_by'] = array(tbl_country . '.id_country');
         $filter_array['order_by'] = array(tbl_country . '.id_country' => 'DESC');
+        $filter_array['where'] = array(tbl_country . '.is_delete' => IS_NOT_DELETED_STATUS);
 
         $filter_array['join'][] = array(
             'table' => tbl_user . ' as user',
@@ -188,6 +198,11 @@ class Country
         $this->data['back_url'] = 'super-admin/country';
         $this->data['post_url'] = 'super-admin/country/save/' . $id;
 
+        $this->bread_crum[] = array(
+            'url' => base_url() . $this->data['back_url'],
+            'title' => 'List',
+        );
+
         if (isset($id) && $id > 0) {
             $where = array('id_country' => $id);
             $select_data = array(
@@ -289,5 +304,42 @@ class Country
         } else
             return TRUE;
     }
-    
+
+    /*
+     * Update country is_delete field
+     */
+
+    function delete($country_id = NULL) {
+
+        if (!is_null($country_id) && $country_id > 0) {
+            $mall_data = array(
+                'table' => tbl_mall,
+                'where' => array(
+                    'is_delete' => IS_NOT_DELETED_STATUS,
+                    'id_country' => $country_id
+                )
+            );
+            $check_mall_country = $this->Common_model->master_single_select($mall_data);
+
+            if (isset($check_mall_country) && sizeof($check_mall_country) > 0)
+                $this->session->set_flashdata('error_msg', 'You can not delete this Country, Mall is using this Country.');
+            else {
+                $update_country_data = array('is_delete' => IS_DELETED_STATUS);
+                $where_country_data = array(
+                    'id_country' => $country_id,
+                    'is_delete' => IS_NOT_DELETED_STATUS
+                );
+                $is_updated = $this->Common_model->master_update(tbl_country, $update_country_data, $where_country_data);
+
+                if ($is_updated)
+                    $this->session->set_flashdata('success_msg', 'Country deleted successfully.');
+                else
+                    $this->session->set_flashdata('error_msg', 'Invalid request sent to delete Country. Please try again later.');
+            }
+        } else
+            $this->session->set_flashdata('error_msg', 'Invalid request sent to delete Country. Please try again later.');
+
+        redirect('super-admin/country');
+    }
+
 }

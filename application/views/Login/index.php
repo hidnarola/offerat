@@ -3,8 +3,7 @@
     <head>
         <?php
         $this->load->view('Login/head');
-        ?>        
-        <script type="text/javascript" src="assets/user/js/core/app.js"></script>
+        ?>                
         <noscript><META HTTP-EQUIV="Refresh" CONTENT="0; URL=js_disabled"></noscript>
         <style type="text/css">
             .login-cover {
@@ -23,6 +22,12 @@
             <!-- /page content -->
         </div>
         <!-- /page container -->
-        <script type="text/javascript" src="assets/user/js/plugins/forms/validation/validate.min.js"></script>        
+        <script type="text/javascript" src="assets/user/js/core/app.js"></script>        
+        <script type="text/javascript" src="assets/user/js/plugins/forms/inputs/maxlength.min.js"></script>
+        <script type="text/javascript" src="assets/user/js/plugins/forms/validation/validate.min.js"></script>
+        <script type="text/javascript" src="assets/user/js/plugins/uploaders/fileinput.min.js"></script>
+
+        <!--Checkbox Start-->
+        <script type="text/javascript" src="assets/user/js/plugins/forms/styling/uniform.min.js"></script>
     </body>
 </html>

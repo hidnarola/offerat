@@ -1,3 +1,5 @@
+$(document).find('[data-toggle="tooltip"]').tooltip();
+
 function jqueryValidate() {
     /**
      * Form Validation
@@ -53,3 +55,19 @@ function jqueryValidate() {
         });
     });
 }
+
+
+
+/***Confirmation Popup while delete any record ***/
+$(document).on("click", "#delete", function (e) {
+    var data_path = $(document).find(this).attr('data-path');
+    $(document).find('.yes_i_want_delete').removeClass("btn-success");
+    $(document).find('.yes_i_want_delete').addClass("btn-danger");
+    $(document).find("#deleteConfirm").modal('show');
+    $(document).on("click", ".yes_i_want_delete", function (e) {
+        var val = $(this).val();
+        if (val == 'yes') {
+            window.location.href = data_path;
+        }
+    });
+});

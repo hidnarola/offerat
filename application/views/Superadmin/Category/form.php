@@ -62,7 +62,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <div>
-                                                    <img class="img-responsive" alt="Image Not Found" id="category_logo_display" src="<?php echo category_img_path . $category['category_logo'] ?>" />
+                                                    <img class="img-responsive" alt="Image Not Found" onerror="image_not_found(image_0)" id="image_0" src="<?php echo category_img_path . $category['category_logo'] ?>" />
                                                 </div>
                                             </div>
                                         </div>
@@ -86,11 +86,9 @@
                         </div>
                     </div>
                 </div>
-
-        </form>
-
+            </div>
+        </form>    
     </div>
-</div>
 </div>
 <script type="text/javascript">
     $(function () {
@@ -100,6 +98,6 @@
 <?php if (isset($category['category_logo']) && !empty($category['category_logo'])) { ?>
     <script type="text/javascript" src="assets/user/js/plugins/forms/styling/switch.min.js"></script>
     <script>
-        $(".switch").bootstrapSwitch();
+    $(".switch").bootstrapSwitch();
     </script>
 <?php } ?>

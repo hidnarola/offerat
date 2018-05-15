@@ -58,3 +58,8 @@
     </div>
     <!-- /content area -->
 </div>
+<script type="text/javascript">
+//    $(function () {
+//        jqueryValidate();
+//    });
+</script>

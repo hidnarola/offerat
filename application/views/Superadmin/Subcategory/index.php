@@ -9,8 +9,8 @@
                                 <div class="col-md-12">
                                     <div class="row col-md-12">
                                         <div class="tbl-btn-wrap pull-right">
-                                            <a href="super-admin/category" class="btn bg-teal-400 btn-labeled"><b><i class="icon-sync"></i></b>Refresh</a>
-                                            <a href="super-admin/category/save" class="btn btn-primary btn-labeled"><b><i class="icon-plus22"></i></b>Add Category</a>                                            
+                                            <a href="super-admin/sub-category/<?php echo $category_id; ?>" class="btn bg-teal-400 btn-labeled"><b><i class="icon-sync"></i></b>Refresh</a>
+                                            <a href="super-admin/sub-category/save/<?php echo $category_id; ?>" class="btn btn-primary btn-labeled"><b><i class="icon-plus22"></i></b>Add Sub-category</a>                                            
                                         </div>
                                     </div>
 
@@ -21,7 +21,8 @@
                                                     <th>#</th>
                                                     <th>Sub-category Name</th>
                                                     <th>Logo</th>
-                                                    <th>Status</th>                                                    
+                                                    <th>Status</th>
+                                                    <th>Sort Order</th>
                                                     <th>Actions</th>
                                                 </tr>
                                                 <tr>
@@ -29,6 +30,7 @@
                                                     <th>Category Name</th>
                                                     <th>Logo</th>
                                                     <th>Status</th>
+                                                    <th>Sort Order</th>
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
@@ -46,6 +48,10 @@
         </div>
     </div>
 </div>
+
+<?php
+$this->load->view('Common/delete_alert');
+?>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -94,7 +100,7 @@
                     "name": 'sub_category.sub_category_logo',
                     "render": function (data, type, full, meta) {
                         if (full.sub_category_sub_category_logo != '')
-                            var image_html = '<img height="20px" width="20px" alt="No Image" id="sub_category_image_display" src="<?php echo sub_category_img_path; ?>' + full.sub_category_sub_category_logo + '" />';
+                            var image_html = '<img height="20px" width="20px" alt="No Image" onerror="small_image_not_found(image_' + full.sub_category_id_sub_category + ')" id="image_' + full.sub_category_id_sub_category + '" src="<?php echo SITEURL.sub_category_img_path; ?>' + full.sub_category_sub_category_logo + '" />';
                         else
                             var image_html = '';
                         return image_html;
@@ -113,12 +119,17 @@
                     }
                 },
                 {
+                    'data': 'sub_category_sort_order',
+                    "visible": true,
+                    "name": 'sub_category.sort_order'
+                },
+                {
                     "visible": true,
                     "sortable": false,
                     "searchable": false,
                     "render": function (data, type, full, meta) {
-                        var links = '<a href="<?php echo base_url() ?>super-admin/sub-category/save/' + full.sub_category_id_sub_category + '" title="Update" class="btn btn-primary  btn-xs  tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a>   ';
-                        links += '<a href="javascript:void(0);" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" data-path="<?php echo base_url(); ?>admin/banner/delete/' + full.sub_category_id_sub_category + '" id="delete"><i class="icon-bin"></i></a>';
+                        var links = '<a href="<?php echo base_url() ?>super-admin/sub-category/save/' + '<?php echo $category_id; ?>/' + full.sub_category_id_sub_category + '" title="Update" class="btn btn-primary  btn-xs  tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a>   ';
+                        links += '<a href="javascript:void(0);" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" data-path="<?php echo base_url(); ?>superadmin/subcategory/delete/' + '<?php echo $category_id; ?>' + '/' + full.sub_category_id_sub_category + '" id="delete"><i class="icon-bin"></i></a>';
                         return links;
                     }
                 }

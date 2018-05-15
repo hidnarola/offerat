@@ -33,7 +33,7 @@ $uri_segment_1 = strtolower($this->uri->segment(1));
                     <li><a href="<?php echo $uri_segment_1;?>/profile"><i class="icon-vcard"></i> My Profile</a></li>
                     <li><a href="<?php echo $uri_segment_1;?>/profile/change_password"><i class="icon-lock2"></i> Change Password</a></li>
                     <li class="divider"></li>
-                    <li><a href="<?php echo $uri_segment_1;?>/logout"><i class="icon-switch2"></i> Logout</a></li>
+                    <li><a href="login/logout"><i class="icon-switch2"></i> Logout</a></li>
                 </ul>
             </li>
         </ul>

@@ -18,13 +18,7 @@
                                     <div class="form-group">
                                         <label>Parent Category <span class="text-danger">*</span></label>
                                         <div>
-                                            <?php
-                                            $parent_category_selected = set_value('id_category');
-//                                            if (isset($sub_category['id_category'])) {
-//                                                $parent_category_selected = $sub_category['id_category'];
-//                                            }
-                                            echo form_dropdown('id_category', $category_list, $parent_category_selected, 'class="form-control select-search" required="required"');
-                                            ?>                                                                                        
+                                            <span class="label border-left-primary label-striped"><?php echo $parent_category['category_name']; ?></span>                                                                                   
                                         </div>
                                     </div>        
                                 </div>
@@ -79,7 +73,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <div>
-                                                    <img class="img-responsive" alt="Image Not Found" id="sub_category_logo_display" src="<?php echo sub_category_img_path . $sub_category['sub_category_logo'] ?>" />
+                                                    <img class="img-responsive" alt="Image Not Found" onerror="image_not_found(image_0)" id="image_0" src="<?php echo sub_category_img_path . $sub_category['sub_category_logo'] ?>" />
                                                 </div>
                                             </div>
                                         </div>
@@ -103,11 +97,9 @@
                         </div>
                     </div>
                 </div>
-
+            </div>
         </form>
-
     </div>
-</div>
 </div>
 <script type="text/javascript">
     $(function () {
@@ -117,6 +109,6 @@
 <?php if (isset($sub_category['sub_category_logo']) && !empty($sub_category['sub_category_logo'])) { ?>
     <script type="text/javascript" src="assets/user/js/plugins/forms/styling/switch.min.js"></script>
     <script>
-        $(".switch").bootstrapSwitch();
+    $(".switch").bootstrapSwitch();
     </script>
 <?php } ?>

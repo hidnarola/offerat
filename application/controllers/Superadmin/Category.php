@@ -3,12 +3,16 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Category
-        extends CI_Controller {
+        extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
         $this->load->model('Common_model', '', TRUE);
-        $this->data['page_header'] = 'Category';
+        $this->data['title'] = $this->data['page_header'] = 'Category';
+        $this->bread_crum[] = array(
+            'url' => base_url() . 'super-admin/category',
+            'title' => 'Categories',
+        );
     }
 
     /*
@@ -20,6 +24,11 @@ class Category
         $this->data['page'] = 'category_list_page';
         $this->data['page_header'] = 'Categories';
 
+        $this->bread_crum[] = array(
+            'url' => '',
+            'title' => 'List'
+        );
+
         $this->template->load('user', 'Superadmin/Category/index', $this->data);
     }
 
@@ -28,7 +37,7 @@ class Category
      */
     public function filter_categories() {
         $filter_array = $this->Common_model->create_datatable_request($this->input->post());
-
+        $filter_array['where'] = array('is_delete' => IS_NOT_DELETED_STATUS);
         $filter_records = $this->Common_model->get_filtered_records(tbl_category, $filter_array);
         $total_filter_records = $this->Common_model->get_filtered_records(tbl_category, $filter_array, 1);
 
@@ -133,6 +142,11 @@ class Category
         $this->data['back_url'] = 'super-admin/category';
         $this->data['post_url'] = 'super-admin/category/save/' . $id;
 
+        $this->bread_crum[] = array(
+            'url' => base_url() . $this->data['back_url'],
+            'title' => 'List',
+        );
+
         if (isset($id) && $id > 0) {
             $where = array('id_category' => $id);
             $select_data = array(
@@ -199,7 +213,7 @@ class Category
     /**
      * Callback function to check category name exists or not
      * 
-     * @param string $category_name : County Name
+     * @param string $category_name : Category Name
      * @return boolean
      */
     function check_category_name($category_name) {
@@ -222,6 +236,57 @@ class Category
             return FALSE;
         } else
             return TRUE;
+    }
+
+    /*
+     * Update Category is_delete field
+     */
+
+    function delete($category_id = NULL) {
+        
+        if (!is_null($category_id) && $category_id > 0) {
+            $category_data = array(
+                'table' => tbl_store_category,
+                'where' => array(
+                    'is_delete' => IS_NOT_DELETED_STATUS,
+                    'id_category' => $category_id
+                )
+            );
+            $check_category = $this->Common_model->master_single_select($category_data);
+
+            if (isset($check_category) && sizeof($check_category) > 0)
+                $this->session->set_flashdata('error_msg', 'You can not delete this Category, Store is using this Category');
+            else {
+
+                $category_data = array(
+                    'table' => tbl_sub_category,
+                    'where' => array(
+                        'is_delete' => IS_NOT_DELETED_STATUS,
+                        'id_category' => $category_id
+                    )
+                );
+                $check_category = $this->Common_model->master_single_select($category_data);
+
+                if (isset($check_category) && sizeof($check_category) > 0)
+                    $this->session->set_flashdata('error_msg', 'You can not delete this Category, Sub-category is using this Category.');
+                else {
+                    $update_category_data = array('is_delete' => IS_DELETED_STATUS);
+                    $where_category_data = array(
+                        'id_category' => $category_id,
+                        'is_delete' => IS_NOT_DELETED_STATUS
+                    );
+                    $is_updated = $this->Common_model->master_update(tbl_category, $update_category_data, $where_category_data);
+
+                    if ($is_updated)
+                        $this->session->set_flashdata('success_msg', 'Category deleted successfully.');
+                    else
+                        $this->session->set_flashdata('error_msg', 'Invalid request sent to delete Category. Please try again later.');
+                }
+            }
+        } else
+            $this->session->set_flashdata('error_msg', 'Invalid request sent to delete Category. Please try again later.');
+
+        redirect('super-admin/category');
     }
 
 }

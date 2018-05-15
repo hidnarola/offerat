@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="home_page_html">
     <head>
         <?php
         $this->load->view('Template/head');

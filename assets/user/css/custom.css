@@ -1,13 +1,15 @@
 @font-face {
     font-family: 'Conv_WerkHaus Bold';
-    src: url('http://localhost/offerat/assets/user/font/WerkHaus Bold.eot');
-    src: local('☺'), url('http://localhost/offerat/assets/user/font/WerkHaus Bold.woff') format('woff'), url('http://localhost/offerat/assets/user/font/WerkHaus Bold.ttf') format('truetype'), url('http://localhost/offerat/assets/user/font/WerkHaus Bold.svg') format('svg');
+    /*    src: url('http://localhost/offerat/assets/user/font/WerkHaus Bold.eot');
+        src: local('☺'), url('http://localhost/offerat/assets/user/font/WerkHaus Bold.woff') format('woff'), url('http://localhost/offerat/assets/user/font/WerkHaus Bold.ttf') format('truetype'), url('http://localhost/offerat/assets/user/font/WerkHaus Bold.svg') format('svg');*/
+    src: url('./font/WerkHaus Bold.eot');
+    src: local('☺'), url('../font/WerkHaus Bold.woff') format('woff'), url('../font/WerkHaus Bold.ttf') format('truetype'), url('../font/WerkHaus Bold.svg') format('svg');
     font-weight: normal;
     font-style: normal;
 }
 
 .home_page .site_name {color: #26a69a;text-align: center;font-size: 120px;font-weight: 500;font-family: "Times New Roman", Times, serif;}
-body.home_page_body {background: url(http://localhost/offerat/assets/user/images/site/banner_bg.jpg);background-size: cover;background-position: center center;}
+body.home_page_body {background: url(site/banner_bg.jpg);background-size: cover;background-position: center center;}
 body.home_page_body:After {content: " ";position: absolute;left: 0;top: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.60);    z-index: 0;}
 body.home_page_body .page-container {z-index: 9;}
 .home_page .site_name {text-align: center;font-family: Conv_WerkHaus Bold;font-size: 100px;font-weight: 900;letter-spacing: 5px;color: #fff;line-height: normal;margin: 0;}
@@ -23,15 +25,39 @@ ul.ap_store_btn li a img {max-width: 180px;}
 ul.ap_store_btn li a {display: inline-block;}
 ul.ap_store_btn li:last-child {margin-bottom: 0;}
 
+.nipl_table_listing .dataTables_scrollHead .dataTables_scrollHeadInner table th:not(:last-child),
+.nipl_table_listing .dataTables_scrollHead .dataTables_scrollHeadInner table td:not(:last-child),
+.nipl_table_listing .dataTables_scrollBody table th:not(:last-child),
+.nipl_table_listing .dataTables_scrollBody table td:not(:last-child){min-width: 120px;/*160px;*/}
+/* if last 2 columns are static */
+.dt-last-2-col-mw.nipl_table_listing .dataTables_scrollHead .dataTables_scrollHeadInner table th:nth-last-child(2),
+.dt-last-2-col-mw.nipl_table_listing .dataTables_scrollHead .dataTables_scrollHeadInner table td:nth-last-child(2),
+.dt-last-2-col-mw.nipl_table_listing .dataTables_scrollBody table th:nth-last-child(2),
+.dt-last-2-col-mw.nipl_table_listing .dataTables_scrollBody table td:nth-last-child(2){min-width: 100px;}
+.dt-last-col-default-mw.nipl_table_listing .dataTables_scrollHead .dataTables_scrollHeadInner table th:last-child,
+.dt-last-col-default-mw.nipl_table_listing .dataTables_scrollHead .dataTables_scrollHeadInner table td:last-child,
+.dt-last-col-default-mw.nipl_table_listing .dataTables_scrollBody table th:last-child,
+.dt-last-col-default-mw.nipl_table_listing .dataTables_scrollBody table td:last-child{min-width: 160px;}
+.dt-first-col-mw.nipl_table_listing .dataTables_scrollHead .dataTables_scrollHeadInner table th:first-child,
+.dt-first-col-mw.nipl_table_listing .dataTables_scrollHead .dataTables_scrollHeadInner table td:first-child,
+.dt-first-col-mw.nipl_table_listing .dataTables_scrollBody table th:first-child,
+.dt-first-col-mw.nipl_table_listing .dataTables_scrollBody table td:first-child{min-width: 100px;}
+
 /** media start here ***/
 
-@media (min-width:768px){
-    body.home_page_body {height: 100%;}
-    body.home_page_body div#site_wrapper{height: 100%;}
+@media (min-width:1200px){
+html.home_page_html {height: 100%;}
+}
+
+
+
+@media (min-width:992px) and (max-width:1199px){
+	html.home_page_html {height: 100%;}
 }
 
 @media (min-width:768px) and (max-width:991px){
     .ul_menu li a {font-size: 14px;max-width: 150px;width: 150px;}
+	html.home_page_html {height: 100%;}
 }
 
 @media (max-width:767px){
@@ -46,4 +72,16 @@ ul.ap_store_btn li:last-child {margin-bottom: 0;}
     ul.ap_store_btn {margin-top: 40px;}
     body.home_page_body div#site_wrapper {padding: 20px;}
     body.home_page_body {background-repeat: no-repeat;}
+
+	
 }
+
+
+
+@media (min-width:320px) and (max-width:480px){
+html.home_page_html {height: 100% !important;}
+body.home_page_body div#site_wrapper {padding: 20px;position: absolute;left: 50%;top: 50%;transform: translate(-50%,-50%);z-index: 9;}
+}
+
+
+@media (width:812px){html.home_page_html {height: initial;}}

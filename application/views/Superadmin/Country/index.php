@@ -50,8 +50,7 @@
 </div>
 
 <?php
-//$this->load->view('Admin/Common/alert_confirmation');
-//$this->load->view('Admin/Common/alert_information');
+$this->load->view('Common/delete_alert');
 ?>
 
 <script type="text/javascript">
@@ -101,7 +100,7 @@
                     "name": 'country.country_flag',
                     "render": function (data, type, full, meta) {
                         if (full.country_country_flag != '')
-                            var image_html = '<img height="20px" width="20px" alt="No Image" id="country_image_display" src="<?php echo country_img_path; ?>' + full.country_country_flag + '" />';
+                            var image_html = '<img height="20px" width="20px" alt="No Image" onerror="small_image_not_found(image_' + full.country_id_country + ')" id="image_' + full.country_id_country + '" src="<?php echo country_img_path; ?>' + full.country_country_flag + '" />';
                         else
                             var image_html = '';
                         return image_html;
@@ -130,9 +129,8 @@
                     "sortable": false,
                     "searchable": false,
                     "render": function (data, type, full, meta) {
-                        console.log(full);
                         var links = '<a href="<?php echo base_url() ?>super-admin/country/save/' + full.country_id_country + '" title="Update" class="btn btn-primary  btn-xs  tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a>   ';
-                        links += '<a href="javascript:void(0);" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" data-path="<?php echo base_url(); ?>admin/banner/delete/' + full.country_id_country + '" id="delete"><i class="icon-bin"></i></a>';
+                        links += '<a href="javascript:void(0);" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" data-path="<?php echo base_url(); ?>superadmin/country/delete/' + full.country_id_country + '" id="delete"><i class="icon-bin"></i></a>';
                         return links;
                     }
                 }

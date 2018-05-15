@@ -24,3 +24,18 @@
 <script type="text/javascript" src="assets/user/js/core/libraries/bootstrap.min.js"></script>
 <script type="text/javascript" src="assets/user/js/plugins/loaders/blockui.min.js"></script>
 <!-- /core JS files -->
+<script type="text/javascript">
+    var base_url = '<?php echo SITEURL; ?>';
+
+    function image_not_found(sourceId) {
+        var default_img_url = base_url + 'assets/user/images/site/default_missing_image.png';
+        $(document).find(sourceId)[0].src = default_img_url;
+        $(document).find(sourceId)[0].title = "Image Not Found";
+    }
+
+    function small_image_not_found(sourceId) {
+        var default_img_url = base_url + 'assets/user/images/site/small_no_image.jpg';
+        $(document).find(sourceId)[0].src = default_img_url;
+        $(document).find(sourceId)[0].title = "Image Not Found";
+    }
+</script>

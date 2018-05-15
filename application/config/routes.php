@@ -52,6 +52,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'home';
 
 //Super Admin Routes
+//Dashboard
+$route['super-admin/dashboard'] = 'superadmin/dashboard';
+
 //Country
 $route['super-admin/country'] = 'superadmin/country';
 $route['super-admin/country/save'] = 'superadmin/country/save';

@@ -29,7 +29,7 @@
                     ?>
                     <!-- /main sidebar -->
                     <div class="content-wrapper"> 
-                        
+
                         <?php
                         $controller = strtolower($this->uri->segment(2));
                         if ($controller != 'dashboard') {
@@ -121,7 +121,7 @@
                             </div>
                         <?php } ?>
 
-                        
+
                         <div class="content">
                             <?php echo $body; ?>
                         </div> 
@@ -153,7 +153,7 @@
             <!--Checkbox Start-->
             <script type="text/javascript" src="assets/user/js/plugins/forms/styling/uniform.min.js"></script>
             <!--Checkbox End-->
-            
+
             <script type="text/javascript" src="assets/user/js/custom.js"></script>
         </div>
     </body>
