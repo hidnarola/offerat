@@ -36,18 +36,11 @@
                             <div class="col-xs-12">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="display-block">Status <span class="text-danger">*</span></label>
-                                        <?php
-                                        $status_options = array(
-                                            '0' => 'Active',
-                                            '1' => 'Inactive',
-                                        );
-                                        $status_selected = set_value('status');
-                                        if (isset($category['status'])) {
-                                            $status_selected = $category['status'];
-                                        }
-                                        echo form_dropdown('status', $status_options, $status_selected, 'class="form-control select"');
-                                        ?>
+                                        <label class="display-block">Status <span class="text-danger">*</span></label>                                        
+                                        <select name="status" id="status" class="form-control select">
+                                            <option value="0" <?php echo (isset($category['status']) && $category['status'] == '0' ) ? 'selected=selected' : ''; ?>>Active</option>
+                                            <option value="1" <?php echo (isset($category['status']) && $category['status'] == '1' ) ? 'selected=selected' : ''; ?>>Inactive</option>
+                                        </select>
                                     </div>       
                                 </div>
                                 <div class="col-md-6">
@@ -66,13 +59,12 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <div class="col-md-12 checkbox checkbox-switch">
+<!--                                        <div class="col-md-12 checkbox checkbox-switch">
                                             <label>
                                                 Delete Image?
                                                 <input type="checkbox" data-off-color="danger" data-on-text="Yes" data-off-text="No" class="switch" name="delete_category_image" id="delete_category_image" />
                                             </label>
-                                        </div>
+                                        </div>-->
                                     <?php } ?>
                                 </div>                                
                             </div>
@@ -98,6 +90,6 @@
 <?php if (isset($category['category_logo']) && !empty($category['category_logo'])) { ?>
     <script type="text/javascript" src="assets/user/js/plugins/forms/styling/switch.min.js"></script>
     <script>
-    $(".switch").bootstrapSwitch();
+        $(".switch").bootstrapSwitch();
     </script>
 <?php } ?>

@@ -51,6 +51,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $route['default_controller'] = 'home';
 
+//forgot password
+$route['forgot-password'] = 'login/forgot_password';
+//reset password
+$route['reset-password'] = 'login/reset_password';
+
 //Super Admin Routes
 //Dashboard
 $route['super-admin/dashboard'] = 'superadmin/dashboard';

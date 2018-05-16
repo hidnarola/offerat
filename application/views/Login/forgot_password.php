@@ -2,7 +2,7 @@
     <!-- Content area -->
     <div class="content">
         <!-- Password recovery -->
-        <form id="forgot_password_form" action="<?php // echo $post_url   ?>" method="POST" class="form-validate-jquery">
+        <form id="forgot_password_form" action="<?php // echo $post_url    ?>" method="POST" class="form-validate-jquery">
             <div class="panel panel-body login-form">
                 <div class="text-center">                    
                     <h5 class="content-group"><?php echo $page_header; ?></h5>
@@ -30,7 +30,7 @@
                 <?php } ?>
 
                 <div class="form-group has-feedback">
-                    <input type="email" name="forgot_password_email" class="form-control" placeholder="Your email">
+                    <input type="email" name="email" class="form-control" placeholder="Your email" required="required">
                     <div class="form-control-feedback">
                         <i class="icon-mail5 text-muted"></i>
                     </div>

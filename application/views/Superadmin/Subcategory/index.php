@@ -56,8 +56,8 @@ $this->load->view('Common/delete_alert');
 <script type="text/javascript">
     $(document).ready(function () {
         var status_arr = {
-            '1': "Active",
-            '0': "Inactive",
+            '0': "Active",
+            '1': "Inactive",
         };
 
         // Setup - add a text input to each footer cell
@@ -112,7 +112,7 @@ $this->load->view('Common/delete_alert');
                     "name": 'sub_category.status',
                     "render": function (data, type, full, meta) {
                         var status = '<span class="label label-success label-rounded">' + status_arr[full.sub_category_status] + '</span>';
-                        if (full.sub_category_status === '0') {
+                        if (full.sub_category_status === '1') {
                             status = '<span class="label label-danger label-rounded">' + status_arr[full.sub_category_status] + '</span>';
                         }
                         return status;

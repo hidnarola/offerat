@@ -91,6 +91,11 @@ $root .= str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAM
 define('SITEURL', $root);
 define('SITENAME', 'Offerat');
 
+define('site_support_email', 'support@offerat.sale');
+define('site_info_email', 'info@offerat.sale');
+
+define('VERIFICATION_RESET_PASSWORD', 'reset_password');
+
 
 define('tbl_country', 'country');
 define('tbl_category', 'category');
@@ -102,7 +107,7 @@ define('tbl_store_category', 'store_category');
 define('tbl_store_location', 'store_location');
 define('tbl_sub_category', 'sub_category');
 define('tbl_user', 'user');
-
+define('tbl_verification', 'verification');
 
 define('country_img_path', 'assets/images/country/');
 define('category_img_path', 'assets/images/category/');
