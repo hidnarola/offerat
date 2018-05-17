@@ -105,7 +105,7 @@ class Login
         return $this->form_validation->run();
     }
 
-    public function forgot_password() {
+    public function reset_password() {
 
         is_logged_in();
         if ($this->input->post()) {
@@ -127,7 +127,7 @@ class Login
                     if ($user['status'] == ACTIVE_STATUS && $user['is_delete'] == IS_NOT_DELETED_STATUS && $user['user_type'] == SUPER_ADMIN_USER_TYPE) {
 
                         $reset_code = md5(time());
-                        $reset_link = SITEURL . 'reset-password?reset_code=' . $reset_code;
+                        $reset_link = SITEURL . 'change-password?reset_code=' . $reset_code;
                         $subject = 'Forgot Password on Offerat';
                         $content = $this->Email_template_model->forgot_password_format($reset_link);
                         $response = $this->Email_template_model->send_email(NULL, $user['email_id'], $subject, $content);
@@ -148,30 +148,30 @@ class Login
                             redirect('login');
                         } else {
                             $this->session->set_flashdata('error_msg', 'Unable to send Email for Reset Password. Please try again later.');
-                            redirect('forgot-password');
+                            redirect('reset-password');
                         }
                     } elseif ($user['status'] != ACTIVE_STATUS) {
                         $this->session->set_flashdata('error_msg', 'Your Account is inactivated.');
-                        redirect('forgot-password');
+                        redirect('reset-password');
                     } elseif ($user['is_delete'] != IS_NOT_DELETED_STATUS) {
                         $this->session->set_flashdata('error_msg', 'Your Account has been deleted earlier.');
-                        redirect('forgot-password');
+                        redirect('reset-password');
                     } else {
                         $this->session->set_flashdata('error_msg', 'Invalid Email request for Forgot Password');
-                        redirect('forgot-password');
+                        redirect('reset-password');
                     }
                 } else {
                     $this->session->set_flashdata('error_msg', 'Invalid Email request for Forgot Password');
-                    redirect('forgot-password');
+                    redirect('reset-password');
                 }
             }
         }
 
-        $this->data['title'] = $this->data['page_header'] = 'Forgot Password';
-        $this->login_template->load('index', 'Login/forgot_password', $this->data);
+        $this->data['title'] = $this->data['page_header'] = 'Reset Password';
+        $this->login_template->load('index', 'Login/reset_password', $this->data);
     }
 
-    public function reset_password() {
+    public function change_password() {
         is_logged_in();
         $reset_code = $this->input->get('reset_code', TRUE);
 
@@ -250,8 +250,8 @@ class Login
                 redirect('login');
             }
 
-            $this->data['title'] = $this->data['page_header'] = 'Reset Password';
-            $this->login_template->load('index', 'Login/reset_password', $this->data);
+            $this->data['title'] = $this->data['page_header'] = 'Change Password';
+            $this->login_template->load('index', 'Login/change_password', $this->data);
         }
     }
 

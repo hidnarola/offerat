@@ -9,17 +9,22 @@ class Email_template_model
 
     public function forgot_password_format($link = NULL) {
 
-        $message_text = '<p>Hi, </p>
+        $message_text = '<p>Hello, </p>
 
-<p>We received a request to reset your ' . SITENAME . '<sup> </sup>login password. Please <a href="{reset_link}">click here</a> to reset your password.&nbsp;</p>
+<p>We were asked to reset your Offerat account. Follow the instructions below if this request comes from you.<p> 
 
-<p>Email us at <a href="mailto:' . site_support_email . '">' . site_support_email . '</a> if you have any questions. Thank you!</p>
+<p>Ignore the E-mail if the request to reset your password does not come from you.<p>
+
+<p>Click the following link to set a new password.<p>
+
+<p><a href="{reset_link}">{reset_link}</a></p>
+
+<p>If clicking the link doesn\'t work then you can copy the link into your browser window or type it there directly.</p>
 
 <p>&nbsp;</p>
 
-<p>&nbsp;</p>
-
-<p>' . SITENAME . ' Team</p>';
+<p>Regards</p>
+<p>Your Offerat Team</p>';
 
         $find = array("{reset_link}");
         $replace = array($link);

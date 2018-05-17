@@ -51,10 +51,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $route['default_controller'] = 'home';
 
-//forgot password
-$route['forgot-password'] = 'login/forgot_password';
 //reset password
 $route['reset-password'] = 'login/reset_password';
+//change password
+$route['change-password'] = 'login/change_password';
 
 //Super Admin Routes
 //Dashboard
@@ -75,8 +75,14 @@ $route['super-admin/sub-category/(:any)'] = 'superadmin/subcategory/index/$1';
 $route['super-admin/sub-category/save/(:any)'] = 'superadmin/subcategory/save/$1';
 $route['super-admin/sub-category/save/(:any)/(:any)'] = 'superadmin/subcategory/save/$1/$2';
 
-$route['forgot_password'] = 'login/forgot_password';
-$route['reset_password'] = 'login/reset_password';
+//Store Registration
+$route['store-registration'] = 'storeregistration/index';
+
+
+
+
+
+
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
