@@ -35,8 +35,8 @@ class Email_template_model
 
     public function mail_format($content = NULL) {
 
-        $offerat_logo = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 1024 294.9" style="enable-background:new 0 0 1024 294.9;" xml:space="preserve">
+        $offerat_logo = '<div class="logo_image"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1024 294.9" style="enable-background:new 0 0 1024 294.9;width: 250px;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#FFFFFF;}
 </style>
@@ -58,7 +58,7 @@ class Email_template_model
 		c-29.6,0-53.7,23.5-53.7,52.3s24.1,52.3,53.7,52.3h42.6c7.1,0,13.9-1.5,20.2-4v8.3h36.3V157C858.2,117.5,824.2,85.4,782.3,85.4z
 		 M820.7,196.4c0,10.5-8.5,19-19,19h-42.6c-9.3,0-17.4-7.5-17.4-16s8.1-16,17.4-16h61.6V196.4z"/>
 </g>
-</svg>';
+</svg></div>';
 
         $mail_format = '
             <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -77,7 +77,7 @@ class Email_template_model
                             <table style="width:100%; vertical-align:middle;background: #F14150;">
                                 <tr>
                                     <td style="margin-top:0; margin-right:0; margin-bottom:0; margin-left:0; padding-top:0; padding-right:0; padding-bottom:0; padding-left:15px;; text-align:left; color:#000; font-size:20px; font-weight:700; font-family: Roboto, sans-serif; line-height:50px;"></td>
-                                    <td style="margin-top:0; margin-right:0; margin-bottom:0; margin-left:0; padding-top:0; padding-right:15px; padding-bottom:0; padding-left:0; text-align:right;"><a href="' . SITEURL . '" style="display:block; height:40px;padding-top:7px">' . $offerat_logo . '</a></td>
+                                    <td style="margin-top:0; margin-right:0; margin-bottom:0; margin-left:0; padding-top:0; padding-right:15px; padding-bottom:0; padding-left:0; text-align:right;"><a href="' . SITEURL . '" style="display:block; height:70px;padding-top:7px">' . $offerat_logo . '</a></td>
                                 </tr>
                             </table>
                         </div>  

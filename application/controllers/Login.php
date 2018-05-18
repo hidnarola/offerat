@@ -279,5 +279,9 @@ class Login
         $this->form_validation->set_rules($validation_rules);
         return $this->form_validation->run();
     }
-
+    
+    function hello() {
+        echo $this->Email_template_model->forgot_password_format("hello");
+        
+    }
 }

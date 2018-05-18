@@ -43,6 +43,19 @@ ul.ap_store_btn li:last-child {margin-bottom: 0;}
 .svg_logo {text-align: center;}
 .svg_logo svg {width: 450px;height: auto;margin: 0 auto;}
 
+
+/** login page ***/
+.login-cover {background: #f4f4f4;}
+.content {padding: 0 !important;}
+.page-container {padding: 0 !important;}
+.panel_login_head {background: #F14150;padding: 20px;}
+.panel_login_head svg {width: 200px;height: auto;margin: 0 auto;}
+.form_login_wrapper {padding-top: 70px;padding-bottom: 70px;}
+.form_login_wrapper .login-form {border: 0;max-width: 400px;margin: 0px auto !important;padding: 35px 25px 30px 25px;background: #fff;width: 100% !important;border-top: 0px solid #F14150;box-shadow: 0 0 30px 0 #f4f4f4;}
+.form_login_wrapper h5 {margin: 0;padding: 0;font-size: 24px;color: #F14150;font-family: muli;line-height: normal;font-weight: 500;text-align: center;}
+a.f_pass {margin-top: 10px;float: left;font-size: 14px;color: #F14150;}
+.form_login_wrapper .login-form .form-group button {width: auto;margin: 0 auto;float: right;border: 0;background: #F14150;font-size: 14px;font-family: muli;}
+
 /** media start here ***/
 
 @media (min-width:1200px){
@@ -52,6 +65,8 @@ ul.ap_store_btn li:last-child {margin-bottom: 0;}
 @media (min-width:992px) and (max-width:1199px){
     html.home_page_html {height: 100%;}
 }
+
+@media (width:812px){html.home_page_html {height: initial;}}
 
 @media (min-width:768px) and (max-width:991px){
     .ul_menu li a {font-size: 14px;max-width: 150px;width: 150px;}
@@ -70,11 +85,11 @@ ul.ap_store_btn li:last-child {margin-bottom: 0;}
     ul.ap_store_btn {margin-top: 40px;}
     body.home_page_body div#site_wrapper {padding: 20px;}
     body.home_page_body {background-repeat: no-repeat;}
+    .svg_logo svg {width: 250px;}
 }
 
 @media (min-width:320px) and (max-width:480px){
     html.home_page_html {height: 100% !important;}
     body.home_page_body div#site_wrapper {padding: 20px;position: absolute;left: 50%;top: 50%;transform: translate(-50%,-50%);z-index: 9;}
+    .form_login_wrapper .login-form {padding: 30px 15px 20px 15px;width: 95% !important;}
 }
-
-@media (width:812px){html.home_page_html {height: initial;}}

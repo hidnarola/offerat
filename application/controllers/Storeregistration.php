@@ -12,13 +12,20 @@ class Storeregistration
 
     function index() {
 
-        $this->data['page'] = 'hello';
+        $this->data['title'] = $this->data['page_header'] = 'Store Registration';
+
         $select_category = array(
             'table' => tbl_category,
             'where' => array('status' => ACTIVE_STATUS),
             'order_by' => array('sort_order' => 'ASC')
         );
         $this->data['category_list'] = $this->Common_model->master_select($select_category);
+
+        $select_country = array(
+            'table' => tbl_country,
+            'where' => array('status' => ACTIVE_STATUS)
+        );
+        $this->data['country_list'] = $this->Common_model->master_select($select_country);
 
         $this->load->view('Registration/store', $this->data);
     }

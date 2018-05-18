@@ -1,8 +1,11 @@
 
-<!-- Simple login form -->
-<form id="backend_login" action="" method="post" class="form-validate-jquery form_login_wrapper">
-    <h5 class="content-group"><?php echo $page_header; ?></h5>
+<!-- Password recovery -->
+<form id="forgot_password_form" action="<?php // echo $post_url     ?>" method="POST" class="form-validate-jquery">
     <div class="panel panel-body login-form">
+        <div class="text-center">                    
+            <h5 class="content-group"><?php echo $page_header; ?></h5>
+        </div>
+
         <?php if ($this->session->flashdata('error_msg')) { ?>
             <div class="alert alert-danger alert-styled-right alert-bordered">
                 <button type="button" class="close" data-dismiss="alert"><span>&times;</span><span class="sr-only">Close</span></button>
@@ -23,30 +26,14 @@
                 <?php echo $this->session->flashdata('success_msg') ?>
             </div>
         <?php } ?>
-        <div class="form-group has-feedback">
-            <input type="password" id="password" name="password" minlength="5" class="form-control" placeholder="New password" required="required" autocomplete="off">
-            <div class="form-control-feedback">
-                <i class="icon-user-lock text-muted"></i>
-            </div>
-        </div>
-        <div class="form-group has-feedback">
-            <input type="password" id="confirm_password" name="confirm_password" minlength="5" equalTo="#password" class="form-control" placeholder="Confirm password" required="required" autocomplete="off">
-            <div class="form-control-feedback">
-                <i class="icon-user-lock text-muted"></i>
-            </div>
-        </div>
-        <div class="form-group">            
-            <button type="submit" class="btn btn-primary btn-block"><?php echo $page_header; ?> <i class="icon-circle-right2 position-right"></i></button>
-        </div>
 
+        <div class="form-group has-feedback">
+            <input type="email" name="email" class="form-control" placeholder="Your email" required="required">
+            <div class="form-control-feedback">
+                <i class="icon-mail5 text-muted"></i>
+            </div>
+        </div>
+        <button type="submit" class="btn bg-blue btn-block">Reset password <i class="icon-arrow-right14 position-right"></i></button>                
     </div>
 </form>
-<!-- /simple login form -->
-
-
-
-<script type="text/javascript">
-//    $(function () {
-//        jqueryValidate();
-//    });
-</script>
+<!-- /password recovery -->    
