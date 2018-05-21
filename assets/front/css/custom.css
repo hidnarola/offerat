@@ -7,7 +7,7 @@
 .panel_reg legend {font-size: 14px;padding-top: 0px;}
 .panel_reg label {font-size: 14px;}
 .form-horizontal .form-group {padding-left: 120px;margin-left: 0;margin-right: 0;}
-.form-horizontal .form-group label {position: absolute;left: 0;top: 0;width: auto;}
+.form-horizontal .form-group label.control-label {position: absolute;left: 0;top: 0;width: auto;}
 .reg_wrapper {max-width: 450px;margin: 0 auto;}
 .width_50 {float: left;width: 50%;padding: 0 15px;}
 .width_50.first {padding-left: 0;}
@@ -20,20 +20,29 @@
 .form_body_wrapper {padding: 50px 0;}
 .submit_btn, .submit_btn:hover {width: auto;margin: 0 auto;float: right;border: 0;background: #F14150;font-size: 14px;font-family: muli;}
 .checker span {color: #f14150;border: 2px solid #f14150;}
+.row_add_div .clear-float:After {content: " ";display: block;clear: both;}
+.checkbox_reg {margin-top: 15px;}
+.btn_center {padding: 0 !important;text-align: center;margin: 0;}
+.btn_center button {float: none !important;}
+.reg_wrapper fieldset.content-group {margin-bottom: 0px !important;}
+.form-group.checkbox_reg {padding: 0;text-align: left;}
 
 /** media start herer ***/
+
 
 @media (min-width:768px) and (max-width:991px){
     .add_desc {display: inline-block;text-align: right;width: 100%;padding: 0 15px;}
     .business_category_div > div {padding: 0;margin-bottom: 5px;}
     .business_category_div > div:last-child .form-group div {text-align: right;}
+    .panel_reg label {text-align: left;}
 }
 
 @media (max-width:767px){
     .width_50 {float: none;width: 100%;padding: 0;margin-bottom: 5px;}
-    .form-horizontal .form-group label {position: relative;width: 100%;padding-left: 0;}
+    .form-horizontal .form-group label.control-label {position: relative;width: 100%;padding-left: 0;}
     .form-horizontal .form-group {padding-left: 0;}    
     .add_desc {display: inline-block;text-align: right;width: 100%;padding: 0 15px;}
     .business_category_div > div {padding: 0;margin-bottom: 5px;}
     .business_category_div > div:last-child .form-group div {text-align: right;}
+    .panel_reg label {text-align: left;}
 }

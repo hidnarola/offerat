@@ -33,6 +33,31 @@ class Email_template_model
         return $this->mail_format($message);
     }
 
+    public function account_verification_format($link = NULL) {
+
+        $message_text = '<p>Dear Sir,</p>
+<p>Thank you for partnering with us.</p>
+
+<p>Click the following link to complete the registration process.</p>
+
+<p><a href="{varification_link}">{varification_link}</a></p>
+
+
+<p>For help kindly contact our support on:</p>
+<p>' + site_support_email + '</p>
+<p>Mob: +961 70 113 143</p>
+
+
+<p>Best Regards,</p>
+<p>Offerat Team</p>';
+
+        $find = array("{varification_link}");
+        $replace = array($link);
+        $message = str_replace($find, $replace, $message_text);
+
+        return $this->mail_format($message);
+    }
+
     public function mail_format($content = NULL) {
 
         $offerat_logo = '<div class="logo_image"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"

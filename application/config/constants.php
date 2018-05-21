@@ -91,6 +91,8 @@ $root .= str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAM
 define('SITEURL', $root);
 define('SITENAME', 'Offerat');
 
+define('GOOGLE_API_KEY', 'AIzaSyBREMF2gH26r6gNypcVlo_-PSU_qIh2Yu8');
+
 define('site_support_email', 'support@offerat.sale');
 define('site_info_email', 'info@offerat.sale');
 
@@ -112,6 +114,7 @@ define('tbl_verification', 'verification');
 define('country_img_path', 'assets/images/country/');
 define('category_img_path', 'assets/images/category/');
 define('sub_category_img_path', 'assets/images/subcategory/');
+define('store_img_path', 'assets/images/store/');
 
 define('SUPER_ADMIN_USER_TYPE', '1');
 define('COUNTRY_ADMIN_USER_TYPE', '2');
@@ -120,6 +123,10 @@ define('NORMAL_USER_TYPE', '4');
 
 define('ACTIVE_STATUS', 0);
 define('IN_ACTIVE_STATUS', 1);
+define('NOT_VERIFIED_STATUS', -1);
+
+define('MALL_LOCATION_TYPE', 0);
+define('STORE_LOCATION_TYPE', 1);
 
 define('IS_NOT_DELETED_STATUS', 0);
 define('IS_DELETED_STATUS', 1);
