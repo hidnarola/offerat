@@ -8,16 +8,17 @@ class Storeregistration
     public function __construct() {
         parent::__construct();
         $this->load->model('Common_model', '', TRUE);
+        $this->load->model('Email_template_model', '', TRUE);
     }
 
     function index() {
 
         if ($this->input->post()) {
-            pr($_POST);
+//            pr($_POST);
             $date = date('Y-m-d h:i:s');
 
             $do_store_image_has_error = false;
-            $img_name = '';
+            $img_name = $image_name = '';
             if (isset($_FILES['store_logo'])) {
 
                 if (($_FILES['store_logo']['size']) > 0) {
@@ -42,90 +43,105 @@ class Storeregistration
                 }
             }
 
-            if (!$do_store_image_has_error) {
+            $this->Common_model->master_update(
+                    tbl_user, array('is_delete' => IS_DELETED_STATUS), array(
+                'email_id' => $this->input->post('email_id', TRUE),
+                'user_type' => STORE_OR_MALL_ADMIN_USER_TYPE,
+                'status' => NOT_VERIFIED_STATUS
+                    )
+            );
 
-                $select_user = array(
-                    'table' => tbl_user,
-                    'where' => array('email_id' => $this->input->post('email_id', TRUE))
-                );
-                $user_data = $this->Common_model->master_single_select($select_user);
+            $new_user_status = false;
+            $select_user = array(
+                'table' => tbl_user,
+                'where' => array('email_id' => $this->input->post('email_id', TRUE), 'is_delete' => IS_NOT_DELETED_STATUS)
+            );
 
-                if (isset($user_data) && sizeof($user_data) > 0) {
-                    $user_id = $user_data['id_user'];
-                } else {
-                    $in_user_data = array(
-                        'user_type' => STORE_OR_MALL_ADMIN_USER_TYPE,
-                        'email_id' => $this->input->post('email_id', TRUE),
-                        'first_name' => $this->input->post('first_name', TRUE),
-                        'last_name' => $this->input->post('last_name', TRUE),
-                        'mobile' => $this->input->post('mobile', TRUE),
-                        'status' => NOT_VERIFIED_STATUS,
-                        'created_date' => $date,
-                        'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
-                        'is_delete' => IS_NOT_DELETED_STATUS
-                    );
-                    echo 'in_user_data';
-                    pr($in_user_data);
-                    $user_id = 1;
-//                $user_id = $this->Common_model->master_insert($in_user_data);
-                }
-
-                $in_store_data = array(
-                    'store_name' => $this->input->post('store_name', TRUE),
-                    'store_logo' => $this->input->post('store_logo', TRUE),
-                    'id_users' => $user_id,
-                    'website' => $this->input->post('website', TRUE),
-                    'facebook_page' => $this->input->post('facebook_page', TRUE),
-                    'telephone' => $this->input->post('telephone', TRUE),
+            $user_data = $this->Common_model->master_single_select($select_user);
+            if (isset($user_data) && sizeof($user_data) > 0) {
+                $user_id = $user_data['id_user'];
+                $email_id = $user_data['email_id'];
+            } else {
+                $in_user_data = array(
+                    'user_type' => STORE_OR_MALL_ADMIN_USER_TYPE,
+                    'email_id' => $this->input->post('email_id', TRUE),
+                    'first_name' => $this->input->post('first_name', TRUE),
+                    'last_name' => $this->input->post('last_name', TRUE),
+                    'mobile' => $this->input->post('telephone', TRUE),
                     'status' => NOT_VERIFIED_STATUS,
                     'created_date' => $date,
                     'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
                     'is_delete' => IS_NOT_DELETED_STATUS
                 );
-//            $store_id = $this->Common_model->master_insert($in_store_data);
-                $store_id = 1;
-                echo 'in_store_data';
-                pr($in_store_data);
+//                    echo 'in_user_data';
+//                    pr($in_user_data);
+//                    $user_id = 1;
+                $email_id = $this->input->post('email_id', TRUE);
+                $user_id = $this->Common_model->master_save(tbl_user, $in_user_data);
 
-                if ($this->input->post('location_count', TRUE) > 0) {
-                    $location_count = $this->input->post('location_count', TRUE);
-                    for ($i = 0; $i < $location_count; $i++) {
+                $new_user_status = true;
+            }
+
+            $in_store_data = array(
+                'store_name' => $this->input->post('store_name', TRUE),
+                'store_logo' => $image_name,
+                'id_users' => $user_id,
+                'website' => $this->input->post('website', TRUE),
+                'facebook_page' => $this->input->post('facebook_page', TRUE),
+                'telephone' => $this->input->post('telephone', TRUE),
+                'status' => NOT_VERIFIED_STATUS,
+                'created_date' => $date,
+                'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
+                'is_delete' => IS_NOT_DELETED_STATUS
+            );
+            $store_id = $this->Common_model->master_save(tbl_store, $in_store_data);
+//                $store_id = 1;                
+//                echo 'in_store_data';
+//                pr($in_store_data);
+
+            if ($this->input->post('location_count', TRUE) > 0) {
+                $location_count = $this->input->post('location_count', TRUE);
+                for ($i = 0; $i < $location_count; $i++) {
+                    if ($this->input->post('place_id_' . $i, TRUE) != '') {
                         $in_place_data = array(
                             'id_google' => $this->input->post('place_id_' . $i, TRUE),
                             'street' => $this->input->post('address_' . $i, TRUE),
                             'street1' => $this->input->post('street1_' . $i, TRUE),
                             'city' => $this->input->post('city_' . $i, TRUE),
                             'state' => $this->input->post('state_' . $i, TRUE),
-                            'id_country' => $this->input->post('country_id', TRUE),
+                            'id_country' => $this->input->post('id_country', TRUE),
                             'latitude' => $this->input->post('latitude_' . $i, TRUE),
                             'longitude' => $this->input->post('longitude_' . $i, TRUE),
                             'created_date' => $date,
                             'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
                             'is_delete' => IS_NOT_DELETED_STATUS
                         );
-                        echo 'in_place_data';
-                        pr($in_place_data);
-//                    $place_id = $this->Common_model->master_insert($in_place_data);
-                        $place_id = 1;
+//                            echo 'in_place_data';
+//                            pr($in_place_data);
+//                            $place_id = 1;
+                        $place_id = $this->Common_model->master_save(tbl_place, $in_place_data);
 
                         $in_store_location_data = array(
                             'id_store' => $store_id,
                             'id_place' => $place_id,
                             'id_location' => $this->input->post('mall_' . $i, TRUE),
-                            'location_type' => STORE_LOCATION_TYPE,
+                            'location_type' => ($this->input->post('mall_' . $i, TRUE) == 0) ? STORE_LOCATION_TYPE : MALL_LOCATION_TYPE,
+                            'contact_number' => $this->input->post('telephone', TRUE),
                             'created_date' => $date,
                             'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
                             'is_delete' => IS_NOT_DELETED_STATUS
                         );
-                        echo 'in_store_location_data';
-                        pr($in_store_location_data);
-//                    $this->Common_model->master_insert($in_store_location_data);
+//                            echo 'in_store_location_data';
+//                            pr($in_store_location_data);
+                        $this->Common_model->master_save(tbl_store_location, $in_store_location_data);
                     }
                 }
+            }
 
-                if ($this->input->post('category_count', TRUE) > 0) {
-                    $category_count = $this->input->post('category_count', TRUE);
-                    for ($i = 0; $i < $category_count; $i++) {
+            if ($this->input->post('category_count', TRUE) > 0) {
+                $category_count = $this->input->post('category_count', TRUE);
+                for ($i = 0; $i < $category_count; $i++) {
+                    if ($this->input->post('category_' . $i, TRUE) > 0 && $this->input->post('sub_category_' . $i, TRUE) > 0) {
                         $in_category_data = array(
                             'id_store' => $store_id,
                             'id_category' => $this->input->post('category_' . $i, TRUE),
@@ -134,19 +150,78 @@ class Storeregistration
                             'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
                             'is_delete' => IS_NOT_DELETED_STATUS
                         );
-                        echo 'in_category_data';
-                        pr($in_category_data);
-//                    $this->Common_model->master_insert($in_category_data);
+//                        echo 'in_category_data';
+//                        pr($in_category_data);
+                        $this->Common_model->master_save(tbl_store_category, $in_category_data);
                     }
                 }
+            }
 
+            //Send verification Email for new user
+            if ($new_user_status == true) {
                 $verification_code = md5(time());
-                $reset_link = SITEURL . 'store-registration?account_verification=' . $verification_code;
+                $verification_link = SITEURL . 'account-verification?verification=' . $verification_code;
                 $subject = 'Complete your registration';
-//                $content = $this->Email_template_model->forgot_password_format($reset_link);
-//                $response = $this->Email_template_model->send_email(NULL, $user['email_id'], $subject, $content);
-//                account_verification_format();
-                die("end");
+                $content = $this->Email_template_model->account_verification_format($verification_link);
+                $response = $this->Email_template_model->send_email(NULL, $email_id, $subject, $content);
+
+//                $response = 'yes';
+                if (isset($response) && $response == 'yes') {
+
+                    $in_veri_data = array(
+                        'id_user' => $user_id,
+                        'verification_code' => $verification_code,
+                        'purpose' => VERIFICATION_ACCOUNT,
+                        'email_id' => $email_id,
+                        'link_url' => $verification_link,
+                        'status' => 0
+                    );
+                    $this->Common_model->master_save(tbl_verification, $in_veri_data);
+
+                    $this->session->set_flashdata('success_msg', 'Verification Email Sent. Please click on link in Email for Verification.');
+                    redirect('/');
+                } else {
+                    $this->session->set_flashdata('error_msg', 'Unable to send Email for Account Verification. Please try again later.');
+                    redirect('store-registration');
+                }
+            } else {
+                //to send email to Country Admin
+                $country_admin_data = array(
+                    'table' => tbl_country . ' country',
+                    'fields' => array('user.email_id'),
+                    'where' => array(
+                        'country.id_country' => $this->input->post('id_country', TRUE),
+                        'user.is_delete' => IS_NOT_DELETED_STATUS,
+                        'country.is_delete' => IS_NOT_DELETED_STATUS,
+                        'user.status' => ACTIVE_STATUS,
+                        'country.status' => ACTIVE_STATUS,
+                    ),
+                    'join' => array(
+                        array(
+                            'table' => tbl_user . ' as user',
+                            'condition' => 'user.id_user = country.id_users',
+                            'join' => 'left'
+                        )
+                    )
+                );
+
+                $country_admin_details = $this->Common_model->master_single_select($country_admin_data);
+
+                if (isset($country_admin_details) && sizeof($country_admin_details) > 0) {
+
+                    $country_admin_email_id = $country_admin_details['email_id'];
+                    $subject = 'Add new Store - ' . $this->input->post('store_name', TRUE);
+                    $content = '';
+                    $response = $this->Email_template_model->send_email(NULL, $country_admin_email_id, $subject, $content);
+
+                    if (isset($response) && $response == 'yes') {
+                        $this->session->set_flashdata('success_msg', 'Thank you for Your Store Registration. Please allow 1-2 business days for store activation.');
+                        redirect('/');
+                    } else {
+                        $this->session->set_flashdata('error_msg', 'Unable to send Email for Account Verification. Please try again later.');
+                        redirect('store-registration');
+                    }
+                }
             }
         }
 
@@ -206,6 +281,134 @@ class Storeregistration
 
         $load_data['mall_list'] = $mall_list;
         echo $this->load->view('Registration/mall', $load_data, TRUE);
+    }
+
+    /*
+     * Account Verification
+     */
+
+    function verification() {
+        $verification_code = $this->input->get('verification', TRUE);
+        if (isset($verification_code) && !empty($verification_code)) {
+            $verification_code_arr = array(
+                'table' => tbl_verification,
+                'where' => array(
+                    'verification_code' => $verification_code,
+                    'purpose' => VERIFICATION_ACCOUNT
+                )
+            );
+            $verified_data = $this->Common_model->master_single_select($verification_code_arr);
+            if (isset($verified_data) && sizeof($verified_data) > 0) {                
+                if ($verified_data['status'] == 0) {
+                    
+                    $user_id = $verified_data['id_user'];
+                    $user_arr = array(
+                        'table' => tbl_user . ' user',
+                        'fields' => array('user.status', 'place.id_country'),
+                        'where' => array('user.id_user' => $user_id),
+                        'join' => array(
+                            array(
+                                'table' => tbl_store . ' as store',
+                                'condition' => 'store.id_users = user.id_user',
+                                'join' => 'left'
+                            ),
+                            array(
+                                'table' => tbl_store_location . ' as store_location',
+                                'condition' => 'store_location.id_store = store.id_store',
+                                'join' => 'left'
+                            ),
+                            array(
+                                'table' => tbl_place . ' as place',
+                                'condition' => 'store_location.id_place = place.id_place',
+                                'join' => 'left'
+                            )
+                        )
+                    );
+                    $user = $this->Common_model->master_single_select($user_arr);
+
+                    if (isset($user) && sizeof($user) > 0) {
+                        
+                        if ($user['status'] == ACTIVE_USER_STATUS) {
+                            $this->session->set_flashdata('error_msg', 'Your Account is already verified.');
+                            redirect('/');
+                        } else {
+                            if ($user['status'] == NOT_VERIFIED_STATUS) {
+                                $date = date('Y-m-d h:i:s');
+                                $up_data = array('status' => ACTIVE_STATUS);
+                                $wh_data = array('id' => $user_id, 'status' => NOT_VERIFIED_STATUS);
+//                                $result = $this->Common_model->master_update(tbl_user, $up_data, $wh_data);
+
+                                $update_data = array('status' => 1, 'modified_date' => $date);
+                                $where = array(
+                                    'reset_code' => $verification_code,
+                                    'user_id' => $user_id,
+                                    'status' => 0
+                                );
+//                                $is_updated = $this->Common_model->master_update(tbl_verification, $update_data, $where);
+
+                                if ($result) {
+
+                                    //to send email to Country Admin
+                                    $country_admin_data = array(
+                                        'table' => tbl_country . ' country',
+                                        'fields' => array('user.email_id'),
+                                        'where' => array(
+                                            'country.id_country' => $user['id_country'],
+                                            'country.is_delete' => IS_NOT_DELETED_STATUS,
+                                            'country.status' => ACTIVE_STATUS
+                                        ),
+                                        'join' => array(
+                                            array(
+                                                'table' => tbl_user . ' as user',
+                                                'condition' => 'user.id_user = country.id_users',
+                                                'join' => 'left'
+                                            )
+                                        )
+                                    );
+
+                                    $country_admin_details = $this->Common_model->master_single_select($country_admin_data);
+
+                                    if (isset($country_admin_details) && sizeof($country_admin_details) > 0) {
+                                        
+                                        $country_admin_email_id = $country_admin_details['email_id'];
+                                        $subject = 'Add new Store - ' . $this->input->post('store_name', TRUE);
+                                        $content = '';
+                                        $response = $this->Email_template_model->send_email(NULL, $country_admin_email_id, $subject, $content);
+
+                                        if (isset($response) && $response == 'yes') {
+                                            $this->session->set_flashdata('success_msg', 'Thank you for Your Store Registration. Please allow 1-2 business days for store activation.');
+                                            redirect('/');
+                                        } else {
+                                            $this->session->set_flashdata('error_msg', 'Unable to send Email for Account Verification. Please try again later.');
+                                            redirect('store-registration');
+                                        }
+                                    }
+                                } else {
+                                    $message = 'Account Verification failed.';
+                                    $this->session->set_flashdata('error_msg', $message);
+                                }                                
+                            } else {
+                                $this->session->set_flashdata('error_msg', 'Invalid Request');                                
+                            }
+                            redirect('/');
+                        }
+                    } else {
+                        $this->session->set_flashdata('error_msg', 'Invalid User');
+                        redirect('/');
+                    }
+                } else {
+                    if ($verified_data['status'] == 1)
+                        $this->session->set_flashdata('error_msg', 'Your Account is already verified.');
+                    else
+                        $this->session->set_flashdata('error_msg', 'Invalid Request');
+
+                    redirect('/');
+                }
+            } else {
+                $this->session->set_flashdata('error_msg', 'Invalid Request');
+                redirect('/');
+            }
+        }
     }
 
 }

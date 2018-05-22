@@ -97,6 +97,7 @@ define('site_support_email', 'support@offerat.sale');
 define('site_info_email', 'info@offerat.sale');
 
 define('VERIFICATION_RESET_PASSWORD', 'reset_password');
+define('VERIFICATION_ACCOUNT', 'account_verification');
 
 
 define('tbl_country', 'country');
@@ -110,6 +111,7 @@ define('tbl_store_location', 'store_location');
 define('tbl_sub_category', 'sub_category');
 define('tbl_user', 'user');
 define('tbl_verification', 'verification');
+define('tbl_place', 'place');
 
 define('country_img_path', 'assets/images/country/');
 define('category_img_path', 'assets/images/category/');

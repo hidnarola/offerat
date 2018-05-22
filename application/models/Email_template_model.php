@@ -44,7 +44,7 @@ class Email_template_model
 
 
 <p>For help kindly contact our support on:</p>
-<p>' + site_support_email + '</p>
+<p>Email: ' . site_support_email . '</p>
 <p>Mob: +961 70 113 143</p>
 
 

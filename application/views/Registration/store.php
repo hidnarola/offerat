@@ -22,6 +22,26 @@
                     <div class="form_body_wrapper">
                         <div class="form_head"><h2>Add New Store</h2></div>
                         <div class="reg_wrapper">
+                            <?php if ($this->session->flashdata('error_msg')) { ?>
+                                <div class="alert alert-danger alert-styled-right alert-bordered">
+                                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span><span class="sr-only">Close</span></button>
+                                    <?php echo $this->session->flashdata('error_msg'); ?>
+                                </div>
+                            <?php } ?>
+
+                            <?php if (validation_errors()) { ?>
+                                <div class="alert alert-danger alert-styled-right alert-bordered">
+                                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span><span class="sr-only">Close</span></button>
+                                    <?php echo validation_errors(); ?>
+                                </div>
+                            <?php } ?>
+
+                            <?php if ($this->session->flashdata('success_msg')) { ?>
+                                <div class="alert alert-success alert-styled-right alert-arrow-right alert-bordered">
+                                    <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                                    <?php echo $this->session->flashdata('success_msg') ?>
+                                </div>
+                            <?php } ?>
                             <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
                                 <fieldset class="content-group">                                                
                                     <legend class="text-bold">Store Info.</legend>
@@ -64,51 +84,47 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="control-label col-lg-2">Telephone <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="telephone" id="telephone"  placeholder="Telephone Number"  required="required">
+                                        <label class="control-label col-lg-2">Contact Number <span class="text-danger">*</span></label>
+                                        <div class="width_50 first">
+                                            <input type="text" class="form-control" name="telephone" id="telephone"  placeholder="Contact Number"  required="required">
+                                        </div>
                                     </div>
-
-                                    <div class="form-group">
-                                        <label class="control-label col-lg-2">Mobile <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="mobile" id="mobile"  placeholder="Mobile Number"  required="required">
-                                    </div>
-
 
                                     <legend class="text-bold">Business</legend>
 
-                                    <div class="">
-                                        <div class="add_desc">
-                                            <button id="category_selection_btn" type="button" class="pull-right margin-left-5 btn-primary labeled"><b><i class="icon-plus22"></i></b>Add More Category</button>
-                                        </div>
-                                        <div class="row">
-                                            <div id="category_selection_wrapper" class="clear-float row_add_div">  
-                                                <div id="category_selection_block_0" data-clone-number="0" class="clear-float">
-                                                    <div class="col-md-12 business_category_div">
-                                                        <div class="col-md-5">
-                                                            <div class="form-group">
-                                                                <div>
-                                                                    <select id="category_0" name="category_0" class="select category_selection_dropdown form-control" data-clone-number="0" required="required">
-                                                                        <option value="">Select Category</option>
-                                                                        <?php foreach ($category_list as $list) { ?>
-                                                                            <option value="<?php echo $list['id_category']; ?>"><?php echo $list['category_name']; ?></option>
-                                                                        <?php } ?>
-                                                                    </select>
-                                                                </div>
+
+                                    <div class="add_desc">
+                                        <button id="category_selection_btn" type="button" class="pull-right margin-left-5 btn-primary labeled"><b><i class="icon-plus22"></i></b>Add More Category</button>
+                                    </div>
+                                    <div class="row">
+                                        <div id="category_selection_wrapper" class="clear-float row_add_div">  
+                                            <div id="category_selection_block_0" data-clone-number="0" class="clear-float">
+                                                <div class="col-md-12 business_category_div">
+                                                    <div class="col-md-5">
+                                                        <div class="form-group">
+                                                            <div>
+                                                                <select id="category_0" name="category_0" class="select category_selection_dropdown form-control" data-clone-number="0" required="required">
+                                                                    <option value="">Select Category</option>
+                                                                    <?php foreach ($category_list as $list) { ?>
+                                                                        <option value="<?php echo $list['id_category']; ?>"><?php echo $list['category_name']; ?></option>
+                                                                    <?php } ?>
+                                                                </select>
                                                             </div>
                                                         </div>
+                                                    </div>
 
-                                                        <div class="col-md-5">
-                                                            <select id="sub_category_0" name="sub_category_0" class="select sub_category_selection_dropdown form-control" data-clone-number="0" required="required">
-                                                                <option value="">Select Sub Category</option>
-                                                            </select>
-                                                        </div>
+                                                    <div class="col-md-5">
+                                                        <select id="sub_category_0" name="sub_category_0" class="select sub_category_selection_dropdown form-control" data-clone-number="0" required="required">
+                                                            <option value="">Select Sub Category</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <legend class="text-bold">Location</legend>
+
+                                    <legend class="text-bold">Branches</legend>
 
                                     <div class="form-group">
                                         <label class="control-label col-lg-2">Country <span class="text-danger">*</span></label>
@@ -124,7 +140,7 @@
                                         </div>
                                         <div class="width_50 last">
                                             <div class="add_desc">
-                                                <button id="mall_selection_btn" type="button" class="pull-right margin-left-5 btn-primary labeled"><b><i class="icon-plus22"></i></b>Add More Location</button>
+                                                <button id="mall_selection_btn" type="button" class="pull-right margin-left-5 btn-primary labeled"><b><i class="icon-plus22"></i></b>Add More Branch</button>
                                             </div> 
                                         </div>
                                     </div> 
@@ -153,7 +169,7 @@
                                                         $longitude = '';
                                                         ?>                                                            
                                                         <div>
-                                                            <input data-latitude="latitude_0" data-longitude="longitude_0" required="required" data-type="googleMap" data-zoom="10" data-lat="<?php echo $latitude; ?>" data-lang="<?php echo $longitude; ?>" data-input_id="google_input_0" id="google_input_0" type="text" class="form-control" name="address_0"  placeholder="Address Line 1" aria-required="true" value="" data-clone-number="0" />
+                                                            <input data-latitude="latitude_0" data-longitude="longitude_0" required="required" data-type="googleMap" data-zoom="10" data-lat="<?php echo $latitude; ?>" data-lang="<?php echo $longitude; ?>" data-input_id="google_input_0" id="google_input_0" type="text" class="form-control" name="address_0"  placeholder="Location" aria-required="true" value="" data-clone-number="0" />
                                                             <input data-type="latitude_0" type="hidden" name="latitude_0" value="<?php echo $latitude; ?>">
                                                             <input data-type="longitude_0" type="hidden" name="longitude_0" value="<?php echo $longitude; ?>">
                                                             <input type="hidden" class="form-control" name="street1_0" id="street1_0" value="">                                                            
@@ -222,9 +238,7 @@
 </html>
 <script src="//maps.googleapis.com/maps/api/js?key=<?php echo GOOGLE_API_KEY ?>&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
-    $(function () {
-        jqueryValidate();
-    });
+
 
     var categoryCloneNumber = 1;
     var mallCloneNumber = 1;
@@ -238,6 +252,23 @@
     });
 
     $(document).on('click', '#mall_selection_btn', function () {
+
+        var countryId = $(document).find('#id_country').val();
+
+//        $(document).find('.mall_selection_dropdown').val(0);
+//        $(document).find('.mall_selection_dropdown').trigger('change');
+
+        $.ajax({
+            method: 'POST',
+            url: '<?php echo SITEURL; ?>storeregistration/show_mall',
+            data: {country_id: countryId},
+            success: function (response) {
+                $(document).find('.mall_selection_dropdown').html(response);
+            },
+            error: function () {
+                console.log("error occur");
+            },
+        });
         var html = generatemallSelectionBlock(mallCloneNumber);
         $(document).find('#mall_selection_wrapper').append(html);
         mallCloneNumber++;
@@ -310,9 +341,9 @@
         html += '</div>';
 
         html += '<div class="col-md-7">';
-        html += '<input data-latitude="latitude_' + cloneNumber + '" data-longitude="longitude_' + cloneNumber + '" required="required" data-type="googleMap" data-zoom="10" data-lat="<?php echo $latitude; ?>" data-lang="<?php echo $longitude; ?>" data-input_id="google_input_' + cloneNumber + '" id="google_input_' + cloneNumber + '" type="text" class="form-control" name="address_' + cloneNumber + '"  placeholder="Address Line 1" aria-required="true" value="" data-clone-number="' + cloneNumber + '">';
-        html += '<input data-type="latitude_' + cloneNumber + '" type="hidden" name="latitude[]" value="<?php echo $latitude; ?>">';
-        html += '<input data-type="longitude_' + cloneNumber + '" type="hidden" name="longitude[]" value="<?php echo $longitude; ?>">';
+        html += '<input data-latitude="latitude_' + cloneNumber + '" data-longitude="longitude_' + cloneNumber + '" required="required" data-type="googleMap" data-zoom="10" data-lat="<?php echo $latitude; ?>" data-lang="<?php echo $longitude; ?>" data-input_id="google_input_' + cloneNumber + '" id="google_input_' + cloneNumber + '" type="text" class="form-control" name="address_' + cloneNumber + '"  placeholder="Location" aria-required="true" value="" data-clone-number="' + cloneNumber + '">';
+        html += '<input data-type="latitude_' + cloneNumber + '" type="hidden" name="latitude_' + cloneNumber + '" value="<?php echo $latitude; ?>">';
+        html += '<input data-type="longitude_' + cloneNumber + '" type="hidden" name="longitude_' + cloneNumber + '" value="<?php echo $longitude; ?>">';
         html += '<input type="hidden" class="form-control" name="street1_' + cloneNumber + '" id="street1_' + cloneNumber + '" value="">';
         html += '<input type="hidden" class="form-control" name="city_' + cloneNumber + '" id="city_' + cloneNumber + '" value="">';
         html += '<input type="hidden" class="form-control" name="state_' + cloneNumber + '" id="state_' + cloneNumber + '" value="">';
@@ -354,6 +385,10 @@
     $(document).on('change', '#id_country', function () {
         var sender = $(this);
         var countryId = sender.val();
+
+        $(document).find('.mall_selection_dropdown').val(0);
+        $(document).find('.mall_selection_dropdown').trigger('change');
+
         $.ajax({
             method: 'POST',
             url: '<?php echo SITEURL; ?>storeregistration/show_mall',
@@ -365,7 +400,6 @@
                 console.log("error occur");
             },
         });
-
     });
     function reInitializeSelect2Control() {
         $('.select').select2({
@@ -377,7 +411,6 @@
         $('[data-type="googleMap"]').each(function () {
             var currentThis = $(this);
             var control_number = currentThis.data('clone-number');
-            console.log(currentThis);
             var input = document.getElementById($(this).data('input_id'));
             var searchBox = new google.maps.places.SearchBox(input);
             searchBox.addListener('places_changed', function () {
@@ -425,7 +458,6 @@
 
     function fillInAddressComponents(place, componentForm, formFields, control_number) {
         place = place[0];
-        console.log(place.place_id);
         for (var field in formFields) {
             document.getElementById(formFields[field] + '_' + control_number).value = '';
         }
@@ -451,16 +483,8 @@
         }
     }
 
-    //    function googleLocationIssuePrompt() {
-    //        var title = 'Information';
-    //        var data_message = 'Your entered address is not able to track on google so please enter your address manually.';
-    //        $(document).find('#title_info').html(title);
-    //        $(document).find('#info_message').html(data_message);
-    //        $(document).find("#alert_info").modal('show');
-    //    }
-
     $(document).ready(function () {
+        jqueryValidate();
         $(document).on('change', '[data-type="reloadMap"]', initAutocomplete);
     });
-
 </script>

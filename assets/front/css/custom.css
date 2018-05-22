@@ -6,7 +6,7 @@
 .form-group input {/*background: #eee; */color: #666;border-radius: 4px;}
 .panel_reg legend {font-size: 14px;padding-top: 0px;}
 .panel_reg label {font-size: 14px;}
-.form-horizontal .form-group {padding-left: 120px;margin-left: 0;margin-right: 0;}
+.form-horizontal .form-group {padding-left: 130px;margin-left: 0;margin-right: 0;}
 .form-horizontal .form-group label.control-label {position: absolute;left: 0;top: 0;width: auto;}
 .reg_wrapper {max-width: 450px;margin: 0 auto;}
 .width_50 {float: left;width: 50%;padding: 0 15px;}
@@ -26,7 +26,7 @@
 .btn_center button {float: none !important;}
 .reg_wrapper fieldset.content-group {margin-bottom: 0px !important;}
 .form-group.checkbox_reg {padding: 0;text-align: left;}
-
+div#category_selection_wrapper {padding-bottom: 15px;}
 /** media start herer ***/
 
 
