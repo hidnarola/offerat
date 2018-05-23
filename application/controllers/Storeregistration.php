@@ -475,7 +475,7 @@ class Storeregistration
             $validation_rules[] = array(
                 'field' => 'telephone',
                 'label' => 'Contact Number',
-                'rules' => 'trim|required|min_length[2]|max_length[15]|htmlentities'
+                'rules' => 'trim|required|min_length[6]|max_length[15]|htmlentities'
             );
         }
         if (in_array('category_0', $validate_fields)) {

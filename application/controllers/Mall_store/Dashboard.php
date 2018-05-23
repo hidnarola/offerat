@@ -18,7 +18,7 @@ class Dashboard
         $this->data['page'] = 'dashboard_page';
         $this->data['page_header'] = 'Dashboard';
 
-        $this->template->load('user', 'Superadmin/Dashboard/index', $this->data);
+        $this->template->load('user', 'Mall_store/Dashboard/index', $this->data);
     }
 
 }

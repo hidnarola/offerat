@@ -1,7 +1,6 @@
 <?php
 $uri_segment_1 = strtolower($this->uri->segment(1));
-$session_key = $uri_segment_1 . '_user';
-$logged_user = $this->session->userdata($session_key);
+$logged_user_type = $this->session->userdata('loggedin_user_type');
 ?>
 <div class="sidebar sidebar-main">
     <div class="sidebar-content">
@@ -10,7 +9,18 @@ $logged_user = $this->session->userdata($session_key);
             <div class="category-content">
                 <div class="media">                    
                     <div class="media-body">
-                        <a href="/dashboard"><span class="media-heading text-semibold"><i class="fa fa-user fa-3x margin-right-10"></i> <?php echo isset($logged_user) ? $logged_user['first_name'] . ' ' . $logged_user['last_name'] : 'Super Admin Panel' ?></span></a>
+                        <a href="/dashboard">
+                            <span class="media-heading text-semibold"><i class="fa fa-user fa-3x margin-right-10"></i> 
+                                <?php
+                                if ($logged_user_type == SUPER_ADMIN_USER_TYPE)
+                                    echo 'Super Admin';
+                                elseif ($logged_user_type == COUNTRY_ADMIN_USER_TYPE)
+                                    echo 'Country Admin';
+                                elseif ($logged_user_type == SUPER_ADMIN_USER_TYPE)
+                                    echo 'Mall / Store';
+                                ?>                            
+                            </span>
+                        </a>
                     </div>
                 </div>
             </div>

@@ -57,10 +57,10 @@ $route['reset-password'] = 'login/reset_password';
 //change password
 $route['change-password'] = 'login/change_password';
 
-//Super Admin Routes
-//Dashboard
-$route['super-admin/dashboard'] = 'superadmin/dashboard';
 
+
+//Super Admin Routes =================================
+$route['super-admin/dashboard'] = 'superadmin/dashboard';
 //Country
 $route['super-admin/country'] = 'superadmin/country';
 $route['super-admin/country/save'] = 'superadmin/country/save';
@@ -75,6 +75,14 @@ $route['super-admin/category/save/(:any)'] = 'superadmin/category/save/$1';
 $route['super-admin/sub-category/(:any)'] = 'superadmin/subcategory/index/$1';
 $route['super-admin/sub-category/save/(:any)'] = 'superadmin/subcategory/save/$1';
 $route['super-admin/sub-category/save/(:any)/(:any)'] = 'superadmin/subcategory/save/$1/$2';
+
+
+//Country Admin Routes =================================
+$route['country-admin/dashboard'] = 'countryadmin/dashboard';
+
+//Country Mall Store User Routes =================================
+$route['mall-store-user/dashboard'] = 'mall_store/dashboard';
+
 
 //Store Registration
 $route['store-registration'] = 'storeregistration/index';

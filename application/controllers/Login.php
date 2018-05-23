@@ -34,12 +34,19 @@ class Login
                 );
 
                 $user = $this->Common_model->master_single_select($select_data_user);
-
+                
                 if (isset($user) && sizeof($user) > 0) {
 
-                    if ($user['status'] == ACTIVE_STATUS && $user['is_delete'] == IS_NOT_DELETED_STATUS && $user['user_type'] == SUPER_ADMIN_USER_TYPE) {
+                    if ($user['status'] == ACTIVE_STATUS && $user['is_delete'] == IS_NOT_DELETED_STATUS && in_array($user['user_type'], array(SUPER_ADMIN_USER_TYPE, COUNTRY_ADMIN_USER_TYPE, STORE_OR_MALL_ADMIN_USER_TYPE))) {
                         //manage session
-                        $session_user_type = SUPER_ADMIN_USER_TYPE;
+                        $session_user_type = '';
+                        if($user['user_type'] == SUPER_ADMIN_USER_TYPE)
+                            $session_user_type = SUPER_ADMIN_USER_TYPE;
+                        elseif($user['user_type'] == COUNTRY_ADMIN_USER_TYPE)
+                            $session_user_type = COUNTRY_ADMIN_USER_TYPE;
+                        elseif($user['user_type'] == STORE_OR_MALL_ADMIN_USER_TYPE)
+                            $session_user_type = STORE_OR_MALL_ADMIN_USER_TYPE;
+
                         $session_user_data = array(
                             'user_id' => $user['id_user'],
                             'email_id' => $user['email_id']
@@ -55,7 +62,14 @@ class Login
                         $this->Common_model->master_update(tbl_user, $update_user_data, $where_user_data);
 
                         $this->session->set_flashdata('success_msg', 'Welcome Super Admin');
-                        redirect('super-admin/dashboard');
+                        
+                        if($user['user_type'] == SUPER_ADMIN_USER_TYPE)
+                            redirect('super-admin/dashboard');
+                        elseif($user['user_type'] == COUNTRY_ADMIN_USER_TYPE)
+                            redirect('country-admin/dashboard');
+                        elseif($user['user_type'] == STORE_OR_MALL_ADMIN_USER_TYPE)
+                            redirect('mall-store-user/dashboard');
+                        
                     } elseif ($user['status'] != ACTIVE_STATUS) {
                         $this->session->set_flashdata('error_msg', 'Your Account is inactivated.');
                         redirect('login');
@@ -186,7 +200,7 @@ class Login
                 )
             );
             $verified_data = $this->Common_model->master_single_select($reset_code_arr);
-            
+
             if (isset($verified_data) && sizeof($verified_data) > 0) {
 
                 $user_arr = array(
@@ -279,9 +293,5 @@ class Login
         $this->form_validation->set_rules($validation_rules);
         return $this->form_validation->run();
     }
-    
-    function hello() {
-        echo $this->Email_template_model->forgot_password_format("hello");
-        
-    }
+
 }

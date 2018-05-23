@@ -35,5 +35,7 @@
 
         <!--Checkbox Start-->
         <script type="text/javascript" src="assets/user/js/plugins/forms/styling/uniform.min.js"></script>
+        
+        <script type="text/javascript" src="assets/user/js/custom.js"></script>
     </body>
 </html>
