@@ -48,17 +48,17 @@
 
                                     <div class="form-group">                                        
                                         <label class="control-label col-lg-2">Store Name <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="store_name" id="store_name"  placeholder="Store Name" required="required">                                        
+                                        <input type="text" class="form-control" name="store_name" id="store_name"  placeholder="Store Name" required="required" value="<?php echo set_value('store_name'); ?>">
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-lg-2">Website URL</label>
-                                        <input type="text" class="form-control" name="website" id="website"  placeholder="Website URL">
+                                        <input type="text" class="form-control" name="website" id="website"  placeholder="Website URL" value="<?php echo set_value('website'); ?>">
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-lg-2">Facebook Page</label>
-                                        <input type="text" class="form-control" name="facebook_page" id="facebook_page"  placeholder="Facebook Page URL">
+                                        <input type="text" class="form-control" name="facebook_page" id="facebook_page"  placeholder="Facebook Page URL" value="<?php echo set_value('facebook_page'); ?>">
                                     </div>
 
                                     <div class="form-group">
@@ -71,22 +71,22 @@
                                     <div class="form-group">
                                         <label class="control-label col-lg-2">Contact Person <span class="text-danger">*</span></label>
                                         <div class="width_50 first">
-                                            <input type="text" class="form-control" name="first_name" id="first_name"  placeholder="First Name"  required="required">
+                                            <input type="text" class="form-control" name="first_name" id="first_name"  placeholder="First Name"  required="required" value="<?php echo set_value('first_name'); ?>">
                                         </div>
                                         <div class="width_50 last">
-                                            <input type="text" class="form-control" name="last_name" id="last_name"  placeholder="Last Name"  required="required">
+                                            <input type="text" class="form-control" name="last_name" id="last_name"  placeholder="Last Name"  required="required" value="<?php echo set_value('last_name'); ?>">
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-lg-2">Email Address <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="email_id" id="email_id"  placeholder="Email Address"  required="required">
+                                        <input type="email" class="form-control" name="email_id" id="email_id"  placeholder="Email Address"  required="required" value="<?php echo set_value('email_id'); ?>">
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-lg-2">Contact Number <span class="text-danger">*</span></label>
                                         <div class="width_50 first">
-                                            <input type="text" class="form-control" name="telephone" id="telephone"  placeholder="Contact Number"  required="required">
+                                            <input type="number" class="form-control" name="telephone" id="telephone"  placeholder="Contact Number"  required="required" value="<?php echo set_value('telephone'); ?>">
                                         </div>
                                     </div>
 
@@ -187,7 +187,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group checkbox_reg">
-                                        <input type="checkbox" class="styled-checkbox-1" name="send_verification_email" required="required"/>
+                                        <input type="checkbox" class="styled-checkbox-1" name="terms_condition" required="required"/>
                                         <span class="text-size-mini">  Yes, I agree with <a href="javascript:void(0);" target="_blank"><span>Terms And Conditions</span></a></span>
                                         <label id="send_verification_email-error" class="validation-error-label" for="send_verification_email"></label>
                                     </div>
@@ -254,9 +254,6 @@
     $(document).on('click', '#mall_selection_btn', function () {
 
         var countryId = $(document).find('#id_country').val();
-
-//        $(document).find('.mall_selection_dropdown').val(0);
-//        $(document).find('.mall_selection_dropdown').trigger('change');
 
         $.ajax({
             method: 'POST',
@@ -368,12 +365,15 @@
         var cloneNumber = $(this).data('cloneNumber');
         var sender = $(this);
         var categoryId = sender.val();
+        
+        $(document).find('#sub_category_' + cloneNumber).val("");
+        $(document).find('#sub_category_' + cloneNumber).trigger('change');
+        
         $.ajax({
             method: 'POST',
             url: '<?php echo SITEURL; ?>storeregistration/show_sub_category',
             data: {category_id: categoryId},
-            success: function (response) {
-                $(document).find('#sub_category_' + cloneNumber).val(0).trigger("change");
+            success: function (response) {                
                 $(document).find('#sub_category_' + cloneNumber).html(response);
             },
             error: function () {

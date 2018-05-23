@@ -140,7 +140,7 @@ class Email_template_model
         if ($this->email->send())
             $success = 'yes';
         else {
-            $success = 'No';
+            $success = $this->email->print_debugger(array('headers'));
 //            $data['error'] = $this->email->print_debugger(array('headers'));
         }
 
