@@ -61,6 +61,9 @@ $route['change-password'] = 'login/change_password';
 
 //Super Admin Routes =================================
 $route['super-admin/dashboard'] = 'superadmin/dashboard';
+$route['super-admin/change-password'] = 'common/change_password';
+$route['super-admin/change-information'] = 'common/change_information';
+
 //Country
 $route['super-admin/country'] = 'superadmin/country';
 $route['super-admin/country/save'] = 'superadmin/country/save';
@@ -79,9 +82,14 @@ $route['super-admin/sub-category/save/(:any)/(:any)'] = 'superadmin/subcategory/
 
 //Country Admin Routes =================================
 $route['country-admin/dashboard'] = 'countryadmin/dashboard';
+$route['country-admin/change-password'] = 'common/change_password';
+$route['country-admin/change-information'] = 'common/change_information';
+
 
 //Country Mall Store User Routes =================================
 $route['mall-store-user/dashboard'] = 'mall_store/dashboard';
+$route['mall-store-user/change-password'] = 'common/change_password';
+$route['mall-store-user/change-information'] = 'common/change_information';
 
 
 //Store Registration

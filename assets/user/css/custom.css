@@ -55,6 +55,7 @@ ul.ap_store_btn li:last-child {margin-bottom: 0;}
 .form_login_wrapper h5 {margin: 0;padding: 0;font-size: 24px;color: #F14150;font-family: muli;line-height: normal;font-weight: 500;text-align: center;}
 a.f_pass {margin-top: 10px;float: left;font-size: 14px;color: #F14150;}
 .form_login_wrapper .login-form .form-group button {width: auto;margin: 0 auto;float: right;border: 0;background: #F14150;font-size: 14px;font-family: muli;}
+.logout-btn{margin-top: 6px;}
 
 /** media start here ***/
 

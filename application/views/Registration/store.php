@@ -242,7 +242,6 @@
 
     var categoryCloneNumber = 1;
     var mallCloneNumber = 1;
-
     $(document).on('click', '#category_selection_btn', function () {
         var html = generatecategorySelectionBlock(categoryCloneNumber);
         $(document).find('#category_selection_wrapper').append(html);
@@ -250,11 +249,9 @@
         reInitializeSelect2Control();
         $(document).find('#category_count').val(categoryCloneNumber);
     });
-
     $(document).on('click', '#mall_selection_btn', function () {
 
         var countryId = $(document).find('#id_country').val();
-
         $.ajax({
             method: 'POST',
             url: '<?php echo SITEURL; ?>storeregistration/show_mall',
@@ -273,19 +270,16 @@
         initAutocomplete();
         $(document).find('#location_count').val(mallCloneNumber);
     });
-
     $(document).on('click', '.category_selection_remove_btn', function () {
         var cloneNumber = $(this).data('cloneNumber');
         $(document).find('#category_selection_block_' + cloneNumber).remove();
         $(document).find('#category_count').val(cloneNumber);
     });
-
     $(document).on('click', '.mall_selection_remove_btn', function () {
         var cloneNumber = $(this).data('cloneNumber');
         $(document).find('#mall_selection_block_' + cloneNumber).remove();
         $(document).find('#location_count').val(cloneNumber);
     });
-
     function generatecategorySelectionBlock(cloneNumber) {
         var html = '';
         html += '<div id="category_selection_block_' + cloneNumber + '" data-clone-number="' + cloneNumber + '" class="clear-float">';
@@ -302,13 +296,11 @@
         html += '</div>';
         html += '</div>';
         html += '</div>';
-
         html += '<div class="col-md-5">';
         html += '<select id="sub_category_' + cloneNumber + '" name="sub_category_' + cloneNumber + '" class="select sub_category_selection_dropdown form-control" data-clone-number="' + cloneNumber + '" required="required">';
         html += '<option value="">Select Subcategory</option>';
         html += '</select>';
         html += '</div>';
-
         html += '<div class="col-md-1 product-selection-remove-prod-btn">';
         html += '<div class="form-group">';
         html += '<div>';
@@ -318,7 +310,6 @@
         html += '</div>';
         html += '</div>';
         html += '</div>';
-
         return html;
     }
 
@@ -336,7 +327,6 @@
         html += '</div>';
         html += '</div>';
         html += '</div>';
-
         html += '<div class="col-md-7">';
         html += '<input data-latitude="latitude_' + cloneNumber + '" data-longitude="longitude_' + cloneNumber + '" required="required" data-type="googleMap" data-zoom="10" data-lat="<?php echo $latitude; ?>" data-lang="<?php echo $longitude; ?>" data-input_id="google_input_' + cloneNumber + '" id="google_input_' + cloneNumber + '" type="text" class="form-control" name="address_' + cloneNumber + '"  placeholder="Location" aria-required="true" value="" data-clone-number="' + cloneNumber + '">';
         html += '<input data-type="latitude_' + cloneNumber + '" type="hidden" name="latitude_' + cloneNumber + '" value="<?php echo $latitude; ?>">';
@@ -347,7 +337,6 @@
         html += '<input type="hidden" class="form-control" name="zip_code_' + cloneNumber + '" id="zip_code_' + cloneNumber + '" value="">';
         html += '<input type="hidden" class="form-control" name="place_id_' + cloneNumber + '" id="place_id_' + cloneNumber + '" value="">';
         html += '</div>';
-
         html += '<div class="col-md-1 product-selection-remove-prod-btn">';
         html += '<div class="form-group">';
         html += '<div>';
@@ -357,7 +346,6 @@
         html += '</div>';
         html += '</div>';
         html += '</div>';
-
         return html;
     }
 
@@ -365,15 +353,13 @@
         var cloneNumber = $(this).data('cloneNumber');
         var sender = $(this);
         var categoryId = sender.val();
-        
         $(document).find('#sub_category_' + cloneNumber).val("");
         $(document).find('#sub_category_' + cloneNumber).trigger('change');
-        
         $.ajax({
             method: 'POST',
             url: '<?php echo SITEURL; ?>storeregistration/show_sub_category',
             data: {category_id: categoryId},
-            success: function (response) {                
+            success: function (response) {
                 $(document).find('#sub_category_' + cloneNumber).html(response);
             },
             error: function () {
@@ -381,14 +367,11 @@
             },
         });
     });
-
     $(document).on('change', '#id_country', function () {
         var sender = $(this);
         var countryId = sender.val();
-
         $(document).find('.mall_selection_dropdown').val(0);
         $(document).find('.mall_selection_dropdown').trigger('change');
-
         $.ajax({
             method: 'POST',
             url: '<?php echo SITEURL; ?>storeregistration/show_mall',
@@ -437,16 +420,16 @@
 
     function fillInAddress(place, control_number) {
         var componentForm = {
-            street_number: 'long_name',
-            route: 'long_name',
+//            street_number: 'long_name',
+//            route: 'long_name',
             sublocality_level_1: 'long_name',
             locality: 'long_name',
             administrative_area_level_1: 'short_name',
             postal_code: 'short_name',
         };
         var formFields = {
-            street_number: 'google_input',
-            route: 'google_input',
+//            street_number: 'google_input',
+//            route: 'google_input',
             sublocality_level_1: 'street1',
             locality: 'city',
             administrative_area_level_1: 'state',
@@ -458,6 +441,7 @@
 
     function fillInAddressComponents(place, componentForm, formFields, control_number) {
         place = place[0];
+//        console.log(place);
         for (var field in formFields) {
             document.getElementById(formFields[field] + '_' + control_number).value = '';
         }
@@ -466,7 +450,6 @@
         if (typeof place.address_components != 'undefined') {
             for (var i = 0; i < place.address_components.length; i++) {
                 var addressType = place.address_components[i].types[0];
-
                 if (formFields[addressType]) {
                     var val = place.address_components[i][componentForm[addressType]];
                     if (addressType === 'street_number' || addressType === 'route') {
