@@ -84,12 +84,18 @@ $route['super-admin/sub-category/save/(:any)/(:any)'] = 'superadmin/subcategory/
 $route['country-admin/dashboard'] = 'countryadmin/dashboard';
 $route['country-admin/change-password'] = 'common/change_password';
 $route['country-admin/change-information'] = 'common/change_information';
+$route['country-admin/notifications'] = 'common/notifications';
+$route['country-admin/notifications/save'] = 'common/notifications/save';
+$route['country-admin/notifications/save/(:any)'] = 'common/notifications/save/$1';
 
 
 //Country Mall Store User Routes =================================
 $route['mall-store-user/dashboard'] = 'mall_store/dashboard';
 $route['mall-store-user/change-password'] = 'common/change_password';
 $route['mall-store-user/change-information'] = 'common/change_information';
+$route['mall-store-user/notifications'] = 'common/notifications';
+$route['mall-store-user/notifications/save'] = 'common/notifications/save';
+$route['mall-store-user/notifications/save/(:any)'] = 'common/notifications/save/$1';
 
 
 //Store Registration
@@ -97,7 +103,7 @@ $route['store-registration'] = 'storeregistration/index';
 //Store user account verification
 $route['account-verification'] = 'storeregistration/verification';
 
-
+$route['email-change-verify'] = 'login/change_verify';
 
 
 

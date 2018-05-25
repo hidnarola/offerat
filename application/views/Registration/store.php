@@ -118,6 +118,13 @@
                                                             <option value="">Select Sub Category</option>
                                                         </select>
                                                     </div>
+                                                    <div class="col-md-1 product-selection-remove-prod-btn">
+                                                        <div class="form-group">
+                                                            <div>
+                                                                <button type="button" class="btn btn-danger btn-icon category_selection_remove_btn" data-clone-number="0"><i class="icon-cross3"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -180,6 +187,12 @@
 
                                                             <span class="message_note"></span>
                                                             <span class="message_error1" id="address_error"></span>
+                                                        </div>                                                        
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-1 product-selection-remove-prod-btn">
+                                                    <div class="form-group"><div><button type="button" class="btn btn-danger btn-icon mall_selection_remove_btn" data-clone-number="0"><i class="icon-cross3"></i></button>
                                                         </div>
                                                     </div>
                                                 </div>

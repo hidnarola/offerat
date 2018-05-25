@@ -138,7 +138,7 @@ class Login
                 if (isset($user) && sizeof($user) > 0) {
 
                     if ($user['status'] == ACTIVE_STATUS && $user['is_delete'] == IS_NOT_DELETED_STATUS && in_array($user['user_type'], array(SUPER_ADMIN_USER_TYPE, COUNTRY_ADMIN_USER_TYPE, STORE_OR_MALL_ADMIN_USER_TYPE))) {
-                        
+
                         $reset_code = md5(time());
                         $reset_link = SITEURL . 'change-password?reset_code=' . $reset_code;
                         $subject = 'Forgot Password on Offerat';
@@ -291,6 +291,70 @@ class Login
 
         $this->form_validation->set_rules($validation_rules);
         return $this->form_validation->run();
+    }
+
+    function change_verify() {
+
+        $verification_code = $this->input->get('verification', TRUE);
+
+        if (isset($verification_code) && !empty($verification_code)) {
+
+            $verification_code_arr = array(
+                'table' => tbl_verification,
+                'where' => array(
+                    'verification_code' => $verification_code,
+                    'status' => 0,
+                    'purpose' => VERIFICATION_CHANGE_EMAIL
+                )
+            );
+            $verified_data = $this->Common_model->master_single_select($verification_code_arr);
+            if (isset($verified_data) && sizeof($verified_data) > 0) {
+
+                $date = date('Y-m-d h:i:s');
+                $user_id = $verified_data['id_user'];
+                $user_arr = array(
+                    'table' => tbl_user,                    
+                    'where' => array(
+                        'id_user' => $user_id,
+                        'user_type' => STORE_OR_MALL_ADMIN_USER_TYPE,
+                        'status' => ACTIVE_STATUS
+                    )
+                );
+                $user = $this->Common_model->master_single_select($user_arr);
+
+                if (isset($user) && sizeof($user) > 0) {
+
+                    $up_data = array('email_id' => $verified_data['email_id']);
+                    $wh_data = array('id_user' => $user_id);
+                    $result = $this->Common_model->master_update(tbl_user, $up_data, $wh_data);
+
+                    //update Verification
+                    $update_data = array('status' => 1, 'modified_date' => $date);
+                    $where = array(
+                        'verification_code' => $verification_code,
+                        'id_user' => $user_id,
+                        'status' => 0,
+                        'purpose' => VERIFICATION_CHANGE_EMAIL
+                    );
+                    $is_updated = $this->Common_model->master_update(tbl_verification, $update_data, $where);
+
+                    if ($is_updated) {
+                        $message = 'Email updated successfully!';
+                        $this->session->set_flashdata('success_msg', $message);
+                    } else {
+                        $message = 'Email not updated';
+                        $this->session->set_flashdata('error_msg', $message);
+                    }
+                    redirect('login');
+                } else {
+                    $this->session->set_flashdata('error_msg', 'Invalid Request');
+                    redirect('/');
+                }
+            } else {
+                $this->session->set_flashdata('error_msg', 'Invalid Request');
+                redirect('/');
+            }
+        }
     }
 
 }

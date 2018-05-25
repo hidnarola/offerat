@@ -356,7 +356,7 @@ class Storeregistration
                                 $up_data = array('status' => ACTIVE_STATUS);
                                 $wh_data = array('id_user' => $user_id, 'status' => NOT_VERIFIED_STATUS);
                                 $result = $this->Common_model->master_update(tbl_user, $up_data, $wh_data);
-                                $result = 1;
+
                                 $update_data = array('status' => 1, 'modified_date' => $date);
                                 $where = array(
                                     'verification_code' => $verification_code,
@@ -460,7 +460,7 @@ class Storeregistration
         if (in_array('last_name', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'last_name',
-                'label' => 'Last Name',
+                'label' => 'Contact Person\'s Last Name',
                 'rules' => 'trim|required|min_length[2]|max_length[150]|htmlentities'
             );
         }
@@ -475,21 +475,7 @@ class Storeregistration
             $validation_rules[] = array(
                 'field' => 'telephone',
                 'label' => 'Contact Number',
-                'rules' => 'trim|required|min_length[6]|max_length[15]|htmlentities'
-            );
-        }
-        if (in_array('category_0', $validate_fields)) {
-            $validation_rules[] = array(
-                'field' => 'category_0',
-                'label' => 'Category',
-                'rules' => 'trim|required|htmlentities'
-            );
-        }
-        if (in_array('sub_category_0', $validate_fields)) {
-            $validation_rules[] = array(
-                'field' => 'sub_category_0',
-                'label' => 'Sub Category',
-                'rules' => 'trim|required|htmlentities'
+                'rules' => 'trim|required|alpha_numeric|min_length[8]|max_length[20]|htmlentities'
             );
         }
         if (in_array('id_country', $validate_fields)) {
@@ -497,13 +483,6 @@ class Storeregistration
                 'field' => 'id_country',
                 'label' => 'Country',
                 'rules' => 'trim|required|htmlentities'
-            );
-        }
-        if (in_array('address_0', $validate_fields)) {
-            $validation_rules[] = array(
-                'field' => 'address_0',
-                'label' => 'Store Branch Location',
-                'rules' => 'trim|required|min_length[2]|max_length[255]|htmlentities'
             );
         }
         if (in_array('terms_condition', $validate_fields)) {

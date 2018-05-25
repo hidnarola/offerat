@@ -40,7 +40,7 @@ class Email_template_model
 
 <p>Click the following link to complete the registration process.</p>
 
-<p><a href="{varification_link}">{varification_link}</a></p>
+<p><a href="{verification_link}">{verification_link}</a></p>
 
 
 <p>For help kindly contact our support on:</p>
@@ -51,7 +51,32 @@ class Email_template_model
 <p>Best Regards,</p>
 <p>Offerat Team</p>';
 
-        $find = array("{varification_link}");
+        $find = array("{verification_link}");
+        $replace = array($link);
+        $message = str_replace($find, $replace, $message_text);
+
+        return $this->mail_format($message);
+    }
+
+    public function email_change_verification($link = NULL) {
+
+        $message_text = '<p>Hi!</p>
+
+<p>You&#39;ve requested to change your email.&nbsp; 
+
+<p>Click the following link to verify your email address.<p>
+
+<p><a href="{verification_link}">{verification_link}</a></p>
+
+<p>For help kindly contact our support on:</p>
+<p>Email: ' . site_support_email . '</p>
+<p>Mob: +961 70 113 143</p>
+<p>&nbsp;</p>
+
+<p>Best Regards,</p>
+<p>Offerat Team</p>';
+
+        $find = array("{verification_link}");
         $replace = array($link);
         $message = str_replace($find, $replace, $message_text);
 

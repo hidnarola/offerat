@@ -19,7 +19,7 @@
                                         <div class="form-group">
                                             <label>First Name <span class="text-danger">*</span></label>
                                             <div>
-                                                <input type="text" class="form-control" placeholder="First Name" name="first_name" id="first_name" required="required" value="<?php echo $user_details['first_name']; ?>">
+                                                <input type="text" class="form-control" placeholder="First Name" name="first_name" id="first_name" required="required" value="">
                                             </div>
                                         </div>
                                     </div>
@@ -27,7 +27,7 @@
                                         <div class="form-group">
                                             <label>Last Name <span class="text-danger">*</span></label>
                                             <div>
-                                                <input type="text" class="form-control" placeholder="Last Name" name="last_name" id="last_name" required="required" value="<?php echo $user_details['last_name']; ?>">
+                                                <input type="text" class="form-control" placeholder="Last Name" name="last_name" id="last_name" required="required" value="">
                                             </div>
                                         </div>
                                     </div>
@@ -39,7 +39,7 @@
                                         <div class="form-group">
                                             <label>Email Address <span class="text-danger">*</span></label>
                                             <div>
-                                                <input type="email" class="form-control" placeholder="Email Address" name="email_id" id="email_id" required="required" value="<?php echo $user_details['email_id']; ?>">
+                                                <input type="email" class="form-control" placeholder="Email Address" name="email_id" id="email_id" required="required" value="">
                                             </div>
                                         </div>
                                     </div>
@@ -47,14 +47,14 @@
                                         <div class="form-group">
                                             <label>Mobile Number <span class="text-danger">*</span></label>
                                             <div>
-                                                <input type="text" class="form-control" placeholder="Mobile Number" name="mobile" id="mobile" required="required" value="<?php echo $user_details['mobile']; ?>">
+                                                <input type="text" class="form-control" placeholder="Mobile Number" name="mobile" id="mobile" required="required" value="">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="text-right">
-                                <a href="<?php echo $back_url; ?>" class="btn bg-grey-300 btn-labeled"><b><i class="icon-arrow-left13"></i></b>Dashboard</a>
+                                <a href="" class="btn bg-grey-300 btn-labeled"><b><i class="icon-arrow-left13"></i></b>Dashboard</a>
                                 <button type="submit" class="btn bg-teal btn-labeled btn-labeled-right"><b><i class="icon-arrow-right14"></i></b>Save</button>
                             </div>
                         </div>
@@ -69,16 +69,4 @@
     $(function () {
         jqueryValidate();
     });
-
-<?php
-$credetials = $this->session->userdata('change_credetials');
-if (isset($credetials) && !empty($credetials)) {
-    ?>
-        var msg = '<?php echo $credetials; ?>';
-        $(document).find('#alert_message').text(msg);
-        $(document).find('#message_popup').modal('show');
-    <?php
-    $this->session->unset_userdata('change_credetials');
-}
-?>
 </script>

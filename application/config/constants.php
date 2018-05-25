@@ -98,6 +98,7 @@ define('site_info_email', 'info@offerat.sale');
 
 define('VERIFICATION_RESET_PASSWORD', 'reset_password');
 define('VERIFICATION_ACCOUNT', 'account_verification');
+define('VERIFICATION_CHANGE_EMAIL', 'email_change_verification');
 
 
 define('tbl_country', 'country');
@@ -132,3 +133,5 @@ define('STORE_LOCATION_TYPE', 1);
 
 define('IS_NOT_DELETED_STATUS', 0);
 define('IS_DELETED_STATUS', 1);
+
+define('SUCCESS_CHANGE_EMAIL', 'Verification Email Sent. Please click on link in Email to complete the verification, Email change will take effect after verification.');

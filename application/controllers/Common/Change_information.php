@@ -8,9 +8,21 @@ class Change_information
     public function __construct() {
         parent::__construct();
         $this->load->model('Common_model', '', TRUE);
+        $this->load->model('Email_template_model', '', TRUE);
     }
 
     public function index() {
+
+        $user_id = $this->loggedin_user_data['user_id'];
+        $user_type = $this->loggedin_user_type;
+
+        $user_data = array(
+            'table' => tbl_user,
+            'where' => array('id_user' => $user_id)
+        );
+        $user_details = $this->Common_model->master_single_select($user_data);
+        $this->data['user_details'] = $user_details;
+        $exist_email_id = $user_details['email_id'];
 
         $user_dashboard = '';
         if ($this->loggedin_user_type == SUPER_ADMIN_USER_TYPE) {
@@ -27,25 +39,64 @@ class Change_information
         if ($this->input->post()) {
 
             $validate_fields = array(
-                'current_password',
-                'new_password',
-                'confirm_password',
+                'first_name',
+                'last_name',
+                'email_id',
+                'mobile'
             );
             if ($this->_validate_form($validate_fields)) {
 
-                $logged_in_user_id = $this->loggedin_user_data['user_id'];
-
                 $date = date('Y-m-d h:i:s');
                 $data = array(
-                    'password' => md5($this->input->post('new_password', TRUE)),
+                    'first_name' => $this->input->post('first_name', TRUE),
+                    'last_name' => $this->input->post('last_name', TRUE),
+                    'mobile' => $this->input->post('mobile', TRUE),
                     'modified_date' => $date
                 );
-                $where = array('id_user' => $logged_in_user_id);
+                if ($user_type != STORE_OR_MALL_ADMIN_USER_TYPE)
+                    $data['email_id'] = $this->input->post('email_id', TRUE);
+
+                $where = array('id_user' => $user_id);
+
                 $is_updated = $this->Common_model->master_update(tbl_user, $data, $where);
                 if ($is_updated) {
-                    $this->session->set_flashdata('success_msg', "Password Updated Successfully.");
+
+                    if ($user_type == STORE_OR_MALL_ADMIN_USER_TYPE && $exist_email_id != $this->input->post('email_id', TRUE)) {
+                        //send verification email
+
+                        $update_data = array('status' => 1);
+                        $where = array(
+                            'id_user' => $user_id,
+                            'purpose' => VERIFICATION_CHANGE_EMAIL,
+                            'status' => 0
+                        );
+                        $is_updated = $this->Common_model->master_update(tbl_verification, $update_data, $where);
+
+                        $verification_code = md5(time());
+                        $verification_link = SITEURL . 'email-change-verify?verification=' . $verification_code;
+                        $subject = 'Email Change Verification';
+                        $content = $this->Email_template_model->email_change_verification($verification_link);                        
+                        $response = $this->Email_template_model->send_email(NULL, $this->input->post('email_id', TRUE), $subject, $content);
+
+                        if (isset($response) && $response == 'yes') {
+
+                            $in_veri_data = array(
+                                'id_user' => $user_id,
+                                'purpose' => VERIFICATION_CHANGE_EMAIL,
+                                'email_id' => $this->input->post('email_id', TRUE),
+                                'status' => 0,
+                                'verification_code' => $verification_code
+                            );
+
+                            $this->Common_model->master_save(tbl_verification, $in_veri_data);
+
+                            $this->session->set_userdata('change_credetials', SUCCESS_CHANGE_EMAIL);
+                        }
+                    }
+
+                    $this->session->set_flashdata('success_msg', "Information Updated Successfully.");
                 } else {
-                    $this->session->set_flashdata('error_msg', "Password not updated.");
+                    $this->session->set_flashdata('error_msg', "Information not updated.");
                 }
                 redirect($change_password_url);
             }
@@ -75,7 +126,7 @@ class Change_information
         if (in_array('last_name', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'last_name',
-                'label' => 'Last Name',
+                'label' => 'Contact Person\'s Last Name',
                 'rules' => 'trim|required|min_length[2]|max_length[150]|htmlentities'
             );
         }
@@ -83,19 +134,42 @@ class Change_information
             $validation_rules[] = array(
                 'field' => 'email_id',
                 'label' => 'Email Address',
-                'rules' => 'trim|required|min_length[2]|max_length[100]|htmlentities'
+                'rules' => 'trim|required|min_length[2]|max_length[100]|htmlentities|callback_validate_email_id'
             );
         }
         if (in_array('mobile', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'mobile',
                 'label' => 'Mobile Number',
-                'rules' => 'trim|required|min_length[6]|max_length[15]|htmlentities'
+                'rules' => 'trim|required|alpha_numeric|min_length[8]|max_length[20]|htmlentities'
             );
         }
 
         $this->form_validation->set_rules($validation_rules);
         return $this->form_validation->run();
+    }
+
+    function validate_email_id($email) {
+
+        $user_id = $this->loggedin_user_data['user_id'];
+
+        $user_data = array(
+            'table' => tbl_user,
+            'where' => array(
+                'email_id' => $email,
+                'is_delete' => IS_NOT_DELETED_STATUS
+            ),
+            'where_with_sign' => array('id_user !=' . $user_id)
+        );
+
+        $user_exist = $this->Common_model->master_single_select($user_data);
+
+        if (isset($user_exist) && sizeof($user_exist) > 0) {
+            $this->form_validation->set_message('validate_email_id', 'Email Address already exist.');
+            return FALSE;
+        } else {
+            return TRUe;
+        }
     }
 
 }
