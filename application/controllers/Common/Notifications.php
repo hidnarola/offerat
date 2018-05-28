@@ -19,7 +19,7 @@ class Notifications
         );
 
 //        $this->data['back_url'] = $user_dashboard;
-        $this->template->load('user', 'Common/Notifications/form', $this->data);
+        $this->template->load('user', 'Common/Notifications/index', $this->data);
     }
 
     public function save($id = null) {

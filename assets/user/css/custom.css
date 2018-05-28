@@ -42,6 +42,7 @@ ul.ap_store_btn li:last-child {margin-bottom: 0;}
 .dt-first-col-mw.nipl_table_listing .dataTables_scrollBody table td:first-child{min-width: 100px;}
 .svg_logo {text-align: center;}
 .svg_logo svg {width: 450px;height: auto;margin: 0 auto;}
+.display-none{display:none;}
 
 
 /** login page ***/

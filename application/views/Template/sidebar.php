@@ -43,14 +43,14 @@ $logged_user_type = $this->session->userdata('loggedin_user_type');
                 <?php } elseif ($logged_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
                     <ul class="navigation navigation-main navigation-accordion">
                         <li <?php echo ($controller === 'dashboard') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/dashboard"><i class="icon-home4"></i> <span>Dashboard</span></a></li>
-                        <li <?php echo ($controller === 'notifications') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications"><i class="icon-home4"></i> <span>Notifications</span></a></li>
+                        <li <?php echo ($controller === 'notifications') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications"><i class="icon-bell2"></i> <span>Notifications</span></a></li>
                         <li <?php echo ($controller === 'change-password') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-password"><i class="icon-lock2"></i> <span>Change Password</span></a></li>
                         <li <?php echo ($controller === 'change-information') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-information"><i class="fa fa-user"></i> <span>Change Information</span></a></li>
                     </ul>
                 <?php } elseif ($logged_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) { ?>
                     <ul class="navigation navigation-main navigation-accordion">
                         <li <?php echo ($controller === 'dashboard') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/dashboard"><i class="icon-home4"></i> <span>Dashboard</span></a></li>
-                        <li <?php echo ($controller === 'notifications') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications"><i class="icon-home4"></i> <span>Notifications</span></a></li>
+                        <li <?php echo ($controller === 'notifications') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications"><i class="icon-bell2"></i> <span>Notifications</span></a></li>
                         <li <?php echo ($controller === 'change-password') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-password"><i class="icon-lock2"></i> <span>Change Password</span></a></li>
                         <li <?php echo ($controller === 'change-information') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-information"><i class="fa fa-user"></i> <span>Change Information</span></a></li>
                     </ul>

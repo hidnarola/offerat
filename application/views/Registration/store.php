@@ -86,7 +86,7 @@
                                     <div class="form-group">
                                         <label class="control-label col-lg-2">Contact Number <span class="text-danger">*</span></label>
                                         <div class="width_50 first">
-                                            <input type="number" class="form-control" name="telephone" id="telephone"  placeholder="Contact Number"  required="required" value="<?php echo set_value('telephone'); ?>">
+                                            <input type="text" class="form-control" name="telephone" id="telephone"  placeholder="Contact Number"  required="required" value="<?php echo set_value('telephone'); ?>">
                                         </div>
                                     </div>
 
@@ -114,7 +114,7 @@
                                                     </div>
 
                                                     <div class="col-md-5">
-                                                        <select id="sub_category_0" name="sub_category_0" class="select sub_category_selection_dropdown form-control" data-clone-number="0" required="required">
+                                                        <select id="sub_category_0" name="sub_category_0" class="select sub_category_selection_dropdown form-control" data-clone-number="0">
                                                             <option value="">Select Sub Category</option>
                                                         </select>
                                                     </div>
@@ -310,7 +310,7 @@
         html += '</div>';
         html += '</div>';
         html += '<div class="col-md-5">';
-        html += '<select id="sub_category_' + cloneNumber + '" name="sub_category_' + cloneNumber + '" class="select sub_category_selection_dropdown form-control" data-clone-number="' + cloneNumber + '" required="required">';
+        html += '<select id="sub_category_' + cloneNumber + '" name="sub_category_' + cloneNumber + '" class="select sub_category_selection_dropdown form-control" data-clone-number="' + cloneNumber + '">';
         html += '<option value="">Select Subcategory</option>';
         html += '</select>';
         html += '</div>';

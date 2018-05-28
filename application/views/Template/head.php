@@ -17,13 +17,13 @@
 <link href="https://fonts.googleapis.com/css?family=Muli:300,400,600,700,800,900" rel="stylesheet">
 <!-- /global stylesheets -->
 
-
 <!-- Core JS files -->
 <script type="text/javascript" src="assets/user/js/plugins/loaders/pace.min.js"></script>
 <script type="text/javascript" src="assets/user/js/core/libraries/jquery.min.js"></script>
 <script type="text/javascript" src="assets/user/js/core/libraries/bootstrap.min.js"></script>
 <script type="text/javascript" src="assets/user/js/plugins/loaders/blockui.min.js"></script>
 <!-- /core JS files -->
+
 <script type="text/javascript">
     var base_url = '<?php echo SITEURL; ?>';
 

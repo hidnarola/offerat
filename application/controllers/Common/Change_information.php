@@ -141,7 +141,7 @@ class Change_information
             $validation_rules[] = array(
                 'field' => 'mobile',
                 'label' => 'Mobile Number',
-                'rules' => 'trim|required|alpha_numeric|min_length[8]|max_length[20]|htmlentities'
+                'rules' => 'trim|required|min_length[8]|max_length[20]|htmlentities'
             );
         }
 

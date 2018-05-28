@@ -23,10 +23,7 @@ class Storeregistration
                 'last_name',
                 'email_id',
                 'telephone',
-                'category_0',
-                'sub_category_0',
                 'id_country',
-                'address_0',
                 'terms_condition'
             );
 
@@ -158,7 +155,7 @@ class Storeregistration
 
                 $category_count = $this->input->post('category_count', TRUE);
                 for ($i = 0; $i <= $category_count; $i++) {
-                    if ($this->input->post('category_' . $i, TRUE) > 0 && $this->input->post('sub_category_' . $i, TRUE) > 0) {
+                    if ($this->input->post('category_' . $i, TRUE) > 0) {
                         $in_category_data = array(
                             'id_store' => $store_id,
                             'id_category' => $this->input->post('category_' . $i, TRUE),
@@ -475,7 +472,7 @@ class Storeregistration
             $validation_rules[] = array(
                 'field' => 'telephone',
                 'label' => 'Contact Number',
-                'rules' => 'trim|required|alpha_numeric|min_length[8]|max_length[20]|htmlentities'
+                'rules' => 'trim|required|min_length[8]|max_length[20]|htmlentities'
             );
         }
         if (in_array('id_country', $validate_fields)) {

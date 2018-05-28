@@ -139,6 +139,7 @@
 
             <!--Date Picker Start-->
             <script type="text/javascript" src="assets/user/js/plugins/ui/moment/moment.min.js"></script>
+            <script type="text/javascript" src="assets/user/js/plugins/pickers/anytime.min.js"></script>
             <script type="text/javascript" src="assets/user/js/plugins/pickers/pickadate/picker.js"></script>
             <script type="text/javascript" src="assets/user/js/plugins/pickers/pickadate/picker.date.js"></script>
             <script type="text/javascript" src="assets/user/js/plugins/pickers/daterangepicker.js"></script>
