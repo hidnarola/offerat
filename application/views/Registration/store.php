@@ -276,14 +276,14 @@
                     mallCloneNumber++;
 
                     reInitializeSelect2Control();
-//    initAutocomplete();
                     $(document).find('#location_count').val(mallCloneNumber);
 
                     if (results[0]) {
                         var currect_char = addMarker(event.latLng, map);
-                        var latitude = results[0].geometry.location.lat();
-                        var longitude = results[0].geometry.location.lng();
-                        var place = results[0];
+                        console.log("=>" + currect_char);
+//                        var latitude = results[0].geometry.location.lat();
+//                        var longitude = results[0].geometry.location.lng();
+//                        var place = results[0];
                         fillInAddress(results, currect_char);
                     }
                 }
@@ -330,7 +330,7 @@
         place = place[0];
         console.log(place);
         for (var field in formFields) {
-//            document.getElementById(formFields[field] + '_' + control_number).value = '';
+            document.getElementById(formFields[field] + '_' + control_number).value = '';
         }
         // Get each component of the address from the place details
         // and fill the corresponding field on the form.
@@ -342,12 +342,12 @@
                     if (addressType === 'street_number' || addressType === 'route') {
                         document.getElementById(formFields[addressType] + '_' + control_number).value += ' ' + val;
                     } else if (addressType !== 'locality') {
-                        console.log(addressType);
+//                        console.log('=' + control_number);
                         document.getElementById(formFields[addressType] + '_' + control_number).value = val;
                     }
 
                     if (place.place_id != '') {
-                        console.log(place.place_id);
+//                        console.log(place.place_id);
                         document.getElementById('place_id_' + control_number).value = place.place_id;
                     }
                 }

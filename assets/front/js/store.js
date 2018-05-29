@@ -4,7 +4,7 @@ $(document).ready(function () {
 });
 
 var categoryCloneNumber = 1;
-var mallCloneNumber = 1;
+var mallCloneNumber = 0;
 
 $(document).on('click', '#category_selection_btn', function () {
     var html = generatecategorySelectionBlock(categoryCloneNumber);
