@@ -13,7 +13,7 @@
 .width_50.first {padding-left: 0;}
 .width_50.last {padding-right: 0;}
 .panel.panel-flat.panel_reg {background: #f4f4f4;}
-.reg_wrapper {max-width: 600px;margin: 0px auto;padding: 25px;background: #fff;}
+.reg_wrapper {max-width: 100%;margin: 0px auto;padding: 25px;background: #fff;}
 .panel.panel-flat.panel_reg {background: #f4f4f4;}
 .business_category_div .form-group {padding: 0;margin-bottom: 0;}
 .panel_top a svg {width: 200px;height: auto;margin: 0 auto;}
@@ -28,7 +28,7 @@
 .form-group.checkbox_reg {padding: 0;text-align: left;}
 div#category_selection_wrapper {padding-bottom: 15px;}
 /** media start herer ***/
-
+#map-canvas {height: 600px;margin: 0px;padding: 0px;}
 
 @media (min-width:768px) and (max-width:991px){
     .add_desc {display: inline-block;text-align: right;width: 100%;padding: 0 15px;}

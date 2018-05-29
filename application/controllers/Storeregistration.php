@@ -242,7 +242,8 @@ class Storeregistration
             }
         }
         $this->data['title'] = $this->data['page_header'] = 'Store Registration';
-
+        $this->data['sub_header'] = 'Add New Store';
+        
         $select_category = array(
             'table' => tbl_category,
             'where' => array('status' => ACTIVE_STATUS),
@@ -256,7 +257,7 @@ class Storeregistration
         );
         $this->data['country_list'] = $this->Common_model->master_select($select_country);
 
-        $this->load->view('Registration/store', $this->data);
+        $this->template->load('front', 'Registration/store', $this->data);
     }
 
     /**

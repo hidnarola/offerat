@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <?php
-        $this->load->view('Template/head');
+        $this->load->view('Template/Userpanel/head');
         ?>
         <!-- Core JS files -->
         <!-- /Core JS files -->
@@ -16,7 +16,7 @@
 
             <!-- Main navbar -->
             <?php
-            $this->load->view('Template/navbar');
+            $this->load->view('Template/Userpanel/navbar');
             ?>
             <!-- /Main navbar -->
 
@@ -25,7 +25,7 @@
 
                     <!-- Main sidebar -->
                     <?php
-                    $this->load->view('Template/sidebar');
+                    $this->load->view('Template/Userpanel/sidebar');
                     ?>
                     <!-- /main sidebar -->
                     <div class="content-wrapper"> 
