@@ -1,3 +1,4 @@
+.display-none{display:none;}
 .business_category_div {padding-bottom: 10px;}
 .business_category_div:first-child{padding-top: 10px;}
 .panel_top {background: #F14150;padding: 20px;}
@@ -29,6 +30,7 @@
 div#category_selection_wrapper {padding-bottom: 15px;}
 /** media start herer ***/
 #map-canvas {height: 600px;margin: 0px;padding: 0px;}
+.location_label{text-transform: none;}
 
 @media (min-width:768px) and (max-width:991px){
     .add_desc {display: inline-block;text-align: right;width: 100%;padding: 0 15px;}

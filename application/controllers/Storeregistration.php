@@ -2,8 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Storeregistration
-        extends CI_Controller {
+class Storeregistration extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -19,6 +18,7 @@ class Storeregistration
                 'store_name',
                 'website',
                 'facebook_page',
+                'store_logo',
                 'first_name',
                 'last_name',
                 'email_id',
@@ -243,7 +243,7 @@ class Storeregistration
         }
         $this->data['title'] = $this->data['page_header'] = 'Store Registration';
         $this->data['sub_header'] = 'Add New Store';
-        
+
         $select_category = array(
             'table' => tbl_category,
             'where' => array('status' => ACTIVE_STATUS),
@@ -277,8 +277,8 @@ class Storeregistration
             'order_by' => array('sort_order' => 'ASC')
         );
         $sub_category_list = $this->Common_model->master_select($select_sub_category);
-
         $load_data['sub_category_list'] = $sub_category_list;
+
         echo $this->load->view('Registration/sub_category', $load_data, TRUE);
     }
 

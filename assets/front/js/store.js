@@ -50,34 +50,21 @@ $(document).on('change', '.category_selection_dropdown', function () {
         url: base_url + 'storeregistration/show_sub_category',
         data: {category_id: categoryId},
         success: function (response) {
-            $(document).find('#sub_category_' + cloneNumber).html(response);
+            console.log(typeof response + "==" + cloneNumber);
+            if (response != '') {
+                $(document).find('#sub_category_' + cloneNumber).html(response);
+                $(document).find('.sub_cat_section_' + cloneNumber).show();
+            }
+            else {
+                console.log("else part");
+                $(document).find('#sub_category_' + cloneNumber).html('');
+                $(document).find('.sub_cat_section_' + cloneNumber).hide();
+            }
         },
         error: function () {
             console.log("error occur");
         },
     });
-});
-
-$(document).on('click', '#mall_selection_btn', function () {
-
-    var countryId = $(document).find('#id_country').val();
-    $.ajax({
-        method: 'POST',
-        url: base_url + 'storeregistration/show_mall',
-        data: {country_id: countryId},
-        success: function (response) {
-            $(document).find('.mall_selection_dropdown').html(response);
-        },
-        error: function () {
-            console.log("error occur");
-        },
-    });
-    var html = generatemallSelectionBlock(mallCloneNumber);
-    $(document).find('#mall_selection_wrapper').append(html);
-    mallCloneNumber++;
-    reInitializeSelect2Control();
-//    initAutocomplete();
-    $(document).find('#location_count').val(mallCloneNumber);
 });
 
 $(document).on('click', '.category_selection_remove_btn', function () {
@@ -87,6 +74,17 @@ $(document).on('click', '.category_selection_remove_btn', function () {
 });
 $(document).on('click', '.mall_selection_remove_btn', function () {
     var cloneNumber = $(this).data('cloneNumber');
+    var character = $(this).attr('character');
     $(document).find('#mall_selection_block_' + cloneNumber).remove();
     $(document).find('#location_count').val(cloneNumber);
+
+    for (var i = 0; i < markers.length; i++) {
+        if (markers[i].label == character) {
+            //Remove the marker from Map                  
+            markers[i].setMap(null);
+            //Remove the marker from array.
+            markers.splice(i, 1);
+            return;
+        }
+    }
 });

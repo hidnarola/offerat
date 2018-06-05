@@ -18,7 +18,7 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-lg-2">Logo</label>
+            <label class="control-label col-lg-2">Logo <span class="text-danger">*</span></label>
             <input type="file" class="form-control file-input" name="store_logo" id="store_logo" required="required">
         </div>
 
@@ -69,8 +69,8 @@
                             </div>
                         </div>
 
-                        <div class="col-md-5">
-                            <select id="sub_category_0" name="sub_category_0" class="select sub_category_selection_dropdown form-control" data-clone-number="0">
+                        <div class="col-md-5 sub_cat_section_0">
+                            <select id="sub_category_0" name="sub_category_0" class="select sub_category_selection_dropdown form-control display-none" data-clone-number="0">
                                 <option value="">Select Sub Category</option>
                             </select>
                         </div>
@@ -101,59 +101,21 @@
                     </select>
                 <?php } ?>
             </div>
-            <div class="width_50 last">
-                <div class="add_desc">
-                    <button id="mall_selection_btn" type="button" class="pull-right margin-left-5 btn-primary labeled"><b><i class="icon-plus22"></i></b>Add More Branch</button>
-                </div> 
-            </div>
+
         </div> 
         <div id="mall_selection_wrapper" class="clear-float row_add_div">  
-            <div id="mall_selection_block_0" data-clone-number="0" class="clear-float">
+            <div class="clear-float">
                 <div class="col-md-6">
                     <div id="map-canvas"></div>
                 </div>
                 <div class="col-md-6 business_category_div">
-
-                    <!--                    <div class="col-md-1">
-                                            <div class="form-group">
-                                                <div>
-                                                    <select id="mall_0" name="mall_0" class="select mall_selection_dropdown form-control" data-clone-number="0" required="required">
-                                                        <option value="0">Only Shop</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
                     <?php
                     $latitude = '54.6960513';
                     $longitude = '-113.7297772';
-                    ?>
-                                            <div class="form-group">
-                    <?php
                     $latitude = '';
                     $longitude = '';
-                    ?>                                                            
-                                                <div>
-                                                    <input data-latitude="latitude_0" data-longitude="longitude_0" required="required" data-type="googleMap" data-zoom="10" data-lat="<?php echo $latitude; ?>" data-lang="<?php echo $longitude; ?>" data-input_id="google_input_0" id="google_input_0" type="text" class="form-control" name="address_0"  placeholder="Location" aria-required="true" value="" data-clone-number="0" />
-                                                    <input data-type="latitude_0" type="hidden" name="latitude_0" value="<?php echo $latitude; ?>">
-                                                    <input data-type="longitude_0" type="hidden" name="longitude_0" value="<?php echo $longitude; ?>">
-                                                    <input type="text" class="form-control" name="street1_0" id="street1_0" value="">                                                            
-                                                    <input type="text" class="form-control" name="city_0" id="city_0" value="">                                                            
-                                                    <input type="text" class="form-control" name="state_0" id="state_0" value="">                                                            
-                                                    <input type="text" class="form-control" name="zip_code_0" id="zip_code_0" value="">
-                                                    <input type="text" class="form-control" name="place_id_0" id="place_id_0" value="">
-                    
-                                                    <span class="message_note"></span>
-                                                    <span class="message_error1" id="address_error"></span>
-                                                </div>                                                        
-                                            </div>
-                                        </div>
-                    
-                                        <div class="col-md-1 product-selection-remove-prod-btn">
-                                            <div class="form-group"><div><button type="button" class="btn btn-danger btn-icon mall_selection_remove_btn" data-clone-number="0"><i class="icon-cross3"></i></button>
-                                                </div>
-                                            </div>
-                                        </div>-->
+                    ?>
+
                 </div>
             </div>
         </div>
@@ -188,7 +150,7 @@
         html += '</div>';
         html += '</div>';
         html += '</div>';
-        html += '<div class="col-md-5">';
+        html += '<div class="col-md-5 sub_cat_section_' + cloneNumber + '">';
         html += '<select id="sub_category_' + cloneNumber + '" name="sub_category_' + cloneNumber + '" class="select sub_category_selection_dropdown form-control" data-clone-number="' + cloneNumber + '">';
         html += '<option value="">Select Subcategory</option>';
         html += '</select>';
@@ -219,19 +181,22 @@
         html += '</div>';
         html += '</div>';
         html += '<div class="col-md-7">';
-        html += '<input data-latitude="latitude_' + cloneNumber + '" data-longitude="longitude_' + cloneNumber + '" required="required" data-type="googleMap" data-zoom="10" data-lat="<?php echo $latitude; ?>" data-lang="<?php echo $longitude; ?>" data-input_id="google_input_' + cloneNumber + '" id="google_input_' + cloneNumber + '" type="text" class="form-control" name="address_' + cloneNumber + '"  placeholder="Location" aria-required="true" value="" data-clone-number="' + cloneNumber + '">';
-        html += '<input data-type="latitude_' + cloneNumber + '" type="hidden" name="latitude_' + cloneNumber + '" value="<?php echo $latitude; ?>">';
-        html += '<input data-type="longitude_' + cloneNumber + '" type="hidden" name="longitude_' + cloneNumber + '" value="<?php echo $longitude; ?>">';
-        html += '<input type="text" class="form-control" name="street1_' + cloneNumber + '" id="street1_' + cloneNumber + '" value="">';
-        html += '<input type="text" class="form-control" name="city_' + cloneNumber + '" id="city_' + cloneNumber + '" value="">';
-        html += '<input type="text" class="form-control" name="state_' + cloneNumber + '" id="state_' + cloneNumber + '" value="">';
-        html += '<input type="text" class="form-control" name="zip_code_' + cloneNumber + '" id="zip_code_' + cloneNumber + '" value="">';
-        html += '<input type="text" class="form-control" name="place_id_' + cloneNumber + '" id="place_id_' + cloneNumber + '" value="">';
+        html += '<span class="label label-flat border-success text-brown-600 label-icon" id="location_letter_' + cloneNumber + '"></span>';
+        html += '<label class="label border-left-success label-striped location_label" id="location_' + cloneNumber + '"></label>';
+        html += '<input type="hidden" data-latitude="latitude_' + cloneNumber + '" data-longitude="longitude_' + cloneNumber + '" required="required" data-type="googleMap" data-zoom="10" data-lat="<?php echo $latitude; ?>" data-lang="<?php echo $longitude; ?>" data-input_id="google_input_' + cloneNumber + '" id="google_input_' + cloneNumber + '" type="text" class="form-control" name="address_' + cloneNumber + '"  placeholder="Location" aria-required="true" value="" data-clone-number="' + cloneNumber + '">';
+        html += '<input type="hidden" class="form-control" data-type="latitude_' + cloneNumber + '" name="latitude_' + cloneNumber + '" id="latitude_' + cloneNumber + '" value="<?php echo $latitude; ?>">';
+        html += '<input type="hidden" class="form-control" data-type="longitude_' + cloneNumber + '" name="longitude_' + cloneNumber + '" id="longitude_' + cloneNumber + '" value="<?php echo $longitude; ?>">';
+        html += '<input type="hidden" class="form-control" name="street_' + cloneNumber + '" id="street_' + cloneNumber + '" value="">';
+        html += '<input type="hidden" class="form-control" name="street1_' + cloneNumber + '" id="street1_' + cloneNumber + '" value="">';
+        html += '<input type="hidden" class="form-control" name="city_' + cloneNumber + '" id="city_' + cloneNumber + '" value="">';
+        html += '<input type="hidden" class="form-control" name="state_' + cloneNumber + '" id="state_' + cloneNumber + '" value="">';
+        html += '<input type="hidden" class="form-control" name="zip_code_' + cloneNumber + '" id="zip_code_' + cloneNumber + '" value="">';
+        html += '<input type="hidden" class="form-control" name="place_id_' + cloneNumber + '" id="place_id_' + cloneNumber + '" value="">';
         html += '</div>';
         html += '<div class="col-md-1 product-selection-remove-prod-btn">';
         html += '<div class="form-group">';
         html += '<div>';
-        html += '<button type="button" class="btn btn-danger btn-icon mall_selection_remove_btn" data-clone-number="' + cloneNumber + '"><i class="icon-cross3"></i></button>';
+        html += '<button type="button" class="btn btn-danger btn-icon mall_selection_remove_btn" id="mall_selection_remove_btn_' + cloneNumber + '" character="" data-clone-number="' + cloneNumber + '"><i class="icon-cross3"></i></button>';
         html += '</div>';
         html += '</div>';
         html += '</div>';
@@ -242,6 +207,7 @@
 
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     var labelIndex = 0;
+    var markers = [];
 
     function initMap() {
         var myLatlng = new google.maps.LatLng(-25.363, 131.044);
@@ -257,8 +223,6 @@
                 'latLng': event.latLng
             }, function (results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
-
-
                     var countryId = $(document).find('#id_country').val();
                     $.ajax({
                         method: 'POST',
@@ -280,7 +244,8 @@
 
                     if (results[0]) {
                         var currect_char = addMarker(event.latLng, map);
-                        console.log("=>" + currect_char);
+//                        console.log("=>" + currect_char);
+
 //                        var latitude = results[0].geometry.location.lat();
 //                        var longitude = results[0].geometry.location.lng();
 //                        var place = results[0];
@@ -300,6 +265,7 @@
                 label: current_character,
                 map: map
             });
+            markers.push(marker);
 //            return current_character + '-' + (labelIndex - 1);
             return labelIndex - 1;
         }
@@ -307,16 +273,16 @@
 
     function fillInAddress(place, control_number) {
         var componentForm = {
-//            street_number: 'long_name',
-//            route: 'long_name',
+            street_number: 'long_name',
+            route: 'long_name',
             sublocality_level_1: 'long_name',
             locality: 'long_name',
             administrative_area_level_1: 'short_name',
             postal_code: 'short_name',
         };
         var formFields = {
-//            street_number: 'google_input',
-//            route: 'google_input',
+            street_number: 'street',
+            route: 'street',
             sublocality_level_1: 'street1',
             locality: 'city',
             administrative_area_level_1: 'state',
@@ -328,7 +294,7 @@
 
     function fillInAddressComponents(place, componentForm, formFields, control_number) {
         place = place[0];
-        console.log(place);
+//        console.log(place);
         for (var field in formFields) {
             document.getElementById(formFields[field] + '_' + control_number).value = '';
         }
@@ -341,18 +307,24 @@
                     var val = place.address_components[i][componentForm[addressType]];
                     if (addressType === 'street_number' || addressType === 'route') {
                         document.getElementById(formFields[addressType] + '_' + control_number).value += ' ' + val;
-                    } else if (addressType !== 'locality') {
-//                        console.log('=' + control_number);
+                    } else {
                         document.getElementById(formFields[addressType] + '_' + control_number).value = val;
                     }
 
                     if (place.place_id != '') {
-//                        console.log(place.place_id);
                         document.getElementById('place_id_' + control_number).value = place.place_id;
                     }
                 }
             }
+            var current_character = labels[labelIndex % labels.length - 1];
+            $(document).find('#location_letter_' + control_number).text(current_character);
+            $(document).find('#mall_selection_remove_btn_' + control_number).attr('character', current_character);
+            $(document).find('#location_' + control_number).text(place.formatted_address);
+            document.getElementById('google_input_' + control_number).value = place.formatted_address;
+            document.getElementById('latitude_' + control_number).value = place.geometry.location.lat();
+            document.getElementById('longitude_' + control_number).value = place.geometry.location.lng();
         }
     }
+    $(document).find('.sub_cat_section_0').hide();
 </script>
-<!--<script src="https://maps.googleapis.com/maps/api/js?key=<?php // echo GOOGLE_API_KEY                          ?>&libraries=places&callback=initAutocomplete" async defer></script>-->
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=<?php // echo GOOGLE_API_KEY      ?>&libraries=places&callback=initAutocomplete" async defer></script>-->
