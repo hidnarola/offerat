@@ -1,48 +1,50 @@
 <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
     <fieldset class="content-group">                                                
         <legend class="text-bold">Store Info.</legend>
+        <div class="form_grp_inline">
+            <div class="form-group">                                        
+                <label class="control-label col-lg-2">Store Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="store_name" id="store_name"  placeholder="Store Name" required="required" value="<?php echo set_value('store_name'); ?>">
+            </div>
 
-        <div class="form-group">                                        
-            <label class="control-label col-lg-2">Store Name <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" name="store_name" id="store_name"  placeholder="Store Name" required="required" value="<?php echo set_value('store_name'); ?>">
-        </div>
+            <div class="form-group">
+                <label class="control-label col-lg-2">Website URL</label>
+                <input type="text" class="form-control" name="website" id="website"  placeholder="Website URL" value="<?php echo set_value('website'); ?>">
+            </div>
 
-        <div class="form-group">
-            <label class="control-label col-lg-2">Website URL</label>
-            <input type="text" class="form-control" name="website" id="website"  placeholder="Website URL" value="<?php echo set_value('website'); ?>">
-        </div>
+            <div class="form-group">
+                <label class="control-label col-lg-2">Facebook Page</label>
+                <input type="text" class="form-control" name="facebook_page" id="facebook_page"  placeholder="Facebook Page URL" value="<?php echo set_value('facebook_page'); ?>">
+            </div>
 
-        <div class="form-group">
-            <label class="control-label col-lg-2">Facebook Page</label>
-            <input type="text" class="form-control" name="facebook_page" id="facebook_page"  placeholder="Facebook Page URL" value="<?php echo set_value('facebook_page'); ?>">
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-lg-2">Logo <span class="text-danger">*</span></label>
-            <input type="file" class="form-control file-input" name="store_logo" id="store_logo" required="required">
+            <div class="form-group">
+                <label class="control-label col-lg-2">Logo <span class="text-danger">*</span></label>
+                <input type="file" class="form-control file-input" name="store_logo" id="store_logo" required="required">
+            </div>
         </div>
 
         <legend class="text-bold">Personal Info.</legend>
-
-        <div class="form-group">
-            <label class="control-label col-lg-2">Contact Person <span class="text-danger">*</span></label>
-            <div class="width_50 first">
-                <input type="text" class="form-control" name="first_name" id="first_name"  placeholder="First Name"  required="required" value="<?php echo set_value('first_name'); ?>">
+        <div class="form_grp_inline">
+            <div class="form-group">
+                <label class="control-label col-lg-2">Contact Person <span class="text-danger">*</span></label>
+                <div class="width_50 first">
+                    <input type="text" class="form-control" name="first_name" id="first_name"  placeholder="First Name"  required="required" value="<?php echo set_value('first_name'); ?>">
+                </div>
+                <div class="width_50 last">
+                    <input type="text" class="form-control" name="last_name" id="last_name"  placeholder="Last Name"  required="required" value="<?php echo set_value('last_name'); ?>">
+                </div>
             </div>
-            <div class="width_50 last">
-                <input type="text" class="form-control" name="last_name" id="last_name"  placeholder="Last Name"  required="required" value="<?php echo set_value('last_name'); ?>">
+
+            <div class="form-group">
+                <label class="control-label col-lg-2">Email Address <span class="text-danger">*</span></label>
+                <input type="email" class="form-control" name="email_id" id="email_id"  placeholder="Email Address"  required="required" value="<?php echo set_value('email_id'); ?>">
             </div>
-        </div>
 
-        <div class="form-group">
-            <label class="control-label col-lg-2">Email Address <span class="text-danger">*</span></label>
-            <input type="email" class="form-control" name="email_id" id="email_id"  placeholder="Email Address"  required="required" value="<?php echo set_value('email_id'); ?>">
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-lg-2">Contact Number <span class="text-danger">*</span></label>
-            <div class="width_50 first">
-                <input type="text" class="form-control" name="telephone" id="telephone"  placeholder="Contact Number"  required="required" value="<?php echo set_value('telephone'); ?>">
+            <div class="form-group">
+                <label class="control-label col-lg-2">Contact Number <span class="text-danger">*</span></label>
+                <div class="width_50 first">
+                    <input type="text" class="form-control" name="telephone" id="telephone"  placeholder="Contact Number"  required="required" value="<?php echo set_value('telephone'); ?>">
+                </div>
             </div>
         </div>
 
@@ -88,10 +90,10 @@
 
 
         <legend class="text-bold">Branches</legend>
+        <div class="col-lg-6 col_mobile_pad">
+            <div class="form-group">
+                <label class="control-label col-lg-2">Country <span class="text-danger">*</span></label>
 
-        <div class="form-group">
-            <label class="control-label col-lg-2">Country <span class="text-danger">*</span></label>
-            <div class="width_50 first">
                 <?php if (isset($country_list) && sizeof($country_list) > 0) { ?>
                     <select class="form-control" name="id_country" id="id_country" required="required">                                            
                         <option value="">Select Country</option>
@@ -100,15 +102,16 @@
                         <?php } ?>
                     </select>
                 <?php } ?>
-            </div>
 
-        </div> 
+
+            </div> 
+        </div>
         <div id="mall_selection_wrapper" class="clear-float row_add_div">  
             <div class="clear-float">
-                <div class="col-md-6">
+                <div class="col-md-12 map_div">
                     <div id="map-canvas"></div>
                 </div>
-                <div class="col-md-6 business_category_div">
+                <div class="col-md-6 business_location_div">
                     <?php
                     $latitude = '54.6960513';
                     $longitude = '-113.7297772';
@@ -170,8 +173,8 @@
     function generatemallSelectionBlock(cloneNumber) {
         var html = '';
         html += '<div id="mall_selection_block_' + cloneNumber + '" data-clone-number="' + cloneNumber + '" class="clear-float">';
-        html += '<div class="col-md-12 business_category_div">';
-        html += '<div class="col-md-4">';
+        html += '<div class="col-sm-12">';
+        html += '<div class="col-sm-4">';
         html += '<div class="form-group">';
         html += '<div>';
         html += '<select id="mall_' + cloneNumber + '" name="mall_' + cloneNumber + '" class="select mall_selection_dropdown form-control" data-clone-number="' + cloneNumber + '" required="required">';
@@ -180,7 +183,7 @@
         html += '</div>';
         html += '</div>';
         html += '</div>';
-        html += '<div class="col-md-7">';
+        html += '<div class="col-sm-7">';
         html += '<span class="label label-flat border-success text-brown-600 label-icon" id="location_letter_' + cloneNumber + '"></span>';
         html += '<label class="label border-left-success label-striped location_label" id="location_' + cloneNumber + '"></label>';
         html += '<input type="hidden" data-latitude="latitude_' + cloneNumber + '" data-longitude="longitude_' + cloneNumber + '" required="required" data-type="googleMap" data-zoom="10" data-lat="<?php echo $latitude; ?>" data-lang="<?php echo $longitude; ?>" data-input_id="google_input_' + cloneNumber + '" id="google_input_' + cloneNumber + '" type="text" class="form-control" name="address_' + cloneNumber + '"  placeholder="Location" aria-required="true" value="" data-clone-number="' + cloneNumber + '">';
@@ -193,7 +196,7 @@
         html += '<input type="hidden" class="form-control" name="zip_code_' + cloneNumber + '" id="zip_code_' + cloneNumber + '" value="">';
         html += '<input type="hidden" class="form-control" name="place_id_' + cloneNumber + '" id="place_id_' + cloneNumber + '" value="">';
         html += '</div>';
-        html += '<div class="col-md-1 product-selection-remove-prod-btn">';
+        html += '<div class="col-sm-1 product-selection-remove-prod-btn">';
         html += '<div class="form-group">';
         html += '<div>';
         html += '<button type="button" class="btn btn-danger btn-icon mall_selection_remove_btn" id="mall_selection_remove_btn_' + cloneNumber + '" character="" data-clone-number="' + cloneNumber + '"><i class="icon-cross3"></i></button>';
@@ -208,15 +211,53 @@
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     var labelIndex = 0;
     var markers = [];
-
+    var minZoomLevel = 5;
     function initMap() {
-        var myLatlng = new google.maps.LatLng(-25.363, 131.044);
+        var myLatlng = new google.maps.LatLng(20.593684, 78.96288);
         var myOptions = {
-            zoom: 13,
+            zoom: 5,
             center: myLatlng
         }
         var map = new google.maps.Map(document.getElementById('map-canvas'), myOptions);
         var geocoder = new google.maps.Geocoder();
+
+        var southWest = new google.maps.LatLng(12.97232, 77.59480);
+        var northEast = new google.maps.LatLng(12.89201, 77.58905);
+        // Bounds for North America
+        var strictBounds = new google.maps.LatLngBounds(southWest, northEast);
+
+        // Listen for the dragend event
+        google.maps.event.addListener(map, 'dragend', function () {
+            if (strictBounds.contains(map.getCenter()))
+                return;
+
+            // We're out of bounds - Move the map back within the bounds
+
+            var c = map.getCenter(),
+                    x = c.lng(),
+                    y = c.lat(),
+                    maxX = strictBounds.getNorthEast().lng(),
+                    maxY = strictBounds.getNorthEast().lat(),
+                    minX = strictBounds.getSouthWest().lng(),
+                    minY = strictBounds.getSouthWest().lat();
+
+            if (x < minX)
+                x = minX;
+            if (x > maxX)
+                x = maxX;
+            if (y < minY)
+                y = minY;
+            if (y > maxY)
+                y = maxY;
+
+            map.setCenter(new google.maps.LatLng(y, x));
+        });
+
+        // Limit the zoom level
+        google.maps.event.addListener(map, 'zoom_changed', function () {
+            if (map.getZoom() < minZoomLevel)
+                map.setZoom(minZoomLevel);
+        });
 
         google.maps.event.addListener(map, 'click', function (event) {
             geocoder.geocode({
@@ -236,7 +277,7 @@
                         },
                     });
                     var html = generatemallSelectionBlock(mallCloneNumber);
-                    $(document).find('#mall_selection_wrapper').append(html);
+                    $(document).find('.business_location_div').append(html);
                     mallCloneNumber++;
 
                     reInitializeSelect2Control();
@@ -244,13 +285,11 @@
 
                     if (results[0]) {
                         var currect_char = addMarker(event.latLng, map);
-//                        console.log("=>" + currect_char);
-
-//                        var latitude = results[0].geometry.location.lat();
-//                        var longitude = results[0].geometry.location.lng();
-//                        var place = results[0];
                         fillInAddress(results, currect_char);
                     }
+
+                    $(document).find('.map_div').addClass('col-md-6');
+                    $(document).find('.map_div').removeClass('col-md-12');
                 }
             });
         });
@@ -327,4 +366,4 @@
     }
     $(document).find('.sub_cat_section_0').hide();
 </script>
-<!--<script src="https://maps.googleapis.com/maps/api/js?key=<?php // echo GOOGLE_API_KEY      ?>&libraries=places&callback=initAutocomplete" async defer></script>-->
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=<?php // echo GOOGLE_API_KEY                   ?>&libraries=places&callback=initAutocomplete" async defer></script>-->

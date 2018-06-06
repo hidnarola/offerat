@@ -8,11 +8,10 @@
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
 <link href="assets/user/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
 <link href="assets/user/css/icons/fontawesome/styles.min.css" rel="stylesheet" type="text/css">
-<link href="assets/user/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="assets/front/css/bootstrap.css" rel="stylesheet" type="text/css">
 <link href="assets/user/css/core.css" rel="stylesheet" type="text/css">
 <link href="assets/user/css/components.css" rel="stylesheet" type="text/css">
 <link href="assets/user/css/colors.css" rel="stylesheet" type="text/css">
-<link href="assets/user/css/custom.css" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Muli:300,400,600,700,800,900" rel="stylesheet">
 <!-- /global stylesheets -->
 

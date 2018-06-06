@@ -1,4 +1,7 @@
 $(function () {
+
+    $('[data-toggle="tooltip"]').tooltip();
+
     $('.simpleDatePicker').pickadate({
         selectMonths: true,
         selectYears: 4,

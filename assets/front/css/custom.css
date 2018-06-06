@@ -14,7 +14,7 @@
 .width_50.first {padding-left: 0;}
 .width_50.last {padding-right: 0;}
 .panel.panel-flat.panel_reg {background: #f4f4f4;}
-.reg_wrapper {max-width: 100%;margin: 0px auto;padding: 25px;background: #fff;}
+.reg_wrapper {    max-width: 1100px;margin: 0px auto;padding: 25px;background: #fff;}
 .panel.panel-flat.panel_reg {background: #f4f4f4;}
 .business_category_div .form-group {padding: 0;margin-bottom: 0;}
 .panel_top a svg {width: 200px;height: auto;margin: 0 auto;}
@@ -22,29 +22,63 @@
 .submit_btn, .submit_btn:hover {width: auto;margin: 0 auto;float: right;border: 0;background: #F14150;font-size: 14px;font-family: muli;}
 .checker span {color: #f14150;border: 2px solid #f14150;}
 .row_add_div .clear-float:After {content: " ";display: block;clear: both;}
-.checkbox_reg {margin-top: 15px;}
+.checkbox_reg {margin-top: 25px;text-align: center;}
+.checker {margin-right: 5px;}
 .btn_center {padding: 0 !important;text-align: center;margin: 0;}
-.btn_center button {float: none !important;}
+.btn_center button {float: none !important;padding: 10px 20px;}
 .reg_wrapper fieldset.content-group {margin-bottom: 0px !important;}
-.form-group.checkbox_reg {padding: 0;text-align: left;}
+.form-group.checkbox_reg {padding: 0;text-align: center;}
 div#category_selection_wrapper {padding-bottom: 15px;}
 /** media start herer ***/
-#map-canvas {height: 600px;margin: 0px;padding: 0px;}
+#map-canvas {height: 400px;margin: 0px;padding: 0px;}
 .location_label{text-transform: none;}
+
+.form_grp_inline:After {content: " ";display: block;clear: both;}
+.form_grp_inline .form-group {width: 50%;float: left;padding-right: 15px;}
+.form_grp_inline {margin-right: -15px;}
+.business_location_div .label-icon.label-flat {padding: 6px;position: absolute;background: #fff;top: 5px;left: 15px;}
+.business_location_div .location_label {font-size: 13px;width: 100%;border: 0;padding: 8px 10px 8px 30px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;    text-align: left;}
+.business_location_div .form-group {padding: 0;}
+.row_add_div {clear: both;}
+
+@media (min-width:992px) and (max-width:1199px){
+    .business_category_div .col-md-5 {width: 41.66666667%;}
+    .business_category_div {display: flex;}
+    .business_location_div .location_label {margin-bottom: 0;}
+    .business_location_div .form-group {margin-bottom: 5px;}
+    .business_location_div > div {margin-bottom: 10px;}
+    .business_location_div > div > div {padding: 0;margin: 0 -10px;}
+    .business_location_div {margin-top: 30px;}
+}
 
 @media (min-width:768px) and (max-width:991px){
     .add_desc {display: inline-block;text-align: right;width: 100%;padding: 0 15px;}
     .business_category_div > div {padding: 0;margin-bottom: 5px;}
     .business_category_div > div:last-child .form-group div {text-align: right;}
     .panel_reg label {text-align: left;}
+    .business_category_div .col-md-5 {width: 41.66666667%;padding: 0 15px;}
+    .business_category_div {display: flex;    margin: 0 -15px;}
+    .business_location_div .clear-float > div {padding: 0;margin: 0 -15px;}
+    .business_location_div {margin-top: 20px;}
+    .width_50 {padding: 0 5px;}
 }
 
 @media (max-width:767px){
     .width_50 {float: none;width: 100%;padding: 0;margin-bottom: 5px;}
-    .form-horizontal .form-group label.control-label {position: relative;width: 100%;padding-left: 0;}
+    .form-horizontal .form-group label.control-label {position: relative;width: 100%;padding-left: 0;    padding-bottom: 5px;}
     .form-horizontal .form-group {padding-left: 0;}    
     .add_desc {display: inline-block;text-align: right;width: 100%;padding: 0 15px;}
     .business_category_div > div {padding: 0;margin-bottom: 5px;}
     .business_category_div > div:last-child .form-group div {text-align: right;}
     .panel_reg label {text-align: left;}
+    .form_grp_inline .form-group {width: 100%;float: none;padding-right: 0;}
+    .form_grp_inline {margin-right: 0;}
+    .row_add_div .col-md-6 {padding: 0;}
+    #map-canvas {height: 250px;width: 100%;}
+    .business_location_div > div > div {padding: 0;margin: 0 -15px;}
+    .business_location_div {margin-top: 20px;}
+    .business_location_div .form-group {margin-bottom: 5px;}
+    .business_location_div .location_label {margin-bottom: 0;}
+    .col_mobile_pad {padding: 0;}
+    .business_location_div > div {margin-bottom: 20px;}
 }

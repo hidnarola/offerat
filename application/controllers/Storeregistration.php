@@ -506,4 +506,24 @@ class Storeregistration extends CI_Controller {
         }
     }
 
+    function location() {
+        $location_name = str_replace(' ', '+', 'india');
+        $url = "https://maps.google.com/maps/api/geocode/json?key=" . GOOGLE_API_KEY . "&address=" . $location_name . "&sensor=false";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_PROXYPORT, 3128);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $response_a = json_decode($response);
+        pr($response_a);
+        echo $google_map_lat = @$response_a->results[0]->geometry->location->lat;
+        echo '===' . $google_map_long = @$response_a->results[0]->geometry->location->lng;
+        pr(@$response_a->results[0]->geometry->bounds->northeast);
+        pr(@$response_a->results[0]->geometry->bounds->southwest);
+        
+    }
+
 }

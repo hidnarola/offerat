@@ -1,5 +1,6 @@
 $(document).ready(function () {
     jqueryValidate();
+//    $(document).find('#mall_selection_wrapper').hide();
 //    $(document).on('change', '[data-type="reloadMap"]', initAutocomplete);
 });
 
@@ -31,6 +32,7 @@ $(document).on('change', '#id_country', function () {
         url: base_url + 'storeregistration/show_mall',
         data: {country_id: countryId},
         success: function (response) {
+//            $(document).find('#mall_selection_wrapper').show();
             $(document).find('.mall_selection_dropdown').html(response);
         },
         error: function () {
@@ -54,8 +56,7 @@ $(document).on('change', '.category_selection_dropdown', function () {
             if (response != '') {
                 $(document).find('#sub_category_' + cloneNumber).html(response);
                 $(document).find('.sub_cat_section_' + cloneNumber).show();
-            }
-            else {
+            } else {
                 console.log("else part");
                 $(document).find('#sub_category_' + cloneNumber).html('');
                 $(document).find('.sub_cat_section_' + cloneNumber).hide();
@@ -78,6 +79,10 @@ $(document).on('click', '.mall_selection_remove_btn', function () {
     $(document).find('#mall_selection_block_' + cloneNumber).remove();
     $(document).find('#location_count').val(cloneNumber);
 
+    if (cloneNumber == 0) {
+        $(document).find('.map_div').removeClass('col-md-6');
+        $(document).find('.map_div').addClass('col-md-12');
+    }
     for (var i = 0; i < markers.length; i++) {
         if (markers[i].label == character) {
             //Remove the marker from Map                  
