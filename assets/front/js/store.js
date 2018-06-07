@@ -1,7 +1,8 @@
 $(document).ready(function () {
     jqueryValidate();
+//    initMap();
 //    $(document).find('#mall_selection_wrapper').hide();
-//    $(document).on('change', '[data-type="reloadMap"]', initAutocomplete);
+//    $(document).on('change', '[data-type="reloadMap"]', initMap);
 });
 
 var categoryCloneNumber = 1;
@@ -23,10 +24,34 @@ function reInitializeSelect2Control() {
 }
 
 $(document).on('change', '#id_country', function () {
+
     var sender = $(this);
     var countryId = sender.val();
+    var country_name = $(document).find('#id_country option:selected').text();
+    $.ajax({
+        method: 'POST',
+        url: base_url + 'storeregistration/location',
+        data: {country_name: country_name},
+        success: function (response) {
+            var obj = JSON.parse(response);
+            latitude = obj.latitude;
+            longitude = obj.longitude;
+            southWestLatitude = obj.southWestLatitude;
+            southWestLongitude = obj.southWestLongitude;
+            northEastLatitude = obj.northEastLatitude;
+            northEastLongitude = obj.northEastLongitude;
+
+            initMap();
+
+            $(document).find('.business_location_div div').remove();
+            $(document).find('.map_div').removeClass('col-md-6');
+            $(document).find('.map_div').addClass('col-md-12');
+        }
+    });
+
     $(document).find('.mall_selection_dropdown').val(0);
     $(document).find('.mall_selection_dropdown').trigger('change');
+
     $.ajax({
         method: 'POST',
         url: base_url + 'storeregistration/show_mall',
@@ -52,7 +77,6 @@ $(document).on('change', '.category_selection_dropdown', function () {
         url: base_url + 'storeregistration/show_sub_category',
         data: {category_id: categoryId},
         success: function (response) {
-            console.log(typeof response + "==" + cloneNumber);
             if (response != '') {
                 $(document).find('#sub_category_' + cloneNumber).html(response);
                 $(document).find('.sub_cat_section_' + cloneNumber).show();

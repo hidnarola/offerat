@@ -134,7 +134,8 @@
         </div>
     </fieldset>
 </form>
-<script src="https://maps.googleapis.com/maps/api/js?key=<?php echo GOOGLE_API_KEY ?>&callback=initMap" async defer></script>
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=<?php echo GOOGLE_API_KEY ?>&callback=initMap" async defer></script>-->
+
 <script type="text/javascript" src="assets/front/js/store.js"></script>
 <script>
     function generatecategorySelectionBlock(cloneNumber) {
@@ -211,18 +212,29 @@
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     var labelIndex = 0;
     var markers = [];
-    var minZoomLevel = 5;
+    var minZoomLevel = 17;
+
+    var latitude = 20.593684;
+    var longitude = 78.96288;
+    var southWestLatitude = 12.97232;
+    var southWestLongitude = 77.59480;
+    var northEastLatitude = 12.89201;
+    var northEastLongitude = 77.58905;
+
     function initMap() {
-        var myLatlng = new google.maps.LatLng(20.593684, 78.96288);
+        console.log(latitude);
+        var myLatlng = new google.maps.LatLng(latitude, longitude);
+
         var myOptions = {
-            zoom: 5,
-            center: myLatlng
+            zoom: 4,
+            center: new google.maps.LatLng(latitude, longitude)
         }
         var map = new google.maps.Map(document.getElementById('map-canvas'), myOptions);
+
         var geocoder = new google.maps.Geocoder();
 
-        var southWest = new google.maps.LatLng(12.97232, 77.59480);
-        var northEast = new google.maps.LatLng(12.89201, 77.58905);
+        var southWest = new google.maps.LatLng(southWestLatitude, southWestLongitude);
+        var northEast = new google.maps.LatLng(northEastLatitude, northEastLongitude);
         // Bounds for North America
         var strictBounds = new google.maps.LatLngBounds(southWest, northEast);
 
@@ -232,31 +244,25 @@
                 return;
 
             // We're out of bounds - Move the map back within the bounds
-
-            var c = map.getCenter(),
-                    x = c.lng(),
-                    y = c.lat(),
-                    maxX = strictBounds.getNorthEast().lng(),
-                    maxY = strictBounds.getNorthEast().lat(),
-                    minX = strictBounds.getSouthWest().lng(),
-                    minY = strictBounds.getSouthWest().lat();
-
-            if (x < minX)
-                x = minX;
-            if (x > maxX)
-                x = maxX;
-            if (y < minY)
-                y = minY;
-            if (y > maxY)
-                y = maxY;
-
-            map.setCenter(new google.maps.LatLng(y, x));
-        });
-
-        // Limit the zoom level
-        google.maps.event.addListener(map, 'zoom_changed', function () {
-            if (map.getZoom() < minZoomLevel)
-                map.setZoom(minZoomLevel);
+//
+//            var c = map.getCenter(),
+//                    x = c.lng(),
+//                    y = c.lat(),
+//                    maxX = strictBounds.getNorthEast().lng(),
+//                    maxY = strictBounds.getNorthEast().lat(),
+//                    minX = strictBounds.getSouthWest().lng(),
+//                    minY = strictBounds.getSouthWest().lat();
+//
+//            if (x < minX)
+//                x = minX;
+//            if (x > maxX)
+//                x = maxX;
+//            if (y < minY)
+//                y = minY;
+//            if (y > maxY)
+//                y = maxY;
+//
+//            map.setCenter(new google.maps.LatLng(y, x));
         });
 
         google.maps.event.addListener(map, 'click', function (event) {
@@ -279,12 +285,12 @@
                     var html = generatemallSelectionBlock(mallCloneNumber);
                     $(document).find('.business_location_div').append(html);
                     mallCloneNumber++;
-
                     reInitializeSelect2Control();
                     $(document).find('#location_count').val(mallCloneNumber);
-
                     if (results[0]) {
                         var currect_char = addMarker(event.latLng, map);
+                        
+                        console.log(results[0]);
                         fillInAddress(results, currect_char);
                     }
 
@@ -293,21 +299,21 @@
                 }
             });
         });
+    }
 
-        // Adds a marker to the map.
-        function addMarker(location, map) {
-            // Add the marker at the clicked location, and add the next-available label
-            // from the array of alphabetical characters.
-            var current_character = labels[labelIndex++ % labels.length]
-            var marker = new google.maps.Marker({
-                position: location,
-                label: current_character,
-                map: map
-            });
-            markers.push(marker);
+    // Adds a marker to the map.
+    function addMarker(location, map) {
+        // Add the marker at the clicked location, and add the next-available label
+        // from the array of alphabetical characters.
+        var current_character = labels[labelIndex++ % labels.length]
+        var marker = new google.maps.Marker({
+            position: location,
+            label: current_character,
+            map: map
+        });
+        markers.push(marker);
 //            return current_character + '-' + (labelIndex - 1);
-            return labelIndex - 1;
-        }
+        return labelIndex - 1;
     }
 
     function fillInAddress(place, control_number) {
@@ -366,4 +372,5 @@
     }
     $(document).find('.sub_cat_section_0').hide();
 </script>
-<!--<script src="https://maps.googleapis.com/maps/api/js?key=<?php // echo GOOGLE_API_KEY                   ?>&libraries=places&callback=initAutocomplete" async defer></script>-->
+<script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,places&key=<?php echo GOOGLE_API_KEY ?>&callback=initMap" async defer></script>
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=<?php // echo GOOGLE_API_KEY                                         ?>&libraries=places&callback=initAutocomplete" async defer></script>-->

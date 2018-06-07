@@ -507,7 +507,7 @@ class Storeregistration extends CI_Controller {
     }
 
     function location() {
-        $location_name = str_replace(' ', '+', 'india');
+        $location_name = str_replace(' ', '+', $this->input->post('country_name', TRUE));
         $url = "https://maps.google.com/maps/api/geocode/json?key=" . GOOGLE_API_KEY . "&address=" . $location_name . "&sensor=false";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -518,12 +518,23 @@ class Storeregistration extends CI_Controller {
         $response = curl_exec($ch);
         curl_close($ch);
         $response_a = json_decode($response);
-        pr($response_a);
-        echo $google_map_lat = @$response_a->results[0]->geometry->location->lat;
-        echo '===' . $google_map_long = @$response_a->results[0]->geometry->location->lng;
-        pr(@$response_a->results[0]->geometry->bounds->northeast);
-        pr(@$response_a->results[0]->geometry->bounds->southwest);
-        
+
+//        pr($response_a, 1);
+
+        $google_map_lat = @$response_a->results[0]->geometry->location->lat;
+        $google_map_long = @$response_a->results[0]->geometry->location->lng;
+//        pr(@$response_a->results[0]->geometry->bounds->northeast->lat);
+//        pr(@$response_a->results[0]->geometry->bounds->southwest);
+
+        $response = array();
+        $response['latitude'] = $google_map_lat;
+        $response['longitude'] = $google_map_long;
+        $response['northEastLatitude'] = @$response_a->results[0]->geometry->bounds->northeast->lat;
+        $response['northEastLongitude'] = @$response_a->results[0]->geometry->bounds->northeast->lng;
+        $response['southWestLatitude'] = @$response_a->results[0]->geometry->bounds->southwest->lat;
+        $response['southWestLongitude'] = @$response_a->results[0]->geometry->bounds->southwest->lng;
+
+        echo json_encode($response);
     }
 
 }
