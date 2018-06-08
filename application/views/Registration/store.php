@@ -212,26 +212,73 @@
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     var labelIndex = 0;
     var markers = [];
-    var minZoomLevel = 17;
+    var minZoomLevel = 25;
 
-    var latitude = 20.593684;
-    var longitude = 78.96288;
+//    var latitude = 20.593684;
+//    var longitude = 78.96288;
+//    var southWestLatitude = 12.97232;
+//    var southWestLongitude = 77.59480;
+//    var northEastLatitude = 12.89201;
+//    var northEastLongitude = 77.58905;
+    var latitude = 33.854721;
+    var longitude = 35.862285;
     var southWestLatitude = 12.97232;
     var southWestLongitude = 77.59480;
-    var northEastLatitude = 12.89201;
-    var northEastLongitude = 77.58905;
+    var northEastLatitude = 34.69209;
+    var northEastLongitude = 36.62372;
+    var kmlLayers = [];
+
 
     function initMap() {
-        console.log(latitude);
+
         var myLatlng = new google.maps.LatLng(latitude, longitude);
 
         var myOptions = {
             zoom: 4,
-            center: new google.maps.LatLng(latitude, longitude)
+            center: myLatlng
         }
         var map = new google.maps.Map(document.getElementById('map-canvas'), myOptions);
 
         var geocoder = new google.maps.Geocoder();
+
+//        var ctaLayer = new google.maps.KmlLayer('http://www.settlethescore.com/admin/assets/uploads/countries_kmls/IN.kml');
+        var ctaLayer = new google.maps.KmlLayer('http://europa.narola.online/PG/TG/Offerat/cms/assets/images/countries_kmls8/IN.kml');
+        ctaLayer.setMap(map);
+        google.maps.event.addListener(ctaLayer, 'click', function (kmlEvent) {
+
+            geocoder.geocode({
+                'latLng': kmlEvent.latLng
+            }, function (results, status) {
+
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var countryId = $(document).find('#id_country').val();
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'storeregistration/show_mall',
+                        data: {country_id: countryId},
+                        success: function (response) {
+                            $(document).find('.mall_selection_dropdown').html(response);
+                        },
+                        error: function () {
+                            console.log("error occur");
+                        },
+                    });
+                    var html = generatemallSelectionBlock(mallCloneNumber);
+                    $(document).find('.business_location_div').append(html);
+                    mallCloneNumber++;
+                    reInitializeSelect2Control();
+                    $(document).find('#location_count').val(mallCloneNumber);
+                    if (results[0]) {
+                        var currect_char = addMarker(kmlEvent.latLng, map);
+                        console.log(results[0]);
+                        fillInAddress(results, currect_char);
+                    }
+
+                    $(document).find('.map_div').addClass('col-md-6');
+                    $(document).find('.map_div').removeClass('col-md-12');
+                }
+            });
+        });
 
         var southWest = new google.maps.LatLng(southWestLatitude, southWestLongitude);
         var northEast = new google.maps.LatLng(northEastLatitude, northEastLongitude);
@@ -242,7 +289,6 @@
         google.maps.event.addListener(map, 'dragend', function () {
             if (strictBounds.contains(map.getCenter()))
                 return;
-
             // We're out of bounds - Move the map back within the bounds
 //
 //            var c = map.getCenter(),
@@ -265,41 +311,9 @@
 //            map.setCenter(new google.maps.LatLng(y, x));
         });
 
-        google.maps.event.addListener(map, 'click', function (event) {
-            geocoder.geocode({
-                'latLng': event.latLng
-            }, function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    var countryId = $(document).find('#id_country').val();
-                    $.ajax({
-                        method: 'POST',
-                        url: base_url + 'storeregistration/show_mall',
-                        data: {country_id: countryId},
-                        success: function (response) {
-                            $(document).find('.mall_selection_dropdown').html(response);
-                        },
-                        error: function () {
-                            console.log("error occur");
-                        },
-                    });
-                    var html = generatemallSelectionBlock(mallCloneNumber);
-                    $(document).find('.business_location_div').append(html);
-                    mallCloneNumber++;
-                    reInitializeSelect2Control();
-                    $(document).find('#location_count').val(mallCloneNumber);
-                    if (results[0]) {
-                        var currect_char = addMarker(event.latLng, map);
-                        
-                        console.log(results[0]);
-                        fillInAddress(results, currect_char);
-                    }
-
-                    $(document).find('.map_div').addClass('col-md-6');
-                    $(document).find('.map_div').removeClass('col-md-12');
-                }
-            });
-        });
     }
+
+
 
     // Adds a marker to the map.
     function addMarker(location, map) {
@@ -373,4 +387,4 @@
     $(document).find('.sub_cat_section_0').hide();
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,places&key=<?php echo GOOGLE_API_KEY ?>&callback=initMap" async defer></script>
-<!--<script src="https://maps.googleapis.com/maps/api/js?key=<?php // echo GOOGLE_API_KEY                                         ?>&libraries=places&callback=initAutocomplete" async defer></script>-->
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=<?php // echo GOOGLE_API_KEY                                                               ?>&libraries=places&callback=initAutocomplete" async defer></script>-->
