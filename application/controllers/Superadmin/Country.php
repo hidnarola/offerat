@@ -2,8 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Country
-        extends MY_Controller {
+class Country extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -87,8 +86,9 @@ class Country
                 if (isset($_FILES['country_flag'])) {
 
                     if (($_FILES['country_flag']['size']) > 0) {
+//                        echo $image_path = dirname($_SERVER["SCRIPT_FILENAME"]) . '/' . country_img_path;
+                        $image_path = $_SERVER['DOCUMENT_ROOT'] . country_img_path;
 
-                        $image_path = dirname($_SERVER["SCRIPT_FILENAME"]) . '/' . country_img_path;
                         if (!file_exists($image_path)) {
                             $this->Common_model->created_directory($image_path);
                         }

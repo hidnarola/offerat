@@ -100,7 +100,7 @@ $this->load->view('Common/delete_alert');
                     "name": 'sub_category.sub_category_logo',
                     "render": function (data, type, full, meta) {
                         if (full.sub_category_sub_category_logo != '')
-                            var image_html = '<img height="20px" width="20px" alt="No Image" onerror="small_image_not_found(image_' + full.sub_category_id_sub_category + ')" id="image_' + full.sub_category_id_sub_category + '" src="<?php echo SITEURL.sub_category_img_path; ?>' + full.sub_category_sub_category_logo + '" />';
+                            var image_html = '<img height="20px" width="20px" alt="No Image" onerror="small_image_not_found(image_' + full.sub_category_id_sub_category + ')" id="image_' + full.sub_category_id_sub_category + '" src="<?php echo sub_category_img_path; ?>' + full.sub_category_sub_category_logo + '" />';
                         else
                             var image_html = '';
                         return image_html;

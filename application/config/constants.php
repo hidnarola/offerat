@@ -113,10 +113,15 @@ define('tbl_user', 'user');
 define('tbl_verification', 'verification');
 define('tbl_place', 'place');
 
-define('country_img_path', 'assets/images/country/');
-define('category_img_path', 'assets/images/category/');
-define('sub_category_img_path', 'assets/images/subcategory/');
-define('store_img_path', 'assets/images/store/');
+/* define('country_img_path', 'assets/images/country/');
+  define('category_img_path', 'assets/images/category/');
+  define('sub_category_img_path', 'assets/images/subcategory/');
+  define('store_img_path', 'assets/images/store/'); */
+
+define('country_img_path', '/PG/TG/Offerat/media/CountryFlag/');
+define('category_img_path', '/PG/TG/Offerat/media/CategoryIcon/');
+define('sub_category_img_path', '/PG/TG/Offerat/media/SubCategoryIcon/');
+define('store_img_path', '/PG/TG/Offerat/media/StoreLogo/');
 
 define('SUPER_ADMIN_USER_TYPE', '1');
 define('COUNTRY_ADMIN_USER_TYPE', '2');

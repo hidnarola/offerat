@@ -5,21 +5,25 @@
             <div class="form-group">                                        
                 <label class="control-label col-lg-2">Store Name <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" name="store_name" id="store_name"  placeholder="Store Name" required="required" value="<?php echo set_value('store_name'); ?>">
-            </div>
-
+            </div>            
             <div class="form-group">
                 <label class="control-label col-lg-2">Website URL</label>
                 <input type="text" class="form-control" name="website" id="website"  placeholder="Website URL" value="<?php echo set_value('website'); ?>">
             </div>
-
+        </div>
+        <div class="form_grp_inline">
             <div class="form-group">
                 <label class="control-label col-lg-2">Facebook Page</label>
                 <input type="text" class="form-control" name="facebook_page" id="facebook_page"  placeholder="Facebook Page URL" value="<?php echo set_value('facebook_page'); ?>">
             </div>
-
-            <div class="form-group">
+            <div class="form-group upload-store-logo-div">
                 <label class="control-label col-lg-2">Logo <span class="text-danger">*</span></label>
                 <input type="file" class="form-control file-input" name="store_logo" id="store_logo" required="required">
+                <input type="hidden" name="is_valid" id="is_valid" value="1">
+                <div id="store_logo_errors_wrapper" class="alert alert-danger alert-bordered display-none">
+                    <span id="store_logo_errors"></span>
+                </div>
+                <label id="store_logo-error" class="validation-error-label" for="store_logo"></label>
             </div>
         </div>
 
@@ -39,17 +43,15 @@
                 <label class="control-label col-lg-2">Email Address <span class="text-danger">*</span></label>
                 <input type="email" class="form-control" name="email_id" id="email_id"  placeholder="Email Address"  required="required" value="<?php echo set_value('email_id'); ?>">
             </div>
-
+        </div>
+        <div class="form_grp_inline">
             <div class="form-group">
-                <label class="control-label col-lg-2">Contact Number <span class="text-danger">*</span></label>
-                <div class="width_50 first">
-                    <input type="text" class="form-control" name="telephone" id="telephone"  placeholder="Contact Number"  required="required" value="<?php echo set_value('telephone'); ?>">
-                </div>
-            </div>
+                <label class="control-label col-lg-2">Contact Number <span class="text-danger">*</span></label>                
+                <input type="text" class="form-control" name="telephone" id="telephone"  placeholder="Contact Number"  required="required" value="<?php echo set_value('telephone'); ?>">                
+            </div>            
         </div>
 
         <legend class="text-bold">Business</legend>
-
 
         <div class="add_desc">
             <button id="category_selection_btn" type="button" class="pull-right margin-left-5 btn-primary labeled"><b><i class="icon-plus22"></i></b>Add More Category</button>
@@ -102,34 +104,62 @@
                         <?php } ?>
                     </select>
                 <?php } ?>
-
-
             </div> 
         </div>
-        <div id="mall_selection_wrapper" class="clear-float row_add_div">  
-            <div class="clear-float">
-                <div class="col-md-12 map_div">
-                    <div id="map-canvas"></div>
-                </div>
-                <div class="col-md-6 business_location_div">
-                    <?php
-                    $latitude = '54.6960513';
-                    $longitude = '-113.7297772';
-                    $latitude = '';
-                    $longitude = '';
-                    ?>
+        <div class="col-lg-6 col_mobile_pad">
+            <div class="form-group">
+                <div class="add_desc">
+                    <button id="mall_selection_btn" type="button" class="pull-right margin-left-5 btn-primary labeled"><b><i class="icon-plus22"></i></b>Add More Branch</button>
+                </div> 
+            </div> 
+        </div>
 
+        <div id="mall_selection_wrapper" class="clear-float row_add_div">  
+            <?php
+            $latitude = '54.6960513';
+            $longitude = '-113.7297772';
+            ?>
+            <div id="mall_selection_block_0" data-clone-number="0" class="clear-float">
+                <div class="col-sm-12 business_category_div">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div>
+                                <select id="mall_0" name="mall_0" class="select mall_selection_dropdown form-control" data-clone-number="0" required="required">
+                                    <option value="0">Only Shop</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        <input type="text" data-latitude="latitude_0" data-longitude="longitude_0" required="required" data-type="googleMap" data-zoom="10" data-lat="<?php echo $latitude; ?>" data-lang="<?php echo $longitude; ?>" data-input_id="google_input_0" id="google_input_0" type="text" class="form-control" name="address_0"  placeholder="Location" aria-required="true" value="" data-clone-number="0">
+                        <input type="hidden" class="form-control" data-type="latitude_0" name="latitude_0" id="latitude_0" value="<?php echo $latitude; ?>">
+                        <input type="hidden" class="form-control" data-type="longitude_0" name="longitude_0" id="longitude_0" value="<?php echo $longitude; ?>">
+                        <input type="hidden" class="form-control" name="street_0" id="street_0" value="">
+                        <input type="hidden" class="form-control" name="street1_0" id="street1_0" value="">
+                        <input type="hidden" class="form-control" name="city_0" id="city_0" value="">
+                        <input type="hidden" class="form-control" name="state_0" id="state_0" value="">
+                        <input type="hidden" class="form-control" name="zip_code_0" id="zip_code_0" value="">
+                        <input type="hidden" class="form-control" name="place_id_0" id="place_id_0" value="">
+                    </div>
+                    <div class="col-sm-1 product-selection-remove-prod-btn">
+                        <div class="form-group">
+                            <div>
+                                <button type="button" class="btn btn-danger btn-icon mall_selection_remove_btn" id="mall_selection_remove_btn_0" character="" data-clone-number="0"><i class="icon-cross3"></i></button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="form-group checkbox_reg">
-            <input type="checkbox" class="styled-checkbox-1" name="terms_condition" required="required"/>
-            <span class="text-size-mini">  Yes, I agree with <a href="javascript:void(0);" target="_blank"><span>Terms And Conditions</span></a></span>
-            <label id="send_verification_email-error" class="validation-error-label" for="send_verification_email"></label>
+        <div class="form-group checkbox_reg">            
+            <input type="checkbox" class="styled-checkbox-1" name="terms_condition" required="required"/>                
+            <span class="text-size-mini">  Yes, I agree with <a href="javascript:void(0);" target="_blank"><span>Terms And Conditions</span></a></span>            
+            <label id="terms_condition-error" class="validation-error-label" for="terms_condition"></label>
+
         </div>
         <div class="form-group btn_center">            
-            <input type="hidden" name="category_count" id="category_count" value="0">
-            <input type="hidden" name="location_count" id="location_count" value="0">
+            <input type="hidden" name="category_count" id="category_count" value="1">
+            <input type="hidden" name="location_count" id="location_count" value="1">
             <button type="submit" class="btn btn-primary btn-block submit_btn">Submit</button>
         </div>
     </fieldset>
@@ -174,7 +204,7 @@
     function generatemallSelectionBlock(cloneNumber) {
         var html = '';
         html += '<div id="mall_selection_block_' + cloneNumber + '" data-clone-number="' + cloneNumber + '" class="clear-float">';
-        html += '<div class="col-sm-12">';
+        html += '<div class="col-sm-12 business_category_div">';
         html += '<div class="col-sm-4">';
         html += '<div class="form-group">';
         html += '<div>';
@@ -185,9 +215,7 @@
         html += '</div>';
         html += '</div>';
         html += '<div class="col-sm-7">';
-        html += '<span class="label label-flat border-success text-brown-600 label-icon" id="location_letter_' + cloneNumber + '"></span>';
-        html += '<label class="label border-left-success label-striped location_label" id="location_' + cloneNumber + '"></label>';
-        html += '<input type="hidden" data-latitude="latitude_' + cloneNumber + '" data-longitude="longitude_' + cloneNumber + '" required="required" data-type="googleMap" data-zoom="10" data-lat="<?php echo $latitude; ?>" data-lang="<?php echo $longitude; ?>" data-input_id="google_input_' + cloneNumber + '" id="google_input_' + cloneNumber + '" type="text" class="form-control" name="address_' + cloneNumber + '"  placeholder="Location" aria-required="true" value="" data-clone-number="' + cloneNumber + '">';
+        html += '<input type="text" data-latitude="latitude_' + cloneNumber + '" data-longitude="longitude_' + cloneNumber + '" required="required" data-type="googleMap" data-zoom="10" data-lat="<?php echo $latitude; ?>" data-lang="<?php echo $longitude; ?>" data-input_id="google_input_' + cloneNumber + '" id="google_input_' + cloneNumber + '" type="text" class="form-control" name="address_' + cloneNumber + '"  placeholder="Location" aria-required="true" value="" data-clone-number="' + cloneNumber + '">';
         html += '<input type="hidden" class="form-control" data-type="latitude_' + cloneNumber + '" name="latitude_' + cloneNumber + '" id="latitude_' + cloneNumber + '" value="<?php echo $latitude; ?>">';
         html += '<input type="hidden" class="form-control" data-type="longitude_' + cloneNumber + '" name="longitude_' + cloneNumber + '" id="longitude_' + cloneNumber + '" value="<?php echo $longitude; ?>">';
         html += '<input type="hidden" class="form-control" name="street_' + cloneNumber + '" id="street_' + cloneNumber + '" value="">';
@@ -209,125 +237,32 @@
         return html;
     }
 
-    var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    var labelIndex = 0;
-    var markers = [];
-    var minZoomLevel = 25;
-
-//    var latitude = 20.593684;
-//    var longitude = 78.96288;
-//    var southWestLatitude = 12.97232;
-//    var southWestLongitude = 77.59480;
-//    var northEastLatitude = 12.89201;
-//    var northEastLongitude = 77.58905;
-    var latitude = 33.854721;
-    var longitude = 35.862285;
-    var southWestLatitude = 12.97232;
-    var southWestLongitude = 77.59480;
-    var northEastLatitude = 34.69209;
-    var northEastLongitude = 36.62372;
-    var kmlLayers = [];
-
-
-    function initMap() {
-
-        var myLatlng = new google.maps.LatLng(latitude, longitude);
-
-        var myOptions = {
-            zoom: 4,
-            center: myLatlng
-        }
-        var map = new google.maps.Map(document.getElementById('map-canvas'), myOptions);
-
-        var geocoder = new google.maps.Geocoder();
-
-//        var ctaLayer = new google.maps.KmlLayer('http://www.settlethescore.com/admin/assets/uploads/countries_kmls/IN.kml');
-        var ctaLayer = new google.maps.KmlLayer('http://europa.narola.online/PG/TG/Offerat/cms/assets/images/countries_kmls8/IN.kml');
-        ctaLayer.setMap(map);
-        google.maps.event.addListener(ctaLayer, 'click', function (kmlEvent) {
-
-            geocoder.geocode({
-                'latLng': kmlEvent.latLng
-            }, function (results, status) {
-
-                if (status == google.maps.GeocoderStatus.OK) {
-                    var countryId = $(document).find('#id_country').val();
-                    $.ajax({
-                        method: 'POST',
-                        url: base_url + 'storeregistration/show_mall',
-                        data: {country_id: countryId},
-                        success: function (response) {
-                            $(document).find('.mall_selection_dropdown').html(response);
-                        },
-                        error: function () {
-                            console.log("error occur");
-                        },
-                    });
-                    var html = generatemallSelectionBlock(mallCloneNumber);
-                    $(document).find('.business_location_div').append(html);
-                    mallCloneNumber++;
-                    reInitializeSelect2Control();
-                    $(document).find('#location_count').val(mallCloneNumber);
-                    if (results[0]) {
-                        var currect_char = addMarker(kmlEvent.latLng, map);
-                        console.log(results[0]);
-                        fillInAddress(results, currect_char);
-                    }
-
-                    $(document).find('.map_div').addClass('col-md-6');
-                    $(document).find('.map_div').removeClass('col-md-12');
+    function initAutocomplete() {
+        $('[data-type="googleMap"]').each(function () {
+            var currentThis = $(this);
+            var control_number = currentThis.data('clone-number');
+            var input = document.getElementById($(this).data('input_id'));
+            var searchBox = new google.maps.places.SearchBox(input);
+            searchBox.addListener('places_changed', function () {
+                var places = searchBox.getPlaces();
+                if (places.length == 0) {
+                    return;
                 }
+                places.forEach(function (place) {
+                    if (typeof place.geometry !== 'undefined') {
+                        $('[data-type="' + currentThis.data('latitude') + '"]').val(place.geometry.location.lat());
+                        $('[data-type="' + currentThis.data('longitude') + '"]').val(place.geometry.location.lng());
+                    } else {
+                        //googleLocationIssuePrompt();
+                    }
+                });
+                /**
+                 * This code is used copy address when selection is done from auto complete
+                 */
+
+                fillInAddress(places, control_number);
             });
         });
-
-        var southWest = new google.maps.LatLng(southWestLatitude, southWestLongitude);
-        var northEast = new google.maps.LatLng(northEastLatitude, northEastLongitude);
-        // Bounds for North America
-        var strictBounds = new google.maps.LatLngBounds(southWest, northEast);
-
-        // Listen for the dragend event
-        google.maps.event.addListener(map, 'dragend', function () {
-            if (strictBounds.contains(map.getCenter()))
-                return;
-            // We're out of bounds - Move the map back within the bounds
-//
-//            var c = map.getCenter(),
-//                    x = c.lng(),
-//                    y = c.lat(),
-//                    maxX = strictBounds.getNorthEast().lng(),
-//                    maxY = strictBounds.getNorthEast().lat(),
-//                    minX = strictBounds.getSouthWest().lng(),
-//                    minY = strictBounds.getSouthWest().lat();
-//
-//            if (x < minX)
-//                x = minX;
-//            if (x > maxX)
-//                x = maxX;
-//            if (y < minY)
-//                y = minY;
-//            if (y > maxY)
-//                y = maxY;
-//
-//            map.setCenter(new google.maps.LatLng(y, x));
-        });
-
-    }
-
-
-
-    // Adds a marker to the map.
-    function addMarker(location, map) {
-        // Add the marker at the clicked location, and add the next-available label
-        // from the array of alphabetical characters.
-        var current_character = labels[labelIndex++ % labels.length]
-        var marker = new google.maps.Marker({
-            position: location,
-            label: current_character,
-            map: map
-        });
-        markers.push(marker);
-//            return current_character + '-' + (labelIndex - 1);
-        return labelIndex - 1;
     }
 
     function fillInAddress(place, control_number) {
@@ -375,16 +310,9 @@
                     }
                 }
             }
-            var current_character = labels[labelIndex % labels.length - 1];
-            $(document).find('#location_letter_' + control_number).text(current_character);
-            $(document).find('#mall_selection_remove_btn_' + control_number).attr('character', current_character);
-            $(document).find('#location_' + control_number).text(place.formatted_address);
-            document.getElementById('google_input_' + control_number).value = place.formatted_address;
-            document.getElementById('latitude_' + control_number).value = place.geometry.location.lat();
-            document.getElementById('longitude_' + control_number).value = place.geometry.location.lng();
         }
     }
     $(document).find('.sub_cat_section_0').hide();
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,places&key=<?php echo GOOGLE_API_KEY ?>&callback=initMap" async defer></script>
-<!--<script src="https://maps.googleapis.com/maps/api/js?key=<?php // echo GOOGLE_API_KEY                                                               ?>&libraries=places&callback=initAutocomplete" async defer></script>-->
+<script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,places&key=<?php echo GOOGLE_API_KEY ?>&callback=initAutocomplete" async defer></script>
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=<?php // echo GOOGLE_API_KEY                                                                                        ?>&libraries=places&callback=initAutocomplete" async defer></script>-->

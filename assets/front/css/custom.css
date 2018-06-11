@@ -40,6 +40,10 @@ div#category_selection_wrapper {padding-bottom: 15px;}
 .business_location_div .location_label {font-size: 13px;width: 100%;border: 0;padding: 8px 10px 8px 30px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;    text-align: left;}
 .business_location_div .form-group {padding: 0;}
 .row_add_div {clear: both;}
+.upload-store-logo-div .btn.btn-primary.btn-file{height: 40px;}
+.upload-store-logo-div button.btn.btn-default.fileinput-remove.fileinput-remove-button {height: 40px;}
+.file-caption-name{text-overflow: ellipsis;overflow: hidden;width: 100px;white-space: nowrap;}
+.validation-error-label, .validation-valid-label {display: inline;}
 
 @media (min-width:992px) and (max-width:1199px){
     .business_category_div .col-md-5 {width: 41.66666667%;}
@@ -53,7 +57,7 @@ div#category_selection_wrapper {padding-bottom: 15px;}
 
 @media (min-width:768px) and (max-width:991px){
     .add_desc {display: inline-block;text-align: right;width: 100%;padding: 0 15px;}
-    .business_category_div > div {padding: 0;margin-bottom: 5px;}
+    .business_category_div > div {padding: 0;margin-bottom: 5px;padding-right: 10px;}
     .business_category_div > div:last-child .form-group div {text-align: right;}
     .panel_reg label {text-align: left;}
     .business_category_div .col-md-5 {width: 41.66666667%;padding: 0 15px;}

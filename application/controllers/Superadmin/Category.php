@@ -2,13 +2,12 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Category
-        extends MY_Controller {
+class Category extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
         $this->load->model('Common_model', '', TRUE);
-        $this->data['title'] = $this->data['page_header'] = 'Category';
+        $this->data['title'] = $this->data['page_header'] = 'Categories';
         $this->bread_crum[] = array(
             'url' => base_url() . 'super-admin/category',
             'title' => 'Categories',
@@ -72,7 +71,8 @@ class Category
 
                     if (($_FILES['category_logo']['size']) > 0) {
 
-                        $image_path = dirname($_SERVER["SCRIPT_FILENAME"]) . '/' . category_img_path;
+//                        $image_path = dirname($_SERVER["SCRIPT_FILENAME"]) . '/' . category_img_path;
+                        $image_path = $_SERVER['DOCUMENT_ROOT'] . category_img_path;
                         if (!file_exists($image_path)) {
                             $this->Common_model->created_directory($image_path);
                         }
@@ -243,7 +243,7 @@ class Category
      */
 
     function delete($category_id = NULL) {
-        
+
         if (!is_null($category_id) && $category_id > 0) {
             $category_data = array(
                 'table' => tbl_store_category,

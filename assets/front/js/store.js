@@ -1,21 +1,48 @@
 $(document).ready(function () {
     jqueryValidate();
-//    initMap();
-//    $(document).find('#mall_selection_wrapper').hide();
-//    $(document).on('change', '[data-type="reloadMap"]', initMap);
+
+    errorMgsToDefault();
+    $("#store_logo").on("change", function () {
+        validate_logo('#store_logo');
+    });
+
 });
 
 var categoryCloneNumber = 1;
-var mallCloneNumber = 0;
+var mallCloneNumber = 1;
 
 $(document).on('click', '#category_selection_btn', function () {
     var html = generatecategorySelectionBlock(categoryCloneNumber);
     $(document).find('#category_selection_wrapper').append(html);
+
+    $(document).find('.sub_cat_section_' + categoryCloneNumber).hide();
+
     categoryCloneNumber++;
     reInitializeSelect2Control();
     $(document).find('#category_count').val(categoryCloneNumber);
 });
 
+$(document).on('click', '#mall_selection_btn', function () {
+
+    var countryId = $(document).find('#id_country').val();
+    $.ajax({
+        method: 'POST',
+        url: base_url + 'storeregistration/show_mall',
+        data: {country_id: countryId},
+        success: function (response) {
+            $(document).find('.mall_selection_dropdown').html(response);
+        },
+        error: function () {
+            console.log("error occur");
+        },
+    });
+    var html = generatemallSelectionBlock(mallCloneNumber);
+    $(document).find('#mall_selection_wrapper').append(html);
+    mallCloneNumber++;
+    reInitializeSelect2Control();
+    initAutocomplete();
+    $(document).find('#location_count').val(mallCloneNumber);
+});
 
 function reInitializeSelect2Control() {
     $('.select').select2({
@@ -27,37 +54,13 @@ $(document).on('change', '#id_country', function () {
 
     var sender = $(this);
     var countryId = sender.val();
-    var country_name = $(document).find('#id_country option:selected').text();
-    $.ajax({
-        method: 'POST',
-        url: base_url + 'storeregistration/location',
-        data: {country_name: country_name},
-        success: function (response) {
-            var obj = JSON.parse(response);
-            latitude = obj.latitude;
-            longitude = obj.longitude;
-            southWestLatitude = obj.southWestLatitude;
-            southWestLongitude = obj.southWestLongitude;
-            northEastLatitude = obj.northEastLatitude;
-            northEastLongitude = obj.northEastLongitude;
-
-            initMap();
-
-            $(document).find('.business_location_div div').remove();
-            $(document).find('.map_div').removeClass('col-md-6');
-            $(document).find('.map_div').addClass('col-md-12');
-        }
-    });
-
     $(document).find('.mall_selection_dropdown').val(0);
     $(document).find('.mall_selection_dropdown').trigger('change');
-
     $.ajax({
         method: 'POST',
         url: base_url + 'storeregistration/show_mall',
         data: {country_id: countryId},
         success: function (response) {
-//            $(document).find('#mall_selection_wrapper').show();
             $(document).find('.mall_selection_dropdown').html(response);
         },
         error: function () {
@@ -70,21 +73,24 @@ $(document).on('change', '.category_selection_dropdown', function () {
     var cloneNumber = $(this).data('cloneNumber');
     var sender = $(this);
     var categoryId = sender.val();
-    $(document).find('#sub_category_' + cloneNumber).val("");
-    $(document).find('#sub_category_' + cloneNumber).trigger('change');
+
     $.ajax({
         method: 'POST',
         url: base_url + 'storeregistration/show_sub_category',
         data: {category_id: categoryId},
         success: function (response) {
             if (response != '') {
-                $(document).find('#sub_category_' + cloneNumber).html(response);
+                $(document).find('#sub_category_' + cloneNumber).html('<option value="">Select Sub Category</option>');
+                $(document).find('#sub_category_' + cloneNumber).append(response);
+                $(document).find('#sub_category_' + cloneNumber).attr('required', 'required');
                 $(document).find('.sub_cat_section_' + cloneNumber).show();
             } else {
-                console.log("else part");
                 $(document).find('#sub_category_' + cloneNumber).html('');
+                $(document).find('#sub_category_' + cloneNumber).removeAttr('required');
                 $(document).find('.sub_cat_section_' + cloneNumber).hide();
             }
+            $(document).find('#sub_category_' + cloneNumber).val("");
+            $(document).find('#sub_category_' + cloneNumber).trigger('change');
         },
         error: function () {
             console.log("error occur");
@@ -102,18 +108,56 @@ $(document).on('click', '.mall_selection_remove_btn', function () {
     var character = $(this).attr('character');
     $(document).find('#mall_selection_block_' + cloneNumber).remove();
     $(document).find('#location_count').val(cloneNumber);
-
-    if (cloneNumber == 0) {
-        $(document).find('.map_div').removeClass('col-md-6');
-        $(document).find('.map_div').addClass('col-md-12');
-    }
-    for (var i = 0; i < markers.length; i++) {
-        if (markers[i].label == character) {
-            //Remove the marker from Map                  
-            markers[i].setMap(null);
-            //Remove the marker from array.
-            markers.splice(i, 1);
-            return;
-        }
-    }
 });
+
+function errorMgsToDefault() {
+    var store_logo_error_wrapper = $('#store_logo_errors_wrapper');
+    var store_logo_error = $('#store_logo_errors');
+    store_logo_error_wrapper.addClass('display-none');
+    store_logo_error.html('');
+}
+
+function validate_logo(control) {
+
+    var store_logo_error_wrapper = $('#store_logo_errors_wrapper');
+    var store_logo_error = $('#store_logo_errors');
+    var is_valid = $('#is_valid');
+    store_logo_error_wrapper.addClass('display-none');
+    store_logo_error.html('');
+
+    var fileUpload = $(control)[0];
+    var FileUploadPath = fileUpload.value
+    if (FileUploadPath != '') {
+        if (typeof (fileUpload.files) != "undefined") {
+
+            var Extension = FileUploadPath.substring(FileUploadPath.lastIndexOf('.') + 1).toLowerCase();
+
+            if (Extension == 'gif' || Extension == 'png' || Extension == 'jpeg' || Extension == 'jpg') {
+
+                if (fileUpload.files && fileUpload.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                    }
+                    reader.readAsDataURL(fileUpload.files[0]);
+                    is_valid.val(1);
+                }
+                return true;
+            } else {
+                store_logo_error_wrapper.removeClass('display-none');
+                store_logo_error.html('Store Logo Image should only GIF, PNG, JPG or JPEG file types.');
+                is_valid.val(0);
+                return false;
+            }
+        } else {
+            store_logo_error_wrapper.removeClass('display-none');
+            store_logo_error.html('Store Logo Image should only GIF, PNG, JPG or JPEG file types.');
+            is_valid.val(0);
+            return false;
+        }
+    } else {
+        store_logo_error_wrapper.removeClass('display-none');
+        store_logo_error.html('Store Logo Image should only GIF, PNG, JPG or JPEG file types.');
+        is_valid.val(0);
+        return false;
+    }
+}

@@ -47,7 +47,7 @@
                                     <div class="form-group">
                                         <label>Image <span class="text-danger">*</span> <span class="text-info text-size-mini">(Recommended Width and Height is 100 x 100 pixels respectively)</span></label>
                                         <div>
-                                            <input type="file" name="category_logo" id="category_logo" class="form-control file-inpucountryt">                                            
+                                            <input type="file" name="category_logo" id="category_logo" class="form-control file-inpucountryt  file-input">                                            
                                         </div>
                                     </div>
 

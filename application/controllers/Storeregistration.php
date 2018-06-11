@@ -24,6 +24,8 @@ class Storeregistration extends CI_Controller {
                 'email_id',
                 'telephone',
                 'id_country',
+                'category_count',
+                'location_count',
                 'terms_condition'
             );
 
@@ -36,7 +38,8 @@ class Storeregistration extends CI_Controller {
                 if (isset($_FILES['store_logo'])) {
 
                     if (($_FILES['store_logo']['size']) > 0) {
-                        $image_path = dirname($_SERVER["SCRIPT_FILENAME"]) . '/' . store_img_path;
+//                        $image_path = dirname($_SERVER["SCRIPT_FILENAME"]) . '/' . store_img_path;
+                        $image_path = $_SERVER['DOCUMENT_ROOT'] . store_img_path;
                         if (!file_exists($image_path)) {
                             $this->Common_model->created_directory($image_path);
                         }
@@ -121,7 +124,7 @@ class Storeregistration extends CI_Controller {
 
                         $in_place_data = array(
                             'id_google' => $this->input->post('place_id_' . $i, TRUE),
-                            'street' => $this->input->post('address_' . $i, TRUE),
+                            'street' => $this->input->post('street_' . $i, TRUE),
                             'street1' => $this->input->post('street1_' . $i, TRUE),
                             'city' => $this->input->post('city_' . $i, TRUE),
                             'state' => $this->input->post('state_' . $i, TRUE),
@@ -159,7 +162,7 @@ class Storeregistration extends CI_Controller {
                         $in_category_data = array(
                             'id_store' => $store_id,
                             'id_category' => $this->input->post('category_' . $i, TRUE),
-                            'id_sub_category' => $this->input->post('sub_category_' . $i, TRUE),
+                            'id_sub_category' => ($this->input->post('sub_category_' . $i, TRUE) > 0 ) ? $this->input->post('sub_category_' . $i, TRUE) : 0,
                             'created_date' => $date,
                             'contact_number' => $this->input->post('telephone', TRUE),
                             'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
@@ -279,7 +282,7 @@ class Storeregistration extends CI_Controller {
         $sub_category_list = $this->Common_model->master_select($select_sub_category);
         $load_data['sub_category_list'] = $sub_category_list;
 
-        echo $this->load->view('Registration/sub_category', $load_data, TRUE);
+        echo $this->load->view('Registration/select_sub_category', $load_data, TRUE);
     }
 
     public function show_mall() {
@@ -297,7 +300,7 @@ class Storeregistration extends CI_Controller {
         $mall_list = $this->Common_model->master_select($select_mall);
 
         $load_data['mall_list'] = $mall_list;
-        echo $this->load->view('Registration/mall', $load_data, TRUE);
+        echo $this->load->view('Registration/select_mall', $load_data, TRUE);
     }
 
     /*
@@ -431,7 +434,7 @@ class Storeregistration extends CI_Controller {
             $validation_rules[] = array(
                 'field' => 'store_name',
                 'label' => 'Store Name',
-                'rules' => 'trim|required|min_length[2]|max_length[250]|htmlentities'
+                'rules' => 'trim|required|min_length[2]|max_length[250]|callback_check_store_name|htmlentities'
             );
         }
         if (in_array('website', $validate_fields)) {
@@ -446,6 +449,13 @@ class Storeregistration extends CI_Controller {
                 'field' => 'facebook_page',
                 'label' => 'Facebook Page URL',
                 'rules' => 'trim|required|min_length[2]|max_length[250]|callback_custom_valid_url|htmlentities'
+            );
+        }
+        if (in_array('store_logo', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'store_logo',
+                'label' => 'Store Logo',
+                'rules' => 'trim|callback_custom_store_logo[store_logo]|htmlentities'
             );
         }
         if (in_array('first_name', $validate_fields)) {
@@ -483,6 +493,26 @@ class Storeregistration extends CI_Controller {
                 'rules' => 'trim|required|htmlentities'
             );
         }
+        if (in_array('category_count', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'category_count',
+                'label' => 'Category selection',
+                'rules' => 'trim|required|htmlentities|greater_than[0]',
+                'errors' => array(
+                    'greater_than' => 'Category Selection is required.'
+                )
+            );
+        }
+        if (in_array('location_count', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'location_count',
+                'label' => 'Branch Location',
+                'rules' => 'trim|required|htmlentities|greater_than[0]',
+                'errors' => array(
+                    'greater_than' => 'Branch Location is required.'
+                )
+            );
+        }
         if (in_array('terms_condition', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'terms_condition',
@@ -492,6 +522,47 @@ class Storeregistration extends CI_Controller {
         }
         $this->form_validation->set_rules($validation_rules);
         return $this->form_validation->run();
+    }
+
+    function custom_store_logo($image, $image_control) {
+
+        if ($_FILES[$image_control]['name'] != '') {
+            if ($_FILES[$image_control]['type'] != 'image/jpeg' && $_FILES[$image_control]['type'] != 'image/jpg' && $_FILES[$image_control]['type'] != 'image/gif' && $_FILES[$image_control]['type'] != 'image/png') {
+                $this->form_validation->set_message('custom_store_logo', 'The {field} contain invalid image type.');
+                return FALSE;
+            }
+            if ($_FILES[$image_control]['error'] > 0) {
+                $this->form_validation->set_message('custom_store_logo', 'The {field} contain invalid image.');
+                return FALSE;
+            }
+            if ($_FILES[$image_control]['size'] <= 0) {
+                $this->form_validation->set_message('custom_store_logo', 'The {field} contain invalid image size.');
+                return FALSE;
+            }
+        } else {
+            $this->form_validation->set_message('custom_store_logo', 'The {field} field is required.');
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+    function check_store_name($store_name) {
+
+        $select_data = array(
+            'table' => tbl_store,
+            'where' => array(
+                'is_delete' => IS_NOT_DELETED_STATUS,
+                'store_name' => $store_name
+            )
+        );
+
+        $check_store_name = $this->Common_model->master_single_select($select_data);
+
+        if (isset($check_store_name) && sizeof($check_store_name) > 0) {
+            $this->form_validation->set_message('check_store_name', 'The {field} already exists.');
+            return FALSE;
+        } else
+            return TRUE;
     }
 
     function custom_valid_url($url) {

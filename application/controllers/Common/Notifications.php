@@ -22,7 +22,7 @@ class Notifications
         $this->template->load('user', 'Common/Notifications/index', $this->data);
     }
 
-    public function save($id = null) {
+    public function save($notification_type = NULL, $id = null) {
 
         $this->data['title'] = $this->data['page_header'] = 'Add Notification';
 

@@ -2,13 +2,12 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Subcategory
-        extends MY_Controller {
+class Subcategory extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
         $this->load->model('Common_model', '', TRUE);
-        $this->data['page_header'] = 'Sub-category';
+        $this->data['title'] = $this->data['page_header'] = 'Sub-Categories';
         $this->bread_crum[] = array(
             'url' => base_url() . 'super-admin/category',
             'title' => 'Categories',
@@ -25,8 +24,7 @@ class Subcategory
 
     public function index($category_id = NULL) {
         if (!is_null($category_id)) {
-            $this->data['page'] = 'sub_category_list_page';
-
+            $this->data['page'] = 'sub_category_list_page';            
             $this->data['category_id'] = $category_id;
 
             $select_categories = array(
@@ -40,7 +38,7 @@ class Subcategory
                     'url' => '',
                     'title' => 'List - ' . $parent_category['category_name']
                 );
-                $this->data['page_header'] = 'Sub-categories - ' . $parent_category['category_name'];
+                echo $this->data['page_header'] = 'Sub-categories - ' . $parent_category['category_name'];
 
                 $this->template->load('user', 'Superadmin/Subcategory/index', $this->data);
             } else {
@@ -97,7 +95,8 @@ class Subcategory
 
                         if (($_FILES['sub_category_logo']['size']) > 0) {
 
-                            $image_path = dirname($_SERVER["SCRIPT_FILENAME"]) . '/' . sub_category_img_path;
+//                            $image_path = dirname($_SERVER["SCRIPT_FILENAME"]) . '/' . sub_category_img_path;
+                            $image_path = $_SERVER['DOCUMENT_ROOT'] . sub_category_img_path;
                             if (!file_exists($image_path)) {
                                 $this->Common_model->created_directory($image_path);
                             }
@@ -139,8 +138,8 @@ class Subcategory
                         if (!$id) {
                             // Insert
                             $sub_category_data['created_date'] = $date;
-                            $category_id = $this->Common_model->master_save(tbl_sub_category, $sub_category_data);
-                            if ($category_id > 0) {
+                            $category_id_ = $this->Common_model->master_save(tbl_sub_category, $sub_category_data);
+                            if ($category_id_ > 0) {
                                 $this->session->set_flashdata('success_msg', "Sub-category Added Successfully!");
                             }
                         } else {
@@ -157,6 +156,7 @@ class Subcategory
                                 $this->session->set_flashdata('success_msg', "Sub-category Updated Successfully!");
                             }
                         }
+                        
                         redirect('super-admin/sub-category/' . $category_id);
                     }
                 }
@@ -259,7 +259,7 @@ class Subcategory
         $select_data = array(
             'table' => tbl_sub_category,
             'where' => array(
-                'is_delete' => 0,
+                'is_delete' => IS_NOT_DELETED_STATUS,
                 'sub_category_name' => $sub_category_name
             )
         );
