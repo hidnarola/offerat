@@ -132,7 +132,8 @@ function validate_logo(control) {
 
             var Extension = FileUploadPath.substring(FileUploadPath.lastIndexOf('.') + 1).toLowerCase();
 
-            if (Extension == 'gif' || Extension == 'png' || Extension == 'jpeg' || Extension == 'jpg') {
+//            if (Extension == 'gif' || Extension == 'png' || Extension == 'jpeg' || Extension == 'jpg') {
+            if (Extension == 'png' || Extension == 'jpeg' || Extension == 'jpg') {
 
                 if (fileUpload.files && fileUpload.files[0]) {
                     var reader = new FileReader();
@@ -144,19 +145,19 @@ function validate_logo(control) {
                 return true;
             } else {
                 store_logo_error_wrapper.removeClass('display-none');
-                store_logo_error.html('Store Logo Image should only GIF, PNG, JPG or JPEG file types.');
+                store_logo_error.html('Store Logo Image should only PNG, JPG or JPEG file types.');
                 is_valid.val(0);
                 return false;
             }
         } else {
             store_logo_error_wrapper.removeClass('display-none');
-            store_logo_error.html('Store Logo Image should only GIF, PNG, JPG or JPEG file types.');
+            store_logo_error.html('Store Logo Image should only PNG, JPG or JPEG file types.');
             is_valid.val(0);
             return false;
         }
     } else {
         store_logo_error_wrapper.removeClass('display-none');
-        store_logo_error.html('Store Logo Image should only GIF, PNG, JPG or JPEG file types.');
+        store_logo_error.html('Store Logo Image should only PNG, JPG or JPEG file types.');
         is_valid.val(0);
         return false;
     }

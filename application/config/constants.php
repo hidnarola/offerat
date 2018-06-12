@@ -118,11 +118,19 @@ define('tbl_place', 'place');
   define('sub_category_img_path', 'assets/images/subcategory/');
   define('store_img_path', 'assets/images/store/'); */
 
-define('country_img_path', '/PG/TG/Offerat/media/CountryFlag/');
-define('category_img_path', '/PG/TG/Offerat/media/CategoryIcon/');
-define('sub_category_img_path', '/PG/TG/Offerat/media/SubCategoryIcon/');
-define('store_img_path', '/PG/TG/Offerat/media/StoreLogo/');
-
+if ($_SERVER['HTTP_HOST'] == 'localhost') {
+    define('country_img_path', '/media/CountryFlag/');
+    define('category_img_path', '/media/CategoryIcon/');
+    define('sub_category_img_path', '/media/SubCategoryIcon/');
+    define('store_img_path', '/media/StoreLogo/');
+    define('offer_media_path', '/media/OfferMedia/');
+} else {
+    define('country_img_path', '/PG/TG/Offerat/media/CountryFlag/');
+    define('category_img_path', '/PG/TG/Offerat/media/CategoryIcon/');
+    define('sub_category_img_path', '/PG/TG/Offerat/media/SubCategoryIcon/');
+    define('store_img_path', '/PG/TG/Offerat/media/StoreLogo/');
+    define('offer_media_path', '/PG/TG/Offerat/media/OfferMedia/');
+}
 define('SUPER_ADMIN_USER_TYPE', '1');
 define('COUNTRY_ADMIN_USER_TYPE', '2');
 define('STORE_OR_MALL_ADMIN_USER_TYPE', '3');

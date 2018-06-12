@@ -151,9 +151,7 @@ class Country extends MY_Controller {
                     $country_data = array(
                         'country_name' => $this->input->post('country_name', TRUE),
                         'id_users' => $user_id,
-                        'status' => $this->input->post('status', TRUE),
-                        'created_date' => 0,
-                        'created_by' => 0,
+                        'status' => $this->input->post('status', TRUE),                        
                         'modified_date' => 0,
                         'modified_by' => 0,
                         'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0

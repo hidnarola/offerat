@@ -155,12 +155,12 @@ $(function () {
     $(document).find('[data-toggle="tooltip"]').tooltip();
 
     $('#expire_date_icon').click(function (e) {
-        $('#expire_date_time').AnyTime_noPicker().AnyTime_picker({format: "%m-%d-%Z, %H:%i"}).focus();
+        $('#expire_date_time').AnyTime_noPicker().AnyTime_picker({format: "%Z-%m-%d %H:%i"}).focus();
         e.preventDefault();
     });
 
     $('#broad_cast_icon').click(function (e) {
-        $('#broad_cast_date_time').AnyTime_noPicker().AnyTime_picker({format: "%m-%d-%Z, %H:%i"}).focus();
+        $('#broad_cast_date_time').AnyTime_noPicker().AnyTime_picker({format: "%Z-%m-%d %H:%i"}).focus();
         e.preventDefault();
     });
 });

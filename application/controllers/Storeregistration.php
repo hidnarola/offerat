@@ -527,7 +527,8 @@ class Storeregistration extends CI_Controller {
     function custom_store_logo($image, $image_control) {
 
         if ($_FILES[$image_control]['name'] != '') {
-            if ($_FILES[$image_control]['type'] != 'image/jpeg' && $_FILES[$image_control]['type'] != 'image/jpg' && $_FILES[$image_control]['type'] != 'image/gif' && $_FILES[$image_control]['type'] != 'image/png') {
+//            if ($_FILES[$image_control]['type'] != 'image/jpeg' && $_FILES[$image_control]['type'] != 'image/jpg' && $_FILES[$image_control]['type'] != 'image/gif' && $_FILES[$image_control]['type'] != 'image/png') {
+            if ($_FILES[$image_control]['type'] != 'image/jpeg' && $_FILES[$image_control]['type'] != 'image/jpg' && $_FILES[$image_control]['type'] != 'image/png') {
                 $this->form_validation->set_message('custom_store_logo', 'The {field} contain invalid image type.');
                 return FALSE;
             }
