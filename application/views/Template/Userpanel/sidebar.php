@@ -53,8 +53,8 @@ $logged_user_type = $this->session->userdata('loggedin_user_type');
                         <li>
                             <a href="#"><i class="icon-bell2"></i> <span>Notifications</span></a>
                             <ul>
-                                <li <?php echo ($controller === 'notifications' && isset($type) && $type == 'offers') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/offers"><i class="icon-bubble-notification"></i> <span>Offers</span></a></li>
-                                <li <?php echo ($controller === 'notifications' && isset($type) && $type == 'announcements') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/announcements"><i class="icon-volume-medium"></i> <span>Announcements</span></a></li>
+                                <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'offers') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/offers"><i class="icon-bubble-notification"></i> <span>Offers</span></a></li>
+                                <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'announcements') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/announcements"><i class="icon-volume-medium"></i> <span>Announcements</span></a></li>
                             </ul>
                         </li>
 

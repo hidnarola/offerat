@@ -85,6 +85,9 @@ $route['country-admin/dashboard'] = 'countryadmin/dashboard';
 $route['country-admin/change-password'] = 'common/change_password';
 $route['country-admin/change-information'] = 'common/change_information';
 $route['country-admin/notifications/(:any)'] = 'common/notifications/index/$1';
+$route['country-admin/notifications/(:any)/(:any)'] = 'common/notifications/index/$1/$2';
+$route['country-admin/filter_notifications/(:any)'] = 'common/notifications/filter_notifications/$1';
+$route['country-admin/filter_notifications/(:any)/(:any)'] = 'common/notifications/filter_notifications/$1/$2';
 $route['country-admin/notifications/(:any)/save'] = 'common/notifications/save/$1';
 $route['country-admin/notifications/(:any)/save/(:any)'] = 'common/notifications/save/$1';
 
@@ -94,6 +97,9 @@ $route['mall-store-user/dashboard'] = 'mall_store/dashboard';
 $route['mall-store-user/change-password'] = 'common/change_password';
 $route['mall-store-user/change-information'] = 'common/change_information';
 $route['mall-store-user/notifications/(:any)'] = 'common/notifications/index/$1';
+$route['mall-store-user/notifications/(:any)/(:any)'] = 'common/notifications/index/$1/$2';
+$route['mall-store-user/filter_notifications/(:any)'] = 'common/notifications/filter_notifications/$1';
+$route['mall-store-user/filter_notifications/(:any)/(:any)'] = 'common/notifications/filter_notifications/$1/$2';
 $route['mall-store-user/notifications/(:any)/save'] = 'common/notifications/save/$1';
 $route['mall-store-user/notifications/(:any)/save/(:any)'] = 'common/notifications/save/$1/$2';
 
