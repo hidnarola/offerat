@@ -43,7 +43,13 @@ $logged_user_type = $this->session->userdata('loggedin_user_type');
                 <?php } elseif ($logged_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
                     <ul class="navigation navigation-main navigation-accordion">
                         <li <?php echo ($controller === 'dashboard') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/dashboard"><i class="icon-home4"></i> <span>Dashboard</span></a></li>
-                        <li <?php echo ($controller === 'notifications') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications"><i class="icon-bell2"></i> <span>Notifications</span></a></li>
+                        <li>
+                            <a href="#"><i class="icon-bell2"></i> <span>Notifications</span></a>
+                            <ul>
+                                <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'offers') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/offers"><i class="icon-bubble-notification"></i> <span>Offers</span></a></li>
+                                <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'announcements') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/announcements"><i class="icon-volume-medium"></i> <span>Announcements</span></a></li>
+                            </ul>
+                        </li>
                         <li <?php echo ($controller === 'change-password') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-password"><i class="icon-lock2"></i> <span>Change Password</span></a></li>
                         <li <?php echo ($controller === 'change-information') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-information"><i class="fa fa-user"></i> <span>Change Information</span></a></li>
                     </ul>
@@ -57,7 +63,6 @@ $logged_user_type = $this->session->userdata('loggedin_user_type');
                                 <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'announcements') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/announcements"><i class="icon-volume-medium"></i> <span>Announcements</span></a></li>
                             </ul>
                         </li>
-
                         <li <?php echo ($controller === 'change-password') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-password"><i class="icon-lock2"></i> <span>Change Password</span></a></li>
                         <li <?php echo ($controller === 'change-information') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-information"><i class="fa fa-user"></i> <span>Change Information</span></a></li>
 

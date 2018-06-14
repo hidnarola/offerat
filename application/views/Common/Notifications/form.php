@@ -69,31 +69,6 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>Expire Date & Time</label>
-                                            <div class="input-group">
-                                                <span class="input-group-btn">
-                                                    <button type="button" class="btn btn-default btn-icon" id="expire_date_icon"><i class="icon-calendar3"></i></button>
-                                                </span>                                                
-                                                <?php
-                                                $expiry_time = '';
-                                                if (isset($notification_data) && isset($notification_data['expiry_time'])) {
-                                                    $expiry_time = date_create($notification_data['expiry_time']);
-                                                    $expiry_time = date_format($expiry_time, "Y-m-d H:i");
-                                                } else
-                                                    $expiry_time = set_value('expiry_time');
-                                                ?>
-                                                <input type="text" class="form-control" placeholder="Expire Date & Time" name="expiry_time" id="expire_date_time" value="<?php echo (!empty($expiry_time)) ? $expiry_time : set_value('expiry_time'); ?>">
-                                            </div>                                                                                        
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12">
-                                <div class="col-md-12">                                    
-                                    <div class="col-md-4">
-                                        <div class="form-group">
                                             <label>Broadcast Date & Time <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                                 <span class="input-group-btn">
@@ -111,6 +86,31 @@
                                             </div>                                            
                                         </div>
                                     </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12">
+                                <div class="col-md-12">   
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Expire Date & Time</label>
+                                            <div class="input-group">
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default btn-icon" id="expire_date_icon"><i class="icon-calendar3"></i></button>
+                                                </span>                                                
+                                                <?php
+                                                $expiry_time = '';
+                                                if (isset($notification_data) && isset($notification_data['expiry_time'])) {
+                                                    $expiry_time = date_create($notification_data['expiry_time']);
+                                                    $expiry_time = date_format($expiry_time, "Y-m-d H:i");
+                                                } else
+                                                    $expiry_time = set_value('expiry_time');
+                                                ?>
+                                                <input type="text" class="form-control" placeholder="Expire Date & Time" name="expiry_time" id="expire_date_time" value="<?php echo (!empty($expiry_time)) ? $expiry_time : set_value('expiry_time'); ?>">
+                                            </div>                                                                                        
+                                        </div>
+                                    </div>                                    
                                     <div class="col-md-4">
                                         <div class="form-group offer_text_section">
                                             <label>Offer Text <span class="text-danger">*</span></label>
@@ -191,7 +191,7 @@
 <?php } else { ?>
             $(document).find('.offer_text_section').hide();
             $(document).find('.offer_image_video_section').show();
-            $(document).find('#media_name').attr('required', 'required');
+//            $(document).find('#media_name').attr('required', 'required');
             $(document).find('#content').removeAttr('required');
 <?php } ?>
     });

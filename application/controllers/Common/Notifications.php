@@ -12,6 +12,9 @@ class Notifications extends MY_Controller {
             'url' => '',
             'title' => 'Notifications',
         );
+
+        if (!in_array($this->loggedin_user_type, array(COUNTRY_ADMIN_USER_TYPE, STORE_OR_MALL_ADMIN_USER_TYPE)))
+            redirect('/');
     }
 
     public function index($notification_type = NULL, $list_type = NULL) {
@@ -22,22 +25,21 @@ class Notifications extends MY_Controller {
             $add_url = '';
             $filter_list_url = '';
             $list_type_url = '';
+            $delete_url = '';
             $this->data['title'] = $this->data['page_header'] = ucfirst($notification_type);
-
+//            country-admin/notifications/<?php echo $notification_type; /save/
             if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
                 $list_url = 'country-admin/notifications/' . $notification_type . '/' . $list_type;
                 $add_url = 'country-admin/notifications/' . $notification_type . '/save';
                 $filter_list_url = 'country-admin/filter_notifications/' . $notification_type . '/' . $list_type;
                 $list_type_url = 'country-admin/notifications/' . $notification_type . '/';
+                $delete_url = 'country-admin/notifications/' . $notification_type . '/delete/';
             } elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
                 $list_url = 'mall-store-user/notifications/' . $notification_type . '/' . $list_type;
                 $add_url = 'mall-store-user/notifications/' . $notification_type . '/save';
                 $filter_list_url = 'mall-store-user/filter_notifications/' . $notification_type . '/' . $list_type;
                 $list_type_url = 'mall-store-user/notifications/' . $notification_type . '/';
-            } elseif ($this->loggedin_user_type == SUPER_ADMIN_USER_TYPE) {
-                redirect('super-admin/dashboard');
-            } else {
-                redirect('/');
+                $delete_url = 'mall-store-user/notifications/' . $notification_type . '/delete/';
             }
 
             $this->bread_crum[] = array(
@@ -45,6 +47,7 @@ class Notifications extends MY_Controller {
                 'title' => ucfirst($notification_type) . ' List',
             );
 
+            $this->data['delete_url'] = $delete_url;
             $this->data['list_url'] = $list_url;
             $this->data['add_url'] = $add_url;
             $this->data['filter_list_url'] = $filter_list_url;
@@ -63,6 +66,7 @@ class Notifications extends MY_Controller {
      * Display and Filter Notifications
      */
     public function filter_notifications($notification_type = NULL, $list_type = NULL) {
+
         $filter_array = $this->Common_model->create_datatable_request($this->input->post());
 
         $filter_array['order_by'] = array(tbl_offer_announcement . '.id_offer' => 'DESC');
@@ -79,8 +83,19 @@ class Notifications extends MY_Controller {
             elseif ($list_type == 'expired')
                 $filter_array['where_with_sign'][] = '(DATE_FORMAT(' . tbl_offer_announcement . '.expiry_time, "%Y-%m-%d %H:%i:%s") < now())';
         } else
-            $filter_array['where_with_sign'][] = '(DATE_FORMAT(' . tbl_offer_announcement . '.broadcasting_time, "%Y-%m-%d %H:%i:%s") >= now() and DATE_FORMAT(' . tbl_offer_announcement . '.expiry_time, "%Y-%m-%d %H:%i:%s") = "00-00-0000 00:00:00") OR (now() between ' . tbl_offer_announcement . '.broadcasting_time and ' . tbl_offer_announcement . '.expiry_time)';
+            $filter_array['where_with_sign'][] = '((DATE_FORMAT(' . tbl_offer_announcement . '.broadcasting_time, "%Y-%m-%d %H:%i:%s") >= now() and DATE_FORMAT(' . tbl_offer_announcement . '.expiry_time, "%Y-%m-%d %H:%i:%s") = "00-00-0000 00:00:00") OR (now() between ' . tbl_offer_announcement . '.broadcasting_time and ' . tbl_offer_announcement . '.expiry_time))';
 
+        if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
+            $filter_array['where_with_sign'][] = array('(FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", store.id_users) <> 0 OR FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", mall.id_users) <> 0)');
+        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+            $filter_array['join'][] = array(
+                'table' => tbl_country . ' as country',
+//                'condition' => tbl_country . '.id_users = ' . tbl_user . '.id_user',
+                'condition' => 'FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0 AND country.is_delete=' . IS_NOT_DELETED_STATUS,
+                'join_type' => 'left',
+            );
+            $filter_array['where_with_sign'][] = array('(FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0 AND country.is_delete=' . IS_NOT_DELETED_STATUS . ')');
+        }
         $filter_array['join'][] = array(
             'table' => tbl_mall . ' as mall',
             'condition' => tbl_mall . '.id_mall = ' . tbl_offer_announcement . '.id_mall',
@@ -91,8 +106,19 @@ class Notifications extends MY_Controller {
             'condition' => tbl_store . '.id_store = ' . tbl_offer_announcement . '.id_store',
             'join_type' => 'left',
         );
+        $filter_array['join'][] = array(
+            'table' => tbl_store_location . ' as store_location',
+            'condition' => tbl_store_location . '.id_store = ' . tbl_store . '.id_store',
+            'join_type' => 'left',
+        );
+        $filter_array['join'][] = array(
+            'table' => tbl_place . ' as place',
+            'condition' => tbl_place . '.id_place = ' . tbl_store_location . '.id_place',
+            'join_type' => 'left',
+        );
 
         $filter_records = $this->Common_model->get_filtered_records(tbl_offer_announcement, $filter_array);
+//        query();
         $total_filter_records = $this->Common_model->get_filtered_records(tbl_offer_announcement, $filter_array, 1);
 
         $output = array(
@@ -110,25 +136,31 @@ class Notifications extends MY_Controller {
      * @param int id : notification id
      */
 
-    public function save($notification_type = NULL, $id = null) {
+    public function save($notification_type = NULL, $id = NULL, $list_type = NULL) {
 
         if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements'))) {
-            $img_name = $image_name = '';
+            $m_name = $media_name = '';
+            $media_video_name = '';
+            $media_width = 0;
+            $media_height = 0;
             if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)
-                $back_url = 'countr
-            y-admin/notifications/' . $notification_type;
+                $back_url = 'country-admin/notifications/' . $notification_type . '/' . $list_type;
             elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
-                $back_url = 'mall-store-user/notifications/' . $notification_type;
+                $back_url = 'mall-store-user/notifications/' . $notification_type . '/' . $list_type;
                 if (!is_null($id))
-                    redirect($back_url)
-                    ;
-            } elseif ($this->loggedin_user_type == SUPER_ADMIN_USER_TYPE) {
-                redirect('super-admin/dashboard');
-            } else {
-                redirect('/');
+                    redirect($back_url);
             }
 
+            $this->bread_crum[] = array(
+                'url' => $back_url,
+                'title' => ucfirst($notification_type) . ' List',
+            );
+
             if (isset($id) && $id > 0) {
+                $this->bread_crum[] = array(
+                    'url' => '',
+                    'title' => 'Edit ' . ucfirst($notification_type),
+                );
 
                 $this->data['title'] = $this->data['page_header'] = 'Edit ' . ucfirst($notification_type);
 
@@ -142,17 +174,20 @@ class Notifications extends MY_Controller {
 
                 $notification_data = $this->Common_model->master_single_select($select_notification);
                 if (isset($notification_data) && sizeof($notification_data) > 0) {
-                    $image_name = $notification_data['media_name'];
+                    $media_name = $notification_data['media_name'];
+                    $media_thumbnail = $notification_data['media_thumbnail'];
+                    $media_width = $notification_data['media_width'];
+                    $media_height = $notification_data['media_height'];
                     $this->data['notification_data'] = $notification_data;
                 } else {
                     redirect($back_url);
                 }
             } else {
-
                 $this->bread_crum[] = array(
-                    'url' => $back_url,
-                    'title' => ucfirst($notification_type) . ' List',
+                    'url' => '',
+                    'title' => 'Add ' . ucfirst($notification_type),
                 );
+
                 $this->data['title'] = $this->data['page_header'] = 'Add ' . ucfirst($notification_type);
             }
 
@@ -173,7 +208,7 @@ class Notifications extends MY_Controller {
                 if ($notification_type == 'offers')
                     $validate_fields[] = 'push_message';
 
-                if ($this->_validate_form($validate_fields)) {
+                if ($this->_validate_form($validate_fields, $id)) {
 
                     $uploaded_file_type = @$_FILES['media_name']['type'];
                     $image_types = $this->image_types_arr;
@@ -189,13 +224,32 @@ class Notifications extends MY_Controller {
                                 $this->Common_model->created_directory($image_path);
                             }
                             $supported_files = 'gif|jpg|png|jpeg|mp4|webm|ogg|ogv|wmv|vob|swf|mov|m4v|flv';
-                            $img_name = $this->Common_model->upload_image('media_name', $image_path, $supported_files);
+                            $m_name = $this->Common_model->upload_image('media_name', $image_path, $supported_files);
 
-                            if (empty($img_name)) {
+                            if (empty($m_name)) {
                                 $do_notification_image_video_has_error = true;
                                 $this->data['image_errors'] = $this->upload->display_errors();
                             } else {
-                                $image_name = $img_name;
+                                $media_thumbnail = $media_name = $m_name;
+                                if (in_array($uploaded_file_type, $this->image_types_arr)) {
+                                    list($width, $height) = getimagesize($_SERVER['DOCUMENT_ROOT'] . offer_media_path . $media_name);
+                                    $media_width = $width;
+                                    $media_height = $height;
+                                    $target_file = $_SERVER['DOCUMENT_ROOT'] . offer_media_path . $media_name;
+                                    $destination = $_SERVER['DOCUMENT_ROOT'] . offer_media_thumbnail_path . $media_name;
+                                    $this->Common_model->crop_product_image($target_file, $destination, MEDIA_THUMB_IMAGE_WIDTH, MEDIA_THUMB_IMAGE_HEIGHT);
+                                }
+                                if (in_array($uploaded_file_type, $this->video_extensions_arr)) {
+                                    $target_file = $_SERVER['DOCUMENT_ROOT'] . offer_media_path . $media_name;
+                                    $media_thumbnail = time() . "_videoimg.jpg";
+                                    $destination = $_SERVER['DOCUMENT_ROOT'] . offer_media_thumbnail_path . $media_thumbnail;
+                                    $command = '~/bin/ffmpeg  -i ' . $target_file . "  -ss 00:00:1.435  -vframes 1 " . $destination;
+                                    exec($command, $a, $b);
+
+                                    list($width, $height) = getimagesize($destination);
+                                    $media_width = $width;
+                                    $media_height = $height;
+                                }
                             }
                         } else {
                             if (!empty($_FILES['media_name']['tmp_name'])) {
@@ -204,6 +258,7 @@ class Notifications extends MY_Controller {
                             }
                         }
                     }
+
                     if (!$do_notification_image_video_has_error) {
 
                         $date = date('Y-m-d h:i:s');
@@ -222,18 +277,20 @@ class Notifications extends MY_Controller {
                         $broadcasting_time_text = date_format($broadcasting_time, "Y-m-d H:i:00");
 
                         $notification_data = array(
-                            'type' => ($notification_type == OFFER_OFFER_TYPE) ? OFFER_OFFER_TYPE : ANNOUNCEMENT_OFFER_TYPE,
+                            'type' => ($notification_type == 'offers') ? OFFER_OFFER_TYPE : ANNOUNCEMENT_OFFER_TYPE,
                             'offer_type' => (in_array($uploaded_file_type, $video_types)) ? VIDEO_OFFER_CONTENT_TYPE : ($this->input->post('offer_type', TRUE) == TEXT_OFFER_CONTENT_TYPE) ? TEXT_OFFER_CONTENT_TYPE : IMAGE_OFFER_CONTENT_TYPE,
                             'expiry_time' => $expiry_time_text,
                             'broadcasting_time' => $broadcasting_time_text,
                             'content' => ($this->input->post('offer_type', TRUE) == TEXT_OFFER_CONTENT_TYPE) ? $this->input->post('content', TRUE) : '',
-                            'media_name' => ($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE) ? $image_name : '',
+                            'media_name' => ($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE) ? $media_name : '',
+                            'media_thumbnail' => ($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE) ? $media_thumbnail : '',
                             'id_mall' => $mall_id,
-                            'id_store' => $store_id
+                            'id_store' => $store_id,
+                            'media_width' => ($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE) ? $media_width : 0,
+                            'media_height' => (($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE)) ? $media_height : 0
                         );
                         if ($notification_type == 'offers')
-                            $notification_data['pu
-            sh_message'] = $this->input->post('push_message', TRUE);
+                            $notification_data['push_message'] = $this->input->post('push_message', TRUE);
 
                         if ($id) {
                             $where = array('id_offer' => $id);
@@ -264,8 +321,7 @@ class Notifications extends MY_Controller {
                 'where' => array('status' => ACTIVE_STATUS, 'is_delete' => IS_NOT_DELETED_STATUS)
             );
             if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
-                $select_stores['where_
-            with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", id_users) <> 0');
+                $select_stores['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", id_users) <> 0');
 
             $stores_list = $this->Common_model->master_select($select_stores);
 
@@ -275,8 +331,7 @@ class Notifications extends MY_Controller {
                 'where' => array('status' => ACTIVE_STATUS, 'is_delete' => IS_NOT_DELETED_STATUS)
             );
             if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
-                $select_malls['where_w
-            ith_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", id_users) <> 0');
+                $select_malls['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", id_users) <> 0');
 
             $malls_list = $this->Common_model->master_select($select_malls);
 
@@ -296,7 +351,7 @@ class Notifications extends MY_Controller {
      * @param array $validate_fields array of control names
      * @return boolean
      */
-    function _validate_form($validate_fields) {
+    function _validate_form($validate_fields, $id = NULL) {
         $validation_rules = array();
 
         if (in_array('store_mall_id', $validate_fields)) {
@@ -313,18 +368,24 @@ class Notifications extends MY_Controller {
                 'rules' => 'trim|required|htmlentities',
             );
         }
+        $expiry_callback = '';
+        if (is_null($id))
+            $expiry_callback = '|callback_custom_expiry_time_check';
         if (in_array('expiry_time', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'expiry_time',
                 'label' => 'Expiry Date and Time',
-                'rules' => 'trim|htmlentities|callback_custom_expiry_time_check',
+                'rules' => 'trim|htmlentities' . $expiry_callback,
             );
         }
+        $broadcast_callback = '';
+        if (is_null($id))
+            $broadcast_callback = '|callback_custom_broadcast_time_check';
         if (in_array('broadcasting_time', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'broadcasting_time',
                 'label' => 'Broadcast Date & Time',
-                'rules' => 'trim|required|htmlentities|callback_custom_broadcast_time_check',
+                'rules' => 'trim|required|htmlentities' . $broadcast_callback,
             );
         }
 
@@ -332,16 +393,14 @@ class Notifications extends MY_Controller {
             $validation_rules[] = array(
                 'field' => 'content',
                 'label' => 'Content',
-                'rules' => 'trim|required|min_length[ 5 ]|  htmlentities',
+                'rules' => 'trim|required|min_length[5]|htmlentities',
             );
         }
         if (in_array('media_name', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'media_name',
                 'label' => 'Image / Video',
-                'rules' => 'trim|callback_custom_notification_image_video[  
-
-        media_name]|  htmlentities',
+                'rules' => 'trim|callback_custom_notification_image_video[media_name]|htmlentities',
             );
         }
 
@@ -366,10 +425,11 @@ class Notifications extends MY_Controller {
                 $this->form_validation->set_message('custom_notification_image_video', 'The {field} contain invalid image size / video size.');
                 return FALSE;
             }
-        } else {
-            $this->form_validation->set_message('custom_notification_image_video', 'The {field} field is required.');
-            return FALSE;
         }
+//        else {
+//            $this->form_validation->set_message('custom_notification_image_video', 'The {field} field is required.');
+//            return FALSE;
+//        }
 
         return TRUE;
     }
@@ -402,16 +462,62 @@ class Notifications extends MY_Controller {
             }
             return TRUE;
         } else {
-            $this->form_validation->set_message('custom_broadcast_time_check', 'Broadcast Date & Time should be greater than Current Date & Time.    
-
-              
-
-           
-
-        
-
-         ');
+            $this->form_validation->set_message('custom_broadcast_time_check', 'Broadcast Date & Time should be greater than Current Date & Time.');
             return FALSE;
+        }
+    }
+
+    /*
+     * Delete Notification
+     * @param String $notification_type : 'offers', 'announcements'
+     * @param int id : notification id
+     * @param String list_type : blank , 'upcoming' , 'expired'
+     */
+
+    function delete($notification_type = NULL, $id = null, $list_type = NULL) {
+        $can_delete = TRUE;
+        if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements')) && !is_null($id) && $id > 0) {
+
+            $select_notification = array(
+                'table' => tbl_offer_announcement,
+                'where' => array(
+                    'id_offer' => $id,
+                    'is_delete' => IS_NOT_DELETED_STATUS
+                )
+            );
+
+            $notification_details = $this->Common_model->master_single_select($select_notification);
+
+            if (isset($notification_details) && sizeof($notification_details) > 0) {
+                if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
+                    if ($notification_details['expiry_time'] != '0000-00-00 00:00:00' && strtotime($notification_details['expiry_time']) < strtotime(date('Y-m-d H:i')))
+                        $can_delete = FALSE;
+                }
+
+                if ($can_delete == TRUE) {
+                    $update_data = array('is_delete' => IS_DELETED_STATUS);
+                    $where_data = array('id_offer' => $id, 'is_delete' => IS_NOT_DELETED_STATUS);
+                    $is_updated = $this->Common_model->master_update(tbl_offer_announcement, $update_data, $where_data);
+
+                    if ($is_updated)
+                        $this->session->set_flashdata('success_msg', ucfirst($notification_type) . ' deleted successfully.');
+                    else
+                        $this->session->set_flashdata('error_msg', 'Invalid request sent to delete ' . ucfirst($notification_type) . '. Please try again later.');
+                } else
+                    $this->session->set_flashdata('error_msg', 'Invalid request sent to delete ' . ucfirst($notification_type) . '. Please try again later.');
+            } else {
+                $this->session->set_flashdata('error_msg', 'Invalid request sent to delete ' . ucfirst($notification_type) . '. Please try again later.');
+            }
+            if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)
+                $list_url = 'country-admin/notifications/' . $notification_type . '/' . $list_type;
+            elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
+                $list_url = 'mall-store-user/notifications/' . $notification_type . '/' . $list_type;
+            else
+                $list_url = '/';
+
+            redirect($list_url);
+        } else {
+            dashboard_redirect($this->loggedin_user_type);
         }
     }
 

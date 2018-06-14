@@ -322,12 +322,12 @@ class Country extends MY_Controller {
             if (isset($check_mall_country) && sizeof($check_mall_country) > 0)
                 $this->session->set_flashdata('error_msg', 'You can not delete this Country, Mall is using this Country.');
             else {
-                $update_country_data = array('is_delete' => IS_DELETED_STATUS);
-                $where_country_data = array(
+                $update_data = array('is_delete' => IS_DELETED_STATUS);
+                $where_data = array(
                     'id_country' => $country_id,
                     'is_delete' => IS_NOT_DELETED_STATUS
                 );
-                $is_updated = $this->Common_model->master_update(tbl_country, $update_country_data, $where_country_data);
+                $is_updated = $this->Common_model->master_update(tbl_country, $update_data, $where_data);
 
                 if ($is_updated)
                     $this->session->set_flashdata('success_msg', 'Country deleted successfully.');

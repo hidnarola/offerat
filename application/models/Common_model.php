@@ -1,7 +1,6 @@
 <?php
 
-class Common_model
-        extends CI_Model {
+class Common_model extends CI_Model {
 
     function __construct() {
         parent::__construct();
@@ -599,6 +598,11 @@ class Common_model
         $CI = & get_instance();
         $extension = substr(strrchr($_FILES[$image_name]['name'], '.'), 1);
         $randname = time() . '.' . $extension;
+        
+        if (in_array($extension, array('jpeg', 'jpg', 'png')))
+            $randname = time() . '_image.' . $extension;
+        elseif (in_array($extension, array('mp4', 'webm', 'ogg', 'ogv', 'wmv', 'vob', 'swf', 'mov', 'm4v', 'flv')))
+            $randname = time() . '_video.' . $extension;
 
         if (is_null($file_extensions))
             $file_extensions = 'gif|jpg|png|jpeg|pdf';
@@ -645,6 +649,64 @@ class Common_model
             mkdir($path, 0777, TRUE);
         }
         return true;
+    }
+
+    public function crop_product_image($source, $destination, $width, $height) {
+        $width = 0;
+
+        //$destination = $source;
+        $type = strtolower(pathinfo($source, PATHINFO_EXTENSION));
+        $allowed_type = array('png', 'jpeg', 'gif', 'jpg');
+        $return = 0;
+        if (in_array(strtolower($type), $allowed_type)) {
+            list($w, $h) = getimagesize($source);
+
+            $ratio = $h / $height;
+            $width = $w / $ratio;
+
+            $sourceRatio = $w / $h;
+            $targetRatio = $height / $width;
+
+            if ($sourceRatio < $targetRatio) {
+                $scale = $h / $height;
+            } else {
+                $scale = $w / $width;
+            }
+
+            $widthPadding = $heightPadding = 0;
+
+            $handle = finfo_open(FILEINFO_MIME);
+            $mime_type = finfo_file($handle, $source);
+            $mime_type = mime_content_type($source);
+            switch (strtolower($mime_type)) {
+                case 'image/gif':
+                    $img_r = imagecreatefromgif($source);
+                    $function = 'imagejgif';
+                    break;
+                case 'image/png':
+                    $img_r = imagecreatefrompng($source);
+                    $function = 'imagepng';
+                    break;
+                case 'image/jpg':
+                    $img_r = imagecreatefromjpeg($source);
+                    $function = 'imagejpeg';
+                    break;
+                case 'image/jpeg':
+                    $img_r = imagecreatefromjpeg($source);
+                    $function = 'imagejpeg';
+                    break;
+            }
+
+            $dst_r = ImageCreateTrueColor($width, $height);
+            //set white background
+            $white = imagecolorallocate($dst_r, 255, 255, 255);
+            imagefill($dst_r, 0, 0, $white);
+
+            imagecopyresampled($dst_r, $img_r, 0, 0, $widthPadding, $heightPadding, $width, $height, $w, $h);
+            if ($function($dst_r, $destination)) {
+                $return = 1;
+            }
+        }
     }
 
 }

@@ -124,12 +124,14 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
     define('sub_category_img_path', '/media/SubCategoryIcon/');
     define('store_img_path', '/media/StoreLogo/');
     define('offer_media_path', '/media/OfferMedia/');
+    define('offer_media_thumbnail_path', '/media/OfferMediaThumbail/');
 } else {
     define('country_img_path', '/PG/TG/Offerat/media/CountryFlag/');
     define('category_img_path', '/PG/TG/Offerat/media/CategoryIcon/');
     define('sub_category_img_path', '/PG/TG/Offerat/media/SubCategoryIcon/');
     define('store_img_path', '/PG/TG/Offerat/media/StoreLogo/');
     define('offer_media_path', '/PG/TG/Offerat/media/OfferMedia/');
+    define('offer_media_thumbnail_path', '/PG/TG/Offerat/media/OfferMediaThumbail/');
 }
 define('SUPER_ADMIN_USER_TYPE', '1');
 define('COUNTRY_ADMIN_USER_TYPE', '2');
@@ -152,5 +154,8 @@ define('ANNOUNCEMENT_OFFER_TYPE', 1);
 define('IMAGE_OFFER_CONTENT_TYPE', 0);
 define('VIDEO_OFFER_CONTENT_TYPE', 1);
 define('TEXT_OFFER_CONTENT_TYPE', 2);
+
+define('MEDIA_THUMB_IMAGE_WIDTH', '30');
+define('MEDIA_THUMB_IMAGE_HEIGHT', '30');
 
 define('SUCCESS_CHANGE_EMAIL', 'Verification Email Sent. Please click on link in Email to complete the verification, Email change will take effect after verification.');
