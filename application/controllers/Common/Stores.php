@@ -17,6 +17,9 @@ class Stores extends MY_Controller {
 
         $this->data['title'] = $this->data['page_header'] = 'Stores List';
 
+        $filter_list_url = 'country-admin/stores/filter_stores';
+
+        $this->data['filter_list_url'] = $filter_list_url;
         $this->template->load('user', 'Common/Store/index', $this->data);
     }
 
@@ -27,8 +30,8 @@ class Stores extends MY_Controller {
         $filter_array['order_by'] = array(tbl_store . '.id_store' => 'DESC');
         $filter_array['group_by'] = array(tbl_store . '.id_store');
         $filter_array['where'] = array(tbl_store . '.is_delete' => IS_NOT_DELETED_STATUS);
-        
-        if($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
+
+        if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
             $filter_array['where'][] = array();
         }
         $filter_array['join'][] = array(
