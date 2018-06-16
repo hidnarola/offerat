@@ -158,4 +158,6 @@ define('TEXT_OFFER_CONTENT_TYPE', 2);
 define('MEDIA_THUMB_IMAGE_WIDTH', '30');
 define('MEDIA_THUMB_IMAGE_HEIGHT', '30');
 
+define('FFMPEG_PATH', 'C:/FFMPEG/bin/ffmpeg.exe');
+
 define('SUCCESS_CHANGE_EMAIL', 'Verification Email Sent. Please click on link in Email to complete the verification, Email change will take effect after verification.');

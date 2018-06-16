@@ -93,6 +93,11 @@ $route['country-admin/filter_notifications/(:any)'] = 'common/notifications/filt
 $route['country-admin/filter_notifications/(:any)/(:any)'] = 'common/notifications/filter_notifications/$1/$2';
 $route['country-admin/notifications/(:any)/delete/(:any)/(:any)'] = 'common/notifications/delete/$1/$2/$3';
 
+$route['country-admin/stores'] = 'common/stores/index';
+$route['country-admin/stores/filter_stores'] = 'common/stores/filter_stores';
+$route['country-admin/malls'] = 'common/malls/index';
+$route['country-admin/malls/filter_malls'] = 'common/malls/filter_malls';
+
 
 //Country Mall Store User Routes =================================
 $route['mall-store-user/dashboard'] = 'mall_store/dashboard';
@@ -104,6 +109,11 @@ $route['mall-store-user/notifications/(:any)/(:any)'] = 'common/notifications/in
 $route['mall-store-user/filter_notifications/(:any)'] = 'common/notifications/filter_notifications/$1';
 $route['mall-store-user/filter_notifications/(:any)/(:any)'] = 'common/notifications/filter_notifications/$1/$2';
 $route['mall-store-user/notifications/(:any)/delete/(:any)/(:any)'] = 'common/notifications/delete/$1/$2/$3';
+
+$route['mall-store-user/stores'] = 'common/stores/index';
+$route['mall-store-user/stores/filter_stores'] = 'common/stores/filter_stores';
+$route['mall-store-user/malls'] = 'common/malls/index';
+$route['mall-store-user/malls/filter_malls'] = 'common/malls/filter_malls';
 
 
 //Store Registration

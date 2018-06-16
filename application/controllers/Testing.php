@@ -6,15 +6,24 @@ class Testing extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
+        ini_set('error_reporting', E_ALL);
         $this->load->model('Common_model', '', TRUE);
     }
 
     public function crop() {
-        $file_name = 'ewewwewewewewestore2.png';
+//        echo phpinfo();
+//        die();
+
+        $file_name = '1528969593_video.mp4';
         $target_file = $_SERVER['DOCUMENT_ROOT'] . offer_media_path . $file_name;
         $destination = $_SERVER['DOCUMENT_ROOT'] . offer_media_thumbnail_path . $file_name;
         $destination_ = $_SERVER['DOCUMENT_ROOT'] . offer_media_thumbnail_path;
-        $command = '~/bin/ffmpeg  -i ' . $target_file . "  -ss 00:00:1.435  -vframes 1 " . $destination_ . "_videoimg.jpg";
+//        $command = '~/bin/ffmpeg  -i ' . $target_file . "  -ss 00:00:1.435  -vframes 1 " . $destination_ . "_videoimg.jpg";
+        $command = 'C:/FFMPEG/bin/ffmpeg.exe  -i ' . $target_file . "  -ss 00:00:1.435  -vframes 1 " . $destination_ . "videoimg.jpg";
+//        $thumbFile = "hello_videoimg.png";
+//        $command = "ffmpeg -i $target_file -vf scale=320:240 $thumbFile";
+//        $command = "C:/FFMPEG/bin/ffmpeg.exe  -i $target_file -vf scale=320:240 $thumbFile";
+//        $command = '~/bin/ffmpeg -h';
         exec($command, $a, $b);
         pr($a);
         echo '<br>';

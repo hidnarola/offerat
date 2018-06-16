@@ -17,29 +17,35 @@ class Notifications extends MY_Controller {
             redirect('/');
     }
 
+    /*
+     * Notifications List
+     * @param String notification_type : 'offers', 'announcements'
+     * @param String list_type : NULL, 'upcoming', 'expired' (all for Country Admin , Restrict expired for Store/Mall Admin)
+     */
+
     public function index($notification_type = NULL, $list_type = NULL) {
 
-        if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements'))) {
+        if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements')) && (($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming'))) || ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming', 'expired'))))) {
 
             $list_url = '';
             $add_url = '';
-            $filter_list_url = '';
-            $list_type_url = '';
             $delete_url = '';
+            $list_type_url = '';
+            $filter_list_url = '';
+
             $this->data['title'] = $this->data['page_header'] = ucfirst($notification_type);
-//            country-admin/notifications/<?php echo $notification_type; /save/
             if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
                 $list_url = 'country-admin/notifications/' . $notification_type . '/' . $list_type;
                 $add_url = 'country-admin/notifications/' . $notification_type . '/save';
-                $filter_list_url = 'country-admin/filter_notifications/' . $notification_type . '/' . $list_type;
-                $list_type_url = 'country-admin/notifications/' . $notification_type . '/';
                 $delete_url = 'country-admin/notifications/' . $notification_type . '/delete/';
+                $list_type_url = 'country-admin/notifications/' . $notification_type . '/';
+                $filter_list_url = 'country-admin/filter_notifications/' . $notification_type . '/' . $list_type;
             } elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
                 $list_url = 'mall-store-user/notifications/' . $notification_type . '/' . $list_type;
                 $add_url = 'mall-store-user/notifications/' . $notification_type . '/save';
-                $filter_list_url = 'mall-store-user/filter_notifications/' . $notification_type . '/' . $list_type;
-                $list_type_url = 'mall-store-user/notifications/' . $notification_type . '/';
                 $delete_url = 'mall-store-user/notifications/' . $notification_type . '/delete/';
+                $list_type_url = 'mall-store-user/notifications/' . $notification_type . '/';
+                $filter_list_url = 'mall-store-user/filter_notifications/' . $notification_type . '/' . $list_type;
             }
 
             $this->bread_crum[] = array(
@@ -47,15 +53,15 @@ class Notifications extends MY_Controller {
                 'title' => ucfirst($notification_type) . ' List',
             );
 
-            $this->data['delete_url'] = $delete_url;
             $this->data['list_url'] = $list_url;
             $this->data['add_url'] = $add_url;
+            $this->data['delete_url'] = $delete_url;
             $this->data['filter_list_url'] = $filter_list_url;
             $this->data['list_type_url'] = $list_type_url;
-            $this->data['notification_type'] = $notification_type;
-            $this->data['list_type'] = $list_type;
 
-//        $this->data['back_url'] = $user_dashboard;
+            $this->data['list_type'] = $list_type;
+            $this->data['notification_type'] = $notification_type;
+
             $this->template->load('user', 'Common/Notifications/index', $this->data);
         } else {
             dashboard_redirect($this->loggedin_user_type);
@@ -63,71 +69,79 @@ class Notifications extends MY_Controller {
     }
 
     /**
-     * Display and Filter Notifications
+     * Notifications Filter
+     * @param String notification_type : 'offers', 'announcements'
+     * @param String list_type : NULL, 'upcoming', 'expired' (all for Country Admin , Restrict expired for Store/Mall Admin)
      */
     public function filter_notifications($notification_type = NULL, $list_type = NULL) {
 
-        $filter_array = $this->Common_model->create_datatable_request($this->input->post());
+        if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements')) && (($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming'))) || ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming', 'expired'))))) {
 
-        $filter_array['order_by'] = array(tbl_offer_announcement . '.id_offer' => 'DESC');
-        $filter_array['where'] = array(tbl_offer_announcement . '.is_delete' => IS_NOT_DELETED_STATUS);
+            $filter_array = $this->Common_model->create_datatable_request($this->input->post());
 
-        if ($notification_type == 'offers')
-            $filter_array['where'][tbl_offer_announcement . '.type'] = OFFER_OFFER_TYPE;
-        elseif ($notification_type == 'announcements')
-            $filter_array['where'][tbl_offer_announcement . '.type'] = ANNOUNCEMENT_OFFER_TYPE;
+            $filter_array['order_by'] = array(tbl_offer_announcement . '.id_offer' => 'DESC');
+            $filter_array['group_by'] = array(tbl_offer_announcement . '.id_offer');
+            $filter_array['where'] = array(tbl_offer_announcement . '.is_delete' => IS_NOT_DELETED_STATUS);
 
-        if (!is_null($list_type)) {
-            if ($list_type == 'upcoming')
-                $filter_array['where_with_sign'][] = '(now() > DATE_FORMAT(' . tbl_offer_announcement . '.broadcasting_time, "%Y-%m-%d %H:%i:%s"))';
-            elseif ($list_type == 'expired')
-                $filter_array['where_with_sign'][] = '(DATE_FORMAT(' . tbl_offer_announcement . '.expiry_time, "%Y-%m-%d %H:%i:%s") < now())';
-        } else
-            $filter_array['where_with_sign'][] = '((DATE_FORMAT(' . tbl_offer_announcement . '.broadcasting_time, "%Y-%m-%d %H:%i:%s") >= now() and DATE_FORMAT(' . tbl_offer_announcement . '.expiry_time, "%Y-%m-%d %H:%i:%s") = "00-00-0000 00:00:00") OR (now() between ' . tbl_offer_announcement . '.broadcasting_time and ' . tbl_offer_announcement . '.expiry_time))';
+            if ($notification_type == 'offers')
+                $filter_array['where'][tbl_offer_announcement . '.type'] = OFFER_OFFER_TYPE;
+            elseif ($notification_type == 'announcements')
+                $filter_array['where'][tbl_offer_announcement . '.type'] = ANNOUNCEMENT_OFFER_TYPE;
 
-        if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
-            $filter_array['where_with_sign'][] = array('(FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", store.id_users) <> 0 OR FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", mall.id_users) <> 0)');
-        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+            if (!is_null($list_type)) {
+                if ($list_type == 'upcoming')
+                    $filter_array['where_with_sign'][] = '(DATE_FORMAT(' . tbl_offer_announcement . '.broadcasting_time, "%Y-%m-%d %H:%i:%s") > NOW())';
+                elseif ($list_type == 'expired')
+                    $filter_array['where_with_sign'][] = '(DATE_FORMAT(' . tbl_offer_announcement . '.expiry_time, "%Y-%m-%d %H:%i:%s") < NOW())';
+                else
+                    $filter_array['where_with_sign'][] = '(( NOW() < DATE_FORMAT(' . tbl_offer_announcement . '.broadcasting_time, "%Y-%m-%d %H:%i:%s") and DATE_FORMAT(' . tbl_offer_announcement . '.expiry_time, "%Y-%m-%d %H:%i:%s") = "00-00-0000 00:00:00") OR (NOW() BETWEEN ' . tbl_offer_announcement . '.broadcasting_time and ' . tbl_offer_announcement . '.expiry_time))';
+            } else
+                $filter_array['where_with_sign'][] = '((DATE_FORMAT(' . tbl_offer_announcement . '.broadcasting_time, "%Y-%m-%d %H:%i:%s") >= NOW() and DATE_FORMAT(' . tbl_offer_announcement . '.expiry_time, "%Y-%m-%d %H:%i:%s") = "00-00-0000 00:00:00") OR (NOW() BETWEEN ' . tbl_offer_announcement . '.broadcasting_time and ' . tbl_offer_announcement . '.expiry_time))';
+
             $filter_array['join'][] = array(
-                'table' => tbl_country . ' as country',
-//                'condition' => tbl_country . '.id_users = ' . tbl_user . '.id_user',
-                'condition' => 'FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0 AND country.is_delete=' . IS_NOT_DELETED_STATUS,
+                'table' => tbl_mall . ' as mall',
+                'condition' => tbl_mall . '.id_mall = ' . tbl_offer_announcement . '.id_mall',
                 'join_type' => 'left',
             );
-            $filter_array['where_with_sign'][] = array('(FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0 AND country.is_delete=' . IS_NOT_DELETED_STATUS . ')');
+            $filter_array['join'][] = array(
+                'table' => tbl_store . ' as store',
+                'condition' => tbl_store . '.id_store = ' . tbl_offer_announcement . '.id_store',
+                'join_type' => 'left',
+            );
+            $filter_array['join'][] = array(
+                'table' => tbl_store_location . ' as store_location',
+                'condition' => tbl_store_location . '.id_store = ' . tbl_store . '.id_store',
+                'join_type' => 'left',
+            );
+            $filter_array['join'][] = array(
+                'table' => tbl_place . ' as place',
+                'condition' => tbl_place . '.id_place = ' . tbl_store_location . '.id_place',
+                'join_type' => 'left',
+            );
+
+            if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
+                $filter_array['where_with_sign'][] = '((FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", store.id_users) <> 0) OR (FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", mall.id_users) <> 0))';
+            if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+                $filter_array['join'][] = array(
+                    'table' => tbl_country . ' as country',
+                    'condition' => '(country.id_country = mall.id_country OR country.id_country = place.id_country) AND FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0 AND country.is_delete=' . IS_NOT_DELETED_STATUS,
+                    'join_type' => 'left',
+                );
+                $filter_array['where_with_sign'][] = '((country.id_country = mall.id_country OR country.id_country = place.id_country) AND (FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0 AND country.is_delete=' . IS_NOT_DELETED_STATUS . '))';
+            }
+
+            $filter_records = $this->Common_model->get_filtered_records(tbl_offer_announcement, $filter_array);
+//            query();
+            $total_filter_records = $this->Common_model->get_filtered_records(tbl_offer_announcement, $filter_array, 1);
+
+            $output = array(
+                "draw" => $this->input->post('draw'),
+                "recordsTotal" => $this->Common_model->master_count(tbl_offer_announcement),
+                "recordsFiltered" => $total_filter_records,
+                "data" => $filter_records,
+            );
+            echo json_encode($output);
         }
-        $filter_array['join'][] = array(
-            'table' => tbl_mall . ' as mall',
-            'condition' => tbl_mall . '.id_mall = ' . tbl_offer_announcement . '.id_mall',
-            'join_type' => 'left',
-        );
-        $filter_array['join'][] = array(
-            'table' => tbl_store . ' as store',
-            'condition' => tbl_store . '.id_store = ' . tbl_offer_announcement . '.id_store',
-            'join_type' => 'left',
-        );
-        $filter_array['join'][] = array(
-            'table' => tbl_store_location . ' as store_location',
-            'condition' => tbl_store_location . '.id_store = ' . tbl_store . '.id_store',
-            'join_type' => 'left',
-        );
-        $filter_array['join'][] = array(
-            'table' => tbl_place . ' as place',
-            'condition' => tbl_place . '.id_place = ' . tbl_store_location . '.id_place',
-            'join_type' => 'left',
-        );
-
-        $filter_records = $this->Common_model->get_filtered_records(tbl_offer_announcement, $filter_array);
-//        query();
-        $total_filter_records = $this->Common_model->get_filtered_records(tbl_offer_announcement, $filter_array, 1);
-
-        $output = array(
-            "draw" => $this->input->post('draw'),
-            "recordsTotal" => $this->Common_model->master_count(tbl_offer_announcement),
-            "recordsFiltered" => $total_filter_records,
-            "data" => $filter_records,
-        );
-        echo json_encode($output);
     }
 
     /*
@@ -239,13 +253,14 @@ class Notifications extends MY_Controller {
                                     $destination = $_SERVER['DOCUMENT_ROOT'] . offer_media_thumbnail_path . $media_name;
                                     $this->Common_model->crop_product_image($target_file, $destination, MEDIA_THUMB_IMAGE_WIDTH, MEDIA_THUMB_IMAGE_HEIGHT);
                                 }
-                                if (in_array($uploaded_file_type, $this->video_extensions_arr)) {
+
+                                if (in_array($uploaded_file_type, $this->video_types_arr)) {
+
                                     $target_file = $_SERVER['DOCUMENT_ROOT'] . offer_media_path . $media_name;
                                     $media_thumbnail = time() . "_videoimg.jpg";
                                     $destination = $_SERVER['DOCUMENT_ROOT'] . offer_media_thumbnail_path . $media_thumbnail;
-                                    $command = '~/bin/ffmpeg  -i ' . $target_file . "  -ss 00:00:1.435  -vframes 1 " . $destination;
+                                    $command = FFMPEG_PATH . '  -i ' . $target_file . "  -ss 00:00:1.435  -vframes 1 " . $destination;
                                     exec($command, $a, $b);
-
                                     list($width, $height) = getimagesize($destination);
                                     $media_width = $width;
                                     $media_height = $height;
@@ -258,7 +273,7 @@ class Notifications extends MY_Controller {
                             }
                         }
                     }
-
+                    
                     if (!$do_notification_image_video_has_error) {
 
                         $date = date('Y-m-d h:i:s');
@@ -316,25 +331,54 @@ class Notifications extends MY_Controller {
             }
 
             $select_stores = array(
-                'table' => tbl_store,
-                'fields' => array('id_store', 'store_name'),
-                'where' => array('status' => ACTIVE_STATUS, 'is_delete' => IS_NOT_DELETED_STATUS)
+                'table' => tbl_store . ' store',
+                'fields' => array('store.id_store', 'store.store_name'),
+                'where' => array('store.status' => ACTIVE_STATUS, 'store.is_delete' => IS_NOT_DELETED_STATUS),
+                'group_by' => array('store.id_store')
             );
             if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
-                $select_stores['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", id_users) <> 0');
+                $select_stores['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", store.id_users) <> 0');
+            elseif ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+
+                $select_stores['join'][] = array(
+                    'table' => tbl_store_location . ' as store_location',
+                    'condition' => tbl_store_location . '.id_store = ' . tbl_store . '.id_store',
+                    'join' => 'left',
+                );
+                $select_stores['join'][] = array(
+                    'table' => tbl_place . ' as place',
+                    'condition' => tbl_place . '.id_place = ' . tbl_store_location . '.id_place',
+                    'join' => 'left',
+                );
+                $select_stores['join'][] = array(
+                    'table' => tbl_country . ' as country',
+                    'condition' => tbl_country . '.id_country = ' . tbl_place . '.id_country',
+                    'join' => 'left',
+                );
+                $select_stores['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0');
+            }
+
 
             $stores_list = $this->Common_model->master_select($select_stores);
 
             $select_malls = array(
-                'table' => tbl_mall,
-                'fields' => array('id_mall', 'mall_name'),
-                'where' => array('status' => ACTIVE_STATUS, 'is_delete' => IS_NOT_DELETED_STATUS)
+                'table' => tbl_mall . ' mall',
+                'fields' => array('mall.id_mall', 'mall.mall_name'),
+                'where' => array('mall.status' => ACTIVE_STATUS, 'mall.is_delete' => IS_NOT_DELETED_STATUS),
+                'group_by' => array('mall.id_mall')
             );
             if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
-                $select_malls['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", id_users) <> 0');
-
+                $select_malls['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", mall.id_users) <> 0');
+            elseif ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+                $select_malls['join'][] = array(
+                    'table' => tbl_country . ' as country',
+                    'condition' => tbl_country . '.id_country = ' . tbl_mall . '.id_country',
+                    'join' => 'left',
+                );
+                $select_malls['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0');
+            }
             $malls_list = $this->Common_model->master_select($select_malls);
-
+//            query();
             $this->data['stores_list'] = $stores_list;
             $this->data['malls_list'] = $malls_list;
 
@@ -409,9 +453,10 @@ class Notifications extends MY_Controller {
         return $this->form_validation->run();
     }
 
-    function custom_notification_image_video($image, $image_video_control) {
+    function custom_notification_image_video($media_name, $image_video_control) {
 
-        if ($_FILES[$image_video_control]['name'] != '') {
+
+        if ($_FILES[$image_video_control]['name'] != '' && $this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE) {
 //            if ($_FILES[$image_control]['type'] != 'image/jpeg' && $_FILES[$image_control]['type'] != 'image/jpg' && $_FILES[$image_control]['type'] != 'image/gif' && $_FILES[$image_control]['type'] != 'image/png') {
             if (!in_array($_FILES[$image_video_control]['type'], array('image/jpeg', 'image/jpg', 'image/png', 'video/mp4', 'video/webm', 'video/ogg', 'video/ogv', 'video/wmv', 'video/vob', 'video/swf', 'video/mov', 'video/m4v', 'video/flv'))) {
                 $this->form_validation->set_message('custom_notification_image_video', 'The {field} contain invalid image/video type.');
@@ -425,11 +470,10 @@ class Notifications extends MY_Controller {
                 $this->form_validation->set_message('custom_notification_image_video', 'The {field} contain invalid image size / video size.');
                 return FALSE;
             }
+        } else {
+            $this->form_validation->set_message('custom_notification_image_video', 'The {field} field is required.');
+            return FALSE;
         }
-//        else {
-//            $this->form_validation->set_message('custom_notification_image_video', 'The {field} field is required.');
-//            return FALSE;
-//        }
 
         return TRUE;
     }
