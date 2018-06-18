@@ -1,8 +1,12 @@
 <div id="store_dttable_wrapper_row" class="row">
+
     <div class="col-md-12">
-        <div class="panel panel-flat">
+        <div class="panel panel-flat">            
             <form id="form" method="post">
                 <div class="panel-body">
+                    <div id="store_error_wrapper" class="alert alert-danger alert-bordered display-none">
+                        <span id="store_error_msg"></span>
+                    </div>
                     <div class="tabbable">
                         <div class="tab-content">
                             <div class="row">
@@ -18,7 +22,7 @@
                                         <table id="store_dttable" class="table table-striped datatable-basic custom_dt width-100-per">
                                             <thead>
                                                 <tr>                                                                                                   
-                                                    <th>Date</th>
+                                                    <th>Added Date</th>
                                                     <th>Store Name</th>
                                                     <th>Status</th>
                                                     <th>First Name</th>
@@ -26,9 +30,10 @@
                                                     <th>Actions</th>
                                                     <th>Website</th>
                                                     <th>Facebook Page</th>     
+                                                    <th>Store ID</th>     
                                                 </tr>
                                                 <tr>                                                                                                       
-                                                    <th>Date</th>
+                                                    <th>Added Date</th>
                                                     <th>Store Name</th>
                                                     <th>Status</th>
                                                     <th>First Name</th>
@@ -36,6 +41,7 @@
                                                     <th>Actions</th>
                                                     <th>Website</th>
                                                     <th>Facebook Page</th> 
+                                                    <th>Store ID</th>     
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -54,8 +60,45 @@
 </div>
 <?php
 $this->load->view('Common/delete_alert');
+$this->load->view('Common/Store/details_modal');
 ?>
 <script type="text/javascript">
+
+    $(document).on('click', '.view_store_details', function () {
+        var store_id = $(document).find(this).attr('data-id');
+
+        displayElementBlock('loader');
+        var urlGStoreDetailsURL = '<?php echo $store_details_url; ?>' + store_id;
+        $.ajax({
+            'method': 'GET',
+            'url': urlGStoreDetailsURL,
+            'success': function (response) {
+//                console.log(response);
+//                return false
+                if (response !== '') {
+                    var obj = JSON.parse(response);
+                    if (obj.status === '1') {
+                        $(document).find('#store_view_model').modal('show');
+                        $(document).find('.details_view').html(obj.sub_view);
+                        displayElementNone('loader');
+                    } else {
+                        displayServerMsg('store_error_wrapper', 'store_error_msg', 'Something went wrong! please try again later.');
+                        displayElementNone('loader');
+                    }
+                } else {
+                    displayServerMsg('store_error_wrapper', 'store_error_msg', 'Something went wrong! please try again later.');
+                    displayElementNone('loader');
+                }
+            },
+            'error': function () {
+                displayServerMsg('store_error_wrapper', 'store_error_msg', 'Something went wrong! please try again later.');
+                displayElementNone('loader');
+            },
+        });
+    });
+
+
+
     $(document).ready(function () {
         var status_arr = {
             '-1': "Not Verified",
@@ -66,8 +109,12 @@ $this->load->view('Common/delete_alert');
         // Setup - add a text input to each footer cell
         $('#store_dttable thead tr:eq(0) th').each(function () {
             var title = $(this).text();
-            if (title !== 'Actions' && title !== 'Select') {
-                $(this).html('<input type="text" class="form-control" placeholder="' + title + '" />');
+            if (title !== 'Actions') {
+                if (title === 'Added Date') {
+                    $(this).html('<input type="text" class="form-control daterange-basic-datatable" placeholder="' + title + '" />');
+                } else {
+                    $(this).html('<input type="text" class="form-control" placeholder="' + title + '" />');
+                }
             }
         });
 
@@ -130,15 +177,17 @@ $this->load->view('Common/delete_alert');
                     "searchable": false,
                     "render": function (data, type, full, meta) {
                         var links = '';
-                        links += '<a href="' + full.store_website + '" target="_blank" title="View Details" class="btn bg-teal btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-eye"></i></a>   ';
+                        links += '<a href="javascript:void(0);" target="_blank" title="View Details" data-id="' + full.store_id_store + '" class="btn btn-primary btn-xs tooltip-show margin-right-3 view_store_details" data-placement="top"><i class="icon-eye"></i></a>   ';
                         if (full.store_website !== '' && full.store_website !== undefined) {
                             links += '<a href="//' + full.store_website + '" target="_blank" title="Website" class="btn bg-brown btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-earth"></i></a>   ';
                         }
                         if (full.store_facebook_page !== '' && full.store_facebook_page !== undefined) {
                             links += '<a href="//' + full.store_facebook_page + '" target="_blank" title="Facebook Page" class="btn bg-slate btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-facebook"></i></a>   ';
                         }
-                        links += '<a href="<?php echo base_url() ?>super-admin/store/save/' + full.store_id_store + '" title="Update" class="btn btn-primary  btn-xs  tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a>   ';
-                        links += '<a href="javascript:void(0);" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" data-path="<?php echo base_url(); ?>superadmin/store/delete/' + full.store_id_store + '" id="delete"><i class="icon-bin"></i></a>';
+                        links += '<a href="<?php echo base_url() ?>super-admin/store/save/' + full.store_id_store + '" title="Update" class="btn bg-teal btn-xs  tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a>   ';
+<?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
+                            links += '<a href="javascript:void(0);" data-path="<?php echo $delete_store_url; ?>' + full.store_id_store + '" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" id="delete"><i class="icon-bin"></i></a>';
+<?php } ?>
                         return links;
                     }
                 },
@@ -151,6 +200,11 @@ $this->load->view('Common/delete_alert');
                     'data': 'store_facebook_page',
                     "visible": false,
                     "name": 'store.facebook_page',
+                },
+                {
+                    'data': 'store_id_store',
+                    "visible": false,
+                    "name": 'store.id_store',
                 },
             ],
             initComplete: function () {
@@ -185,7 +239,7 @@ $this->load->view('Common/delete_alert');
                 aoData.forEach(function (data, key) {
                     req_obj[data['name']] = data['value'];
                 });
-
+                req_obj['col_eq'] = ['store.status'];
                 $.ajax({
                     'dataType': 'json',
                     'type': 'POST',

@@ -58,6 +58,11 @@ a.f_pass {margin-top: 10px;float: left;font-size: 14px;color: #F14150;}
 .form_login_wrapper .login-form .form-group button {width: auto;margin: 0 auto;float: right;border: 0;background: #F14150;font-size: 14px;font-family: muli;}
 .logout-btn{margin-top: 6px;}
 
+#store_view_model .modal-body .details_section {overflow: auto;}
+#store_view_model .modal-body .list {padding: 3px 0px;}
+#store_view_model .modal-body .details_section img {max-width : 50%;}
+.page-header-content{padding-bottom: 1px;}
+
 /** media start here ***/
 
 @media (min-width:1200px){

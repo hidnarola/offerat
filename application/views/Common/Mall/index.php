@@ -19,7 +19,7 @@
                                             <thead>
                                                 <tr>
 
-                                                    <th>Date</th>
+                                                    <th>Added Date</th>
                                                     <th>Mall Name</th>
                                                     <th>Status</th>
                                                     <th>First Name</th>
@@ -30,7 +30,7 @@
                                                 </tr>
                                                 <tr>
 
-                                                    <th>Date</th>
+                                                    <th>Added Date</th>
                                                     <th>Mall Name</th>
                                                     <th>Status</th>
                                                     <th>First Name</th>
@@ -56,8 +56,43 @@
 </div>
 <?php
 $this->load->view('Common/delete_alert');
+$this->load->view('Common/Mall/details_modal');
 ?>
 <script type="text/javascript">
+
+    $(document).on('click', '.view_mall_details', function () {
+        var mall_id = $(document).find(this).attr('data-id');
+
+        displayElementBlock('loader');
+        var urlMallDetailsURL = '<?php echo $mall_details_url; ?>' + mall_id;
+        $.ajax({
+            'method': 'GET',
+            'url': urlMallDetailsURL,
+            'success': function (response) {
+//                console.log(response);
+//                return false
+                if (response !== '') {
+                    var obj = JSON.parse(response);
+                    if (obj.status === '1') {
+                        $(document).find('#mall_view_model').modal('show');
+                        $(document).find('.details_view').html(obj.sub_view);
+                        displayElementNone('loader');
+                    } else {
+                        displayServerMsg('mall_error_wrapper', 'mall_error_msg', 'Something went wrong! please try again later.');
+                        displayElementNone('loader');
+                    }
+                } else {
+                    displayServerMsg('mall_error_wrapper', 'mall_error_msg', 'Something went wrong! please try again later.');
+                    displayElementNone('loader');
+                }
+            },
+            'error': function () {
+                displayServerMsg('mall_error_wrapper', 'mall_error_msg', 'Something went wrong! please try again later.');
+                displayElementNone('loader');
+            },
+        });
+    });
+
     $(document).ready(function () {
         var status_arr = {
             '-1': "Not Verified",
@@ -67,8 +102,12 @@ $this->load->view('Common/delete_alert');
         // Setup - add a text input to each footer cell
         $('#mall_dttable thead tr:eq(0) th').each(function () {
             var title = $(this).text();
-            if (title !== 'Actions' && title !== 'Select') {
-                $(this).html('<input type="text" class="form-control" placeholder="' + title + '" />');
+            if (title !== 'Actions') {
+                if (title === 'Added Date') {
+                    $(this).html('<input type="text" class="form-control daterange-basic-datatable" placeholder="' + title + '" />');
+                } else {
+                    $(this).html('<input type="text" class="form-control" placeholder="' + title + '" />');
+                }
             }
         });
         var table = $('#mall_dttable').DataTable({
@@ -130,15 +169,17 @@ $this->load->view('Common/delete_alert');
                     "searchable": false,
                     "render": function (data, type, full, meta) {
                         var links = '';
-                        console.log(full);
+                        links += '<a href="javascript:void(0);" target="_blank" title="View Details" data-id="' + full.mall_id_mall + '" class="btn btn-primary btn-xs tooltip-show margin-right-3 view_mall_details" data-placement="top"><i class="icon-eye"></i></a>   ';
                         if (full.mall_website !== '' && full.mall_website !== undefined) {
                             links += '<a href="//' + full.mall_website + '" target="_blank" title="Website" class="btn bg-brown btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-earth"></i></a>   ';
                         }
                         if (full.mall_facebook_page !== '' && full.mall_facebook_page !== undefined) {
                             links += '<a href="//' + full.mall_facebook_page + '" target="_blank" title="Facebook Page" class="btn bg-slate btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-facebook"></i></a>   ';
                         }
-                        links += '<a href="<?php echo base_url() ?>super-admin/mall/save/' + full.mall_id_mall + '" title="Update" class="btn btn-primary  btn-xs  tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a>   ';
-                        links += '<a href="javascript:void(0);" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" data-path="<?php echo base_url(); ?>superadmin/mall/delete/' + full.mall_id_mall + '" id="delete"><i class="icon-bin"></i></a>';
+                        links += '<a href="<?php echo base_url() ?>super-admin/mall/save/' + full.mall_id_mall + '" title="Update" class="btn bg-teal btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a>   ';
+<?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
+                            links += '<a href="javascript:void(0);" data-path="<?php echo $delete_mall_url; ?>' + full.mall_id_mall + '" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" id="delete"><i class="icon-bin"></i></a>';
+<?php } ?>
                         return links;
                     }
                 },
@@ -151,6 +192,11 @@ $this->load->view('Common/delete_alert');
                     'data': 'mall_facebook_page',
                     "visible": false,
                     "name": 'mall.facebook_page',
+                },
+                {
+                    'data': 'mall_id_mall',
+                    "visible": false,
+                    "name": 'mall.id_mall',
                 },
             ],
             initComplete: function () {
@@ -184,6 +230,7 @@ $this->load->view('Common/delete_alert');
                 aoData.forEach(function (data, key) {
                     req_obj[data['name']] = data['value'];
                 });
+                req_obj['col_eq'] = ['mall.status'];
                 $.ajax({
                     'dataType': 'json',
                     'type': 'POST',

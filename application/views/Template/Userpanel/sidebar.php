@@ -50,6 +50,13 @@ $logged_user_type = $this->session->userdata('loggedin_user_type');
                                 <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'announcements') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/announcements"><i class="icon-volume-medium"></i> <span>Announcements</span></a></li>
                             </ul>
                         </li>
+                        <li>
+                            <a href="#"><i class="icon-office"></i> <span>Stores / Malls</span></a>
+                            <ul>
+                                <li <?php echo ($controller === 'stores') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/stores"><i class="icon-store"></i> <span>Stores</span></a></li>
+                                <li <?php echo ($controller === 'malls') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/malls"><i class="icon-store2"></i> <span>Malls</span></a></li>
+                            </ul>
+                        </li>
                         <li <?php echo ($controller === 'change-password') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-password"><i class="icon-lock2"></i> <span>Change Password</span></a></li>
                         <li <?php echo ($controller === 'change-information') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-information"><i class="fa fa-user"></i> <span>Change Information</span></a></li>
                     </ul>
@@ -61,6 +68,13 @@ $logged_user_type = $this->session->userdata('loggedin_user_type');
                             <ul>
                                 <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'offers') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/offers"><i class="icon-bubble-notification"></i> <span>Offers</span></a></li>
                                 <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'announcements') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/announcements"><i class="icon-volume-medium"></i> <span>Announcements</span></a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="icon-office"></i> <span>Stores / Malls</span></a>
+                            <ul>
+                                <li <?php echo ($controller === 'stores') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/stores"><i class="icon-store"></i> <span>Stores</span></a></li>
+                                <li <?php echo ($controller === 'malls') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/malls"><i class="icon-store2"></i> <span>Malls</span></a></li>
                             </ul>
                         </li>
                         <li <?php echo ($controller === 'change-password') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-password"><i class="icon-lock2"></i> <span>Change Password</span></a></li>

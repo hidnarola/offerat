@@ -3,6 +3,9 @@
         <div class="panel panel-flat">
             <form id="form" method="post">
                 <div class="panel-body">
+                    <div id="mall_error_wrapper" class="alert alert-danger alert-bordered display-none">
+                        <span id="mall_error_msg"></span>
+                    </div>
                     <div class="tabbable">
                         <div class="tab-content">
                             <div class="row">
@@ -34,7 +37,7 @@
                                                 <table id="notification_dttable" class="table table-striped datatable-basic custom_dt width-100-per">
                                                     <thead>
                                                         <tr>
-                                                            <th>Date</th>
+                                                            <th>Added Date</th>
                                                             <th>Broadcast Date</th>
                                                             <th>Expiry Date</th>
                                                             <th>Notification Type</th>
@@ -43,7 +46,7 @@
                                                             <th>Actions</th>
                                                         </tr>
                                                         <tr>
-                                                            <th>Date</th>
+                                                            <th>Added Date</th>
                                                             <th>Broadcast Date</th>
                                                             <th>Expiry Date</th>
                                                             <th>Notification Type</th>
@@ -84,7 +87,7 @@ $this->load->view('Common/delete_alert');
         $('#notification_dttable thead tr:eq(0) th').each(function () {
             var title = $(this).text();
             if (title !== 'Actions') {
-                if (title === 'Date' || title === 'Broadcast Date' || title === 'Expiry Date') {
+                if (title === 'Added Date' || title === 'Broadcast Date' || title === 'Expiry Date') {
                     $(this).html('<input type="text" class="form-control daterange-basic-datatable" placeholder="' + title + '" />');
                 } else {
                     $(this).html('<input type="text" class="form-control" placeholder="' + title + '" />');

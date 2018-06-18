@@ -95,8 +95,12 @@ $route['country-admin/notifications/(:any)/delete/(:any)/(:any)'] = 'common/noti
 
 $route['country-admin/stores'] = 'common/stores/index';
 $route['country-admin/stores/filter_stores'] = 'common/stores/filter_stores';
+$route['country-admin/stores/get_store_details/(:any)'] = 'common/stores/get_store_details/$1';
+$route['country-admin/stores/delete/(:any)'] = 'common/stores/delete/$1';
 $route['country-admin/malls'] = 'common/malls/index';
 $route['country-admin/malls/filter_malls'] = 'common/malls/filter_malls';
+$route['country-admin/malls/get_mall_details/(:any)'] = 'common/malls/get_mall_details/$1';
+$route['country-admin/malls/delete/(:any)'] = 'common/malls/delete/$1';
 
 
 //Country Mall Store User Routes =================================
@@ -112,8 +116,10 @@ $route['mall-store-user/notifications/(:any)/delete/(:any)/(:any)'] = 'common/no
 
 $route['mall-store-user/stores'] = 'common/stores/index';
 $route['mall-store-user/stores/filter_stores'] = 'common/stores/filter_stores';
+$route['mall-store-user/stores/get_store_details/(:any)'] = 'common/stores/get_store_details/$1';
 $route['mall-store-user/malls'] = 'common/malls/index';
 $route['mall-store-user/malls/filter_malls'] = 'common/malls/filter_malls';
+$route['mall-store-user/malls/get_mall_details/(:any)'] = 'common/malls/get_mall_details/$1';
 
 
 //Store Registration

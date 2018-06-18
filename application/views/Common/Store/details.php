@@ -1,21 +1,153 @@
-<div class="modal fade sure" id="store_view_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-md" role="document">
-        <div class = "modal-content">
-            <div class = "modal-header bg-primary">
-                <h4 class = "modal-title" id="title_info">Store Details
-                    <button type = "button" class = "close" data-dismiss = "modal">&times;
-                    </button>
-                </h4>
+<?php if (isset($store_details)) { ?>
+    <div class="panel-body details_section">
+        <div class="row">
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <label>Store Name : </label>
+                <span class="text-semibold">
+                    <?php echo (isset($store_details['store_name']) && !empty($store_details['store_name'])) ? $store_details['store_name'] : '-'; ?>
+                </span>
             </div>
-            <div class = "modal-body">
-                <h6 class = "text-semibold">Internal Notes</h6>
-                <ul id = "order_view_internal_notes_list_wrapper"></ul>
-                <h6 class = "text-semibold">Invoice Notes</h6>
-                <ul id = "order_view_invoice_notes_list_wrapper"></ul>
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <label>Status : </label>
+                <span class="text-semibold">
+                    <?php
+                    if (isset($store_details['store_status']) && !empty($store_details['store_status'])) {
+                        if ($store_details['store_status'] == IN_ACTIVE_STATUS)
+                            echo '<span class="label label-danger label-rounded">Inactive</span>';
+                        elseif ($store_details['store_status'] == NOT_VERIFIED_STATUS)
+                            echo '<span class="label label-info label-rounded">Not Verified</span>';
+                        elseif ($store_details['store_status'] == ACTIVE_STATUS)
+                            echo '<span class="label label-success label-rounded">Active</span>';
+                    } else {
+                        echo '-';
+                    }
+                    ?>
+                </span>
             </div>
-            <div class = "modal-footer">
-                <button type = "button" class = "btn btn-primary" data-dismiss = "modal" value = "1">Ok</button>
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <label>Created On :</label>
+                <span class="text-semibold">
+                    <?php
+                    $store_created_date = date_create($store_details['store_created_date']);
+                    $store_created_date_text = date_format($store_created_date, "d-m-Y H:i");
+                    echo $store_created_date_text;
+                    ?>
+                </span>
+            </div>
+
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <label>Telephone No. : </label>
+                <span class="text-semibold">
+                    <?php echo (isset($store_details['store_telephone']) && !empty($store_details['store_telephone'])) ? $store_details['store_telephone'] : '-'; ?>
+                </span>
+            </div>
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <label>Website : </label>
+                <span class="text-semibold">
+                    <?php if (isset($store_details['store_website']) && !empty($store_details['store_website'])) { ?>
+                        <a href="//<?php echo $store_details['store_website']; ?>"><?php echo $store_details['store_website']; ?></a>
+                    <?php } else echo '- '; ?>
+                </span>
+            </div>
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <label>Facebook Page : </label>
+                <span class="text-semibold">
+                    <?php if (isset($store_details['store_facebook_page']) && !empty($store_details['store_facebook_page'])) { ?>
+                        <a href="//<?php echo $store_details['store_facebook_page']; ?>"><?php echo $store_details['store_facebook_page']; ?></a>
+                    <?php } else echo '-'; ?>
+                </span>
             </div>
         </div>
-    </div>
-</div>
+        <hr>
+        <div class="row">
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <label>Logo : </label>
+                <?php if (isset($store_details['store_store_logo']) && !empty($store_details['store_store_logo'])) { ?>
+                    <img src="<?php echo store_img_path . $store_details['store_store_logo']; ?>" onerror="image_not_found(image_0)" id="image_0" alt="Image Not Found">
+                <?php } else echo '-'; ?>
+            </div>            
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <label>Contact Person : </label>
+                <span class="text-semibold">
+                    <?php
+                    echo (isset($store_details['user_first_name']) && !empty($store_details['user_first_name'])) ? $store_details['user_first_name'] . ' ' . $store_details['user_last_name'] : '-';
+                    ?>
+                </span>
+            </div>
+
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <label>Email ID : </label>
+                <span class="text-semibold">
+                    <?php
+                    echo (isset($store_details['user_email_id']) && !empty($store_details['user_email_id'])) ? $store_details['user_email_id'] : '-';
+                    ?>
+                </span>
+            </div>
+
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <label>Mobile Number : </label>
+                <span class="text-semibold">
+                    <?php
+                    echo (isset($store_details['user_mobile']) && !empty($store_details['user_mobile'])) ? $store_details['user_mobile'] : '-';
+                    ?>
+                </span>
+            </div>
+        </div>  
+        <hr>
+        <div class="row">
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <?php if (isset($store_categories) && sizeof($store_categories) > 0) { ?>
+                    <h6 class="text-semibold">Business Categories</h6>
+
+                    <ul class="list">
+                        <?php foreach ($store_categories as $cat) { ?>
+                            <li>
+                                <span class="label border-left-primary label-striped">
+                                    <?php
+                                    echo $cat['category_name'];
+                                    echo (isset($cat['sub_category_name']) && !empty($cat['sub_category_name'])) ? ' <i class=" icon-arrow-right8"></i> ' . $cat['sub_category_name'] : '';
+                                    ?>
+                                </span>
+                            </li>                                            
+                        <?php } ?>
+                    </ul>
+                <?php } ?>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <?php if (isset($store_locations) && sizeof($store_locations) > 0) { ?>
+                    <h6 class="text-semibold">Branch Locations</h6>
+
+                    <ol class="list rounded-list">
+                        <?php foreach ($store_locations as $loc) { ?>
+                            <li>
+                                <p>
+                                    <?php
+                                    $display_location = $loc['street'];
+                                    if (isset($loc['street1']) && !empty($loc['street1']))
+                                        $display_location .= ', ' . $loc['street1'];
+                                    if (isset($loc['city']) && !empty($loc['city']))
+                                        $display_location .= ', ' . $loc['city'];
+                                    if (isset($loc['state']) && !empty($loc['state']))
+                                        $display_location .= ', ' . $loc['state'];
+                                    if (isset($loc['country_name']) && !empty($loc['country_name']))
+                                        $display_location .= ', ' . $loc['country_name'];
+                                    echo $display_location;
+                                    ?>
+                                </p>
+                            </li>                                            
+                        <?php } ?>
+                    </ol>
+                <?php } else {
+                    echo 'No results found';
+                }
+                ?>
+            </div>
+        </div>
+    </div>                    
+<?php } ?>

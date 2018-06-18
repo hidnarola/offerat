@@ -272,3 +272,52 @@ function get_dd_mm_yyyy_hh_min_DateTime(date, seperator) {
 
     return day + seperator + month + seperator + year + ' ' + hour + ':' + minute;
 }
+
+function displayServerMsg(wrapperId, msgControlId, msg, doShow, doFocusOnControl) {
+    if (typeof doShow === 'undefined') {
+        doShow = true;
+    }
+    if (typeof doFocusOnControl === 'undefined') {
+        doFocusOnControl = true;
+    }
+    $(document).find('#' + msgControlId).html(msg);
+    if (doShow) {
+        displayElementBlock(wrapperId);
+        if (doFocusOnControl) {
+            focusToControl('#' + wrapperId);
+        }
+    } else {
+        displayElementNone(wrapperId);
+    }
+}
+
+function hideServerMsg(wrapperId, msgControlId) {
+    displayServerMsg(wrapperId, msgControlId, '', false, false);
+}
+
+function displayElementBlock(elementId, doAddDisplayBlock) {
+    if (typeof doAddDisplayBlock === undefined) {
+        doAddDisplayBlock = false;
+    }
+    $(document).find('#' + elementId).removeClass('display-none');
+    if (doAddDisplayBlock) {
+        $(document).find('#' + elementId).addClass('display-block');
+    }
+}
+
+function displayElementNone(elementId) {
+    $(document).find('#' + elementId).addClass('display-none');
+    $(document).find('#' + elementId).removeClass('display-block');
+}
+
+function focusToControl(divId) {
+    var divOffsetTop = $(document).find(divId).offset().top;
+    divOffsetTop -= 20;
+    $('html, body, document, window').animate({scrollTop: divOffsetTop}, 'slow');
+}
+
+function removeJqueryValidationMsgs(formId) {
+    $.each($(document).find(formId + ' .validation-error-label'), function () {
+        $(this).html('');
+    });
+}
