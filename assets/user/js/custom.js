@@ -130,6 +130,10 @@ $(function () {
 
     $('.select-search').select2();
 
+    $(".styled-checkbox-1").uniform({
+        radioClass: 'choice'
+    });
+
     /**
      * This method is used to add a select event on select 2 control
      * it is implemented because if user submit form and jquery validation show error message for control

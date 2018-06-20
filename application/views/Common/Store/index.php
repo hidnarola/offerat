@@ -13,8 +13,8 @@
                                 <div class="col-md-12">
                                     <div class="row col-md-12">
                                         <div class="tbl-btn-wrap pull-right">
-                                            <a href="super-admin/country" class="btn bg-teal-400 btn-labeled"><b><i class="icon-sync"></i></b>Refresh</a>
-                                            <a href="super-admin/country/save" class="btn btn-primary btn-labeled"><b><i class="icon-plus22"></i></b>Add Store</a>                                            
+                                            <a href="<?php echo $store_list_url; ?>" class="btn bg-teal-400 btn-labeled"><b><i class="icon-sync"></i></b>Refresh</a>
+                                            <a href="<?php echo $add_store_url; ?>" class="btn btn-primary btn-labeled"><b><i class="icon-plus22"></i></b>Add Store</a>                                            
                                         </div>
                                     </div>
 

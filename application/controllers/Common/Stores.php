@@ -16,21 +16,29 @@ class Stores extends MY_Controller {
     public function index() {
 
         $this->data['title'] = $this->data['page_header'] = 'Stores List';
+        $store_list_url = '';
         $filter_list_url = '';
         $store_details_url = '';
         $delete_store_url = '';
+        $add_store_url = '';
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+            $store_list_url = 'country-admin/stores';
             $filter_list_url = 'country-admin/stores/filter_stores';
             $store_details_url = 'country-admin/stores/get_store_details/';
             $delete_store_url = 'country-admin/stores/delete/';
             $this->data['delete_store_url'] = $delete_store_url;
+            $add_store_url = 'country-admin/stores/save/';
         } elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
+            $store_list_url = 'mall-store-user/stores';
             $filter_list_url = 'mall-store-user/stores/filter_stores';
             $store_details_url = 'mall-store-user/stores/get_store_details/';
+            $add_store_url = 'mall-store-user/stores/save/';
         }
 
+        $this->data['store_list_url'] = $store_list_url;
         $this->data['filter_list_url'] = $filter_list_url;
         $this->data['store_details_url'] = $store_details_url;
+        $this->data['add_store_url'] = $add_store_url;
 
         $this->template->load('user', 'Common/Store/index', $this->data);
     }
@@ -154,7 +162,312 @@ class Stores extends MY_Controller {
         echo json_encode($response);
     }
 
-    function delete($id) {
+    public function save($id = NULL) {
+
+
+
+        $back_url = '';
+        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+            $back_url = 'country-admin/stores';
+        } elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
+            $back_url = 'mall-store-user/stores';
+        }
+
+
+        $status_arr = array(
+            ACTIVE_STATUS => 'Active',
+            IN_ACTIVE_STATUS => 'Inactive',
+        );
+        if (!is_null($id)) {
+
+            $select_store = array(
+                'table' => tbl_store . ' store',
+                'where' => array('store.status' => ACTIVE_STATUS, 'store.is_delete' => IS_NOT_DELETED_STATUS, 'store.id_store' => $id)
+            );
+
+            $select_store['join'][] = array(
+                'table' => tbl_user . ' as user',
+                'condition' => tbl_store . '.id_users = ' . tbl_user . '.id_user',
+                'join' => 'left',
+            );
+
+            if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
+                $select_store['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", store.id_users) <> 0');
+            elseif ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+
+                $select_store['join'][] = array(
+                    'table' => tbl_store_location . ' as store_location',
+                    'condition' => tbl_store_location . '.id_store = ' . tbl_store . '.id_store',
+                    'join' => 'left',
+                );
+                $select_store['join'][] = array(
+                    'table' => tbl_place . ' as place',
+                    'condition' => tbl_place . '.id_place = ' . tbl_store_location . '.id_place',
+                    'join' => 'left',
+                );
+                $select_store['join'][] = array(
+                    'table' => tbl_country . ' as country',
+                    'condition' => tbl_country . '.id_country = ' . tbl_place . '.id_country',
+                    'join' => 'left',
+                );
+                $select_store['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0');
+            }
+
+            $store_details = $this->Common_model->master_single_select($select_store);
+            if (isset($store_details) && sizeof($store_details) > 0) {
+                $select_store_category = array(
+                    'table' => tbl_store_category . ' store_category',
+                    'fields' => array('category.id_category, sub_category.id_sub_category, category.category_name, sub_category.sub_category_name'),
+                    'where' => array('store_category.id_store' => $id, 'store_category.is_delete' => IS_NOT_DELETED_STATUS),
+                    'join' => array(
+                        array(
+                            'table' => tbl_category . ' as category',
+                            'condition' => 'category.id_category = store_category.id_category',
+                            'join' => 'left'
+                        ),
+                        array(
+                            'table' => tbl_sub_category . ' as sub_category',
+                            'condition' => 'sub_category.id_sub_category = store_category.id_sub_category',
+                            'join' => 'left'
+                        )
+                    )
+                );
+                $store_categories = $this->Common_model->master_select($select_store_category);
+
+                $select_store_locations = array(
+                    'table' => tbl_place . ' place',
+                    'fields' => array('place.street', 'place.street1', 'place.city', 'place.state', 'country.country_name'),
+                    'where' => array(
+                        'store.id_store' => $id,
+                        'store_location.is_delete' => IS_NOT_DELETED_STATUS,
+                        'place.is_delete' => IS_NOT_DELETED_STATUS
+                    ),
+                    'where_with_sign' => array(
+                        'store_location.id_place = place.id_place',
+                        'store.id_store = store_location.id_store'
+                    ),
+                    'join' => array(
+                        array(
+                            'table' => tbl_store_location . ' as store_location',
+                            'condition' => 'store_location.id_place = place.id_place',
+                            'join' => 'left'
+                        ),
+                        array(
+                            'table' => tbl_store . ' as store',
+                            'condition' => 'store.id_store = store_location.id_store',
+                            'join' => 'left'
+                        ),
+                        array(
+                            'table' => tbl_country . ' as country',
+                            'condition' => 'country.id_country = place.id_country',
+                            'join' => 'left'
+                        )
+                    )
+                );
+                $store_locations = $this->Common_model->master_select($select_store_locations);
+
+                $this->data['store_details'] = $store_details;
+                $this->data['store_categories'] = $store_categories;
+                $this->data['store_locations'] = $store_locations;
+                pr($store_categories);
+                pr($store_locations);
+            } else {
+                redirect($back_url);
+            }
+
+            if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+
+                $select_user_status = array(
+                    'table' => tbl_store,
+                    'where' => array('is_delete' => IS_NOT_DELETED_STATUS, 'status' => NOT_VERIFIED_STATUS, 'id_store' => $id)
+                );
+                $user_status = $this->Common_model->master_single_select($select_user_status);
+                if (isset($user_status) && sizeof($user_status) > 0)
+                    $status_arr[NOT_VERIFIED_STATUS] = 'Not Verified';
+            }
+        }
+
+
+        $select_category = array(
+            'table' => tbl_category,
+            'where' => array('status' => ACTIVE_STATUS, 'is_delete' => IS_NOT_DELETED_STATUS),
+            'order_by' => array('sort_order' => 'ASC')
+        );
+        $category_list = $this->Common_model->master_select($select_category);
+
+        $select_country = array(
+            'table' => tbl_country,
+            'where' => array('status' => ACTIVE_STATUS, 'is_delete' => IS_NOT_DELETED_STATUS)
+        );
+        $country_list = $this->Common_model->master_select($select_country);
+
+
+        $this->data['status_list'] = $status_arr;
+        $this->data['category_list'] = $category_list;
+        $this->data['country_list'] = $country_list;
+        $this->data['title'] = $this->data['page_header'] = 'Add Store';
+        $this->data['back_url'] = $back_url;
+        $this->template->load('user', 'Common/Store/form', $this->data);
+    }
+
+    public function _validate_form($validate_fields) {
+
+        if (in_array('store_name', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'store_name',
+                'label' => 'Store Name',
+                'rules' => 'trim|required|min_length[2]|max_length[250]|callback_check_store_name|htmlentities'
+            );
+        }
+        if (in_array('website', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'website',
+                'label' => 'Website',
+                'rules' => 'trim|min_length[2]|max_length[250]|callback_custom_valid_url|htmlentities'
+            );
+        }
+        if (in_array('facebook_page', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'facebook_page',
+                'label' => 'Facebook Page URL',
+                'rules' => 'trim|min_length[2]|max_length[250]|callback_custom_valid_url|htmlentities'
+            );
+        }
+        if (in_array('store_logo', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'store_logo',
+                'label' => 'Store Logo',
+                'rules' => 'trim|callback_custom_store_logo[store_logo]|htmlentities'
+            );
+        }
+        if (in_array('telephone', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'telephone',
+                'label' => 'Telephone Number',
+                'rules' => 'trim|required|min_length[8]|max_length[20]|htmlentities'
+            );
+        }
+        if (in_array('first_name', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'first_name',
+                'label' => 'Contact Person\'s First Name',
+                'rules' => 'trim|required|min_length[2]|max_length[150]|htmlentities'
+            );
+        }
+        if (in_array('last_name', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'last_name',
+                'label' => 'Contact Person\'s Last Name',
+                'rules' => 'trim|required|min_length[2]|max_length[150]|htmlentities'
+            );
+        }
+        if (in_array('email_id', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'email_id',
+                'label' => 'Email Address',
+                'rules' => 'trim|required|min_length[2]|max_length[100]|htmlentities'
+            );
+        }
+        if (in_array('mobile', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'mobile',
+                'label' => 'Mobile Number',
+                'rules' => 'trim|required|min_length[8]|max_length[20]|htmlentities'
+            );
+        }
+        if (in_array('id_country', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'id_country',
+                'label' => 'Country',
+                'rules' => 'trim|required|htmlentities'
+            );
+        }
+        if (in_array('category_count', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'category_count',
+                'label' => 'Category selection',
+                'rules' => 'trim|required|htmlentities|greater_than[0]',
+                'errors' => array(
+                    'greater_than' => 'Category Selection is required.'
+                )
+            );
+        }
+        if (in_array('location_count', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'location_count',
+                'label' => 'Branch Location',
+                'rules' => 'trim|required|htmlentities|greater_than[0]',
+                'errors' => array(
+                    'greater_than' => 'Branch Location is required.'
+                )
+            );
+        }
+        if (in_array('terms_condition', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'terms_condition',
+                'label' => 'Terms and Conditions',
+                'rules' => 'trim|required|min_length[2]|max_length[255]|htmlentities'
+            );
+        }
+        $this->form_validation->set_rules($validation_rules);
+        return $this->form_validation->run();
+    }
+
+    function custom_store_logo($image, $image_control) {
+
+        if ($_FILES[$image_control]['name'] != '') {
+//            if ($_FILES[$image_control]['type'] != 'image/jpeg' && $_FILES[$image_control]['type'] != 'image/jpg' && $_FILES[$image_control]['type'] != 'image/gif' && $_FILES[$image_control]['type'] != 'image/png') {
+            if ($_FILES[$image_control]['type'] != 'image/jpeg' && $_FILES[$image_control]['type'] != 'image/jpg' && $_FILES[$image_control]['type'] != 'image/png') {
+                $this->form_validation->set_message('custom_store_logo', 'The {field} contain invalid image type.');
+                return FALSE;
+            }
+            if ($_FILES[$image_control]['error'] > 0) {
+                $this->form_validation->set_message('custom_store_logo', 'The {field} contain invalid image.');
+                return FALSE;
+            }
+            if ($_FILES[$image_control]['size'] <= 0) {
+                $this->form_validation->set_message('custom_store_logo', 'The {field} contain invalid image size.');
+                return FALSE;
+            }
+        } else {
+            $this->form_validation->set_message('custom_store_logo', 'The {field} field is required.');
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+    function check_store_name($store_name) {
+
+        $select_data = array(
+            'table' => tbl_store,
+            'where' => array(
+                'is_delete' => IS_NOT_DELETED_STATUS,
+                'store_name' => $store_name
+            )
+        );
+
+        $check_store_name = $this->Common_model->master_single_select($select_data);
+
+        if (isset($check_store_name) && sizeof($check_store_name) > 0) {
+            $this->form_validation->set_message('check_store_name', 'The {field} already exists.');
+            return FALSE;
+        } else
+            return TRUE;
+    }
+
+    function custom_valid_url($url) {
+
+        if (isset($url) && !empty($url)) {
+            if (preg_match('%^((https?://)|(www\.))([a-z0-9-].?)+(:[0-9]+)?(/.*)?$%i', $url)) {
+                return TRUE;
+            } else {
+                $this->form_validation->set_message('custom_valid_url', 'The {field} not a valid url.');
+                return FALSE;
+            }
+        }
+    }
+
+    public function delete($id) {
 
         if (!is_null($id) && $id > 0 && $this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
 

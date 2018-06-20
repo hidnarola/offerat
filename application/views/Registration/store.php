@@ -97,7 +97,7 @@
                 <label class="control-label col-lg-2">Country <span class="text-danger">*</span></label>
 
                 <?php if (isset($country_list) && sizeof($country_list) > 0) { ?>
-                    <select class="form-control" name="id_country" id="id_country" required="required">                                            
+                    <select class="form-control select" name="id_country" id="id_country" required="required">                                            
                         <option value="">Select Country</option>
                         <?php foreach ($country_list as $list) { ?>
                             <option value="<?php echo $list['id_country']; ?>"><?php echo $list['country_name']; ?></option>

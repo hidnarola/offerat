@@ -249,14 +249,14 @@ class Storeregistration extends CI_Controller {
 
         $select_category = array(
             'table' => tbl_category,
-            'where' => array('status' => ACTIVE_STATUS),
+            'where' => array('status' => ACTIVE_STATUS, 'is_delete' => IS_NOT_DELETED_STATUS),
             'order_by' => array('sort_order' => 'ASC')
         );
         $this->data['category_list'] = $this->Common_model->master_select($select_category);
 
         $select_country = array(
             'table' => tbl_country,
-            'where' => array('status' => ACTIVE_STATUS)
+            'where' => array('status' => ACTIVE_STATUS, 'is_delete' => IS_NOT_DELETED_STATUS)
         );
         $this->data['country_list'] = $this->Common_model->master_select($select_country);
 
@@ -275,7 +275,8 @@ class Storeregistration extends CI_Controller {
             'fields' => array('id_sub_category', 'sub_category_name'),
             'where' => array(
                 'id_category' => $category_id,
-                'status' => ACTIVE_STATUS
+                'status' => ACTIVE_STATUS,
+                'is_delete' => IS_NOT_DELETED_STATUS
             ),
             'order_by' => array('sort_order' => 'ASC')
         );
@@ -294,7 +295,8 @@ class Storeregistration extends CI_Controller {
             'fields' => array('id_mall', 'mall_name'),
             'where' => array(
                 'id_country' => $country_id,
-                'status' => ACTIVE_STATUS
+                'status' => ACTIVE_STATUS,
+                'is_delete' => IS_NOT_DELETED_STATUS
             )
         );
         $mall_list = $this->Common_model->master_select($select_mall);
@@ -441,14 +443,14 @@ class Storeregistration extends CI_Controller {
             $validation_rules[] = array(
                 'field' => 'website',
                 'label' => 'Website',
-                'rules' => 'trim|required|min_length[2]|max_length[250]|callback_custom_valid_url|htmlentities'
+                'rules' => 'trim|min_length[2]|max_length[250]|callback_custom_valid_url|htmlentities'
             );
         }
         if (in_array('facebook_page', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'facebook_page',
                 'label' => 'Facebook Page URL',
-                'rules' => 'trim|required|min_length[2]|max_length[250]|callback_custom_valid_url|htmlentities'
+                'rules' => 'trim|min_length[2]|max_length[250]|callback_custom_valid_url|htmlentities'
             );
         }
         if (in_array('store_logo', $validate_fields)) {
