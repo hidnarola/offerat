@@ -8,15 +8,10 @@ $(document).ready(function () {
 
 });
 
-var categoryCloneNumber = 1;
-var mallCloneNumber = 1;
-
 $(document).on('click', '#category_selection_btn', function () {
     var html = generatecategorySelectionBlock(categoryCloneNumber);
     $(document).find('#category_selection_wrapper').append(html);
-
     $(document).find('.sub_cat_section_' + categoryCloneNumber).hide();
-
     categoryCloneNumber++;
     reInitializeSelect2Control();
     $(document).find('#category_count').val(categoryCloneNumber);
@@ -42,6 +37,13 @@ $(document).on('click', '#mall_selection_btn', function () {
     reInitializeSelect2Control();
     initAutocomplete();
     $(document).find('#location_count').val(mallCloneNumber);
+});
+
+$(document).on('click', '#sales_trend_btn', function () {
+    var html = generateSalesTrendBlock(salesTrendNumber);
+    $(document).find('#sales_trend_wrapper').append(html);
+    salesTrendNumber++;
+    $(document).find('#sales_trend_count').val(salesTrendNumber);
 });
 
 function reInitializeSelect2Control() {
@@ -108,6 +110,12 @@ $(document).on('click', '.mall_selection_remove_btn', function () {
     var character = $(this).attr('character');
     $(document).find('#mall_selection_block_' + cloneNumber).remove();
     $(document).find('#location_count').val(cloneNumber);
+});
+$(document).on('click', '.sales_trend_remove_btn', function () {
+    var cloneNumber = $(this).data('cloneNumber');
+    var character = $(this).attr('character');
+    $(document).find('#sales_trend_block_' + cloneNumber).remove();
+    $(document).find('#sales_trend_count').val(cloneNumber);
 });
 
 function errorMgsToDefault() {

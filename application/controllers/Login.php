@@ -27,7 +27,6 @@ class Login
                 $select_data_user = array(
                     'table' => tbl_user,
                     'where' => array(
-//                        'user_type' => SUPER_ADMIN_USER_TYPE,
                         'email_id' => $email,
                         'password' => md5($password)
                     )
@@ -51,6 +50,9 @@ class Login
                             'user_id' => $user['id_user'],
                             'email_id' => $user['email_id']
                         );
+                        
+                        
+                        
 
                         $this->session->set_userdata('loggedin_user_type', $session_user_type);
                         $this->session->set_userdata('loggedin_user_data', $session_user_data);

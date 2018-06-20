@@ -112,19 +112,19 @@
                                             <button id="category_selection_btn" type="button" class="pull-left margin-left-5 btn-primary labeled"><b><i class="icon-plus22"></i></b>Add More Category</button>
                                         </div>
                                     </div>
-                                </div>                            
+                                </div>
                                 <div id="category_selection_wrapper" class="clear-float row_add_div">
                                     <?php
+                                    $categoryCloneNumber = 0;
                                     if (isset($store_categories) && sizeof($store_categories) > 0) {
                                         foreach ($store_categories as $key => $cat) {
-                                            pr($cat);
                                             ?>
                                             <div id="category_selection_block_<?php echo $key; ?>" data-clone-number="<?php echo $key; ?>" class="clear-float">
-                                                <div class="col-xs-12 business_category_div">                                
+                                                <div class="col-xs-12 business_category_div">
                                                     <div class="col-md-3">
-                                                        <div class="form-group">                                        
+                                                        <div class="form-group">
                                                             <div>
-                                                                <select id="category_<?php echo $key; ?>" name="category_<?php echo $key; ?>" class="select category_selection_dropdown form-control" data-clone-number="<?php echo $key; ?>" required="required">
+                                                                <select id="category_<?php echo $key; ?>" name="exist_category_<?php echo $cat['id_store_category']; ?>" class="select category_selection_dropdown form-control" data-clone-number="<?php echo $key; ?>" required="required">
                                                                     <option value="">Select Category</option>
                                                                     <?php foreach ($category_list as $list) { ?>
                                                                         <option value="<?php echo $list['id_category']; ?>" <?php echo ($list['id_category'] == $cat['id_category']) ? 'selected=selected' : ''; ?>><?php echo $list['category_name']; ?></option>
@@ -139,13 +139,21 @@
                                                                 <?php
                                                                 $select_sub_category = array(
                                                                     'table' => tbl_sub_category,
-                                                                    'where' => array('status' => ACTIVE_STATUS, 'is_delete' => IS_NOT_DELETED_STATUS, 'id_sub_category')
+                                                                    'where' => array('status' => ACTIVE_STATUS, 'is_delete' => IS_NOT_DELETED_STATUS, 'id_sub_category' => $cat['id_sub_category'])
                                                                 );
-                                                                
+
+                                                                $sub_category_list = $this->Common_model->master_select($select_sub_category);
                                                                 ?>
-                                                                <select id="sub_category_<?php echo $key; ?>" name="sub_category_<?php echo $key; ?>" class="select sub_category_selection_dropdown form-control display-none" data-clone-number="<?php echo $key; ?>">
-                                                                    <option value="">Select Sub Category</option>
-                                                                </select>
+                                                                <select id="sub_category_<?php echo $key; ?>" name="exist_sub_category_<?php echo $cat['id_store_category']; ?>" class="select sub_category_selection_dropdown form-control" data-clone-number="<?php echo $key; ?>">
+                                                                    <?php if (isset($sub_category_list) && sizeof($sub_category_list) > 0) { ?>
+                                                                        <option value="">Select Sub Category</option>
+                                                                        <?php foreach ($sub_category_list as $list) { ?>
+                                                                            <option value="<?php echo $list['id_sub_category']; ?>" <?php echo ($list['id_sub_category'] == $cat['id_sub_category']) ? 'selected=selected' : ''; ?>><?php echo $list['sub_category_name']; ?></option>
+                                                                            <?php
+                                                                        }
+                                                                    }
+                                                                    ?>
+                                                                </select>        
                                                             </div>
                                                         </div>
                                                     </div>
@@ -158,7 +166,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        <?php
+                                            <?php
+                                            $categoryCloneNumber++;
                                         }
                                     } else {
                                         ?>
@@ -201,13 +210,13 @@
                                 <legend class="text-bold">Branches</legend>
                                 <div class="col-xs-12">
                                     <div class="col-md-3">
-                                        <div class="form-group">                                        
+                                        <div class="form-group">
                                             <div>
                                                 <?php if (isset($country_list) && sizeof($country_list) > 0) { ?>
-                                                    <select class="form-control select" name="id_country" id="id_country" required="required">                                            
+                                                    <select class="form-control select" name="id_country" id="id_country" required="required">
                                                         <option value="">Select Country</option>
                                                         <?php foreach ($country_list as $list) { ?>
-                                                            <option value="<?php echo $list['id_country']; ?>"><?php echo $list['country_name']; ?></option>
+                                                            <option value="<?php echo $list['id_country']; ?>" <?php echo ((isset($store_details['id_country'])) && $store_details['id_country'] == $list['id_country']) ? 'selected=selected' : ''; ?>><?php echo $list['country_name']; ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 <?php } ?>
@@ -224,44 +233,192 @@
                                     <?php
                                     $latitude = '54.6960513';
                                     $longitude = '-113.7297772';
-                                    ?>
-                                    <div id="mall_selection_block_0" data-clone-number="0" class="clear-float">
-                                        <div class="col-xs-12 business_category_div">                                
-                                            <div class="col-md-3">
-                                                <div class="form-group">                                        
-                                                    <div>
-                                                        <select id="mall_0" name="mall_0" class="select mall_selection_dropdown form-control" data-clone-number="0" required="required">
-                                                            <option value="0">Only Shop</option>
-                                                        </select>
+                                    $storeLocationCloneNumber = 0;
+                                    if (isset($store_locations) && sizeof($store_locations) > 0) {
+                                        foreach ($store_locations as $key => $loc) {
+                                            ?>
+                                            <div id="mall_selection_block_<?php echo $key; ?>" data-clone-number="<?php echo $key; ?>" class="clear-float">
+                                                <div class="col-xs-12 business_category_div">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <div>
+                                                                <select id="mall_<?php echo $key; ?>" name="exist_mall_<?php echo $loc['id_place']; ?>" class="select mall_selection_dropdown form-control" data-clone-number="<?php echo $key; ?>" required="required">
+                                                                    <option value="0">Only Shop</option>
+                                                                    <?php
+                                                                    if (isset($malls) && sizeof($malls) > 0) {
+                                                                        foreach ($malls as $m) {
+                                                                            ?>
+                                                                            <option value="<?php echo $m['id_mall']; ?>" <?php echo ($loc['id_location'] == $m['id_mall']) ? 'selected=selected' : ''; ?>><?php echo $m['mall_name']; ?></option>
+                                                                            <?php
+                                                                        }
+                                                                    }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+                                                        </div>        
                                                     </div>
-                                                </div>        
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">                                        
+                                                            <div>
+                                                                <?php
+                                                                $display_location = $loc['street'];
+                                                                if (isset($loc['street1']) && !empty($loc['street1']))
+                                                                    $display_location .= ', ' . $loc['street1'];
+                                                                if (isset($loc['city']) && !empty($loc['city']))
+                                                                    $display_location .= ', ' . $loc['city'];
+                                                                if (isset($loc['state']) && !empty($loc['state']))
+                                                                    $display_location .= ', ' . $loc['state'];
+                                                                if (isset($loc['country_name']) && !empty($loc['country_name']))
+                                                                    $display_location .= ', ' . $loc['country_name'];
+                                                                ?>
+                                                                <input type="text" data-latitude="latitude_<?php echo $key; ?>" data-longitude="longitude_<?php echo $key; ?>" required="required" data-type="googleMap" data-zoom="10" data-lat="<?php echo $latitude; ?>" data-lang="<?php echo $longitude; ?>" data-input_id="google_input_<?php echo $key; ?>" id="google_input_<?php echo $key; ?>" type="text" class="form-control" name="exist_address_<?php echo $loc['id_place']; ?>" placeholder="Location" aria-required="true" value="<?php echo $display_location; ?>" data-clone-number="<?php echo $key; ?>">
+                                                                <input type="hidden" class="form-control" data-type="latitude_<?php echo $key; ?>" name="exist_latitude_<?php echo $loc['id_place']; ?>" id="latitude_<?php echo $key; ?>" value="<?php echo $loc['latitude']; ?>">
+                                                                <input type="hidden" class="form-control" data-type="longitude_<?php echo $key; ?>" name="exist_longitude_<?php echo $loc['id_place']; ?>" id="longitude_<?php echo $key; ?>" value="<?php echo $loc['longitude']; ?>">
+                                                                <input type="hidden" class="form-control" name="exist_street_<?php echo $loc['id_place']; ?>" id="street_<?php echo $key; ?>" value="<?php echo $loc['street']; ?>">
+                                                                <input type="hidden" class="form-control" name="exist_street1_<?php echo $loc['id_place']; ?>" id="street1_<?php echo $key; ?>" value="<?php echo $loc['street1']; ?>">
+                                                                <input type="hidden" class="form-control" name="exist_city_<?php echo $loc['id_place']; ?>" id="city_<?php echo $key; ?>" value="<?php echo $loc['city']; ?>">
+                                                                <input type="hidden" class="form-control" name="exist_state_<?php echo $loc['id_place']; ?>" id="state_<?php echo $key; ?>" value="<?php echo $loc['state']; ?>">                                                                
+                                                                <input type="hidden" class="form-control" name="exist_place_id_<?php echo $loc['id_place']; ?>" id="place_id_<?php echo $key; ?>" value="<?php echo $loc['place_id']; ?>">
+                                                            </div>
+                                                        </div>        
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">                                        
+                                                            <div>
+                                                                <button type="button" class="btn btn-danger btn-icon mall_selection_remove_btn" id="mall_selection_remove_btn_0" character="" data-clone-number="0"><i class="icon-cross3"></i></button>
+                                                            </div>
+                                                        </div>        
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">                                        
-                                                    <div>
-                                                        <input type="text" data-latitude="latitude_0" data-longitude="longitude_0" required="required" data-type="googleMap" data-zoom="10" data-lat="<?php echo $latitude; ?>" data-lang="<?php echo $longitude; ?>" data-input_id="google_input_0" id="google_input_0" type="text" class="form-control" name="address_0"  placeholder="Location" aria-required="true" value="" data-clone-number="0">
-                                                        <input type="hidden" class="form-control" data-type="latitude_0" name="latitude_0" id="latitude_0" value="<?php echo $latitude; ?>">
-                                                        <input type="hidden" class="form-control" data-type="longitude_0" name="longitude_0" id="longitude_0" value="<?php echo $longitude; ?>">
-                                                        <input type="hidden" class="form-control" name="street_0" id="street_0" value="">
-                                                        <input type="hidden" class="form-control" name="street1_0" id="street1_0" value="">
-                                                        <input type="hidden" class="form-control" name="city_0" id="city_0" value="">
-                                                        <input type="hidden" class="form-control" name="state_0" id="state_0" value="">
-                                                        <input type="hidden" class="form-control" name="zip_code_0" id="zip_code_0" value="">
-                                                        <input type="hidden" class="form-control" name="place_id_0" id="place_id_0" value="">
-                                                    </div>
-                                                </div>        
+                                            <?php
+                                            $storeLocationCloneNumber++;
+                                        }
+                                    } else {
+                                        ?>
+                                        <div id="mall_selection_block_0" data-clone-number="0" class="clear-float">
+                                            <div class="col-xs-12 business_category_div">                                
+                                                <div class="col-md-3">
+                                                    <div class="form-group">                                        
+                                                        <div>
+                                                            <select id="mall_0" name="mall_0" class="select mall_selection_dropdown form-control" data-clone-number="0" required="required">
+                                                                <option value="0">Only Shop</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>        
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">                                        
+                                                        <div>
+                                                            <input type="text" data-latitude="latitude_0" data-longitude="longitude_0" required="required" data-type="googleMap" data-zoom="10" data-lat="<?php echo $latitude; ?>" data-lang="<?php echo $longitude; ?>" data-input_id="google_input_0" id="google_input_0" type="text" class="form-control" name="address_0"  placeholder="Location" aria-required="true" value="" data-clone-number="0">
+                                                            <input type="hidden" class="form-control" data-type="latitude_0" name="latitude_0" id="latitude_0" value="<?php echo $latitude; ?>">
+                                                            <input type="hidden" class="form-control" data-type="longitude_0" name="longitude_0" id="longitude_0" value="<?php echo $longitude; ?>">
+                                                            <input type="hidden" class="form-control" name="street_0" id="street_0" value="">
+                                                            <input type="hidden" class="form-control" name="street1_0" id="street1_0" value="">
+                                                            <input type="hidden" class="form-control" name="city_0" id="city_0" value="">
+                                                            <input type="hidden" class="form-control" name="state_0" id="state_0" value="">                                                            
+                                                            <input type="hidden" class="form-control" name="place_id_0" id="place_id_0" value="">
+                                                        </div>
+                                                    </div>        
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">                                        
+                                                        <div>
+                                                            <button type="button" class="btn btn-danger btn-icon mall_selection_remove_btn" id="mall_selection_remove_btn_0" character="" data-clone-number="0"><i class="icon-cross3"></i></button>
+                                                        </div>
+                                                    </div>        
+                                                </div>
                                             </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">                                        
-                                                    <div>
-                                                        <button type="button" class="btn btn-danger btn-icon mall_selection_remove_btn" id="mall_selection_remove_btn_0" character="" data-clone-number="0"><i class="icon-cross3"></i></button>
-                                                    </div>
-                                                </div>        
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </fieldset>
+
+                            <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
+                                <fieldset class="content-group">
+                                    <legend class="text-bold">Sales Trend</legend>  
+                                    <div class="col-xs-12">                                                                
+                                        <div class="col-md-4"></div>               
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <button id="sales_trend_btn" type="button" class="pull-left margin-left-5 btn-primary labeled"><b><i class="icon-plus22"></i></b>Add More Sales Trend</button>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </fieldset>
+
+                                    <div class="col-xs-12 business_category_div">
+
+                                    </div>
+                                    <div id="sales_trend_wrapper" class="clear-float row_add_div">
+                                        <?php
+                                        $salesTrendCloneNumber = 0;
+                                        if (isset($sales_trends) && sizeof($sales_trends) > 0) {
+                                            foreach ($sales_trends as $key => $trend) {
+                                                $from_date = date_create($trend['from_date']);
+                                                $from_date_text = date_format($from_date, "d-F");
+                                                $to_date = date_create($trend['to_date']);
+                                                $to_date_text = date_format($to_date, "d-F");
+                                                ?>
+                                                <div id="sales_trend_block_<?php echo $key; ?>" data-clone-number="<?php echo $key; ?>" class="clear-float">
+                                                    <div class="col-xs-12">
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">                                        
+                                                                <div>
+                                                                    <input type="text" class="form-control sales_trend_from_date" placeholder="From Date" data-clone-number="<?php echo $key; ?>" name="exist_from_date_<?php echo $key; ?>" id="from_date_<?php echo $key; ?>" value="<?php echo $from_date_text; ?>" required="required">
+                                                                </div>
+                                                            </div>        
+                                                        </div>                                                
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">                                        
+                                                                <div>
+                                                                    <input type="text" class="form-control sales_trend_to_date" placeholder="To Date" data-clone-number="<?php echo $key; ?>" name="exist_to_date_<?php echo $key; ?>" id="to_date_<?php echo $key; ?>" value="<?php echo $to_date_text; ?>" required="required">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">                                        
+                                                                <div>
+                                                                    <button type="button" class="btn btn-danger btn-icon sales_trend_remove_btn" id="sales_trend_remove_btn_<?php echo $key; ?>" character="" data-clone-number="<?php echo $key; ?>"><i class="icon-cross3"></i></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <?php
+                                                $salesTrendCloneNumber++;
+                                            }
+                                        } else {
+                                            ?>
+                                            <div id="sales_trend_block_0" data-clone-number="0" class="clear-float">
+                                                <div class="col-xs-12">
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">                                        
+                                                            <div>
+                                                                <input type="text" class="form-control sales_trend_from_date" data-clone-number="0" name="from_date_0" id="from_date_0" value="" required="required">
+                                                            </div>
+                                                        </div>        
+                                                    </div>                                                
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">                                        
+                                                            <div>
+                                                                <input type="text" class="form-control sales_trend_to_date" data-clone-number="0" name="to_date_0" id="to_date_0" value="" required="required">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">                                        
+                                                            <div>
+                                                                <button type="button" class="btn btn-danger btn-icon sales_trend_remove_btn" id="sales_trend_remove_btn_0" character="" data-clone-number="0"><i class="icon-cross3"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+                                    </div>                                    
+                                </fieldset>
+                            <?php } ?>
+                            <?php if((!isset($store_details) && !$this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)) { ?>
                             <fieldset class="content-group">
                                 <legend class="text-bold">Others</legend>
                                 <div class="col-xs-12">
@@ -292,9 +449,11 @@
                                     </div>
                                 </div>
                             </fieldset>
+                            <?php } ?>
                             <div class="text-right">
-                                <input type="hidden" name="category_count" id="category_count" value="1">
-                                <input type="hidden" name="location_count" id="location_count" value="1">
+                                <input type="hidden" name="category_count" id="category_count" value="<?php echo $categoryCloneNumber; ?>">
+                                <input type="hidden" name="location_count" id="location_count" value="<?php echo $storeLocationCloneNumber; ?>">
+                                <input type="hidden" name="sales_trend_count" id="sales_trend_count" value="<?php echo @$salesTrendCloneNumber; ?>">
                                 <a href="<?php echo $back_url ?>" class="btn bg-grey-300 btn-labeled"><b><i class="icon-arrow-left13"></i></b>Back</a>
                                 <button type="submit" class="btn bg-teal btn-labeled btn-labeled-right"><b><i class="icon-arrow-right14"></i></b>Save</button>
                             </div>
@@ -307,6 +466,68 @@
 </div>
 <script type="text/javascript" src="assets/user/js/store.js"></script>
 <script>
+    $(document).on('click', '.sales_trend_from_date', function (e) {
+        var cloneNumber = $(this).data('cloneNumber');
+        $(document).find('#from_date_' + cloneNumber).AnyTime_noPicker().AnyTime_picker({format: "%d-%M"}).focus();
+        e.preventDefault();
+    });
+    $(document).on('click', '.sales_trend_to_date', function (e) {
+        var cloneNumber = $(this).data('cloneNumber');
+        $(document).find('#to_date_' + cloneNumber).AnyTime_noPicker().AnyTime_picker({format: "%d-%M"}).focus();
+        e.preventDefault();
+    });
+    var categoryCloneNumber = 1;
+    var mallCloneNumber = 1;
+    var salesTrendNumber = 1;
+<?php if ($categoryCloneNumber > 0) { ?>
+        categoryCloneNumber = '<?php echo $categoryCloneNumber; ?>';
+    <?php if ($storeLocationCloneNumber > 0) { ?>
+            mallCloneNumber = '<?php echo $storeLocationCloneNumber; ?>';
+        <?php
+    }
+    if (@$salesTrendCloneNumber > 0) {
+        ?>
+            salesTrendNumber = '<?php echo @$salesTrendCloneNumber; ?>';
+        <?php
+    }
+}
+if (isset($store_details)) {
+    ?>
+        $(document).find('#id_country').attr('disabled', 'disabled');
+<?php } ?>
+
+    function generateSalesTrendBlock(cloneNumber) {
+        var html = '';
+        html += '<div id="sales_trend_wrapper" class="clear-float row_add_div">';
+        html += '<div id="sales_trend_block_' + cloneNumber + '" data-clone-number="' + cloneNumber + '" class="clear-float">';
+        html += '<div class="col-xs-12">';
+        html += '<div class="col-md-2">';
+        html += '<div class="form-group">';
+        html += '<div>';
+        html += '<input type="text" class="form-control sales_trend_from_date" data-clone-number="' + cloneNumber + '" placeholder="From Date" name="from_date_' + cloneNumber + '" id="from_date_' + cloneNumber + '" value="">';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '<div class="col-md-2">';
+        html += '<div class="form-group">';
+        html += '<div>';
+        html += '<input type="text" class="form-control sales_trend_to_date" data-clone-number="' + cloneNumber + '" placeholder="To Date" name="to_date_' + cloneNumber + '" id="to_date_' + cloneNumber + '" value="">';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '<div class="col-md-2">';
+        html += '<div class="form-group">';
+        html += '<div>';
+        html += '<button type="button" class="btn btn-danger btn-icon sales_trend_remove_btn" id="sales_trend_remove_btn_' + cloneNumber + '" character="" data-clone-number="' + cloneNumber + '"><i class="icon-cross3"></i></button>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        return html;
+    }
+
     function generatecategorySelectionBlock(cloneNumber) {
         var html = '';
         html += '<div id="category_selection_block_' + cloneNumber + '" data-clone-number="' + cloneNumber + '" class="clear-float">';
@@ -361,7 +582,6 @@
         html += '<input type="hidden" class="form-control" name="street1_' + cloneNumber + '" id="street1_' + cloneNumber + '" value="">';
         html += '<input type="hidden" class="form-control" name="city_' + cloneNumber + '" id="city_' + cloneNumber + '" value="">';
         html += '<input type="hidden" class="form-control" name="state_' + cloneNumber + '" id="state_' + cloneNumber + '" value="">';
-        html += '<input type="hidden" class="form-control" name="zip_code_' + cloneNumber + '" id="zip_code_' + cloneNumber + '" value="">';
         html += '<input type="hidden" class="form-control" name="place_id_' + cloneNumber + '" id="place_id_' + cloneNumber + '" value="">';
         html += '</div>';
         html += '<div class="col-sm-3 product-selection-remove-prod-btn">';
@@ -411,7 +631,7 @@
             sublocality_level_1: 'long_name',
             locality: 'long_name',
             administrative_area_level_1: 'short_name',
-            postal_code: 'short_name',
+//            postal_code: 'short_name',
         };
         var formFields = {
             street_number: 'street',
@@ -419,7 +639,7 @@
             sublocality_level_1: 'street1',
             locality: 'city',
             administrative_area_level_1: 'state',
-            postal_code: 'zip_code',
+//            postal_code: 'zip_code',
             place_id: 'place_id',
         };
         fillInAddressComponents(place, componentForm, formFields, control_number);
@@ -451,6 +671,6 @@
             }
         }
     }
-    $(document).find('.sub_cat_section_0').hide();
+//    $(document).find('.sub_cat_section_0').hide();
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,places&key=<?php echo GOOGLE_API_KEY ?>&callback=initAutocomplete" async defer></script>

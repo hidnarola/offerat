@@ -30,14 +30,16 @@ $(function () {
     });
 
     $('.daterange-basic').daterangepicker({
+
         applyClass: 'bg-slate-600',
         cancelClass: 'btn-default',
-        showDropdowns: true,
+        showDropdowns: false,
+        selectYears: 0,
         locale: {
             format: 'YYYY/MM/DD'
         }
     });
-
+    
     $('.daterange-basic-datatable').daterangepicker({
         ranges: {
             'This Month': [moment().startOf('month'), moment().endOf('month')],

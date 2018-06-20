@@ -112,6 +112,7 @@ define('tbl_sub_category', 'sub_category');
 define('tbl_user', 'user');
 define('tbl_verification', 'verification');
 define('tbl_place', 'place');
+define('tbl_sales_trend', 'sales_trend');
 
 /* define('country_img_path', 'assets/images/country/');
   define('category_img_path', 'assets/images/category/');
