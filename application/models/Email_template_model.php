@@ -1,10 +1,29 @@
 <?php
 
-class Email_template_model
-        extends CI_Model {
+class Email_template_model extends CI_Model {
 
     function __construct() {
         parent::__construct();
+    }
+
+    public function send_password_format($first_name = NULL, $last_name = NULL, $new_password = NULL) {
+        $login_link = SITEURL . 'login';
+        $message_text = '<p>Hello {first_name} {last_name},</p>
+
+<p>Your account has been created on Offerat, your new temporary password is {new_password}</p>
+
+<p>Please change your password after you Login (Link <a href="' . $login_link . '">' . $login_link . '</a>). Thank you.</p>
+
+<p>&nbsp;</p>
+
+<p>Regards</p>
+<p>Your Offerat Team</p>';
+
+        $find = array("{first_name}", "{last_name}", "{new_password}");
+        $replace = array($first_name, $last_name, $new_password);
+        $message = str_replace($find, $replace, $message_text);
+
+        return $this->mail_format($message);
     }
 
     public function forgot_password_format($link = NULL) {

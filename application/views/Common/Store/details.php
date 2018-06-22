@@ -11,13 +11,15 @@
                 <label>Status : </label>
                 <span class="text-semibold">
                     <?php
-                    if (isset($store_details['store_status']) && !empty($store_details['store_status'])) {
+                    if (isset($store_details['store_status'])) {
                         if ($store_details['store_status'] == IN_ACTIVE_STATUS)
                             echo '<span class="label label-danger label-rounded">Inactive</span>';
                         elseif ($store_details['store_status'] == NOT_VERIFIED_STATUS)
                             echo '<span class="label label-info label-rounded">Not Verified</span>';
                         elseif ($store_details['store_status'] == ACTIVE_STATUS)
                             echo '<span class="label label-success label-rounded">Active</span>';
+                        else
+                            echo '-';
                     } else {
                         echo '-';
                     }
@@ -35,12 +37,12 @@
                 </span>
             </div>
 
-            <div class="col-md-4 col-sm-12 col-xs-12">
-                <label>Telephone No. : </label>
-                <span class="text-semibold">
-                    <?php echo (isset($store_details['store_telephone']) && !empty($store_details['store_telephone'])) ? $store_details['store_telephone'] : '-'; ?>
-                </span>
-            </div>
+            <!--            <div class="col-md-4 col-sm-12 col-xs-12">
+                            <label>Telephone No. : </label>
+                            <span class="text-semibold">
+            <?php // echo (isset($store_details['store_telephone']) && !empty($store_details['store_telephone'])) ? $store_details['store_telephone'] : '-'; ?>
+                            </span>
+                        </div>-->
             <div class="col-md-4 col-sm-12 col-xs-12">
                 <label>Website : </label>
                 <span class="text-semibold">
@@ -143,7 +145,8 @@
                             </li>                                            
                         <?php } ?>
                     </ol>
-                <?php } else {
+                    <?php
+                } else {
                     echo 'No results found';
                 }
                 ?>

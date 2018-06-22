@@ -20,6 +20,7 @@
                                         <div class="form-group">
                                             <label>Store Name <span class="text-danger">*</span></label>
                                             <div>
+                                                <input type="hidden" class="form-control" name="store_id" id="store_id"  value="<?php echo (isset($store_details['id_store'])) ? $store_details['id_store'] : ''; ?>">
                                                 <input type="text" class="form-control" name="store_name" id="store_name"  placeholder="Store Name" required="required" value="<?php echo (isset($store_details['store_name'])) ? $store_details['store_name'] : set_value('store_name'); ?>">
                                             </div>
                                         </div>        
@@ -46,20 +47,35 @@
                                         <div class="form-group">
                                             <label>Logo <span class="text-danger">*</span></label>
                                             <div>
-                                                <input type="file" class="form-control file-input" name="store_logo" id="store_logo" required="required">
+                                                <input type="file" class="form-control file-input" name="store_logo" id="store_logo"  <?php echo (isset($store_details)) ? '' : 'required="required"'; ?>>
                                                 <input type="hidden" name="is_valid" id="is_valid" value="1">
                                                 <div id="store_logo_errors_wrapper" class="alert alert-danger alert-bordered display-none">
                                                     <span id="store_logo_errors"></span>
                                                 </div>
                                                 <label id="store_logo-error" class="validation-error-label" for="store_logo"></label>
-                                            </div>
+                                            </div>                                            
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>Telephone Number <span class="text-danger">*</span></label>
+                                            <label> </label>
                                             <div>
-                                                <input type="text" class="form-control" name="telephone" id="telephone"  placeholder="Telephone Number"  required="required" value="<?php echo (isset($store_details['telephone'])) ? $store_details['telephone'] : set_value('telephone'); ?>">                
+                                                <?php
+                                                if (isset($store_details['store_logo']) && !empty($store_details['store_logo'])) {
+                                                    $extension = explode('.', $store_details['store_logo']);
+                                                    if (isset($extension) && isset($extension[1]) && in_array($extension[1], $this->image_extensions_arr)) {
+                                                        ?>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <div>                                                                    
+                                                                    <a href="<?php echo store_img_path . $store_details['store_logo'] ?>" class="btn btn-info btn-lg" target="_blank"><i class="icon-image5"></i> View Image</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <?php
+                                                    }
+                                                }
+                                                ?>
                                             </div>
                                         </div>
                                     </div>
@@ -71,33 +87,33 @@
                                     <div class="col-xs-12">
                                         <div class="col-md-2">
                                             <div class="form-group">
-                                                <label>Contact Person First Name <span class="text-danger">*</span></label>
+                                                <label>Contact Person First Name</label>
                                                 <div>
-                                                    <input type="text" class="form-control" name="first_name" id="first_name"  placeholder="First Name"  required="required" value="<?php echo (isset($store_details['first_name'])) ? $store_details['first_name'] : set_value('first_name'); ?>">
+                                                    <input type="text" class="form-control" name="first_name" id="first_name"  placeholder="First Name" value="<?php echo (isset($store_details['first_name'])) ? $store_details['first_name'] : set_value('first_name'); ?>">
                                                 </div>
                                             </div>        
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">
-                                                <label>Contact Person Last Name <span class="text-danger">*</span></label>
+                                                <label>Contact Person Last Name</label>
                                                 <div>
-                                                    <input type="text" class="form-control" name="last_name" id="last_name"  placeholder="Last Name"  required="required" value="<?php echo (isset($store_details['last_name'])) ? $store_details['last_name'] : set_value('last_name'); ?>">
+                                                    <input type="text" class="form-control" name="last_name" id="last_name"  placeholder="Last Name"  value="<?php echo (isset($store_details['last_name'])) ? $store_details['last_name'] : set_value('last_name'); ?>">
                                                 </div>
                                             </div>        
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label>Email Address <span class="text-danger">*</span></label>
+                                                <label>Email Address</label>
                                                 <div>
-                                                    <input type="email" class="form-control" name="email_id" id="email_id"  placeholder="Email Address"  required="required" value="<?php echo (isset($store_details['email_id'])) ? $store_details['email_id'] : set_value('email_id'); ?>">
+                                                    <input type="email" class="form-control" name="email_id" id="email_id"  placeholder="Email Address"  value="<?php echo (isset($store_details['email_id'])) ? $store_details['email_id'] : set_value('email_id'); ?>">
                                                 </div>
                                             </div>
                                         </div> 
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label>Mobile Number <span class="text-danger">*</span></label>
+                                                <label>Mobile Number</label>
                                                 <div>
-                                                    <input type="text" class="form-control" name="mobile" id="mobile"  placeholder="Mobile Number" required="required" value="<?php echo (isset($store_details['mobile'])) ? $store_details['mobile'] : set_value('mobile'); ?>">
+                                                    <input type="text" class="form-control" name="mobile" id="mobile"  placeholder="Mobile Number" value="<?php echo (isset($store_details['mobile'])) ? $store_details['mobile'] : set_value('mobile'); ?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -115,7 +131,7 @@
                                 </div>
                                 <div id="category_selection_wrapper" class="clear-float row_add_div">
                                     <?php
-                                    $categoryCloneNumber = 0;
+                                    $categoryCloneNumber = 1;
                                     if (isset($store_categories) && sizeof($store_categories) > 0) {
                                         foreach ($store_categories as $key => $cat) {
                                             ?>
@@ -133,7 +149,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3 sub_cat_section_<?php echo $key; ?>">
+                                                    <div class="col-md-3 sub_cat_section_<?php echo $key; ?> <?php echo ($cat['id_sub_category'] > 0) ? '' : 'display-none'; ?>">
                                                         <div class="form-group">                                        
                                                             <div>
                                                                 <?php
@@ -209,7 +225,7 @@
                             <fieldset class="content-group">
                                 <legend class="text-bold">Branches</legend>
                                 <div class="col-xs-12">
-                                    <div class="col-md-3">
+                                    <div class="col-md-3 display-none">
                                         <div class="form-group">
                                             <div>
                                                 <?php if (isset($country_list) && sizeof($country_list) > 0) { ?>
@@ -233,7 +249,7 @@
                                     <?php
                                     $latitude = '54.6960513';
                                     $longitude = '-113.7297772';
-                                    $storeLocationCloneNumber = 0;
+                                    $storeLocationCloneNumber = 1;
                                     if (isset($store_locations) && sizeof($store_locations) > 0) {
                                         foreach ($store_locations as $key => $loc) {
                                             ?>
@@ -351,7 +367,7 @@
                                     </div>
                                     <div id="sales_trend_wrapper" class="clear-float row_add_div">
                                         <?php
-                                        $salesTrendCloneNumber = 0;
+                                        $salesTrendCloneNumber = 1;
                                         if (isset($sales_trends) && sizeof($sales_trends) > 0) {
                                             foreach ($sales_trends as $key => $trend) {
                                                 $from_date = date_create($trend['from_date']);
@@ -364,14 +380,14 @@
                                                         <div class="col-md-2">
                                                             <div class="form-group">                                        
                                                                 <div>
-                                                                    <input type="text" class="form-control sales_trend_from_date" placeholder="From Date" data-clone-number="<?php echo $key; ?>" name="exist_from_date_<?php echo $key; ?>" id="from_date_<?php echo $key; ?>" value="<?php echo $from_date_text; ?>" required="required">
+                                                                    <input type="text" class="form-control sales_trend_from_date" placeholder="From Date" data-clone-number="<?php echo $key; ?>" name="exist_from_date_<?php echo $trend['id_sales_trend']; ?>" id="from_date_<?php echo $key; ?>" value="<?php echo $from_date_text; ?>">
                                                                 </div>
                                                             </div>        
                                                         </div>                                                
                                                         <div class="col-md-2">
                                                             <div class="form-group">                                        
                                                                 <div>
-                                                                    <input type="text" class="form-control sales_trend_to_date" placeholder="To Date" data-clone-number="<?php echo $key; ?>" name="exist_to_date_<?php echo $key; ?>" id="to_date_<?php echo $key; ?>" value="<?php echo $to_date_text; ?>" required="required">
+                                                                    <input type="text" class="form-control sales_trend_to_date" placeholder="To Date" data-clone-number="<?php echo $key; ?>" name="exist_to_date_<?php echo $trend['id_sales_trend']; ?>" id="to_date_<?php echo $key; ?>" value="<?php echo $to_date_text; ?>">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -394,14 +410,14 @@
                                                     <div class="col-md-2">
                                                         <div class="form-group">                                        
                                                             <div>
-                                                                <input type="text" class="form-control sales_trend_from_date" data-clone-number="0" name="from_date_0" id="from_date_0" value="" required="required">
+                                                                <input type="text" class="form-control sales_trend_from_date" data-clone-number="0" name="from_date_0" id="from_date_0" value="">
                                                             </div>
                                                         </div>        
                                                     </div>                                                
                                                     <div class="col-md-2">
                                                         <div class="form-group">                                        
                                                             <div>
-                                                                <input type="text" class="form-control sales_trend_to_date" data-clone-number="0" name="to_date_0" id="to_date_0" value="" required="required">
+                                                                <input type="text" class="form-control sales_trend_to_date" data-clone-number="0" name="to_date_0" id="to_date_0" value="">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -418,37 +434,37 @@
                                     </div>                                    
                                 </fieldset>
                             <?php } ?>
-                            <?php if((!isset($store_details) && !$this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)) { ?>
-                            <fieldset class="content-group">
-                                <legend class="text-bold">Others</legend>
-                                <div class="col-xs-12">
-                                    <div class="col-md-3">
-                                        <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
-                                            <label>Status <span class="text-danger">*</span></label>
-                                            <div>                                            
-                                                <select id="status" name="status" class="select form-control" data-clone-number="0" required="required">
-                                                    <?php foreach ($status_list as $key => $list) { ?>
-                                                        <option value="<?php echo $key; ?>"><?php echo $list; ?></option>
-                                                    <?php } ?>
-                                                </select>
-                                            </div>
-                                        <?php } ?>
-                                    </div>
-                                    <div class="col-md-6"></div>
-                                    <div class="col-md-3">
-                                        <?php if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) { ?>
-                                            <div class="form-group pull-right"> 
-                                                <label></label>
-                                                <div>
-                                                    <input type="checkbox" class="styled-checkbox-1" name="terms_condition" required="required"/>                
-                                                    <span class="text-size-mini">  Yes, I agree with <a href="javascript:void(0);" target="_blank"><span>Terms And Conditions</span></a></span>            
-                                                    <label id="terms_condition-error" class="validation-error-label" for="terms_condition"></label>
+                            <?php if (($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) || (!isset($store_details) && $this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)) { ?>
+                                <fieldset class="content-group">
+                                    <legend class="text-bold">Others</legend>
+                                    <div class="col-xs-12">
+                                        <div class="col-md-3">
+                                            <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
+                                                <label>Status <span class="text-danger">*</span></label>
+                                                <div>                                            
+                                                    <select id="status" name="status" class="select form-control" data-clone-number="0" required="required">
+                                                        <?php foreach ($status_list as $key => $list) { ?>
+                                                            <option value="<?php echo $key; ?>" <?php echo ($key == $store_details['store_status']) ? 'selected=selected' : ''; ?>><?php echo $list; ?></option>
+                                                        <?php } ?>
+                                                    </select>
                                                 </div>
-                                            </div>
-                                        <?php } ?>
+                                            <?php } ?>
+                                        </div>
+                                        <div class="col-md-6"></div>
+                                        <div class="col-md-3">
+                                            <?php if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) { ?>
+                                                <div class="form-group pull-right"> 
+                                                    <label></label>
+                                                    <div>
+                                                        <input type="checkbox" class="styled-checkbox-1" name="terms_condition" required="required"/>                
+                                                        <span class="text-size-mini">  Yes, I agree with <a href="javascript:void(0);" target="_blank"><span>Terms And Conditions</span></a></span>            
+                                                        <label id="terms_condition-error" class="validation-error-label" for="terms_condition"></label>
+                                                    </div>
+                                                </div>
+                                            <?php } ?>
+                                        </div>
                                     </div>
-                                </div>
-                            </fieldset>
+                                </fieldset>
                             <?php } ?>
                             <div class="text-right">
                                 <input type="hidden" name="category_count" id="category_count" value="<?php echo $categoryCloneNumber; ?>">

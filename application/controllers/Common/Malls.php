@@ -112,14 +112,30 @@ class Malls extends MY_Controller {
 
         if (!is_null($id) && $id > 0 && $this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
 
-            $update_data = array('is_delete' => IS_DELETED_STATUS);
-            $where_data = array('is_delete' => IS_NOT_DELETED_STATUS, 'id_mall' => $id);
+            $select_store_location = array(
+                'table' => tbl_store_location,
+                'where' => array(
+                    'is_delete' => IS_NOT_DELETED_STATUS,
+                    'id_location' => $id,
+                    'location_type' => MALL_LOCATION_TYPE
+                )
+            );
 
-            $is_updated = $this->Common_model->master_update(tbl_mall, $update_data, $where_data);
-            if ($is_updated)
-                $this->session->set_flashdata('success_msg', 'Mall deleted successfully.');
-            else
-                $this->session->set_flashdata('error_msg', 'Invalid request sent to delete Mall. Please try again later.');
+            $store_locations = $this->Common_model->master_single_select($select_store_location);
+
+            if (isset($store_locations) && sizeof($store_locations) > 0) {
+
+                $this->session->set_flashdata('error_msg', 'Store is using this Mall, You can not delet this Mall.');
+            } else {
+                $update_data = array('is_delete' => IS_DELETED_STATUS);
+                $where_data = array('is_delete' => IS_NOT_DELETED_STATUS, 'id_mall' => $id);
+
+                $is_updated = $this->Common_model->master_update(tbl_mall, $update_data, $where_data);
+                if ($is_updated)
+                    $this->session->set_flashdata('success_msg', 'Mall deleted successfully.');
+                else
+                    $this->session->set_flashdata('error_msg', 'Invalid request sent to delete Mall. Please try again later.');
+            }
             redirect('country-admin/malls');
         } else {
             dashboard_redirect($this->loggedin_user_type);

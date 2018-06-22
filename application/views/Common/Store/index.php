@@ -184,7 +184,7 @@ $this->load->view('Common/Store/details_modal');
                         if (full.store_facebook_page !== '' && full.store_facebook_page !== undefined) {
                             links += '<a href="//' + full.store_facebook_page + '" target="_blank" title="Facebook Page" class="btn bg-slate btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-facebook"></i></a>   ';
                         }
-                        links += '<a href="<?php echo base_url() ?>super-admin/store/save/' + full.store_id_store + '" title="Update" class="btn bg-teal btn-xs  tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a>   ';
+                        links += '<a href="<?php echo $edit_store_url; ?>' + full.store_id_store + '" title="Update" class="btn bg-teal btn-xs  tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a>   ';
 <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
                             links += '<a href="javascript:void(0);" data-path="<?php echo $delete_store_url; ?>' + full.store_id_store + '" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" id="delete"><i class="icon-bin"></i></a>';
 <?php } ?>

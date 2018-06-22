@@ -8,6 +8,7 @@ class Stores extends MY_Controller {
         parent::__construct();
 
         $this->load->model('Common_model', '', TRUE);
+        $this->load->model('Email_template_model', '', TRUE);
 
         if (!in_array($this->loggedin_user_type, array(COUNTRY_ADMIN_USER_TYPE, STORE_OR_MALL_ADMIN_USER_TYPE)))
             redirect('/');
@@ -21,6 +22,7 @@ class Stores extends MY_Controller {
         $store_details_url = '';
         $delete_store_url = '';
         $add_store_url = '';
+        $edit_store_url = '';
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
             $store_list_url = 'country-admin/stores';
             $filter_list_url = 'country-admin/stores/filter_stores';
@@ -28,17 +30,20 @@ class Stores extends MY_Controller {
             $delete_store_url = 'country-admin/stores/delete/';
             $this->data['delete_store_url'] = $delete_store_url;
             $add_store_url = 'country-admin/stores/save/';
+            $edit_store_url = 'country-admin/stores/save/';
         } elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
             $store_list_url = 'mall-store-user/stores';
             $filter_list_url = 'mall-store-user/stores/filter_stores';
             $store_details_url = 'mall-store-user/stores/get_store_details/';
             $add_store_url = 'mall-store-user/stores/save/';
+            $edit_store_url = 'mall-store-user/stores/save/';
         }
 
         $this->data['store_list_url'] = $store_list_url;
         $this->data['filter_list_url'] = $filter_list_url;
         $this->data['store_details_url'] = $store_details_url;
         $this->data['add_store_url'] = $add_store_url;
+        $this->data['edit_store_url'] = $edit_store_url;
 
         $this->template->load('user', 'Common/Store/index', $this->data);
     }
@@ -164,9 +169,9 @@ class Stores extends MY_Controller {
 
     public function save($id = NULL) {
 
-
-
         $back_url = '';
+        $img_name = $image_name = '';
+        $country_id = 0;
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
             $back_url = 'country-admin/stores';
         } elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
@@ -183,7 +188,10 @@ class Stores extends MY_Controller {
 
             $select_store = array(
                 'table' => tbl_store . ' store',
-                'where' => array('store.status' => ACTIVE_STATUS, 'store.is_delete' => IS_NOT_DELETED_STATUS, 'store.id_store' => $id)
+                'fields' => '*, store.status store_status',
+//                'where' => array('store.status' => ACTIVE_STATUS, 'store.is_delete' => IS_NOT_DELETED_STATUS, 'store.id_store' => $id),
+                'where' => array('store.is_delete' => IS_NOT_DELETED_STATUS, 'store.id_store' => $id),
+                'where_with_sign' => array('store.status IN (' . ACTIVE_STATUS . ', ' . IN_ACTIVE_STATUS . ', ' . NOT_VERIFIED_STATUS . ')')
             );
 
             $select_store['join'][] = array(
@@ -194,7 +202,6 @@ class Stores extends MY_Controller {
 
             if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
                 $select_store['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", store.id_users) <> 0');
-
 
             $select_store['join'][] = array(
                 'table' => tbl_store_location . ' as store_location',
@@ -217,6 +224,9 @@ class Stores extends MY_Controller {
             $store_details = $this->Common_model->master_single_select($select_store);
 
             if (isset($store_details) && sizeof($store_details) > 0) {
+
+                $image_name = $store_details['store_logo'];
+                $country_id = $store_details['id_country'];
                 $select_store_category = array(
                     'table' => tbl_store_category . ' store_category',
                     'fields' => array('id_store_category', 'category.id_category', 'sub_category.id_sub_category', 'category.category_name', 'sub_category.sub_category_name'),
@@ -302,134 +312,295 @@ class Stores extends MY_Controller {
             }
         } else {
             $this->data['title'] = $this->data['page_header'] = 'Add Store';
+
+            $select_country = array(
+                'table' => tbl_store . ' store',
+                'where' => array('store.status' => ACTIVE_STATUS, 'store.is_delete' => IS_NOT_DELETED_STATUS)
+            );
+
+            $select_country['join'][] = array(
+                'table' => tbl_user . ' as user',
+                'condition' => tbl_store . '.id_users = ' . tbl_user . '.id_user',
+                'join' => 'left',
+            );
+
+            if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
+                $select_country['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", store.id_users) <> 0');
+
+            $select_country['join'][] = array(
+                'table' => tbl_store_location . ' as store_location',
+                'condition' => tbl_store_location . '.id_store = ' . tbl_store . '.id_store',
+                'join' => 'left',
+            );
+            $select_country['join'][] = array(
+                'table' => tbl_place . ' as place',
+                'condition' => tbl_place . '.id_place = ' . tbl_store_location . '.id_place',
+                'join' => 'left',
+            );
+            $select_country['join'][] = array(
+                'table' => tbl_country . ' as country',
+                'condition' => tbl_country . '.id_country = ' . tbl_place . '.id_country',
+                'join' => 'left',
+            );
+            if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)
+                $select_country['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0');
+
+            $country_details = $this->Common_model->master_single_select($select_country);
+            if (isset($country_details) && sizeof($country_details) > 0) {
+                $country_id = $country_details['id_country'];
+            }
         }
 
         if ($this->input->post()) {
 
-            pr($_POST);
-            $date = date('Y-m-d h:i:s');
-            $delete_store_category = array();
-            $delete_store_place = array();
-            $do_store_image_has_error = false;
-            $img_name = $image_name = '';
-            if (isset($_FILES['store_logo'])) {
-
-                if (($_FILES['store_logo']['size']) > 0) {
-//                        $image_path = dirname($_SERVER["SCRIPT_FILENAME"]) . '/' . store_img_path;
-                    $image_path = $_SERVER['DOCUMENT_ROOT'] . store_img_path;
-                    if (!file_exists($image_path)) {
-                        $this->Common_model->created_directory($image_path);
-                    }
-                    $supported_files = 'gif|jpg|png|jpeg';
-                    $img_name = $this->Common_model->upload_image('store_logo', $image_path, $supported_files);
-
-                    if (empty($img_name)) {
-                        $do_store_image_has_error = true;
-                        $this->data['image_errors'] = $this->upload->display_errors();
-                    } else {
-                        $image_name = $img_name;
-                    }
-                } else {
-                    if (!empty($_FILES['store_logo']['tmp_name'])) {
-                        $do_store_image_has_error = true;
-                        $this->data['image_errors'] = 'Invalid File';
-                    }
-                }
-            }
-
-            $store_data = array(
-                'store_name' => $this->input->post('store_name', TRUE),
-                'store_logo' => $image_name,
-                'website' => $this->input->post('website', TRUE),
-                'facebook_page' => $this->input->post('facebook_page', TRUE),
-                'telephone' => $this->input->post('telephone', TRUE)
+            $validate_fields = array(
+                'store_name',
+                'website',
+                'facebook_page',
+                'store_logo',
             );
 
-            $user_data = array(
-                'email_id' => $this->input->post('email_id', TRUE),
-                'first_name' => $this->input->post('first_name', TRUE),
-                'last_name' => $this->input->post('last_name', TRUE),
-                'mobile' => $this->input->post('mobile', TRUE),
-            );
-
-            if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
-                $store_data['status'] = $this->input->post('status', TRUE);
-                $user_data['status'] = $this->input->post('status', TRUE);
+            if ($this->input->post('email_id') != '') {
+                $validate_fields[] = 'first_name';
+                $validate_fields[] = 'last_name';
+                $validate_fields[] = 'email_id';
+                $validate_fields[] = 'telephone';
             }
 
-            if ($id) {
-                $store_data['modified_date'] = $date;
-                $user_data['modified_date'] = $date;
+            $validate_fields[] = 'category_count';
+            $validate_fields[] = 'location_count';
 
-                if (isset($store_categories) && sizeof($store_categories) > 0) {
-                    foreach ($store_categories as $cat) {
+            if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE && is_null($id))
+                $validate_fields[] = 'terms_condition';
 
-                        if ($this->input->post('exist_category_' . $cat['id_store_category'], TRUE) != '') {
-                            $update_store_category = array(
-                                'id_category' => $this->input->post('exist_category_' . $cat['id_store_category'], TRUE),
-                                'id_sub_category' => $this->input->post('exist_sub_category_' . $cat['id_store_category'], TRUE)
-                            );
-                            $where_store_category = array('id_store_category' => $cat['id_store_category']);
-//                            $this->Common_model->master_update(tbl_store_category, $update_store_category, $where_store_category);
-                        } else
-                            $delete_store_category[] = $cat['id_store_category'];
-                    }
+            if ($this->_validate_form($validate_fields)) {
+                $user_id = 0;
+                $date = date('Y-m-d h:i:s');
+                $delete_store_category = array();
+                $delete_store_place = array();
+                $delete_store_sales_trend = array();
 
-                    if (isset($delete_store_category) && sizeof($delete_store_category) > 0) {
-                        $update_store_category_data = 'is_delete = ' . IS_NOT_DELETED_STATUS;
-                        $where_store_category_data = 'id_store_category IN ("' . implode(',', $delete_store_category) . '")';
-//                    $this->Common_model->master_update(tbl_store_category, $update_store_category_data, $where_store_category_data, TRUE);
-                    }
-                }
+                $exist_store_category_ids = array();
+                $exist_store_place_ids = array();
+                $exist_store_sales_trend_ids = array();
 
+                $do_store_image_has_error = false;
 
-
-                if (isset($store_locations) && sizeof($store_locations) > 0) {
-                    foreach ($store_locations as $loc) {
-                        if ($this->input->post('exist_mall_' . $loc['id_place'], TRUE) != '') {
-                            $update_store_location = array(
-                                'street' => $this->input->post('exist_address_' . $loc['id_place'], TRUE),
-                                'street' => $this->input->post('exist_street_' . $loc['id_place'], TRUE),
-                                'street1' => $this->input->post('exist_street1_' . $loc['id_place'], TRUE),
-                                'city' => $this->input->post('exist_city_' . $loc['id_place'], TRUE),
-                                'state' => $this->input->post('exist_state_' . $loc['id_place'], TRUE),
-                                'latitude' => $this->input->post('exist_latitude_' . $loc['id_place'], TRUE),
-                                'longitude' => $this->input->post('exist_longitude_' . $loc['id_place'], TRUE),
-                                'id_google' => $this->input->post('exist_place_id_' . $loc['id_place'], TRUE),
-                            );                            
-                            $where_store_location = array('id_place' => $loc['id_place']);
-//                            $this->Common_model->master_update(tbl_place, $update_store_location, $where_store_location);
+                if (isset($_FILES['store_logo'])) {
+                    if (($_FILES['store_logo']['size']) > 0) {
+                        $image_path = $_SERVER['DOCUMENT_ROOT'] . store_img_path;
+                        if (!file_exists($image_path)) {
+                            $this->Common_model->created_directory($image_path);
+                        }
+                        $supported_files = 'gif|jpg|png|jpeg';
+                        $img_name = $this->Common_model->upload_image('store_logo', $image_path, $supported_files);
+                        pr($img_name);
+                        if (empty($img_name)) {
+                            $do_store_image_has_error = true;
+                            $this->data['image_errors'] = $this->upload->display_errors();
                         } else {
-                            $delete_store_place[] = $loc['id_place'];
+                            $image_name = $img_name;
+                        }
+                    } else {
+                        if (!empty($_FILES['store_logo']['tmp_name'])) {
+                            $do_store_image_has_error = true;
+                            $this->data['image_errors'] = 'Invalid File';
+                        }
+                    }
+                }
+
+                if (!$do_store_image_has_error) {
+                    $store_data = array(
+                        'store_name' => $this->input->post('store_name', TRUE),
+                        'store_logo' => $image_name,
+                        'website' => $this->input->post('website', TRUE),
+                        'facebook_page' => $this->input->post('facebook_page', TRUE),
+                        'telephone' => ($this->input->post('mobile', TRUE) != '') ? $this->input->post('mobile', TRUE) : ' '
+                    );
+
+                    if ($this->input->post('email_id', TRUE) != '') {
+                        $select_user = array(
+                            'table' => tbl_user,
+                            'where' => array('email_id' => $this->input->post('email_id', TRUE), 'is_delete' => IS_NOT_DELETED_STATUS)
+                        );
+
+                        $user_details = $this->Common_model->master_single_select($select_user);
+                    }
+                    if (isset($user_details) && sizeof($user_details) > 0) {
+                        $user_id = $user_details['id_user'];
+                    } else {
+
+                        if ($this->input->post('email_id', TRUE) != '') {
+                            $new_password = $this->Common_model->random_generate_code(5);
+                            $user_data = array(
+                                'user_type' => STORE_OR_MALL_ADMIN_USER_TYPE,
+                                'email_id' => $this->input->post('email_id', TRUE),
+                                'first_name' => $this->input->post('first_name', TRUE),
+                                'last_name' => $this->input->post('last_name', TRUE),
+                                'mobile' => ($this->input->post('mobile', TRUE) != '') ? $this->input->post('mobile', TRUE) : ' ',
+                                'password' => md5($new_password),
+                                'created_date' => $date,
+                                'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
+                                'is_delete' => IS_NOT_DELETED_STATUS,
+                            );
+                            if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)
+                                $user_data['status'] = $this->input->post('status', TRUE);
+                            else
+                                $user_data['status'] = NOT_VERIFIED_STATUS;
+
+                            $user_id = $this->Common_model->master_save(tbl_user, $user_data);
+
+                            $content = $this->Email_template_model->send_password_format($this->input->post('first_name', TRUE), $this->input->post('last_name', TRUE), $new_password);
+                            $response = $this->Email_template_model->send_email(NULL, $this->input->post('email_id', TRUE), 'Account Password', $content);
+                        } else {
+                            $user_id = $this->loggedin_user_data['user_id'];
                         }
                     }
 
-                    if (isset($delete_store_place) && sizeof($delete_store_place) > 0) {
-                        $update_store_place_data = 'is_delete = ' . IS_NOT_DELETED_STATUS;
-                        $where_store_place_data = 'id_place IN ("' . implode(',', $delete_store_place) . '")';
-//                        $this->Common_model->master_update(tbl_place, $update_store_place_data, $where_store_place_data, TRUE);
-//                        $this->Common_model->master_update(tbl_store_location, $update_store_place_data, $where_store_place_data, TRUE);
+                    if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)
+                        $store_data['status'] = $this->input->post('status', TRUE);
+                    else
+                        $store_data['status'] = NOT_VERIFIED_STATUS;
+
+                    if (isset($store_data['status']) && $store_data['status'] == NOT_VERIFIED_STATUS) {
+
+                        $country_admin_data = array(
+                            'table' => tbl_country . ' country',
+                            'fields' => array('user.email_id'),
+                            'where' => array(
+                                'country.id_country' => $country_id,
+                                'user.is_delete' => IS_NOT_DELETED_STATUS,
+                                'country.is_delete' => IS_NOT_DELETED_STATUS,
+                                'user.status' => ACTIVE_STATUS,
+                                'country.status' => ACTIVE_STATUS,
+                            ),
+                            'join' => array(
+                                array(
+                                    'table' => tbl_user . ' as user',
+                                    'condition' => 'user.id_user = country.id_users',
+                                    'join' => 'left'
+                                )
+                            )
+                        );
+
+                        $country_admin_details = $this->Common_model->master_single_select($country_admin_data);
+
+                        if (isset($country_admin_details) && sizeof($country_admin_details) > 0) {
+
+                            $country_admin_email_id = $country_admin_details['email_id'];
+                            $subject = 'Add new Store - ' . $this->input->post('store_name', TRUE);
+                            $content = ' ';
+                            $response = $this->Email_template_model->send_email(NULL, $country_admin_email_id, $subject, $content);
+                        }
                     }
+
+                    $store_data['id_users'] = $user_id;
+
+                    if ($id) {
+
+                        $store_data['modified_date'] = $date;
+                        $where_store = array('id_store' => $id);
+                        $this->Common_model->master_update(tbl_store, $store_data, $where_store);
+
+                        $this->add_category_sub_category($date, $id);
+                        $this->add_locations($date, $id, $country_id);
+                        $this->add_sales_trend($date, $id);
+
+                        if (isset($store_categories) && sizeof($store_categories) > 0) {
+                            foreach ($store_categories as $cat) {
+
+                                if ($this->input->post('exist_category_' . $cat['id_store_category'], TRUE) != '') {
+                                    $update_store_category = array(
+                                        'id_category' => $this->input->post('exist_category_' . $cat['id_store_category'], TRUE),
+                                        'id_sub_category' => $this->input->post('exist_sub_category_' . $cat['id_store_category'], TRUE),
+                                        'modified_date' => $date
+                                    );
+                                    $where_store_category = array('id_store_category' => $cat['id_store_category']);
+                                    $this->Common_model->master_update(tbl_store_category, $update_store_category, $where_store_category);
+                                } else
+                                    $delete_store_category[] = $cat['id_store_category'];
+                            }
+
+                            if (isset($delete_store_category) && sizeof($delete_store_category) > 0) {
+                                $update_store_category_data = 'is_delete = ' . IS_DELETED_STATUS . ' , modified_date = "' . $date . '"';
+                                $where_store_category_data = 'id_store_category IN (' . implode(',', $delete_store_category) . ')';
+                                $this->Common_model->master_update(tbl_store_category, $update_store_category_data, $where_store_category_data, TRUE);
+                            }
+                        }
+
+                        if (isset($store_locations) && sizeof($store_locations) > 0) {
+                            foreach ($store_locations as $loc) {
+                                if ($this->input->post('exist_mall_' . $loc['id_place'], TRUE) != '') {
+                                    $update_store_location = array(
+                                        'street' => $this->input->post('exist_address_' . $loc['id_place'], TRUE),
+                                        'street' => $this->input->post('exist_street_' . $loc['id_place'], TRUE),
+                                        'street1' => $this->input->post('exist_street1_' . $loc['id_place'], TRUE),
+                                        'city' => $this->input->post('exist_city_' . $loc['id_place'], TRUE),
+                                        'state' => $this->input->post('exist_state_' . $loc['id_place'], TRUE),
+                                        'latitude' => $this->input->post('exist_latitude_' . $loc['id_place'], TRUE),
+                                        'longitude' => $this->input->post('exist_longitude_' . $loc['id_place'], TRUE),
+                                        'id_google' => $this->input->post('exist_place_id_' . $loc['id_place'], TRUE),
+                                        'modified_date' => $date
+                                    );
+                                    $where_store_location = array('id_place' => $loc['id_place']);
+                                    $this->Common_model->master_update(tbl_place, $update_store_location, $where_store_location);
+                                } else {
+                                    $delete_store_place[] = $loc['id_place'];
+                                }
+                            }
+
+                            if (isset($delete_store_place) && sizeof($delete_store_place) > 0) {
+                                $update_store_place_data = 'is_delete = ' . IS_DELETED_STATUS . ' , modified_date = "' . $date . '"';
+                                $where_store_place_data = 'id_place IN (' . implode(',', $delete_store_place) . ')';
+                                $this->Common_model->master_update(tbl_place, $update_store_place_data, $where_store_place_data, TRUE);
+                                $this->Common_model->master_update(tbl_store_location, $update_store_place_data, $where_store_place_data, TRUE);
+                            }
+                        }
+
+                        if (isset($sales_trends) && sizeof($sales_trends) > 0) {
+                            foreach ($sales_trends as $trend) {
+                                if ($this->input->post('exist_from_date_' . $trend['id_sales_trend'], TRUE) != '') {
+
+                                    $from_date = $this->input->post('exist_from_date_' . $trend['id_sales_trend'], TRUE);
+                                    $from_date_text = date('y-m-d', strtotime($from_date));
+                                    $to_date = $this->input->post('exist_to_date_' . $trend['id_sales_trend'], TRUE);
+                                    $to_date_text = date('y-m-d', strtotime($to_date));
+                                    $update_store_sales_trend = array(
+                                        'from_date' => $from_date_text,
+                                        'to_date' => $to_date_text,
+                                        'modified_date' => $date
+                                    );
+                                    $where_store_sales_trend = array('id_sales_trend' => $trend['id_sales_trend']);
+                                    $this->Common_model->master_update(tbl_sales_trend, $update_store_sales_trend, $where_store_sales_trend);
+                                } else {
+                                    $delete_store_sales_trend[] = $trend['id_sales_trend'];
+                                }
+                            }
+
+                            if (isset($delete_store_sales_trend) && sizeof($delete_store_sales_trend) > 0) {
+                                $update_store_sales_trend = 'is_delete = ' . IS_DELETED_STATUS . ' , modified_date = "' . $date . '"';
+                                $where_store_sales_trend = 'id_sales_trend IN (' . implode(',', $delete_store_sales_trend) . ')';
+                                $this->Common_model->master_update(tbl_sales_trend, $update_store_sales_trend, $where_store_sales_trend, TRUE);
+                            }
+                        }
+                        $this->session->set_flashdata('success_msg', 'Store updated successfully');
+                    } else {
+                        $store_data['created_date'] = date('Y-m-d h:i:s');
+                        $store_data['is_testdata'] = (ENVIRONMENT !== 'production') ? 1 : 0;
+                        $store_data['is_delete'] = IS_NOT_DELETED_STATUS;
+
+                        $store_id = $this->Common_model->master_save(tbl_store, $store_data);
+
+                        $this->add_category_sub_category($date, $store_id);
+                        $this->add_locations($date, $store_id, $country_id);
+                        $this->add_sales_trend($date, $store_id);
+                        $this->session->set_flashdata('success_msg', 'Store added successfully');
+                    }
+
+                    redirect($back_url);
                 }
-
-                
-                $store_locations;
-                $sales_trends;
-            } else {
-                $store_data['created_date'] = date('Y-m-d h:i:s');
-                $store_data['is_testdata'] = (ENVIRONMENT !== 'production') ? 1 : 0;
-                $store_data['is_delete'] = IS_NOT_DELETED_STATUS;
-
-                $user_data['created_date'] = date('Y-m-d h:i:s');
-                $user_data['is_testdata'] = (ENVIRONMENT !== 'production') ? 1 : 0;
-                $user_data['is_delete'] = IS_NOT_DELETED_STATUS;
             }
-
-            die();
         }
-
-
-
         $select_category = array(
             'table' => tbl_category,
             'where' => array('status' => ACTIVE_STATUS, 'is_delete' => IS_NOT_DELETED_STATUS),
@@ -443,7 +614,6 @@ class Stores extends MY_Controller {
         );
         $country_list = $this->Common_model->master_select($select_country);
 
-
         $this->data['status_list'] = $status_arr;
         $this->data['category_list'] = $category_list;
         $this->data['country_list'] = $country_list;
@@ -455,10 +625,11 @@ class Stores extends MY_Controller {
     public function _validate_form($validate_fields) {
 
         if (in_array('store_name', $validate_fields)) {
+
             $validation_rules[] = array(
                 'field' => 'store_name',
                 'label' => 'Store Name',
-                'rules' => 'trim|required|min_length[2]|max_length[250]|callback_check_store_name|htmlentities'
+                'rules' => 'trim|required|min_length[2]|callback_check_store_name|max_length[250]|htmlentities'
             );
         }
         if (in_array('website', $validate_fields)) {
@@ -476,52 +647,42 @@ class Stores extends MY_Controller {
             );
         }
         if (in_array('store_logo', $validate_fields)) {
+
+            $check_store_validation = '';
+            if ($this->input->post('store_id') == '')
+                $check_store_validation = '|callback_custom_store_logo[store_logo]';
             $validation_rules[] = array(
                 'field' => 'store_logo',
                 'label' => 'Store Logo',
-                'rules' => 'trim|callback_custom_store_logo[store_logo]|htmlentities'
-            );
-        }
-        if (in_array('telephone', $validate_fields)) {
-            $validation_rules[] = array(
-                'field' => 'telephone',
-                'label' => 'Telephone Number',
-                'rules' => 'trim|required|min_length[8]|max_length[20]|htmlentities'
+                'rules' => 'trim' . $check_store_validation . '|htmlentities'
             );
         }
         if (in_array('first_name', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'first_name',
                 'label' => 'Contact Person\'s First Name',
-                'rules' => 'trim|required|min_length[2]|max_length[150]|htmlentities'
+                'rules' => 'trim|min_length[2]|max_length[150]|htmlentities'
             );
         }
         if (in_array('last_name', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'last_name',
                 'label' => 'Contact Person\'s Last Name',
-                'rules' => 'trim|required|min_length[2]|max_length[150]|htmlentities'
+                'rules' => 'trim|min_length[2]|max_length[150]|htmlentities'
             );
         }
         if (in_array('email_id', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'email_id',
                 'label' => 'Email Address',
-                'rules' => 'trim|required|min_length[2]|max_length[100]|htmlentities'
+                'rules' => 'trim|min_length[2]|max_length[100]|htmlentities'
             );
         }
         if (in_array('mobile', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'mobile',
                 'label' => 'Mobile Number',
-                'rules' => 'trim|required|min_length[8]|max_length[20]|htmlentities'
-            );
-        }
-        if (in_array('id_country', $validate_fields)) {
-            $validation_rules[] = array(
-                'field' => 'id_country',
-                'label' => 'Country',
-                'rules' => 'trim|required|htmlentities'
+                'rules' => 'trim|min_length[8]|max_length[20]|htmlentities'
             );
         }
         if (in_array('category_count', $validate_fields)) {
@@ -572,22 +733,37 @@ class Stores extends MY_Controller {
                 return FALSE;
             }
         } else {
-            $this->form_validation->set_message('custom_store_logo', 'The {field} field is required.');
-            return FALSE;
+            if ($this->input->post('store_id', TRUE) == '') {
+                $this->form_validation->set_message('custom_store_logo', 'The {field} field is required.');
+                return FALSE;
+            } else {
+                return TRUE;
+            }
         }
         return TRUE;
     }
 
     function check_store_name($store_name) {
 
-        $select_data = array(
-            'table' => tbl_store,
-            'where' => array(
-                'is_delete' => IS_NOT_DELETED_STATUS,
-                'store_name' => $store_name
-            )
-        );
-
+        if ($this->input->post('store_id', TRUE) != '') {
+            $select_data = array(
+                'table' => tbl_store,
+                'where' => array(
+                    'is_delete' => IS_NOT_DELETED_STATUS,
+                    'store_name' => $store_name,
+                    'id_store' => $this->input->post('store_id', TRUE)
+                ),
+                'where_with_sign' => array('id_store <>' . $this->input->post('store_id', TRUE))
+            );
+        } else {
+            $select_data = array(
+                'table' => tbl_store,
+                'where' => array(
+                    'is_delete' => IS_NOT_DELETED_STATUS,
+                    'store_name' => $store_name
+                )
+            );
+        }
         $check_store_name = $this->Common_model->master_single_select($select_data);
 
         if (isset($check_store_name) && sizeof($check_store_name) > 0) {
@@ -624,6 +800,92 @@ class Stores extends MY_Controller {
             redirect('country-admin/stores');
         } else {
             dashboard_redirect($this->loggedin_user_type);
+        }
+    }
+
+    function add_category_sub_category($date = NULL, $store_id = NULL) {
+
+        if (!is_null($store_id) && $store_id > 0) {
+            $category_count = $this->input->post('category_count', TRUE);
+            for ($i = 0; $i <= $category_count; $i++) {
+                if ($this->input->post('category_' . $i, TRUE) > 0) {
+                    $in_category_data = array(
+                        'id_store' => $store_id,
+                        'id_category' => $this->input->post('category_' . $i, TRUE),
+                        'id_sub_category' => ($this->input->post('sub_category_' . $i, TRUE) > 0 ) ? $this->input->post('sub_category_' . $i, TRUE) : 0,
+                        'created_date' => $date,
+                        'contact_number' => ($this->input->post('mobile', TRUE) != '') ? $this->input->post('mobile', TRUE) : ' ',
+                        'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
+                        'is_delete' => IS_NOT_DELETED_STATUS
+                    );
+                    $this->Common_model->master_save(tbl_store_category, $in_category_data);
+                }
+            }
+        }
+    }
+
+    function add_locations($date = NULL, $store_id = NULL, $country_id = NULL) {
+
+        $location_count = $this->input->post('location_count', TRUE);
+
+        for ($i = 0; $i <= $location_count; $i++) {
+
+            if ($this->input->post('place_id_' . $i, TRUE) != '') {
+
+                $in_place_data = array(
+                    'id_google' => $this->input->post('place_id_' . $i, TRUE),
+                    'street' => $this->input->post('street_' . $i, TRUE),
+                    'street1' => $this->input->post('street1_' . $i, TRUE),
+                    'city' => $this->input->post('city_' . $i, TRUE),
+                    'state' => $this->input->post('state_' . $i, TRUE),
+                    'id_country' => $country_id,
+                    'latitude' => $this->input->post('latitude_' . $i, TRUE),
+                    'longitude' => $this->input->post('longitude_' . $i, TRUE),
+                    'created_date' => $date,
+                    'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
+                    'is_delete' => IS_NOT_DELETED_STATUS
+                );
+
+                $place_id = $this->Common_model->master_save(tbl_place, $in_place_data);
+
+                $in_store_location_data = array(
+                    'id_store' => $store_id,
+                    'id_place' => $place_id,
+                    'id_location' => $this->input->post('mall_' . $i, TRUE),
+                    'location_type' => ($this->input->post('mall_' . $i, TRUE) == 0) ? STORE_LOCATION_TYPE : MALL_LOCATION_TYPE,
+                    'contact_number' => ($this->input->post('mobile', TRUE) != '') ? $this->input->post('mobile', TRUE) : ' ',
+                    'created_date' => $date,
+                    'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
+                    'is_delete' => IS_NOT_DELETED_STATUS
+                );
+                $this->Common_model->master_save(tbl_store_location, $in_store_location_data);
+            }
+        }
+    }
+
+    function add_sales_trend($date = NULL, $store_id = NULL) {
+
+        if (!is_null($store_id) && $store_id > 0) {
+            $sales_trend_count = $this->input->post('sales_trend_count', TRUE);
+            for ($i = 0; $i <= $sales_trend_count; $i++) {
+                if ($this->input->post('from_date_' . $i, TRUE) > 0) {
+
+                    $from_date = $this->input->post('from_date_' . $i, TRUE);
+                    $from_date_text = date('y-m-d', strtotime($from_date));
+                    $to_date = $this->input->post('to_date_' . $i, TRUE);
+                    $to_date_text = date('y-m-d', strtotime($to_date));
+
+                    $in_sales_trend_data = array(
+                        'id_store' => $store_id,
+                        'from_date' => $from_date_text,
+                        'to_date' => $to_date_text,
+                        'created_date' => $date,
+                        'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
+                        'is_delete' => IS_NOT_DELETED_STATUS
+                    );
+                    $this->Common_model->master_save(tbl_sales_trend, $in_sales_trend_data);
+                }
+            }
         }
     }
 
