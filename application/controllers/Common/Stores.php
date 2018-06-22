@@ -10,6 +10,11 @@ class Stores extends MY_Controller {
         $this->load->model('Common_model', '', TRUE);
         $this->load->model('Email_template_model', '', TRUE);
 
+        $this->bread_crum[] = array(
+            'url' => '',
+            'title' => 'Stores',
+        );
+
         if (!in_array($this->loggedin_user_type, array(COUNTRY_ADMIN_USER_TYPE, STORE_OR_MALL_ADMIN_USER_TYPE)))
             redirect('/');
     }
@@ -17,6 +22,10 @@ class Stores extends MY_Controller {
     public function index() {
 
         $this->data['title'] = $this->data['page_header'] = 'Stores List';
+        $this->bread_crum[] = array(
+            'url' => '',
+            'title' => 'List',
+        );
         $store_list_url = '';
         $filter_list_url = '';
         $store_details_url = '';
@@ -172,6 +181,7 @@ class Stores extends MY_Controller {
         $back_url = '';
         $img_name = $image_name = '';
         $country_id = 0;
+
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
             $back_url = 'country-admin/stores';
         } elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
@@ -182,9 +192,18 @@ class Stores extends MY_Controller {
             ACTIVE_STATUS => 'Active',
             IN_ACTIVE_STATUS => 'Inactive',
         );
+        $this->bread_crum[] = array(
+            'url' => $back_url,
+            'title' => ' List',
+        );
+
         if (!is_null($id)) {
 
             $this->data['title'] = $this->data['page_header'] = 'Edit Store';
+            $this->bread_crum[] = array(
+                'url' => '',
+                'title' => 'Edit Store'
+            );
 
             $select_store = array(
                 'table' => tbl_store . ' store',
@@ -312,7 +331,10 @@ class Stores extends MY_Controller {
             }
         } else {
             $this->data['title'] = $this->data['page_header'] = 'Add Store';
-
+            $this->bread_crum[] = array(
+                'url' => '',
+                'title' => 'Add Store',
+            );
             $select_country = array(
                 'table' => tbl_store . ' store',
                 'where' => array('store.status' => ACTIVE_STATUS, 'store.is_delete' => IS_NOT_DELETED_STATUS)
@@ -394,7 +416,6 @@ class Stores extends MY_Controller {
                         }
                         $supported_files = 'gif|jpg|png|jpeg';
                         $img_name = $this->Common_model->upload_image('store_logo', $image_path, $supported_files);
-                        pr($img_name);
                         if (empty($img_name)) {
                             $do_store_image_has_error = true;
                             $this->data['image_errors'] = $this->upload->display_errors();
@@ -442,12 +463,8 @@ class Stores extends MY_Controller {
                                 'created_date' => $date,
                                 'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
                                 'is_delete' => IS_NOT_DELETED_STATUS,
+                                'status' => ACTIVE_STATUS
                             );
-                            if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)
-                                $user_data['status'] = $this->input->post('status', TRUE);
-                            else
-                                $user_data['status'] = NOT_VERIFIED_STATUS;
-
                             $user_id = $this->Common_model->master_save(tbl_user, $user_data);
 
                             $content = $this->Email_template_model->send_password_format($this->input->post('first_name', TRUE), $this->input->post('last_name', TRUE), $new_password);
@@ -617,6 +634,7 @@ class Stores extends MY_Controller {
         $this->data['status_list'] = $status_arr;
         $this->data['category_list'] = $category_list;
         $this->data['country_list'] = $country_list;
+        $this->data['country_id'] = $country_id;
 
         $this->data['back_url'] = $back_url;
         $this->template->load('user', 'Common/Store/form', $this->data);
@@ -649,7 +667,7 @@ class Stores extends MY_Controller {
         if (in_array('store_logo', $validate_fields)) {
 
             $check_store_validation = '';
-            if ($this->input->post('store_id') == '')
+            if ($this->input->post('store_id') == '' || (isset($_FILES['store_logo']) && $_FILES['store_logo']['size'] > 0))
                 $check_store_validation = '|callback_custom_store_logo[store_logo]';
             $validation_rules[] = array(
                 'field' => 'store_logo',

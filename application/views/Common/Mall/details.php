@@ -36,13 +36,6 @@
                     ?>
                 </span>
             </div>
-
-            <div class="col-md-4 col-sm-12 col-xs-12">
-                <label>Telephone No. : </label>
-                <span class="text-semibold">
-                    <?php echo (isset($mall_details['mall_telephone']) && !empty($mall_details['mall_telephone'])) ? $mall_details['mall_telephone'] : '-'; ?>
-                </span>
-            </div>
             <div class="col-md-4 col-sm-12 col-xs-12">
                 <label>Website : </label>
                 <span class="text-semibold">
@@ -73,7 +66,7 @@
             <div class="col-md-4 col-sm-12 col-xs-12">
                 <label>Logo : </label>
                 <?php if (isset($mall_details['mall_mall_logo']) && !empty($mall_details['mall_mall_logo'])) { ?>
-                    <img src="<?php echo mall_img_path . $mall_details['mall_mall_logo']; ?>" onerror="image_not_found(image_0)" id="image_0" alt="Image Not Found">
+                    <img src="<?php echo store_img_path . $mall_details['mall_mall_logo']; ?>" onerror="image_not_found(image_0)" id="image_0" alt="Image Not Found">
                     <?php
                 } else {
                     echo '-';
@@ -113,25 +106,21 @@
         <hr>        
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">                
-                <h6 class="text-semibold">Mall Locations</h6>
-                <ol class="list rounded-list">                        
-                    <li>
-                        <p>
-                            <?php
-                            $display_location = $mall_details['street'];
-                            if (isset($mall_details['street1']) && !empty($mall_details['street1']))
-                                $display_location .= ', ' . $mall_details['street1'];
-                            if (isset($mall_details['city']) && !empty($mall_details['city']))
-                                $display_location .= ', ' . $mall_details['city'];
-                            if (isset($mall_details['state']) && !empty($mall_details['state']))
-                                $display_location .= ', ' . $mall_details['state'];
-                            if (isset($mall_details['country_name']) && !empty($mall_details['country_name']))
-                                $display_location .= ', ' . $mall_details['country_name'];
-                            echo $display_location;
-                            ?>
-                        </p>
-                    </li>                                                            
-                </ol>                
+                <h6 class="text-semibold">Mall Locations : </h6>
+                <p>
+                    <?php
+                    $display_location = $mall_details['street'];
+                    if (isset($mall_details['street1']) && !empty($mall_details['street1']))
+                        $display_location .= ', ' . $mall_details['street1'];
+                    if (isset($mall_details['city']) && !empty($mall_details['city']))
+                        $display_location .= ', ' . $mall_details['city'];
+                    if (isset($mall_details['state']) && !empty($mall_details['state']))
+                        $display_location .= ', ' . $mall_details['state'];
+                    if (isset($mall_details['country_name']) && !empty($mall_details['country_name']))
+                        $display_location .= ', ' . $mall_details['country_name'];
+                    echo $display_location;
+                    ?>
+                </p>
             </div>
         </div>
     </div>                    

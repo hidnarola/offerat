@@ -100,10 +100,9 @@
         </div>  
         <hr>
         <div class="row">
-            <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="col-md-6 col-sm-12 col-xs-12">                
+                <h6 class="text-semibold">Business Categories : </h6>
                 <?php if (isset($store_categories) && sizeof($store_categories) > 0) { ?>
-                    <h6 class="text-semibold">Business Categories</h6>
-
                     <ul class="list">
                         <?php foreach ($store_categories as $cat) { ?>
                             <li>
@@ -116,17 +115,20 @@
                             </li>                                            
                         <?php } ?>
                     </ul>
-                <?php } ?>
+                <?php
+                } else {
+                    echo 'No results found';
+                }
+                ?>
             </div>
         </div>
         <hr>
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
-                <?php if (isset($store_locations) && sizeof($store_locations) > 0) { ?>
-                    <h6 class="text-semibold">Branch Locations</h6>
-
+                <h6 class="text-semibold">Branch Locations : </h6>
+                    <?php if (isset($store_locations) && sizeof($store_locations) > 0) { ?>
                     <ol class="list rounded-list">
-                        <?php foreach ($store_locations as $loc) { ?>
+                                <?php foreach ($store_locations as $loc) { ?>
                             <li>
                                 <p>
                                     <?php
@@ -143,7 +145,7 @@
                                     ?>
                                 </p>
                             </li>                                            
-                        <?php } ?>
+                    <?php } ?>
                     </ol>
                     <?php
                 } else {

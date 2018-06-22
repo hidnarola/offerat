@@ -61,6 +61,9 @@ a.f_pass {margin-top: 10px;float: left;font-size: 14px;color: #F14150;}
 #store_view_model .modal-body .details_section {overflow: auto;}
 #store_view_model .modal-body .list {padding: 3px 0px;}
 #store_view_model .modal-body .details_section img {max-width : 50%;}
+#mall_view_model .modal-body .details_section {overflow: auto;}
+#mall_view_model .modal-body .list {padding: 3px 0px;}
+#mall_view_model .modal-body .details_section img {max-width : 50%;}
 .page-header-content{padding-bottom: 1px;}
 .business_category_div{padding-top: 15px;}
 hr.style1{border-top: 1px solid #8c8b8b;}

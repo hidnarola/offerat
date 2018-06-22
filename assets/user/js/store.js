@@ -17,27 +17,7 @@ $(document).on('click', '#category_selection_btn', function () {
     $(document).find('#category_count').val(categoryCloneNumber);
 });
 
-$(document).on('click', '#mall_selection_btn', function () {
 
-    var countryId = $(document).find('#id_country').val();
-    $.ajax({
-        method: 'POST',
-        url: base_url + 'storeregistration/show_mall',
-        data: {country_id: countryId},
-        success: function (response) {
-            $(document).find('.mall_selection_dropdown').html(response);
-        },
-        error: function () {
-            console.log("error occur");
-        },
-    });
-    var html = generatemallSelectionBlock(mallCloneNumber);
-    $(document).find('#mall_selection_wrapper').append(html);
-    mallCloneNumber++;
-    reInitializeSelect2Control();
-    initAutocomplete();
-    $(document).find('#location_count').val(mallCloneNumber);
-});
 
 $(document).on('click', '#sales_trend_btn', function () {
     var html = generateSalesTrendBlock(salesTrendNumber);
@@ -51,25 +31,6 @@ function reInitializeSelect2Control() {
         minimumResultsForSearch: Infinity,
     });
 }
-
-$(document).on('change', '#id_country', function () {
-
-    var sender = $(this);
-    var countryId = sender.val();
-    $(document).find('.mall_selection_dropdown').val(0);
-    $(document).find('.mall_selection_dropdown').trigger('change');
-    $.ajax({
-        method: 'POST',
-        url: base_url + 'storeregistration/show_mall',
-        data: {country_id: countryId},
-        success: function (response) {
-            $(document).find('.mall_selection_dropdown').html(response);
-        },
-        error: function () {
-            console.log("error occur");
-        },
-    });
-});
 
 $(document).on('change', '.category_selection_dropdown', function () {
     var cloneNumber = $(this).data('cloneNumber');

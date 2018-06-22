@@ -410,14 +410,14 @@
                                                     <div class="col-md-2">
                                                         <div class="form-group">                                        
                                                             <div>
-                                                                <input type="text" class="form-control sales_trend_from_date" data-clone-number="0" name="from_date_0" id="from_date_0" value="">
+                                                                <input type="text" class="form-control sales_trend_from_date" placeholder="From Date" data-clone-number="0" name="from_date_0" id="from_date_0" value="">
                                                             </div>
                                                         </div>        
                                                     </div>                                                
                                                     <div class="col-md-2">
                                                         <div class="form-group">                                        
                                                             <div>
-                                                                <input type="text" class="form-control sales_trend_to_date" data-clone-number="0" name="to_date_0" id="to_date_0" value="">
+                                                                <input type="text" class="form-control sales_trend_to_date"  placeholder="To Date"  data-clone-number="0" name="to_date_0" id="to_date_0" value="">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -444,7 +444,7 @@
                                                 <div>                                            
                                                     <select id="status" name="status" class="select form-control" data-clone-number="0" required="required">
                                                         <?php foreach ($status_list as $key => $list) { ?>
-                                                            <option value="<?php echo $key; ?>" <?php echo ($key == $store_details['store_status']) ? 'selected=selected' : ''; ?>><?php echo $list; ?></option>
+                                                            <option value="<?php echo $key; ?>" <?php echo (isset($store_details['store_status']) && $key == $store_details['store_status']) ? 'selected=selected' : ''; ?>><?php echo $list; ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -497,20 +497,58 @@
     var salesTrendNumber = 1;
 <?php if ($categoryCloneNumber > 0) { ?>
         categoryCloneNumber = '<?php echo $categoryCloneNumber; ?>';
-    <?php if ($storeLocationCloneNumber > 0) { ?>
-            mallCloneNumber = '<?php echo $storeLocationCloneNumber; ?>';
-        <?php
-    }
-    if (@$salesTrendCloneNumber > 0) {
-        ?>
-            salesTrendNumber = '<?php echo @$salesTrendCloneNumber; ?>';
-        <?php
-    }
+<?php } if ($storeLocationCloneNumber > 0) { ?>
+        mallCloneNumber = '<?php echo $storeLocationCloneNumber; ?>';
+    <?php
+}
+if (@$salesTrendCloneNumber > 0) {
+    ?>
+        salesTrendNumber = '<?php echo @$salesTrendCloneNumber; ?>';
+    <?php
 }
 if (isset($store_details)) {
     ?>
         $(document).find('#id_country').attr('disabled', 'disabled');
 <?php } ?>
+
+    load_malls();
+    function load_malls() {
+        var countryId = '<?php echo @$country_id ?>';
+        $.ajax({
+            method: 'POST',
+            url: base_url + 'storeregistration/show_mall',
+            data: {country_id: countryId},
+            success: function (response) {
+                $(document).find('.mall_selection_dropdown').html(response);
+            },
+            error: function () {
+                console.log("error occur");
+            },
+        });
+    }
+
+    $(document).on('click', '#mall_selection_btn', function () {
+
+        var countryId = '<?php echo @$country_id ?>';
+        console.log(countryId);
+        $.ajax({
+            method: 'POST',
+            url: base_url + 'storeregistration/show_mall',
+            data: {country_id: countryId},
+            success: function (response) {
+                $(document).find('.mall_selection_dropdown').html(response);
+            },
+            error: function () {
+                console.log("error occur");
+            },
+        });
+        var html = generatemallSelectionBlock(mallCloneNumber);
+        $(document).find('#mall_selection_wrapper').append(html);
+        mallCloneNumber++;
+        reInitializeSelect2Control();
+        initAutocomplete();
+        $(document).find('#location_count').val(mallCloneNumber);
+    });
 
     function generateSalesTrendBlock(cloneNumber) {
         var html = '';

@@ -9,8 +9,8 @@
                                 <div class="col-md-12">
                                     <div class="row col-md-12">
                                         <div class="tbl-btn-wrap pull-right">
-                                            <a href="super-admin/country" class="btn bg-teal-400 btn-labeled"><b><i class="icon-sync"></i></b>Refresh</a>
-                                            <a href="super-admin/country/save" class="btn btn-primary btn-labeled"><b><i class="icon-plus22"></i></b>Add Mall</a>                                            
+                                            <a href="<?php echo $mall_list_url; ?>" class="btn bg-teal-400 btn-labeled"><b><i class="icon-sync"></i></b>Refresh</a>
+                                            <a href="<?php echo $add_mall_url; ?>" class="btn btn-primary btn-labeled"><b><i class="icon-plus22"></i></b>Add Mall</a>                                            
                                         </div>
                                     </div>
 
@@ -176,7 +176,7 @@ $this->load->view('Common/Mall/details_modal');
                         if (full.mall_facebook_page !== '' && full.mall_facebook_page !== undefined) {
                             links += '<a href="//' + full.mall_facebook_page + '" target="_blank" title="Facebook Page" class="btn bg-slate btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-facebook"></i></a>   ';
                         }
-                        links += '<a href="<?php echo base_url() ?>super-admin/mall/save/' + full.mall_id_mall + '" title="Update" class="btn bg-teal btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a>   ';
+                        links += '<a href="<?php echo $edit_mall_url; ?>' + full.mall_id_mall + '" title="Update" class="btn bg-teal btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a>   ';
 <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
                             links += '<a href="javascript:void(0);" data-path="<?php echo $delete_mall_url; ?>' + full.mall_id_mall + '" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" id="delete"><i class="icon-bin"></i></a>';
 <?php } ?>

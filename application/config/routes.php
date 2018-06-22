@@ -103,6 +103,8 @@ $route['country-admin/malls'] = 'common/malls/index';
 $route['country-admin/malls/filter_malls'] = 'common/malls/filter_malls';
 $route['country-admin/malls/get_mall_details/(:any)'] = 'common/malls/get_mall_details/$1';
 $route['country-admin/malls/delete/(:any)'] = 'common/malls/delete/$1';
+$route['country-admin/malls/save'] = 'common/malls/save';
+$route['country-admin/malls/save/(:any)'] = 'common/malls/save/$1';
 
 //Country Mall Store User Routes =================================
 $route['mall-store-user/dashboard'] = 'mall_store/dashboard';
@@ -124,6 +126,8 @@ $route['mall-store-user/stores/save/(:any)'] = 'common/stores/save/$1';
 $route['mall-store-user/malls'] = 'common/malls/index';
 $route['mall-store-user/malls/filter_malls'] = 'common/malls/filter_malls';
 $route['mall-store-user/malls/get_mall_details/(:any)'] = 'common/malls/get_mall_details/$1';
+$route['mall-store-user/malls/save'] = 'common/malls/save';
+$route['mall-store-user/malls/save/(:any)'] = 'common/malls/save/$1';
 
 
 //Store Registration
