@@ -96,6 +96,16 @@
                                         </div>        
                                         <?php
                                     }
+                                    
+                                    if (isset($file_errors)) {
+                                        ?>
+                                        <div class="alert alert-danger alert-bordered">
+                                            <?php
+                                            echo $file_errors;
+                                            ?>
+                                        </div>        
+                                        <?php
+                                    }
                                     ?>
                                 </div>
                                 <?php if (isset($this->bread_crum)) { ?>

@@ -1,11 +1,9 @@
 $(document).ready(function () {
     jqueryValidate();
-
     errorMgsToDefault();
     $("#store_logo").on("change", function () {
         validate_logo('#store_logo');
     });
-
 });
 
 $(document).on('click', '#category_selection_btn', function () {
@@ -16,8 +14,6 @@ $(document).on('click', '#category_selection_btn', function () {
     reInitializeSelect2Control();
     $(document).find('#category_count').val(categoryCloneNumber);
 });
-
-
 
 $(document).on('click', '#sales_trend_btn', function () {
     var html = generateSalesTrendBlock(salesTrendNumber);
@@ -66,7 +62,7 @@ $(document).on('click', '.category_selection_remove_btn', function () {
     $(document).find('#category_selection_block_' + cloneNumber).remove();
     $(document).find('#category_count').val(cloneNumber);
 });
-$(document).on('click', '.mall_selection_remove_btn', function () {
+$(document).on('click', '.location_remove_btn', function () {
     var cloneNumber = $(this).data('cloneNumber');
     var character = $(this).attr('character');
     $(document).find('#mall_selection_block_' + cloneNumber).remove();

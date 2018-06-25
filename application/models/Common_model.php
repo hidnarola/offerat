@@ -598,7 +598,7 @@ class Common_model extends CI_Model {
         $CI = & get_instance();
         $extension = substr(strrchr($_FILES[$image_name]['name'], '.'), 1);
         $randname = time() . '.' . $extension;
-        
+
         if (in_array($extension, array('jpeg', 'jpg', 'png')))
             $randname = time() . '_image.' . $extension;
         elseif (in_array($extension, array('mp4', 'webm', 'ogg', 'ogv', 'wmv', 'vob', 'swf', 'mov', 'm4v', 'flv')))
@@ -616,6 +616,33 @@ class Common_model extends CI_Model {
         $CI->load->library('upload');
         $CI->upload->initialize($config);
         if ($CI->upload->do_upload($image_name)) {
+            $img_data = $CI->upload->data();
+            $imgname = $img_data['file_name'];
+        } //if
+        else {
+            $imgname = '';
+        }
+        return $imgname;
+    }
+
+    function upload_file($file_name, $file_path, $file_extensions = NULL, $new_file_name = NULL) {
+        $CI = & get_instance();
+        $extension = substr(strrchr($_FILES[$file_name]['name'], '.'), 1);
+        if (is_null($new_file_name))
+            $new_file_name = time() . '.' . $extension;
+
+        if (is_null($file_extensions))
+            $file_extensions = 'xlsx';
+
+        $config = array('upload_path' => $file_path,
+            'allowed_types' => $file_extensions,
+            'max_size' => "5120KB",
+            'file_name' => $new_file_name
+        );
+        #Load the upload library
+        $CI->load->library('upload');
+        $CI->upload->initialize($config);
+        if ($CI->upload->do_upload($file_name)) {
             $img_data = $CI->upload->data();
             $imgname = $img_data['file_name'];
         } //if
@@ -708,7 +735,7 @@ class Common_model extends CI_Model {
             }
         }
     }
-    
+
     function random_generate_code($length = NULL) {
 
 //        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -720,4 +747,5 @@ class Common_model extends CI_Model {
         }
         return $randomString;
     }
+
 }

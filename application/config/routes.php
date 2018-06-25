@@ -102,6 +102,7 @@ $route['country-admin/stores/delete/(:any)'] = 'common/stores/delete/$1';
 $route['country-admin/malls'] = 'common/malls/index';
 $route['country-admin/malls/filter_malls'] = 'common/malls/filter_malls';
 $route['country-admin/malls/get_mall_details/(:any)'] = 'common/malls/get_mall_details/$1';
+$route['country-admin/stores/loacation_excel_download/(:any)'] = 'common/stores/loacation_excel_download/$1';
 $route['country-admin/malls/delete/(:any)'] = 'common/malls/delete/$1';
 $route['country-admin/malls/save'] = 'common/malls/save';
 $route['country-admin/malls/save/(:any)'] = 'common/malls/save/$1';
@@ -136,8 +137,6 @@ $route['store-registration'] = 'storeregistration/index';
 $route['account-verification'] = 'storeregistration/verification';
 
 $route['email-change-verify'] = 'login/change_verify';
-
-
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

@@ -64,14 +64,30 @@ class Malls extends MY_Controller {
 
         $filter_array['order_by'] = array(tbl_mall . '.id_mall' => 'DESC');
         $filter_array['group_by'] = array(tbl_mall . '.id_mall');
-        $filter_array['where'][tbl_mall . '.is_delete'] = IS_NOT_DELETED_STATUS;
+        $filter_array['where'] = array(
+            tbl_mall . '.is_delete' => IS_NOT_DELETED_STATUS,
+            tbl_user . '.is_delete' => IS_NOT_DELETED_STATUS,
+            tbl_country . '.is_delete' => IS_NOT_DELETED_STATUS,
+        );
+
+        $filter_array['where_with_sign'][] = 'country.id_country = mall.id_country';
+        $filter_array['where_with_sign'][] = 'user.id_user = mall.id_users';
 
         if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
             $filter_array['where'][tbl_mall . '.id_users'] = $this->loggedin_user_data['user_id'];
         }
+        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+            $filter_array['where_with_sign'][] = 'country.id_users =  ' . $this->loggedin_user_data['user_id'];
+        }
+
         $filter_array['join'][] = array(
             'table' => tbl_user . ' as user',
             'condition' => tbl_user . '.id_user = ' . tbl_mall . '.id_users',
+            'join_type' => 'left',
+        );
+        $filter_array['join'][] = array(
+            'table' => tbl_country . ' as country',
+            'condition' => tbl_country . '.id_country = ' . tbl_mall . '.id_country',
             'join_type' => 'left',
         );
 
@@ -97,7 +113,7 @@ class Malls extends MY_Controller {
 
             $select_mall = array(
                 'table' => tbl_mall . ' mall',
-                'fields' => array('mall.mall_name', 'mall.mall_logo mall_mall_logo', 'mall.status mall_status', 'mall.created_date mall_created_date', 'mall.telephone mall_telephone', 'mall.website mall_website', 'mall.facebook_page mall_facebook_page', 'user.first_name user_first_name', 'user.last_name user_last_name', 'user.email_id user_email_id', 'user.mobile user_mobile', 'mall.street', 'mall.street1', 'mall.city', 'mall.state', 'country.country_name'),
+                'fields' => array('mall.mall_name', 'mall.mall_logo mall_mall_logo', 'mall.status mall_status', 'mall.created_date mall_created_date', 'mall.telephone mall_telephone', 'mall.website mall_website', 'mall.facebook_page mall_facebook_page', 'user.first_name user_first_name', 'user.last_name user_last_name', 'user.email_id user_email_id', 'user.mobile user_mobile'),
                 'where' => array('mall.id_mall' => $mall_id, 'mall.is_delete' => IS_NOT_DELETED_STATUS),
                 'join' => array(
                     array(
@@ -140,6 +156,9 @@ class Malls extends MY_Controller {
             $back_url = 'mall-store-user/malls';
         }
 
+        if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE && is_null($id))
+            redirect($back_url);
+
         $status_arr = array(
             ACTIVE_STATUS => 'Active',
             IN_ACTIVE_STATUS => 'Inactive',
@@ -155,29 +174,40 @@ class Malls extends MY_Controller {
                 'url' => '',
                 'title' => 'Edit Mall'
             );
+
             $select_mall = array(
                 'table' => tbl_mall . ' mall',
-                'fields' => '*, mall.status mall_status',
-                'where' => array('mall.is_delete' => IS_NOT_DELETED_STATUS, 'mall.id_mall' => $id),
-                'where_with_sign' => array('mall.status IN (' . ACTIVE_STATUS . ', ' . IN_ACTIVE_STATUS . ', ' . NOT_VERIFIED_STATUS . ')')
-            );
-
-            $select_mall['join'][] = array(
-                'table' => tbl_user . ' as user',
-                'condition' => tbl_mall . '.id_users = ' . tbl_user . '.id_user',
-                'join' => 'left',
+                'fields' => '*, mall.status mall_status, country.id_users con',
+                'where' => array(
+                    'mall.is_delete' => IS_NOT_DELETED_STATUS,
+                    'user.is_delete' => IS_NOT_DELETED_STATUS,
+                    'country.is_delete' => IS_NOT_DELETED_STATUS,
+                    'mall.id_mall' => $id
+                ),
+                'where_with_sign' => array(
+                    'mall.status IN (' . ACTIVE_STATUS . ', ' . IN_ACTIVE_STATUS . ', ' . NOT_VERIFIED_STATUS . ')',
+                    'country.id_country = mall.id_country',
+                    'user.id_user = mall.id_users'
+                ),
+                'join' => array(
+                    array(
+                        'table' => tbl_user . ' as user',
+                        'condition' => tbl_mall . '.id_users = ' . tbl_user . '.id_user',
+                        'join' => 'left',
+                    ),
+                    array(
+                        'table' => tbl_country . ' as country',
+                        'condition' => tbl_country . '.id_country = ' . tbl_mall . '.id_country',
+                        'join' => 'left',
+                    )
+                )
             );
 
             if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
-                $select_mall['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", mall.id_users) <> 0');
+                $select_mall['where_with_sign'][] = 'FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", mall.id_users) <> 0';
 
-            $select_mall['join'][] = array(
-                'table' => tbl_country . ' as country',
-                'condition' => tbl_country . '.id_country = ' . tbl_mall . '.id_country',
-                'join' => 'left',
-            );
             if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)
-                $select_mall['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0');
+                $select_mall['where_with_sign'][] = 'FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0';
 
             $mall_details = $this->Common_model->master_single_select($select_mall);
 
@@ -213,25 +243,35 @@ class Malls extends MY_Controller {
                 'url' => '',
                 'title' => 'Add Mall',
             );
+
             $select_country = array(
                 'table' => tbl_mall . ' mall',
-                'where' => array('mall.status' => ACTIVE_STATUS, 'mall.is_delete' => IS_NOT_DELETED_STATUS)
-            );
-
-            $select_country['join'][] = array(
-                'table' => tbl_user . ' as user',
-                'condition' => tbl_mall . '.id_users = ' . tbl_user . '.id_user',
-                'join' => 'left',
+                'where' => array(
+                    'mall.status' => ACTIVE_STATUS,
+                    'mall.is_delete' => IS_NOT_DELETED_STATUS,
+                    'user.is_delete' => IS_NOT_DELETED_STATUS,
+                    'country.is_delete' => IS_NOT_DELETED_STATUS
+                ),
+                'where_with_sign' => array(
+                    'country.id_country = mall.id_country',
+                    'user.id_user = mall.id_users'
+                ),
+                'join' => array(
+                    array(
+                        'table' => tbl_user . ' as user',
+                        'condition' => tbl_mall . '.id_users = ' . tbl_user . '.id_user',
+                        'join' => 'left',
+                    ),
+                    array(
+                        'table' => tbl_country . ' as country',
+                        'condition' => tbl_country . '.id_country = ' . tbl_mall . '.id_country',
+                        'join' => 'left',
+                    )
+                )
             );
 
             if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
                 $select_country['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", mall.id_users) <> 0');
-
-            $select_country['join'][] = array(
-                'table' => tbl_country . ' as country',
-                'condition' => tbl_country . '.id_country = ' . tbl_mall . '.id_country',
-                'join' => 'left',
-            );
             if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)
                 $select_country['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0');
 
@@ -247,8 +287,13 @@ class Malls extends MY_Controller {
                 'mall_name',
                 'website',
                 'facebook_page',
-                'mall_logo'
+                'mall_logo',
             );
+
+            if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+                $validate_fields[] = 'latitude';
+                $validate_fields[] = 'longitude';
+            }
 
             if ($this->input->post('email_id') != '') {
                 $validate_fields[] = 'first_name';
@@ -260,12 +305,8 @@ class Malls extends MY_Controller {
             if ($this->_validate_form($validate_fields)) {
                 $user_id = 0;
                 $date = date('Y-m-d h:i:s');
-
-                $delete_mall_place = array();
                 $delete_mall_sales_trend = array();
-                $exist_mall_place_ids = array();
                 $exist_mall_sales_trend_ids = array();
-
                 $do_mall_image_has_error = false;
 
                 if (isset($_FILES['mall_logo'])) {
@@ -297,11 +338,9 @@ class Malls extends MY_Controller {
                         'website' => $this->input->post('website', TRUE),
                         'facebook_page' => $this->input->post('facebook_page', TRUE),
                         'telephone' => ($this->input->post('mobile', TRUE) != '') ? $this->input->post('mobile', TRUE) : ' ',
-                        'street' => $this->input->post('street', TRUE),
-                        'street1' => $this->input->post('street1', TRUE),
-                        'city' => $this->input->post('city', TRUE),
-                        'state' => $this->input->post('state', TRUE),
-                        'id_country' => $country_id
+                        'id_country' => $country_id,
+                        'latitude' => $this->input->post('latitude', TRUE),
+                        'longitude' => $this->input->post('longitude', TRUE)
                     );
 
                     if ($this->input->post('email_id', TRUE) != '') {
@@ -409,8 +448,8 @@ class Malls extends MY_Controller {
 
         $this->data['status_list'] = $status_arr;
         $this->data['country_list'] = $country_list;
-
         $this->data['back_url'] = $back_url;
+
         $this->template->load('user', 'Common/Mall/form', $this->data);
     }
 
@@ -475,6 +514,20 @@ class Malls extends MY_Controller {
                 'field' => 'mobile',
                 'label' => 'Mobile Number',
                 'rules' => 'trim|min_length[8]|max_length[20]|htmlentities'
+            );
+        }
+        if (in_array('latitude', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'latitude',
+                'label' => 'Latitude',
+                'rules' => 'trim|min_length[2]|max_length[10]|decimal|htmlentities'
+            );
+        }
+        if (in_array('longitude', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'longitude',
+                'label' => 'Longitude',
+                'rules' => 'trim|min_length[2]|max_length[10]|decimal|htmlentities'
             );
         }
 
@@ -568,7 +621,7 @@ class Malls extends MY_Controller {
 
             if (isset($mall_locations) && sizeof($mall_locations) > 0) {
 
-                $this->session->set_flashdata('error_msg', 'Store is using this Mall, You can not delet this Mall.');
+                $this->session->set_flashdata('error_msg', 'Store is using this Mall, You can not delete this Mall.');
             } else {
                 $update_data = array('is_delete' => IS_DELETED_STATUS);
                 $where_data = array('is_delete' => IS_NOT_DELETED_STATUS, 'id_mall' => $id);

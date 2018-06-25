@@ -9,7 +9,6 @@ $(document).ready(function () {
 });
 
 var categoryCloneNumber = 1;
-var mallCloneNumber = 1;
 
 $(document).on('click', '#category_selection_btn', function () {
     var html = generatecategorySelectionBlock(categoryCloneNumber);
@@ -20,28 +19,6 @@ $(document).on('click', '#category_selection_btn', function () {
     categoryCloneNumber++;
     reInitializeSelect2Control();
     $(document).find('#category_count').val(categoryCloneNumber);
-});
-
-$(document).on('click', '#mall_selection_btn', function () {
-
-    var countryId = $(document).find('#id_country').val();
-    $.ajax({
-        method: 'POST',
-        url: base_url + 'storeregistration/show_mall',
-        data: {country_id: countryId},
-        success: function (response) {
-            $(document).find('.mall_selection_dropdown').html(response);
-        },
-        error: function () {
-            console.log("error occur");
-        },
-    });
-    var html = generatemallSelectionBlock(mallCloneNumber);
-    $(document).find('#mall_selection_wrapper').append(html);
-    mallCloneNumber++;
-    reInitializeSelect2Control();
-    initAutocomplete();
-    $(document).find('#location_count').val(mallCloneNumber);
 });
 
 function reInitializeSelect2Control() {

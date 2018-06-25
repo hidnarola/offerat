@@ -119,69 +119,50 @@
                                         </div>
                                     </div>
                                 </fieldset>
-                            <?php } ?>                            
-                            <fieldset class="content-group">
-                                <legend class="text-bold">Location</legend>
-                                <div class="col-xs-12">
-                                    <div class="col-md-3 display-none">
-                                        <div class="form-group">
-                                            <div>
-                                                <?php if (isset($country_list) && sizeof($country_list) > 0) { ?>
-                                                    <select class="form-control select" name="id_country" id="id_country" required="required">
-                                                        <option value="">Select Country</option>
-                                                        <?php foreach ($country_list as $list) { ?>
-                                                            <option value="<?php echo $list['id_country']; ?>" <?php echo ((isset($mall_details['id_country'])) && $mall_details['id_country'] == $list['id_country']) ? 'selected=selected' : ''; ?>><?php echo $list['country_name']; ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                <?php } ?>
+                            <?php } ?>       
+                            <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
+                                <fieldset class="content-group">
+                                    <legend class="text-bold">Location</legend>
+                                    <div class="col-xs-12">
+                                        <div class="col-md-3 display-none">
+                                            <div class="form-group">
+                                                <div>
+                                                    <?php if (isset($country_list) && sizeof($country_list) > 0) { ?>
+                                                        <select class="form-control select" name="id_country" id="id_country" required="required">
+                                                            <option value="">Select Country</option>
+                                                            <?php foreach ($country_list as $list) { ?>
+                                                                <option value="<?php echo $list['id_country']; ?>" <?php echo ((isset($mall_details['id_country'])) && $mall_details['id_country'] == $list['id_country']) ? 'selected=selected' : ''; ?>><?php echo $list['country_name']; ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    <?php } ?>
+                                                </div>
+                                            </div>
+                                        </div>                                     
+                                    </div>
+                                    <div id="mall_selection_wrapper" class="clear-float row_add_div">                                     
+                                        <div id="mall_selection_block_0" class="clear-float">
+                                            <div class="col-xs-12 business_category_div">                                                                            
+                                                <div class="col-md-2">
+                                                    <div class="form-group">  
+                                                        <label>Latitude <span class="text-danger">*</span></label>
+                                                        <div>
+                                                            <input type="text" class="form-control" name="latitude" id="latitude" required="required"  placeholder="Latitude" value="<?php echo (isset($mall_details['latitude'])) ? $mall_details['latitude'] : set_value('latitude'); ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group"> 
+                                                        <label>Longitude <span class="text-danger">*</span></label>
+                                                        <div>
+                                                            <input type="text" class="form-control" name="longitude" id="longitude" required="required" placeholder="Longitude" value="<?php echo (isset($mall_details['longitude'])) ? $mall_details['longitude'] : set_value('longitude'); ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>                                     
-                                </div>
-                                <div id="mall_selection_wrapper" class="clear-float row_add_div"> 
-                                    <?php
-                                    $latitude = '54.6960513';
-                                    $longitude = '-113.7297772';
-                                    ?>
-                                    <div id="mall_selection_block_0" class="clear-float">
-                                        <div class="col-xs-12 business_category_div">                                                                            
-                                            <div class="col-md-6">
-                                                <div class="form-group">                                        
-                                                    <div>
-                                                        <?php
-                                                        $display_location = '';
-                                                        if (isset($mall_details)) {
-                                                            $display_location = $mall_details['street'];
-                                                            if (isset($mall_details['street1']) && !empty($mall_details['street1'])) {
-                                                                if (!empty(trim($display_location)))
-                                                                    $display_location .= ', ';
-
-                                                                $display_location .= $mall_details['street1'];
-                                                            }
-                                                            if (isset($mall_details['city']) && !empty($mall_details['city']))
-                                                                $display_location .= ', ' . $mall_details['city'];
-                                                            if (isset($mall_details['state']) && !empty($mall_details['state']))
-                                                                $display_location .= ', ' . $mall_details['state'];
-                                                            if (isset($mall_details['country_name']) && !empty($mall_details['country_name']))
-                                                                $display_location .= ', ' . $mall_details['country_name'];
-                                                        }
-                                                        ?>
-                                                        <input type="text" data-latitude="latitude" data-longitude="longitude" required="required" data-type="googleMap" data-zoom="10" data-lat="<?php echo $latitude; ?>" data-lang="<?php echo $longitude; ?>" data-input_id="google_input" id="google_input" type="text" class="form-control" name="address"  placeholder="Location" aria-required="true" value="<?php echo $display_location; ?>">
-                                                        <input type="hidden" class="form-control" data-type="latitude" name="latitude" id="latitude" value="<?php echo $latitude; ?>">
-                                                        <input type="hidden" class="form-control" data-type="longitude" name="longitude" id="longitude" value="<?php echo $longitude; ?>">
-                                                        <input type="hidden" class="form-control" name="street" id="street" value="<?php echo (isset($mall_details['street'])) ? $mall_details['street'] : ''; ?>">
-                                                        <input type="hidden" class="form-control" name="street1" id="street1" value="<?php echo (isset($mall_details['street1'])) ? $mall_details['street1'] : ''; ?>">
-                                                        <input type="hidden" class="form-control" name="city" id="city" value="<?php echo (isset($mall_details['city'])) ? $mall_details['city'] : ''; ?>">
-                                                        <input type="hidden" class="form-control" name="state" id="state" value="<?php echo (isset($mall_details['state'])) ? $mall_details['state'] : ''; ?>">
-                                                        <input type="hidden" class="form-control" name="place_id" id="place_id" value="<?php echo (isset($mall_details['id_google'])) ? $mall_details['id_google'] : ''; ?>">
-                                                    </div>
-                                                </div>        
-                                            </div>                                            
-                                        </div>
                                     </div>
-                                </div>
-                            </fieldset>
-
+                                </fieldset>
+                            <?php } ?>
                             <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
                                 <fieldset class="content-group">
                                     <legend class="text-bold">Sales Trend</legend>  
@@ -331,81 +312,4 @@ if (isset($mall_details)) {
         html += '</div>';
         return html;
     }
-
-    function initAutocomplete() {
-        $('[data-type="googleMap"]').each(function () {
-            var currentThis = $(this);
-            var input = document.getElementById($(this).data('input_id'));
-            var searchBox = new google.maps.places.SearchBox(input);
-            searchBox.addListener('places_changed', function () {
-                var places = searchBox.getPlaces();
-                if (places.length == 0) {
-                    return;
-                }
-                places.forEach(function (place) {
-                    if (typeof place.geometry !== 'undefined') {
-                        $('[data-type="' + currentThis.data('latitude') + '"]').val(place.geometry.location.lat());
-                        $('[data-type="' + currentThis.data('longitude') + '"]').val(place.geometry.location.lng());
-                    } else {
-                        //googleLocationIssuePrompt();
-                    }
-                });
-                /**
-                 * This code is used copy address when selection is done from auto complete
-                 */
-
-                fillInAddress(places);
-            });
-        });
-    }
-
-    function fillInAddress(place) {
-        var componentForm = {
-            street_number: 'long_name',
-            route: 'long_name',
-            sublocality_level_1: 'long_name',
-            locality: 'long_name',
-            administrative_area_level_1: 'short_name',
-//            postal_code: 'short_name',
-        };
-        var formFields = {
-            street_number: 'street',
-            route: 'street',
-            sublocality_level_1: 'street1',
-            locality: 'city',
-            administrative_area_level_1: 'state',
-//            postal_code: 'zip_code',
-            place_id: 'place_id',
-        };
-        fillInAddressComponents(place, componentForm, formFields);
-    }
-
-    function fillInAddressComponents(place, componentForm, formFields) {
-        place = place[0];
-//        console.log(place);
-        for (var field in formFields) {
-            document.getElementById(formFields[field]).value = '';
-        }
-        // Get each component of the address from the place details
-        // and fill the corresponding field on the form.
-        if (typeof place.address_components != 'undefined') {
-            for (var i = 0; i < place.address_components.length; i++) {
-                var addressType = place.address_components[i].types[0];
-                if (formFields[addressType]) {
-                    var val = place.address_components[i][componentForm[addressType]];
-                    if (addressType === 'street_number' || addressType === 'route') {
-                        document.getElementById(formFields[addressType]).value += ' ' + val;
-                    } else {
-                        document.getElementById(formFields[addressType]).value = val;
-                    }
-
-                    if (place.place_id != '') {
-                        document.getElementById('place_id').value = place.place_id;
-                    }
-                }
-            }
-        }
-    }
-//    $(document).find('.sub_cat_section_0').hide();
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,places&key=<?php echo GOOGLE_API_KEY ?>&callback=initAutocomplete" async defer></script>

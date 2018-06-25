@@ -25,7 +25,6 @@ class Storeregistration extends CI_Controller {
                 'telephone',
                 'id_country',
                 'category_count',
-                'location_count',
                 'terms_condition'
             );
 
@@ -115,46 +114,6 @@ class Storeregistration extends CI_Controller {
 //                $store_id = 1;                
 //                echo 'in_store_data';
 //                pr($in_store_data);
-//                if ($this->input->post('location_count', TRUE) > 0) {
-                $location_count = $this->input->post('location_count', TRUE);
-
-                for ($i = 0; $i <= $location_count; $i++) {
-
-                    if ($this->input->post('place_id_' . $i, TRUE) != '') {
-
-                        $in_place_data = array(
-                            'id_google' => $this->input->post('place_id_' . $i, TRUE),
-                            'street' => $this->input->post('street_' . $i, TRUE),
-                            'street1' => $this->input->post('street1_' . $i, TRUE),
-                            'city' => $this->input->post('city_' . $i, TRUE),
-                            'state' => $this->input->post('state_' . $i, TRUE),
-                            'id_country' => $this->input->post('id_country', TRUE),
-                            'latitude' => $this->input->post('latitude_' . $i, TRUE),
-                            'longitude' => $this->input->post('longitude_' . $i, TRUE),
-                            'created_date' => $date,
-                            'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
-                            'is_delete' => IS_NOT_DELETED_STATUS
-                        );
-//                            echo 'in_place_data';
-//                            pr($in_place_data);
-//                            $place_id = 1;
-                        $place_id = $this->Common_model->master_save(tbl_place, $in_place_data);
-
-                        $in_store_location_data = array(
-                            'id_store' => $store_id,
-                            'id_place' => $place_id,
-                            'id_location' => $this->input->post('mall_' . $i, TRUE),
-                            'location_type' => ($this->input->post('mall_' . $i, TRUE) == 0) ? STORE_LOCATION_TYPE : MALL_LOCATION_TYPE,
-                            'contact_number' => $this->input->post('telephone', TRUE),
-                            'created_date' => $date,
-                            'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
-                            'is_delete' => IS_NOT_DELETED_STATUS
-                        );
-//                            echo 'in_store_location_data';                            
-                        $this->Common_model->master_save(tbl_store_location, $in_store_location_data);
-                    }
-                }
-//                }
 
                 $category_count = $this->input->post('category_count', TRUE);
                 for ($i = 0; $i <= $category_count; $i++) {
@@ -502,16 +461,6 @@ class Storeregistration extends CI_Controller {
                 'rules' => 'trim|required|htmlentities|greater_than[0]',
                 'errors' => array(
                     'greater_than' => 'Category Selection is required.'
-                )
-            );
-        }
-        if (in_array('location_count', $validate_fields)) {
-            $validation_rules[] = array(
-                'field' => 'location_count',
-                'label' => 'Branch Location',
-                'rules' => 'trim|required|htmlentities|greater_than[0]',
-                'errors' => array(
-                    'greater_than' => 'Branch Location is required.'
                 )
             );
         }

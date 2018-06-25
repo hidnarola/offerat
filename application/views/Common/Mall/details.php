@@ -102,26 +102,6 @@
                     ?>
                 </span>
             </div>
-        </div>  
-        <hr>        
-        <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">                
-                <h6 class="text-semibold">Mall Locations : </h6>
-                <p>
-                    <?php
-                    $display_location = $mall_details['street'];
-                    if (isset($mall_details['street1']) && !empty($mall_details['street1']))
-                        $display_location .= ', ' . $mall_details['street1'];
-                    if (isset($mall_details['city']) && !empty($mall_details['city']))
-                        $display_location .= ', ' . $mall_details['city'];
-                    if (isset($mall_details['state']) && !empty($mall_details['state']))
-                        $display_location .= ', ' . $mall_details['state'];
-                    if (isset($mall_details['country_name']) && !empty($mall_details['country_name']))
-                        $display_location .= ', ' . $mall_details['country_name'];
-                    echo $display_location;
-                    ?>
-                </p>
-            </div>
-        </div>
+        </div>          
     </div>                    
 <?php } ?>

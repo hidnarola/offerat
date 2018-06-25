@@ -124,6 +124,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
     define('category_img_path', '/media/CategoryIcon/');
     define('sub_category_img_path', '/media/SubCategoryIcon/');
     define('store_img_path', '/media/StoreLogo/');
+    define('location_excel_img_path', '/media/LocationsExcels/');
     define('offer_media_path', '/media/OfferMedia/');
     define('offer_media_thumbnail_path', '/media/OfferMediaThumbail/');
 } else {
@@ -131,6 +132,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
     define('category_img_path', '/PG/TG/Offerat/media/CategoryIcon/');
     define('sub_category_img_path', '/PG/TG/Offerat/media/SubCategoryIcon/');
     define('store_img_path', '/PG/TG/Offerat/media/StoreLogo/');
+    define('location_excel_img_path', '/PG/TG/Offerat/media/LocationsExcels/');
     define('offer_media_path', '/PG/TG/Offerat/media/OfferMedia/');
     define('offer_media_thumbnail_path', '/PG/TG/Offerat/media/OfferMediaThumbail/');
 }

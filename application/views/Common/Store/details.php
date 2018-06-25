@@ -121,38 +121,6 @@
                 }
                 ?>
             </div>
-        </div>
-        <hr>
-        <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <h6 class="text-semibold">Branch Locations : </h6>
-                    <?php if (isset($store_locations) && sizeof($store_locations) > 0) { ?>
-                    <ol class="list rounded-list">
-                                <?php foreach ($store_locations as $loc) { ?>
-                            <li>
-                                <p>
-                                    <?php
-                                    $display_location = $loc['street'];
-                                    if (isset($loc['street1']) && !empty($loc['street1']))
-                                        $display_location .= ', ' . $loc['street1'];
-                                    if (isset($loc['city']) && !empty($loc['city']))
-                                        $display_location .= ', ' . $loc['city'];
-                                    if (isset($loc['state']) && !empty($loc['state']))
-                                        $display_location .= ', ' . $loc['state'];
-                                    if (isset($loc['country_name']) && !empty($loc['country_name']))
-                                        $display_location .= ', ' . $loc['country_name'];
-                                    echo $display_location;
-                                    ?>
-                                </p>
-                            </li>                                            
-                    <?php } ?>
-                    </ol>
-                    <?php
-                } else {
-                    echo 'No results found';
-                }
-                ?>
-            </div>
-        </div>
+        </div>                
     </div>                    
 <?php } ?>
