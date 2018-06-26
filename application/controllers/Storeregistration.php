@@ -105,6 +105,7 @@ class Storeregistration extends CI_Controller {
                     'website' => $this->input->post('website', TRUE),
                     'facebook_page' => $this->input->post('facebook_page', TRUE),
                     'telephone' => $this->input->post('telephone', TRUE),
+                    'id_country' => $this->input->post('id_country', TRUE),
                     'status' => NOT_VERIFIED_STATUS,
                     'created_date' => $date,
                     'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,

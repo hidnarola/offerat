@@ -47,7 +47,7 @@
                                         <div class="form-group">
                                             <label>Logo <span class="text-danger">*</span></label>
                                             <div>
-                                                <input type="file" class="form-control file-input" name="store_logo" id="store_logo"  <?php echo (isset($store_details)) ? '' : 'required="required"'; ?>>
+                                                <input type="file" class="form-control file-input" name="store_logo" id="store_logo"  <?php echo (isset($store_details) && isset($store_details['store_logo']) && !empty($store_details['store_logo'])) ? '' : 'required="required"'; ?>>
                                                 <input type="hidden" name="is_valid" id="is_valid" value="1">
                                                 <div id="store_logo_errors_wrapper" class="alert alert-danger alert-bordered display-none">
                                                     <span id="store_logo_errors"></span>
@@ -227,7 +227,7 @@
                             if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
                                 ?>
                                 <fieldset class="content-group">
-                                    <legend class="text-bold">Branches</legend>
+                                    <legend class="text-bold">Locations</legend>
                                     <div class="col-xs-12">
                                         <div class="col-md-3 display-none">
                                             <div class="form-group">
@@ -326,14 +326,17 @@
                                                 </div>
                                             </div>        
                                         </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">                                                
-                                                <label><br></label>
-                                                <div>
-                                                    <a href="<?php echo $download_locations_url; ?>" class="btn bg-brown">Export To Excel</a>
-                                                </div>
-                                            </div>        
-                                        </div>
+                                        <?php if (isset($store_details)) { ?>
+                                            <div class="col-md-6">
+                                                <div class="form-group">                                                
+                                                    <label><br></label>
+                                                    <div>
+                                                        <a href="<?php echo $download_locations_url; ?>" class="btn bg-brown">Export To Excel</a>
+                                                        <a href="<?php echo 'country-admin/stores/locations/' . $store_details['id_store']; ?>" target="_blank" class="btn bg-teal">Locations List</a>
+                                                    </div>
+                                                </div>        
+                                            </div>
+                                        <?php } ?>
                                     </div>
                                 </fieldset>
                             <?php } ?>
@@ -345,7 +348,7 @@
                                         <div class="form-group">
                                             <div>
                                                 <?php if (isset($malls_list) && sizeof($malls_list) > 0) { ?>
-                                                    <select class="form-control select " multiple name="id_malls[]" id="id_malls" required="required">                                                        
+                                                    <select class="form-control select " multiple name="id_malls[]" id="id_malls">                                                        
                                                         <?php foreach ($malls_list as $list) { ?>
                                                             <option value="<?php echo $list['id_mall']; ?>" <?php echo (isset($store_malls_list) && in_array($list['id_mall'], $store_malls_list)) ? 'selected=selected' : ''; ?>><?php echo $list['mall_name']; ?></option>
                                                         <?php } ?>

@@ -96,7 +96,7 @@
                                         </div>        
                                         <?php
                                     }
-                                    
+
                                     if (isset($file_errors)) {
                                         ?>
                                         <div class="alert alert-danger alert-bordered">
@@ -114,7 +114,7 @@
                                             <?php
                                             $bread_crum_count = count($this->bread_crum);
                                             foreach ($this->bread_crum as $index => $bread_crum) {
-                                                if (($bread_crum_count - 1) != $index) {
+                                                if (($bread_crum_count - 1) != $index && !empty($bread_crum['url'])) {
                                                     ?>
                                                     <li><a href="<?php echo $bread_crum['url'] ?>"><?php echo $bread_crum['title'] ?></a></li>
                                                     <?php
