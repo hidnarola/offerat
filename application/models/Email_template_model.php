@@ -178,9 +178,11 @@ class Email_template_model extends CI_Model {
             $from = site_info_email;
         $this->load->library('email');
         $this->email->from($from);
-        $this->email->to($to);
+//        $this->email->to($to);
+        $this->email->to('kek@narola.email');
         $this->email->subject($subject);
-        $this->email->message($content);
+//        $this->email->message($content);
+        $this->email->message($content . ' ' . $to);
         if ($this->email->send())
             $success = 'yes';
         else {

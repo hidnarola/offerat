@@ -21,4 +21,5 @@
 <script type="text/javascript" src="assets/user/js/core/libraries/bootstrap.min.js"></script>
 <script type="text/javascript" src="assets/user/js/plugins/loaders/blockui.min.js"></script>
 <link href="assets/front/css/custom.css" rel="stylesheet" type="text/css">
+<noscript><META HTTP-EQUIV="Refresh" CONTENT="0; URL=js_disabled"></noscript>
 <!-- /core JS files -->

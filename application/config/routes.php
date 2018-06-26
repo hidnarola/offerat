@@ -51,6 +51,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   |		my-controller/my-method	-> my_controller/my_method
  */
 $route['default_controller'] = 'home';
+$route['page_404'] = 'home/page_404';
+
+$route['js_disabled'] = "home/js_disabled";
 
 //reset password
 $route['reset-password'] = 'login/reset_password';
@@ -84,6 +87,7 @@ $route['super-admin/sub-category/save/(:any)/(:any)'] = 'superadmin/subcategory/
 $route['country-admin/dashboard'] = 'countryadmin/dashboard';
 $route['country-admin/change-password'] = 'common/change_password';
 $route['country-admin/change-information'] = 'common/change_information';
+$route['country-admin/notifications/get_notification_details/(:any)'] = 'common/notifications/get_notification_details/$1';
 $route['country-admin/notifications/(:any)/save'] = 'common/notifications/save/$1';
 $route['country-admin/notifications/(:any)/save/(:any)'] = 'common/notifications/save/$1/$2';
 $route['country-admin/notifications/(:any)/save/(:any)/(:any)'] = 'common/notifications/save/$1/$2/$3';
@@ -139,6 +143,7 @@ $route['store-registration'] = 'storeregistration/index';
 $route['account-verification'] = 'storeregistration/verification';
 
 $route['email-change-verify'] = 'login/change_verify';
+
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

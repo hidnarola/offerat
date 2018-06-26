@@ -32,6 +32,7 @@ class Notifications extends MY_Controller {
             $delete_url = '';
             $list_type_url = '';
             $filter_list_url = '';
+            $notification_details_url = '';
 
             $this->data['title'] = $this->data['page_header'] = ucfirst($notification_type);
             if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
@@ -40,12 +41,14 @@ class Notifications extends MY_Controller {
                 $delete_url = 'country-admin/notifications/' . $notification_type . '/delete/';
                 $list_type_url = 'country-admin/notifications/' . $notification_type . '/';
                 $filter_list_url = 'country-admin/filter_notifications/' . $notification_type . '/' . $list_type;
+                $notification_details_url = 'country-admin/notifications/get_notification_details/';
             } elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
                 $list_url = 'mall-store-user/notifications/' . $notification_type . '/' . $list_type;
                 $add_url = 'mall-store-user/notifications/' . $notification_type . '/save';
                 $delete_url = 'mall-store-user/notifications/' . $notification_type . '/delete/';
                 $list_type_url = 'mall-store-user/notifications/' . $notification_type . '/';
                 $filter_list_url = 'mall-store-user/filter_notifications/' . $notification_type . '/' . $list_type;
+                $notification_details_url = 'mall-store-user/notifications/get_notification_details/';
             }
 
             $this->bread_crum[] = array(
@@ -58,6 +61,7 @@ class Notifications extends MY_Controller {
             $this->data['delete_url'] = $delete_url;
             $this->data['filter_list_url'] = $filter_list_url;
             $this->data['list_type_url'] = $list_type_url;
+            $this->data['notification_details_url'] = $notification_details_url;
 
             $this->data['list_type'] = $list_type;
             $this->data['notification_type'] = $notification_type;
@@ -109,26 +113,17 @@ class Notifications extends MY_Controller {
                 'join_type' => 'left',
             );
             $filter_array['join'][] = array(
-                'table' => tbl_store_location . ' as store_location',
-                'condition' => tbl_store_location . '.id_store = ' . tbl_store . '.id_store',
-                'join_type' => 'left',
+                'table' => tbl_country . ' as country',
+                'condition' => '(country.id_country = store.id_country OR country.id_country = mall.id_country)',
+                'join' => 'left',
             );
-            $filter_array['join'][] = array(
-                'table' => tbl_place . ' as place',
-                'condition' => tbl_place . '.id_place = ' . tbl_store_location . '.id_place',
-                'join_type' => 'left',
-            );
+            $filter_array['where_with_sign'][] = '(country.id_country = mall.id_country OR country.id_country = store.id_country)';
 
             if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
                 $filter_array['where_with_sign'][] = '((FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", store.id_users) <> 0) OR (FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", mall.id_users) <> 0))';
-            if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
-                $filter_array['join'][] = array(
-                    'table' => tbl_country . ' as country',
-                    'condition' => '(country.id_country = mall.id_country OR country.id_country = place.id_country) AND FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0 AND country.is_delete=' . IS_NOT_DELETED_STATUS,
-                    'join_type' => 'left',
-                );
-                $filter_array['where_with_sign'][] = '((country.id_country = mall.id_country OR country.id_country = place.id_country) AND (FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0 AND country.is_delete=' . IS_NOT_DELETED_STATUS . '))';
-            }
+
+            if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)
+                $filter_array['where_with_sign'][] = '(FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0)';
 
             $filter_records = $this->Common_model->get_filtered_records(tbl_offer_announcement, $filter_array);
 //            query();
@@ -273,7 +268,7 @@ class Notifications extends MY_Controller {
                             }
                         }
                     }
-                    
+
                     if (!$do_notification_image_video_has_error) {
 
                         $date = date('Y-m-d h:i:s');
@@ -334,30 +329,20 @@ class Notifications extends MY_Controller {
                 'table' => tbl_store . ' store',
                 'fields' => array('store.id_store', 'store.store_name'),
                 'where' => array('store.status' => ACTIVE_STATUS, 'store.is_delete' => IS_NOT_DELETED_STATUS),
-                'group_by' => array('store.id_store')
+                'group_by' => array('store.id_store'),
+                'join' => array(
+                    array(
+                        'table' => tbl_country . ' as country',
+                        'condition' => tbl_country . '.id_country = ' . tbl_store . '.id_country',
+                        'join' => 'left',
+                    )
+                )
             );
             if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
                 $select_stores['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", store.id_users) <> 0');
             elseif ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
-
-                $select_stores['join'][] = array(
-                    'table' => tbl_store_location . ' as store_location',
-                    'condition' => tbl_store_location . '.id_store = ' . tbl_store . '.id_store',
-                    'join' => 'left',
-                );
-                $select_stores['join'][] = array(
-                    'table' => tbl_place . ' as place',
-                    'condition' => tbl_place . '.id_place = ' . tbl_store_location . '.id_place',
-                    'join' => 'left',
-                );
-                $select_stores['join'][] = array(
-                    'table' => tbl_country . ' as country',
-                    'condition' => tbl_country . '.id_country = ' . tbl_place . '.id_country',
-                    'join' => 'left',
-                );
                 $select_stores['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0');
             }
-
 
             $stores_list = $this->Common_model->master_select($select_stores);
 
@@ -365,16 +350,18 @@ class Notifications extends MY_Controller {
                 'table' => tbl_mall . ' mall',
                 'fields' => array('mall.id_mall', 'mall.mall_name'),
                 'where' => array('mall.status' => ACTIVE_STATUS, 'mall.is_delete' => IS_NOT_DELETED_STATUS),
-                'group_by' => array('mall.id_mall')
+                'group_by' => array('mall.id_mall'),
+                'join' => array(
+                    array(
+                        'table' => tbl_country . ' as country',
+                        'condition' => tbl_country . '.id_country = ' . tbl_mall . '.id_country',
+                        'join' => 'left',
+                    )
+                )
             );
             if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
                 $select_malls['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", mall.id_users) <> 0');
             elseif ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
-                $select_malls['join'][] = array(
-                    'table' => tbl_country . ' as country',
-                    'condition' => tbl_country . '.id_country = ' . tbl_mall . '.id_country',
-                    'join' => 'left',
-                );
                 $select_malls['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0');
             }
             $malls_list = $this->Common_model->master_select($select_malls);
@@ -563,6 +550,49 @@ class Notifications extends MY_Controller {
         } else {
             dashboard_redirect($this->loggedin_user_type);
         }
+    }
+
+    public function get_notification_details($notification_id = NULL) {
+        $response = array(
+            'status' => '0',
+            'sub_view' => '0',
+        );
+        if (isset($notification_id) && !empty($notification_id)) {
+
+            $select_notification = array(
+                'table' => tbl_offer_announcement.' offer_announcement',
+                'where' => array(
+                    'offer_announcement.is_delete' => IS_NOT_DELETED_STATUS,
+                    'offer_announcement.id_offer' => $notification_id
+                ),
+                'join' => array(
+                    array(
+                        'table' => tbl_mall . ' as mall',
+                        'condition' => 'mall.id_mall = offer_announcement.id_mall',
+                        'join' => 'left',
+                    ),
+                    array(
+                        'table' => tbl_store . ' as store',
+                        'condition' => 'store.id_store = offer_announcement.id_store',
+                        'join' => 'left',
+                    ),
+                    array(
+                        'table' => tbl_country . ' as country',
+                        'condition' => '(country.id_country = store.id_country OR country.id_country = mall.id_country)',
+                        'join' => 'left',
+                    )
+                )
+            );
+            $notification_details = $this->Common_model->master_single_select($select_notification);            
+            $this->data['notification_details'] = $notification_details;
+
+            $html = $this->load->view('Common/Notifications/details', $this->data, TRUE);
+            $response = array(
+                'status' => '1',
+                'sub_view' => $html
+            );
+        }
+        echo json_encode($response);
     }
 
 }

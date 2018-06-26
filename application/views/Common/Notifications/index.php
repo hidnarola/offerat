@@ -3,8 +3,8 @@
         <div class="panel panel-flat">
             <form id="form" method="post">
                 <div class="panel-body">
-                    <div id="mall_error_wrapper" class="alert alert-danger alert-bordered display-none">
-                        <span id="mall_error_msg"></span>
+                    <div id="notification_error_wrapper" class="alert alert-danger alert-bordered display-none">
+                        <span id="notification_error_msg"></span>
                     </div>
                     <div class="tabbable">
                         <div class="tab-content">
@@ -73,8 +73,43 @@
 </div>
 <?php
 $this->load->view('Common/delete_alert');
+$this->load->view('Common/Notifications/details_modal');
 ?>
 <script type="text/javascript">
+
+    $(document).on('click', '.view_notification_details', function () {
+        var notifications_id = $(document).find(this).attr('data-id');
+
+        displayElementBlock('loader');
+        var urlGNotificationDetailsURL = '<?php echo $notification_details_url; ?>' + notifications_id;
+        $.ajax({
+            'method': 'GET',
+            'url': urlGNotificationDetailsURL,
+            'success': function (response) {
+//                console.log(response);
+//                return false
+                if (response !== '') {
+                    var obj = JSON.parse(response);
+                    if (obj.status === '1') {
+                        $(document).find('#notification_view_model').modal('show');
+                        $(document).find('.details_view').html(obj.sub_view);
+                        displayElementNone('loader');
+                    } else {
+                        displayServerMsg('notification_error_wrapper', 'notification_error_msg', 'Something went wrong! please try again later.');
+                        displayElementNone('loader');
+                    }
+                } else {
+                    displayServerMsg('notification_error_wrapper', 'notification_error_msg', 'Something went wrong! please try again later.');
+                    displayElementNone('loader');
+                }
+            },
+            'error': function () {
+                displayServerMsg('notification_error_wrapper', 'notification_error_msg', 'Something went wrong! please try again later.');
+                displayElementNone('loader');
+            },
+        });
+    });
+
     $(document).ready(function () {
 
         var notification_type_arr = {
@@ -160,8 +195,9 @@ $this->load->view('Common/delete_alert');
                     "name": 'offer_announcement.id_offer',
                     "render": function (data, type, full, meta) {
                         var links = '';
+                        links += '<a href="javascript:void(0);" target="_blank" title="View Details" data-id="' + full.offer_announcement_id_offer + '" class="btn btn-primary btn-xs tooltip-show margin-right-3 view_notification_details" data-placement="top"><i class="icon-eye"></i></a>   ';
 <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
-                            var links = '<a href="<?php echo base_url() ?>country-admin/notifications/<?php echo $notification_type; ?>/save/' + full.offer_announcement_id_offer + '/<?php echo $list_type; ?>" title="Update" class="btn btn-primary btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a> ';
+                            links += '<a href="<?php echo base_url() ?>country-admin/notifications/<?php echo $notification_type; ?>/save/' + full.offer_announcement_id_offer + '/<?php echo $list_type; ?>" title="Update" class="btn bg-teal btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a> ';
 <?php } ?>
                         links += '<a href="javascript:void(0);" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" data-path="<?php echo $delete_url; ?>' + full.offer_announcement_id_offer + '/<?php echo $list_type; ?>" id="delete"><i class="icon-bin"></i></a>';
 

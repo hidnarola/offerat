@@ -57,3 +57,11 @@ function dashboard_redirect($loggedin_user_type = NULL) {
 
     redirect($redirect_path);
 }
+
+function override_404() {
+    $CI = & get_instance();
+    $CI->data['title'] = '404 Page Not Found';
+    $CI->data['page'] = '404';
+    echo $CI->load->view('errors/html/error_404', $CI->data, true);
+    die();
+}

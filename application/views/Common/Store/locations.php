@@ -33,14 +33,14 @@
                                                 </div>
                                             </div>        
                                         </div>
-                                        <div class="col-md-4 col-xs-5">
+                                        <div class="col-md-5 col-xs-5">
                                             <div class="form-group">                                            
                                                 <div>
                                                     <input type="text" class="form-control" placeholder="Latitude"  value="<?php echo $loc['latitude']; ?>" readonly>
                                                 </div>
                                             </div>        
                                         </div>
-                                        <div class="col-md-4 col-xs-5">
+                                        <div class="col-md-5 col-xs-5">
                                             <div class="form-group">                                            
                                                 <div>
                                                     <input type="text" class="form-control" placeholder="Longitude"  value="<?php echo $loc['longitude']; ?>" readonly>

@@ -97,8 +97,6 @@ $this->load->view('Common/Store/details_modal');
         });
     });
 
-
-
     $(document).ready(function () {
         var status_arr = {
             '-1': "Not Verified",

@@ -21,7 +21,7 @@
                                             <label>Mall Name <span class="text-danger">*</span></label>
                                             <div>
                                                 <input type="hidden" class="form-control" name="mall_id" id="mall_id"  value="<?php echo (isset($mall_details['id_mall'])) ? $mall_details['id_mall'] : ''; ?>">
-                                                <input type="text" class="form-control" name="mall_name" id="mall_name"  placeholder="Store Name" required="required" value="<?php echo (isset($mall_details['mall_name'])) ? $mall_details['mall_name'] : set_value('mall_name'); ?>">
+                                                <input type="text" class="form-control" name="mall_name" id="mall_name"  placeholder="Mall Name" required="required" value="<?php echo (isset($mall_details['mall_name'])) ? $mall_details['mall_name'] : set_value('mall_name'); ?>">
                                             </div>
                                         </div>        
                                     </div>

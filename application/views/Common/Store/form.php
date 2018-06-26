@@ -316,17 +316,16 @@
                                             </div>
                                         <?php } ?>
                                     </div>
-
-                                    <div class="col-xs-12">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>Upload from Excel</label>
-                                                <div>                                                
-                                                    <input type="file" class="form-control file-input" name="location_excel" id="location_excel">
-                                                </div>
-                                            </div>        
-                                        </div>
-                                        <?php if (isset($store_details)) { ?>
+                                    <?php if (isset($store_details)) { ?>
+                                        <div class="col-xs-12">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Upload from Excel</label>
+                                                    <div>                                                
+                                                        <input type="file" class="form-control file-input" name="location_excel" id="location_excel">
+                                                    </div>
+                                                </div>        
+                                            </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">                                                
                                                     <label><br></label>
@@ -336,8 +335,8 @@
                                                     </div>
                                                 </div>        
                                             </div>
-                                        <?php } ?>
-                                    </div>
+                                        </div>
+                                    <?php } ?>
                                 </fieldset>
                             <?php } ?>
 

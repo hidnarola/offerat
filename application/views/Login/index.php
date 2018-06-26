@@ -28,14 +28,33 @@
         <!-- /page content -->
 
         <!-- /page container -->
-        <script type="text/javascript" src="assets/user/js/core/app.js"></script>        
+        <script type="text/javascript" src="assets/user/js/core/app.js"></script>
+        <script type="text/javascript" src="assets/user/js/plugins/forms/selects/select2.min.js"></script>
+        <!--Data table Start-->
+
+        <script type="text/javascript" src="assets/user/js/plugins/tables/datatables/datatables.min.js"></script>
+
+        <script type="text/javascript" src="assets/user/js/plugins/tables/datatables/dataTables.fixedColumns.min.js"></script>
+        <!--/Data table End-->
+
+        <!--Date Picker Start-->
+        <script type="text/javascript" src="assets/user/js/plugins/ui/moment/moment.min.js"></script>
+        <script type="text/javascript" src="assets/user/js/plugins/pickers/anytime.min.js"></script>
+        <script type="text/javascript" src="assets/user/js/plugins/pickers/pickadate/picker.js"></script>
+        <script type="text/javascript" src="assets/user/js/plugins/pickers/pickadate/picker.date.js"></script>
+        <script type="text/javascript" src="assets/user/js/plugins/pickers/daterangepicker.js"></script>
+        <!--Date Picker End-->
+
         <script type="text/javascript" src="assets/user/js/plugins/forms/inputs/maxlength.min.js"></script>
+
         <script type="text/javascript" src="assets/user/js/plugins/forms/validation/validate.min.js"></script>
+
         <script type="text/javascript" src="assets/user/js/plugins/uploaders/fileinput.min.js"></script>
 
         <!--Checkbox Start-->
         <script type="text/javascript" src="assets/user/js/plugins/forms/styling/uniform.min.js"></script>
-        
+        <!--Checkbox End-->
+
         <script type="text/javascript" src="assets/user/js/custom.js"></script>
     </body>
 </html>

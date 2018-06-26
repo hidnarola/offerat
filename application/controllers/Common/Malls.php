@@ -157,7 +157,7 @@ class Malls extends MY_Controller {
         }
 
         if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE && is_null($id))
-            redirect($back_url);
+            override_404();
 
         $status_arr = array(
             ACTIVE_STATUS => 'Active',
@@ -225,7 +225,7 @@ class Malls extends MY_Controller {
                 $this->data['mall_details'] = $mall_details;
                 $this->data['sales_trends'] = $sales_trends;
             } else {
-                redirect($back_url);
+                override_404();
             }
 
             if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
@@ -302,7 +302,7 @@ class Malls extends MY_Controller {
                 $validate_fields[] = 'telephone';
             }
 
-            if ($this->_validate_form($validate_fields)) {
+            if ($this->_validate_form($validate_fields, $country_id)) {
                 $user_id = 0;
                 $date = date('Y-m-d h:i:s');
                 $delete_mall_sales_trend = array();
@@ -453,14 +453,13 @@ class Malls extends MY_Controller {
         $this->template->load('user', 'Common/Mall/form', $this->data);
     }
 
-    public function _validate_form($validate_fields) {
+    public function _validate_form($validate_fields, $country_id) {
 
         if (in_array('mall_name', $validate_fields)) {
-
             $validation_rules[] = array(
                 'field' => 'mall_name',
                 'label' => 'Mall Name',
-                'rules' => 'trim|required|min_length[2]|callback_check_mall_name|max_length[250]|htmlentities'
+                'rules' => 'trim|required|min_length[2]|callback_check_mall_name[' . $country_id . ']|max_length[250]|htmlentities'
             );
         }
         if (in_array('website', $validate_fields)) {
@@ -562,7 +561,7 @@ class Malls extends MY_Controller {
         return TRUE;
     }
 
-    function check_mall_name($mall_name) {
+    function check_mall_name($mall_name, $country_id = NULL) {
 
         if ($this->input->post('mall_id', TRUE) != '') {
             $select_data = array(
@@ -570,7 +569,7 @@ class Malls extends MY_Controller {
                 'where' => array(
                     'is_delete' => IS_NOT_DELETED_STATUS,
                     'mall_name' => $mall_name,
-                    'id_mall' => $this->input->post('mall_id', TRUE)
+                    'id_country' => $country_id
                 ),
                 'where_with_sign' => array('id_mall <>' . $this->input->post('mall_id', TRUE))
             );
@@ -579,12 +578,13 @@ class Malls extends MY_Controller {
                 'table' => tbl_mall,
                 'where' => array(
                     'is_delete' => IS_NOT_DELETED_STATUS,
-                    'mall_name' => $mall_name
+                    'mall_name' => $mall_name,
+                    'id_country' => $country_id
                 )
             );
         }
         $check_mall_name = $this->Common_model->master_single_select($select_data);
-
+        
         if (isset($check_mall_name) && sizeof($check_mall_name) > 0) {
             $this->form_validation->set_message('check_mall_name', 'The {field} already exists.');
             return FALSE;
