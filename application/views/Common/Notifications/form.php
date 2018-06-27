@@ -82,7 +82,7 @@
                                                 } else
                                                     $broadcasting_time = set_value('broadcasting_time');
                                                 ?>
-                                                <input type="text" class="form-control" placeholder="Broadcast Date & Time" name="broadcasting_time" id="broad_cast_date_time" required="required" value="<?php echo $broadcasting_time; ?>">
+                                                <input type="text" class="form-control" placeholder="Broadcast Date & Time" name="broadcasting_time" id="broad_cast_date_time" required="required" value="<?php echo (!empty($broadcasting_time)) ? get_country_wise_date($broadcasting_time, $this->loggedin_user_country_data['timezone']) : get_country_wise_date(date('Y-m-d h:i'), $this->loggedin_user_country_data['timezone']); ?>">
                                             </div>                                            
                                         </div>
                                     </div>
@@ -105,9 +105,9 @@
                                                     $expiry_time = date_create($notification_data['expiry_time']);
                                                     $expiry_time = date_format($expiry_time, "Y-m-d H:i");
                                                 } else
-                                                    $expiry_time = set_value('expiry_time');
+                                                    $expiry_time = set_value('expiry_time');                                                
                                                 ?>
-                                                <input type="text" class="form-control" placeholder="Expire Date & Time" name="expiry_time" id="expire_date_time" value="<?php echo (!empty($expiry_time)) ? $expiry_time : set_value('expiry_time'); ?>">
+                                                <input type="text" class="form-control" placeholder="Expire Date & Time" name="expiry_time" id="expire_date_time" value="<?php echo (!empty($expiry_time)) ? get_country_wise_date($expiry_time, $this->loggedin_user_country_data['timezone']) : date('d-m-Y H:i', strtotime('+10 minutes', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone'])))); ?>">
                                             </div>                                                                                        
                                         </div>
                                     </div>                                    
@@ -191,7 +191,7 @@
 <?php } else { ?>
             $(document).find('.offer_text_section').hide();
             $(document).find('.offer_image_video_section').show();
-//            $(document).find('#media_name').attr('required', 'required');
+            //            $(document).find('#media_name').attr('required', 'required');
             $(document).find('#content').removeAttr('required');
 <?php } ?>
     });

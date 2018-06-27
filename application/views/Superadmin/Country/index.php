@@ -20,6 +20,7 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Country</th>
+                                                    <th>Timezone</th>
                                                     <th>Flag</th>
                                                     <th>Admin Email Id</th>
                                                     <th>Status</th>
@@ -28,6 +29,7 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Country</th>
+                                                    <th>Timezone</th>
                                                     <th>Flag</th>
                                                     <th>Admin Email Id</th>
                                                     <th>Status</th>
@@ -91,6 +93,11 @@ $this->load->view('Common/delete_alert');
                     'data': 'country_country_name',
                     "visible": true,
                     "name": 'country.country_name',
+                },
+                {
+                    'data': 'country_timezone',
+                    "visible": true,
+                    "name": 'country.timezone',
                 },
                 {
                     'data': 'country_country_flag',

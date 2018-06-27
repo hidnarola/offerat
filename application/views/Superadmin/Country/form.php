@@ -25,10 +25,18 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="display-block">Status <span class="text-danger">*</span></label>                                        
-                                        <select name="status" id="status" class="form-control select">
-                                            <option value="0" <?php echo (isset($country['status']) && $country['status'] == '0' ) ? 'selected=selected' : ''; ?>>Active</option>
-                                            <option value="1" <?php echo (isset($country['status']) && $country['status'] == '1' ) ? 'selected=selected' : ''; ?>>Inactive</option>
+                                        <label class="display-block">Timezone <span class="text-danger">*</span></label>                                        
+                                        <select name="timezone" id="timezone" class="form-control select select-search" required="required">
+                                            <option value="">Select Timezone</option>
+                                            <?php
+                                            if (isset($time_zone_list) && sizeof($time_zone_list) > 0) {
+                                                foreach ($time_zone_list as $list) {
+                                                    ?>
+                                                    <option value="<?php echo $list['zone']; ?>" <?php echo (isset($country['timezone']) && $country['timezone'] == $list['zone']) ? 'selected=selected' : ''; ?>><?php echo $list['zone'] . '  (' . $list["diff_from_GMT"] . ')'; ?></option>
+                                                    <?php
+                                                }
+                                            }
+                                            ?>
                                         </select>
                                     </div>       
                                 </div>
@@ -37,13 +45,25 @@
                             <div class="col-xs-12">
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label class="display-block">Status <span class="text-danger">*</span></label>                                        
+                                        <select name="status" id="status" class="form-control select">
+                                            <option value="0" <?php echo (isset($country['status']) && $country['status'] == '0' ) ? 'selected=selected' : ''; ?>>Active</option>
+                                            <option value="1" <?php echo (isset($country['status']) && $country['status'] == '1' ) ? 'selected=selected' : ''; ?>>Inactive</option>
+                                        </select>
+                                    </div>       
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label>Admin Email Id <span class="text-danger">*</span></label>
                                         <div>
                                             <input type="hidden" name="id_user" id="id_user" value="<?php echo isset($country['id_user']) ? $country['id_user'] : set_value('id') ?>">
                                             <input type="text" class="form-control" placeholder="Admin Email Id" name="email_id" id="email_id" value="<?php echo isset($country['email_id']) ? $country['email_id'] : set_value('email_id') ?>" required="required">
                                         </div>
                                     </div>        
-                                </div>
+                                </div>                                                           
+                            </div>
+
+                            <div class="col-xs-12">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Admin Password</label>
@@ -51,10 +71,7 @@
                                             <input type="password" class="form-control" placeholder="Admin Password" name="password" id="password" value="">
                                         </div>
                                     </div>        
-                                </div>                             
-                            </div>
-
-                            <div class="col-xs-12">
+                                </div>  
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Image <span class="text-danger">*</span> <span class="text-info text-size-mini">(Recommended Width and Height is 30 x 20 pixels respectively)</span></label>
@@ -72,12 +89,12 @@
                                             </div>
                                         </div>
 
-<!--                                        <div class="col-md-12 checkbox checkbox-switch">
-                                            <label>
-                                                Delete Image?
-                                                <input type="checkbox" data-off-color="danger" data-on-text="Yes" data-off-text="No" class="switch" name="delete_country_image" id="delete_country_image" />
-                                            </label>
-                                        </div>-->
+                                        <!--                                        <div class="col-md-12 checkbox checkbox-switch">
+                                                                                    <label>
+                                                                                        Delete Image?
+                                                                                        <input type="checkbox" data-off-color="danger" data-on-text="Yes" data-off-text="No" class="switch" name="delete_country_image" id="delete_country_image" />
+                                                                                    </label>
+                                                                                </div>-->
                                     <?php } ?>
                                 </div> 
                             </div>
@@ -103,6 +120,6 @@
 <?php if (isset($country['country_flag']) && !empty($country['country_flag'])) { ?>
     <script type="text/javascript" src="assets/user/js/plugins/forms/styling/switch.min.js"></script>
     <script>
-        $(".switch").bootstrapSwitch();
+    $(".switch").bootstrapSwitch();
     </script>
 <?php } ?>

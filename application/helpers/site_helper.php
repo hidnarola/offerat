@@ -65,3 +65,15 @@ function override_404() {
     echo $CI->load->view('errors/html/error_404', $CI->data, true);
     die();
 }
+
+function get_country_wise_date($display_date = NULL, $time_zone = NULL) {
+    $datetime = new DateTime($display_date);    
+    if (!is_null($time_zone))
+        $la_time = new DateTimeZone($time_zone);
+    else {
+        $la_time = new DateTimeZone(date_default_timezone_get());        
+    }
+
+    $datetime->setTimezone($la_time);
+    return $datetime->format('d-m-Y H:i');
+}

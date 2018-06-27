@@ -7,7 +7,6 @@ class Notifications extends MY_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('Common_model', '', TRUE);
-
         $this->bread_crum[] = array(
             'url' => '',
             'title' => 'Notifications',
@@ -205,8 +204,8 @@ class Notifications extends MY_Controller {
                 $validate_fields = array(
                     'store_mall_id',
                     'offer_type',
-                    'expiry_time',
-                    'broadcasting_time'
+                    'broadcasting_time',
+                    'expiry_time'
                 );
 
                 if ($this->input->post('offer_type') == IMAGE_OFFER_CONTENT_TYPE)
@@ -280,12 +279,28 @@ class Notifications extends MY_Controller {
                             $store_id = $store_mall_text[1];
                         if ($store_mall_text[0] == 'mall')
                             $mall_id = $store_mall_text[1];
+//                        echo timezone_offset_get();
+//                        echo $this->input->post('expiry_time', TRUE);
+//                        $expiry_time = date_create($this->input->post('expiry_time', TRUE));
+//                        $d = date_format($expiry_time, "Y-m-d H:i:00");
+//                        date_default_timezone_set('UTC');
+//                        echo strtotime($d);
+////                        $date = new DateTime($this->input->post('expiry_time', TRUE));
+////                        $date->setTimezone(new DateTimeZone('UTC'));
+//                        echo '<br>';
+//                        die();
+//                        echo $date->format('Y-m-d H:i:s'); // 2012-07 -15 05:00:00 
 
                         $expiry_time = date_create($this->input->post('expiry_time', TRUE));
-                        $expiry_time_text = date_format($expiry_time, "Y-m-d H:i:00");
+                        echo '<br>';
+                        echo get_country_wise_date($this->input->post('expiry_time', TRUE));
+//                        echo get_country_wise_date(date_format($expiry_time, "Y-m-d H:i:00"));
+                        echo '<br>';
+                        echo $expiry_time_text = date_format($expiry_time, "Y-m-d H:i:00");
+
                         $broadcasting_time = date_create($this->input->post('broadcasting_time', TRUE));
                         $broadcasting_time_text = date_format($broadcasting_time, "Y-m-d H:i:00");
-
+                        die();
                         $notification_data = array(
                             'type' => ($notification_type == 'offers') ? OFFER_OFFER_TYPE : ANNOUNCEMENT_OFFER_TYPE,
                             'offer_type' => (in_array($uploaded_file_type, $video_types)) ? VIDEO_OFFER_CONTENT_TYPE : ($this->input->post('offer_type', TRUE) == TEXT_OFFER_CONTENT_TYPE) ? TEXT_OFFER_CONTENT_TYPE : IMAGE_OFFER_CONTENT_TYPE,
@@ -446,19 +461,27 @@ class Notifications extends MY_Controller {
         if ($_FILES[$image_video_control]['name'] != '' && $this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE) {
 //            if ($_FILES[$image_control]['type'] != 'image/jpeg' && $_FILES[$image_control]['type'] != 'image/jpg' && $_FILES[$image_control]['type'] != 'image/gif' && $_FILES[$image_control]['type'] != 'image/png') {
             if (!in_array($_FILES[$image_video_control]['type'], array('image/jpeg', 'image/jpg', 'image/png', 'video/mp4', 'video/webm', 'video/ogg', 'video/ogv', 'video/wmv', 'video/vob', 'video/swf', 'video/mov', 'video/m4v', 'video/flv'))) {
-                $this->form_validation->set_message('custom_notification_image_video', 'The {field} contain invalid image/video type.');
+                $this->form_validation->set_message('custom_notification_image_video', 'The {
+                            field
+                        } contain invalid image/video type.');
                 return FALSE;
             }
             if ($_FILES[$image_video_control]['error'] > 0) {
-                $this->form_validation->set_message('custom_notification_image_video', 'The {field} contain invalid image/video.');
+                $this->form_validation->set_message('custom_notification_image_video', 'The {
+                            field
+                        } contain invalid image/video.');
                 return FALSE;
             }
             if ($_FILES[$image_video_control]['size'] <= 0) {
-                $this->form_validation->set_message('custom_notification_image_video', 'The {field} contain invalid image size / video size.');
+                $this->form_validation->set_message('custom_notification_image_video', 'The {
+                            field
+                        } contain invalid image size / video size.');
                 return FALSE;
             }
         } else {
-            $this->form_validation->set_message('custom_notification_image_video', 'The {field} field is required.');
+            $this->form_validation->set_message('custom_notification_image_video', 'The {
+                            field
+                        } field is required.');
             return FALSE;
         }
 
@@ -560,7 +583,7 @@ class Notifications extends MY_Controller {
         if (isset($notification_id) && !empty($notification_id)) {
 
             $select_notification = array(
-                'table' => tbl_offer_announcement.' offer_announcement',
+                'table' => tbl_offer_announcement . ' offer_announcement',
                 'where' => array(
                     'offer_announcement.is_delete' => IS_NOT_DELETED_STATUS,
                     'offer_announcement.id_offer' => $notification_id
@@ -583,7 +606,7 @@ class Notifications extends MY_Controller {
                     )
                 )
             );
-            $notification_details = $this->Common_model->master_single_select($select_notification);            
+            $notification_details = $this->Common_model->master_single_select($select_notification);
             $this->data['notification_details'] = $notification_details;
 
             $html = $this->load->view('Common/Notifications/details', $this->data, TRUE);

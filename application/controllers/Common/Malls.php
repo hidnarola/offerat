@@ -70,14 +70,13 @@ class Malls extends MY_Controller {
             tbl_country . '.is_delete' => IS_NOT_DELETED_STATUS,
         );
 
-        $filter_array['where_with_sign'][] = 'country.id_country = mall.id_country';
-        $filter_array['where_with_sign'][] = 'user.id_user = mall.id_users';
-
         if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
             $filter_array['where'][tbl_mall . '.id_users'] = $this->loggedin_user_data['user_id'];
+            $filter_array['where_with_sign'][] = 'user.id_user = mall.id_users';
         }
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
             $filter_array['where_with_sign'][] = 'country.id_users =  ' . $this->loggedin_user_data['user_id'];
+            $filter_array['where_with_sign'][] = 'country.id_country = mall.id_country';
         }
 
         $filter_array['join'][] = array(
@@ -92,7 +91,6 @@ class Malls extends MY_Controller {
         );
 
         $filter_records = $this->Common_model->get_filtered_records(tbl_mall, $filter_array);
-//        query();
         $total_filter_records = $this->Common_model->get_filtered_records(tbl_mall, $filter_array, 1);
 
         $output = array(
@@ -149,7 +147,7 @@ class Malls extends MY_Controller {
 
         $back_url = '';
         $img_name = $image_name = '';
-        $country_id = 0;
+        $country_id = $this->loggedin_user_country_data['id_country'];
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
             $back_url = 'country-admin/malls';
         } elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
@@ -214,7 +212,7 @@ class Malls extends MY_Controller {
             if (isset($mall_details) && sizeof($mall_details) > 0) {
 
                 $image_name = $mall_details['mall_logo'];
-                $country_id = $mall_details['id_country'];
+//                $country_id = $mall_details['id_country'];
 
                 $select_sales_trend = array(
                     'table' => tbl_sales_trend,
@@ -277,7 +275,7 @@ class Malls extends MY_Controller {
 
             $country_details = $this->Common_model->master_single_select($select_country);
             if (isset($country_details) && sizeof($country_details) > 0) {
-                $country_id = $country_details['id_country'];
+//                $country_id = $country_details['id_country'];
             }
         }
 
@@ -355,10 +353,18 @@ class Malls extends MY_Controller {
                         $user_id = $user_details['id_user'];
                         $where_user_data = array('id_user' => $user_id);
                         $update_user_data = array(
+                            'status' => ACTIVE_STATUS,
                             'first_name' => $this->input->post('first_name', TRUE),
                             'last_name' => $this->input->post('last_name', TRUE),
-                            'mobile' => $this->input->post('mobile', TRUE)
+                            'mobile' => ($this->input->post('mobile', TRUE) != '') ? $this->input->post('mobile', TRUE) : ' ',
                         );
+                        if (empty($user_details['password'])) {
+                            $new_password = $this->Common_model->random_generate_code(5);
+                            $content = $this->Email_template_model->send_password_format($user_details['first_name'], $user_details['last_name'], $new_password);
+                            $response = $this->Email_template_model->send_email(NULL, $this->input->post('email_id', TRUE), 'Account Password', $content);
+                            $update_user_data['password'] = md5($new_password);
+                        }
+
                         $this->Common_model->master_update(tbl_user, $update_user_data, $where_user_data);
                     } else {
 
@@ -584,7 +590,7 @@ class Malls extends MY_Controller {
             );
         }
         $check_mall_name = $this->Common_model->master_single_select($select_data);
-        
+
         if (isset($check_mall_name) && sizeof($check_mall_name) > 0) {
             $this->form_validation->set_message('check_mall_name', 'The {field} already exists.');
             return FALSE;

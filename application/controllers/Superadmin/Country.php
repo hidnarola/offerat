@@ -68,6 +68,7 @@ class Country extends MY_Controller {
 
             $validate_fields = array(
                 'country_name',
+                'timezone',
                 'email_id',
                 'status'
             );
@@ -150,8 +151,9 @@ class Country extends MY_Controller {
                 if (!$do_flag_image_has_error) {
                     $country_data = array(
                         'country_name' => $this->input->post('country_name', TRUE),
+                        'timezone' => $this->input->post('timezone', TRUE),
                         'id_users' => $user_id,
-                        'status' => $this->input->post('status', TRUE),                        
+                        'status' => $this->input->post('status', TRUE),
                         'modified_date' => 0,
                         'modified_by' => 0,
                         'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0
@@ -230,6 +232,9 @@ class Country extends MY_Controller {
                 'title' => 'Add Country',
             );
         }
+
+        $time_zone_list = $this->Common_model->timezone_list();
+        $this->data['time_zone_list'] = $time_zone_list;
         $this->template->load('user', 'Superadmin/Country/form', $this->data);
     }
 
@@ -246,6 +251,13 @@ class Country extends MY_Controller {
                 'field' => 'country_name',
                 'label' => 'Country Name',
                 'rules' => 'trim|required|min_length[2]|max_length[255]|htmlentities|callback_check_country_name',
+            );
+        }
+        if (in_array('timezone', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'timezone',
+                'label' => 'Timezone',
+                'rules' => 'trim|required|htmlentities',
             );
         }
         if (in_array('email_id', $validate_fields)) {

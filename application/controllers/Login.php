@@ -2,8 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Login
-        extends CI_Controller {
+class Login extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -41,18 +40,64 @@ class Login
                         $session_user_type = '';
                         if ($user['user_type'] == SUPER_ADMIN_USER_TYPE)
                             $session_user_type = SUPER_ADMIN_USER_TYPE;
-                        elseif ($user['user_type'] == COUNTRY_ADMIN_USER_TYPE)
+                        elseif ($user['user_type'] == COUNTRY_ADMIN_USER_TYPE) {
                             $session_user_type = COUNTRY_ADMIN_USER_TYPE;
-                        elseif ($user['user_type'] == STORE_OR_MALL_ADMIN_USER_TYPE)
+                            $select_country = array(
+                                'table' => tbl_country,
+                                'fields' => array('id_country', 'country_name', 'timezone'),
+                                'where' => array('is_delete' => IS_NOT_DELETED_STATUS, 'id_users' => $user['id_user'], 'status' => ACTIVE_STATUS)
+                            );
+
+                            $country_details = $this->Common_model->master_single_select($select_country);
+                            if (isset($country_details) && sizeof($country_details) > 0) {
+                                $this->session->set_userdata('loggedin_user_country_data', $country_details);
+                            } else {
+                                $this->session->set_flashdata('error_msg', 'Invalid Request for Login');
+                                redirect('login');
+                            }
+                        } elseif ($user['user_type'] == STORE_OR_MALL_ADMIN_USER_TYPE) {
                             $session_user_type = STORE_OR_MALL_ADMIN_USER_TYPE;
+
+                            $select_country = array(
+                                'table' => tbl_country . ' country',
+                                'fields' => array('country.id_country', 'country.country_name', 'country.timezone'),
+                                'where' => array(
+                                    'country.is_delete' => IS_NOT_DELETED_STATUS,
+                                    'country.id_users' => $user['id_user'],
+                                    'country.status' => ACTIVE_STATUS,
+                                    ''
+                                ),
+                                'where_with_sign' => array(
+                                    '(country.id_country = mall.id_country OR country.id_country = store.id_country)',
+                                    '(mall.id_users = ' . $user['id_user'] . ' OR store.id_users = ' . $user['id_user'] . ')'
+                                ),
+                                'join' => array(
+                                    array(
+                                        'table' => tbl_mall . ' as mall',
+                                        'condition' => 'mall.id_country = country.id_country',
+                                        'join_type' => 'left',
+                                    ),
+                                    array(
+                                        'table' => tbl_store . ' as store',
+                                        'condition' => 'store.id_country = country.id_country',
+                                        'join_type' => 'left',
+                                    )
+                                )
+                            );
+
+                            $country_details = $this->Common_model->master_single_select($select_country);
+                            if (isset($country_details) && sizeof($country_details) > 0) {
+                                $this->session->set_userdata('loggedin_user_country_data', $country_details);
+                            } else {
+                                $this->session->set_flashdata('error_msg', 'Invalid Request for Login');
+                                redirect('login');
+                            }
+                        }
 
                         $session_user_data = array(
                             'user_id' => $user['id_user'],
                             'email_id' => $user['email_id']
                         );
-                        
-                        
-                        
 
                         $this->session->set_userdata('loggedin_user_type', $session_user_type);
                         $this->session->set_userdata('loggedin_user_data', $session_user_data);
@@ -63,7 +108,7 @@ class Login
 
                         $this->Common_model->master_update(tbl_user, $update_user_data, $where_user_data);
 
-                        $this->session->set_flashdata('success_msg', 'Welcome Super Admin');
+//                        $this->session->set_flashdata('success_msg', 'Welcome Super Admin');
 
                         if ($user['user_type'] == SUPER_ADMIN_USER_TYPE)
                             redirect('super-admin/dashboard');
@@ -315,7 +360,7 @@ class Login
                 $date = date('Y-m-d h:i:s');
                 $user_id = $verified_data['id_user'];
                 $user_arr = array(
-                    'table' => tbl_user,                    
+                    'table' => tbl_user,
                     'where' => array(
                         'id_user' => $user_id,
                         'user_type' => STORE_OR_MALL_ADMIN_USER_TYPE,

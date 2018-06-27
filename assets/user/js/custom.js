@@ -160,15 +160,7 @@ $(function () {
 
     $(document).find('[data-toggle="tooltip"]').tooltip();
 
-    $('#expire_date_icon, #expire_date_time').click(function (e) {
-        $('#expire_date_time').AnyTime_noPicker().AnyTime_picker({format: "%d-%m-%Z %H:%i"}).focus();
-        e.preventDefault();
-    });
-
-    $('#broad_cast_icon, #broad_cast_date_time').click(function (e) {
-        $('#broad_cast_date_time').AnyTime_noPicker().AnyTime_picker({format: "%d-%m-%Z %H:%i"}).focus();
-        e.preventDefault();
-    });
+    
 });
 
 function jqueryValidate() {
@@ -227,8 +219,6 @@ function jqueryValidate() {
     });
 }
 
-
-
 /***Confirmation Popup while delete any record ***/
 $(document).on("click", "#delete", function (e) {
     var data_path = $(document).find(this).attr('data-path');
@@ -242,42 +232,6 @@ $(document).on("click", "#delete", function (e) {
         }
     });
 });
-
-
-function get_dd_mm_yyyy_Date(date, seperator) {
-    if (date === null) {
-        return '';
-    }
-    var d = new Date(date),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear();
-    if (month.length < 2)
-        month = '0' + month;
-    if (day.length < 2)
-        day = '0' + day;
-    return day + seperator + month + seperator + year;
-}
-
-function get_dd_mm_yyyy_hh_min_DateTime(date, seperator) {
-    if (date === null) {
-        return '';
-    }
-
-    var d = new Date(date),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear(),
-            hour = d.getHours(),
-            minute = d.getMinutes();
-
-    if (month.length < 2)
-        month = '0' + month;
-    if (day.length < 2)
-        day = '0' + day;
-
-    return day + seperator + month + seperator + year + ' ' + hour + ':' + minute;
-}
 
 function displayServerMsg(wrapperId, msgControlId, msg, doShow, doFocusOnControl) {
     if (typeof doShow === 'undefined') {

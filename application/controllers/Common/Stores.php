@@ -70,14 +70,13 @@ class Stores extends MY_Controller {
             tbl_user . '.status' => ACTIVE_STATUS,
         );
 
-        $filter_array['where_with_sign'][] = 'country.id_country = store.id_country';
-        $filter_array['where_with_sign'][] = 'user.id_user = store.id_users';
-
         if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
             $filter_array['where'][tbl_store . '.id_users'] = $this->loggedin_user_data['user_id'];
+            $filter_array['where_with_sign'][] = 'user.id_user = store.id_users';
         }
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
             $filter_array['where_with_sign'][] = 'country.id_users =  ' . $this->loggedin_user_data['user_id'];
+            $filter_array['where_with_sign'][] = 'country.id_country = store.id_country';
         }
 
         $filter_array['join'][] = array(
@@ -164,7 +163,7 @@ class Stores extends MY_Controller {
         $date = date('Y-m-d h:i:s');
         $back_url = '';
         $img_name = $image_name = '';
-        $country_id = 0;
+        $country_id = $this->loggedin_user_country_data['id_country'];
         $download_locations_url = '';
 
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
@@ -228,9 +227,8 @@ class Stores extends MY_Controller {
             $store_details = $this->Common_model->master_single_select($select_store);
 
             if (isset($store_details) && sizeof($store_details) > 0) {
-
                 $image_name = $store_details['store_logo'];
-                $country_id = $store_details['id_country'];
+//                $country_id = $store_details['id_country'];
                 $select_store_category = array(
                     'table' => tbl_store_category . ' store_category',
                     'fields' => array('id_store_category', 'category.id_category', 'sub_category.id_sub_category', 'category.category_name', 'sub_category.sub_category_name'),
@@ -286,7 +284,6 @@ class Stores extends MY_Controller {
             $select_country = array(
                 'table' => tbl_store . ' store',
                 'where' => array(
-                    'store.status' => ACTIVE_STATUS,
                     'store.is_delete' => IS_NOT_DELETED_STATUS,
                     'user.is_delete' => IS_NOT_DELETED_STATUS,
                     'country.is_delete' => IS_NOT_DELETED_STATUS
@@ -316,7 +313,7 @@ class Stores extends MY_Controller {
 
             $country_details = $this->Common_model->master_single_select($select_country);
             if (isset($country_details) && sizeof($country_details) > 0) {
-                $country_id = $country_details['id_country'];
+//                $country_id = $country_details['id_country'];
             }
         }
 
@@ -469,7 +466,12 @@ class Stores extends MY_Controller {
                     }
                     if (isset($user_details) && sizeof($user_details) > 0) {
                         $user_id = $user_details['id_user'];
-                        $update_user_data = array('status' => ACTIVE_STATUS);
+                        $update_user_data = array(
+                            'status' => ACTIVE_STATUS,
+                            'first_name' => $this->input->post('first_name', TRUE),
+                            'last_name' => $this->input->post('last_name', TRUE),
+                            'mobile' => ($this->input->post('mobile', TRUE) != '') ? $this->input->post('mobile', TRUE) : ' ',
+                        );
                         $where_user_data = array('id_user' => $user_id);
                         if (empty($user_details['password'])) {
                             $new_password = $this->Common_model->random_generate_code(5);
@@ -702,7 +704,6 @@ class Stores extends MY_Controller {
         $this->data['country_id'] = $country_id;
         $this->data['download_locations_url'] = $download_locations_url;
         $this->data['back_url'] = $back_url;
-
         $this->template->load('user', 'Common/Store/form', $this->data);
     }
 

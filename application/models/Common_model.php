@@ -748,4 +748,22 @@ class Common_model extends CI_Model {
         return $randomString;
     }
 
+    function timezone_list($timezone = "") {
+        $zones_array = array();
+        $timestamp = time();
+        foreach (timezone_identifiers_list() as $key => $zone) {
+            date_default_timezone_set($zone);
+            if ($zone == $timezone) {
+                $zones_array[]['zone'] = $zone;
+                $zones_array[]['diff_from_GMT'] = date('P', $timestamp);
+            } else {
+                $zones_array[$key]['zone'] = $zone;
+                $diff_timezone = str_replace('+0', '+', date('P', $timestamp));
+                $diff_timezone = str_replace(':00', '  ', $diff_timezone);
+                $zones_array[$key]['diff_from_GMT'] = 'UTC/GMT ' . $diff_timezone;
+            }
+        }
+        return $zones_array;
+    }
+
 }

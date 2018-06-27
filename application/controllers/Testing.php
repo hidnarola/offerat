@@ -2,12 +2,23 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Testing extends MY_Controller {
+class Testing extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
         ini_set('error_reporting', E_ALL);
         $this->load->model('Common_model', '', TRUE);
+    }
+
+    function index() {
+
+        echo $current_date = date('2018-06-26 08:57:18');
+        echo '<br>';
+
+        $datetime = new DateTime($current_date);
+        $la_time = new DateTimeZone('Asia/Dubai');
+        $datetime->setTimezone($la_time);
+        echo $datetime->format('Y-m-d H:i:s') . '<br>';
     }
 
     function stores_locations($id = 7) {
