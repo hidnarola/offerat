@@ -135,7 +135,7 @@ $this->load->view('Common/Store/details_modal');
                     "visible": true,
                     "name": 'store.created_date',
                     "render": function (data, type, full, meta) {
-                        return get_dd_mm_yyyy_hh_min_DateTime(full.store_created_date, '/');
+                        return get_dd_mm_yyyy_hh_min_DateTime(full.store_created_date, '-');
                     }
                 },
                 {

@@ -17,6 +17,7 @@
                                 <div class="col-md-12">
                                     <div class="col-md-4">
                                         <div class="form-group">
+                                            <input type="hidden" class="form-control" placeholder="" name="id_offer" id="id_offer" value="<?php echo (isset($notification_data['id_offer'])) ? $notification_data['id_offer'] : ''; ?>">
                                             <label>Select Store / Mall <span class="text-danger">*</span></label>
                                             <?php
                                             $store_id = 0;
@@ -75,6 +76,11 @@
                                                     <button type="button" class="btn btn-default btn-icon" id="broad_cast_icon"><i class="icon-calendar3"></i></button>
                                                 </span>
                                                 <?php
+//                                                $d = date('Y-m-d h:i');
+//                                                $given = new DateTime($d, new DateTimeZone(date_default_timezone_get()));
+//                                                echo $given->format("P") . '<br>';
+//                                                echo date('Y-m-d h:i') . '<br>';
+//                                                echo get_country_wise_date(date('Y-m-d h:i'), $this->loggedin_user_country_data['timezone']);
                                                 $broadcasting_time = '';
                                                 if (isset($notification_data) && isset($notification_data['broadcasting_time'])) {
                                                     $broadcasting_time = date_create($notification_data['broadcasting_time']);
@@ -102,12 +108,15 @@
                                                 <?php
                                                 $expiry_time = '';
                                                 if (isset($notification_data) && isset($notification_data['expiry_time'])) {
-                                                    $expiry_time = date_create($notification_data['expiry_time']);
-                                                    $expiry_time = date_format($expiry_time, "Y-m-d H:i");
-                                                } else
-                                                    $expiry_time = set_value('expiry_time');                                                
+                                                    if ($notification_data['expiry_time'] == '0000-00-00 00:00:00') {
+                                                        $expiry_time = '';
+                                                    } else {
+                                                        $expiry_time = date_create($notification_data['expiry_time']);
+                                                        $expiry_time = date_format($expiry_time, "Y-m-d H:i");
+                                                    }
+                                                }
                                                 ?>
-                                                <input type="text" class="form-control" placeholder="Expire Date & Time" name="expiry_time" id="expire_date_time" value="<?php echo (!empty($expiry_time)) ? get_country_wise_date($expiry_time, $this->loggedin_user_country_data['timezone']) : date('d-m-Y H:i', strtotime('+10 minutes', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone'])))); ?>">
+                                                <input type="text" class="form-control" placeholder="Expire Date & Time" name="expiry_time" id="expire_date_time" value="<?php echo $expiry_time; ?>">
                                             </div>                                                                                        
                                         </div>
                                     </div>                                    

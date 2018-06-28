@@ -53,13 +53,30 @@
             <div class="col-md-4 col-sm-12 col-xs-12">
                 <label>BroadCast Time : </label>
                 <span class="text-semibold">
-                    <?php echo (isset($notification_details['broadcasting_time']) && !empty($notification_details['broadcasting_time'])) ? $notification_details['broadcasting_time'] : '-'; ?>
+                    <?php
+                    if (isset($notification_details['broadcasting_time']) && !empty($notification_details['broadcasting_time'])) {
+                        $broadcasting_time = new DateTime($notification_details['broadcasting_time'], new DateTimeZone(date_default_timezone_get()));
+                        $broadcasting_time->setTimezone(new DateTimeZone($this->loggedin_user_country_data['timezone']));
+                        $broadcasting_time_text = $broadcasting_time->format('d-m-Y H:i');
+
+                        echo $broadcasting_time_text;
+                    } else
+                        echo '-';
+                    ?>
                 </span>
             </div> 
             <div class="col-md-4 col-sm-12 col-xs-12">
                 <label>Expiration Time : </label>
                 <span class="text-semibold">
-                    <?php echo (isset($notification_details['expiry_time']) && !empty($notification_details['expiry_time']) && $notification_details['expiry_time'] != '0000-00-00 00:00:00') ? $notification_details['expiry_time'] : '-'; ?>
+                    <?php
+                    if (isset($notification_details['expiry_time']) && !empty($notification_details['expiry_time']) && $notification_details['expiry_time'] != '0000-00-00 00:00:00') {
+                        $expiry_time = new DateTime($notification_details['expiry_time'], new DateTimeZone(date_default_timezone_get()));
+                        $expiry_time->setTimezone(new DateTimeZone($this->loggedin_user_country_data['timezone']));
+                        $expiry_time_text = $expiry_time->format('Y-m-d H:i');
+                        echo $expiry_time_text;
+                    } else
+                        echo '-';
+                    ?>
                 </span>
             </div>  
         </div>        
@@ -87,7 +104,7 @@
                 </div>
             </div>
         <?php } ?>
-        <?php if ($notification_details['type'] == OFFER_OFFER_TYPE) { ?>
+        <?php if (in_array($notification_details['type'], array(OFFER_OFFER_TYPE, ANNOUNCEMENT_OFFER_TYPE))) { ?>
             <hr>
             <div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12">
@@ -99,7 +116,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <div>                                                                    
-                                        <a href="<?php echo offer_media_path . $notification_details['media_name'] ?>" class="btn btn-info btn-lg" target="_blank"><i class="icon-image5"></i> View Image</a>
+                                        <a href="<?php echo offer_media_path . $notification_details['media_name']; ?>" class="btn btn-info btn-lg" target="_blank"><i class="icon-image5"></i> View Image</a>
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +124,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <div>
-                                        <a href="<?php echo offer_media_path . $notification_details['media_name'] ?>" class="btn btn-info btn-lg" target="_blank"><i class="icon-video-camera2"></i> View Video</a>
+                                        <a href="<?php echo offer_media_path . $notification_details['media_name']; ?>" class="btn btn-info btn-lg" target="_blank"><i class="icon-video-camera2"></i> View Video</a>
                                     </div>
                                 </div>
                             </div>

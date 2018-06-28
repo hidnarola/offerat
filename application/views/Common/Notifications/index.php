@@ -7,7 +7,7 @@
                         <span id="notification_error_msg"></span>
                     </div>
                     <div class="tabbable">
-                        <div class="tab-content">
+                        <div class="tab-content">                            
                             <div class="row">
                                 <div class="col-md-12">
                                     <ul class="nav nav-tabs">

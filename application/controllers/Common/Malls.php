@@ -62,6 +62,18 @@ class Malls extends MY_Controller {
 
         $filter_array = $this->Common_model->create_datatable_request($this->input->post());
 
+        $date = date('Y-m-d h:i:s');
+        $current_time_zone_today_date = new DateTime($date, new DateTimeZone(date_default_timezone_get()));
+        $current_time_zone_today_date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $current_time_zone_today_date_ = $current_time_zone_today_date->format('Y-m-d H:i:s');
+        $current_time_zone_offeset = $current_time_zone_today_date->format('P');
+        $logged_in_country_zone_today_date = new DateTime($date, new DateTimeZone($this->loggedin_user_country_data['timezone']));
+        $logged_in_country_zone_today_date->setTimezone(new DateTimeZone($this->loggedin_user_country_data['timezone']));
+        $logged_in_country_zone_today_date_ = $logged_in_country_zone_today_date->format('Y-m-d H:i:s');
+        $logged_in_country_zone_offset = $logged_in_country_zone_today_date->format('P');
+
+        $filter_array['fields'][] = 'DATE_FORMAT(CONVERT_TZ(' . tbl_mall . '.created_date,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"),"%Y-%m-%d %H:%i") as mall_created_date';
+
         $filter_array['order_by'] = array(tbl_mall . '.id_mall' => 'DESC');
         $filter_array['group_by'] = array(tbl_mall . '.id_mall');
         $filter_array['where'] = array(
@@ -430,7 +442,7 @@ class Malls extends MY_Controller {
                         }
                         $this->session->set_flashdata('success_msg', 'Mall updated successfully');
                     } else {
-                        $mall_data['created_date'] = date('Y-m-d h:i:s');
+                        $mall_data['created_date'] = $date;
                         $mall_data['is_testdata'] = (ENVIRONMENT !== 'production') ? 1 : 0;
                         $mall_data['is_delete'] = IS_NOT_DELETED_STATUS;
                         $mall_data['status'] = ACTIVE_STATUS;

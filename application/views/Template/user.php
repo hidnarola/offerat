@@ -162,13 +162,9 @@
             <script type="text/javascript" src="assets/user/js/plugins/uploaders/fileinput.min.js"></script>
 
             <!--Checkbox Start-->
-            <script type="text/javascript" src="assets/user/js/plugins/forms/styling/uniform.min.js"></script>
-            <!--<script type="text/javascript" src="https://momentjs.com/downloads/moment.min.js"></script>-->
-<!--            <script type="text/javascript" src="https://momentjs.com/downloads/moment-timezone.min.js"></script>
-            <script type="text/javascript" src="https://momentjs.com/downloads/moment-timezone-with-data.min.js"></script>
-            <script type="text/javascript" src="https://www.malot.fr/bootstrap-datetimepicker/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js?t=20130302"></script>-->
-            <script type="text/javascript" src="assets/user/js/moment-timezone.min.js"></script>
-            <script type="text/javascript" src="assets/user/js/moment-timezone-with-data.min.js"></script>
+            <script type="text/javascript" src="assets/user/js/plugins/forms/styling/uniform.min.js"></script>            
+<!--            <script type="text/javascript" src="assets/user/js/moment-timezone.min.js"></script>
+            <script type="text/javascript" src="assets/user/js/moment-timezone-with-data.min.js"></script>-->
             <script type="text/javascript" src="assets/user/js/bootstrap-datetimepicker.min.js"></script>
             <!--Checkbox End-->
 
@@ -194,17 +190,39 @@
                     if (date === null) {
                         return '';
                     }
-                    var date_ = moment.tz(moment.utc(date), "<?php echo $this->loggedin_user_country_data['timezone']; ?>");
-                    return date_.format("DD-MM-YYYY HH:mm");
+
+                    var d = new Date(date),
+                            month = '' + (d.getMonth() + 1),
+                            day = '' + d.getDate(),
+                            year = d.getFullYear(),
+                            hour = d.getHours(),
+                            minute = d.getMinutes();
+
+                    if (month.length < 2)
+                        month = '0' + month;
+                    if (day.length < 2)
+                        day = '0' + day;
+
+                    return day + seperator + month + seperator + year + ' ' + hour + ':' + minute;
                 }
+
+//                function get_dd_mm_yyyy_hh_min_DateTime(date, seperator) {
+//                    if (date === null) {
+//                        return '';
+//                    }
+//                    var date_ = moment.tz(moment.utc(date), "<?php // echo $this->loggedin_user_country_data['timezone'];   ?>");
+//                    return date_.format("DD-MM-YYYY HH:mm");
+//                }
 
                 $('#expire_date_icon, #expire_date_time').click(function (e) {
                     $('#expire_date_time').AnyTime_noPicker().AnyTime_picker({format: "%d-%m-%Z %H:%i"}).focus();
-                    e.preventDefault();
+//                    $('#expire_date_time').removeAttr('readonly');
+//                    $('#expire_date_time').removeAttr('aria-invalid');
+                    
                 });
 
                 $('#broad_cast_icon, #broad_cast_date_time').click(function (e) {
-                    $('#broad_cast_date_time').AnyTime_noPicker().AnyTime_picker({format: "%d-%m-%Z %H:%i"}).focus();
+                    $('#broad_cast_date_time').AnyTime_noPicker().AnyTime_picker({format: "%d-%m-%Z %H:%i"}).focus();                    
                     e.preventDefault();
                 });
             </script>    

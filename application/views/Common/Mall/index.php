@@ -131,7 +131,7 @@ $this->load->view('Common/Mall/details_modal');
                     "visible": true,
                     "name": 'mall.created_date',
                     "render": function (data, type, full, meta) {
-                        return get_dd_mm_yyyy_hh_min_DateTime(full.mall_created_date, '/');
+                        return get_dd_mm_yyyy_hh_min_DateTime(full.mall_created_date, '-');
                     }
                 },
                 {

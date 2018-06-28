@@ -61,6 +61,18 @@ class Stores extends MY_Controller {
 
         $filter_array = $this->Common_model->create_datatable_request($this->input->post());
 
+        $date = date('Y-m-d h:i:s');
+        $current_time_zone_today_date = new DateTime($date, new DateTimeZone(date_default_timezone_get()));
+        $current_time_zone_today_date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $current_time_zone_today_date_ = $current_time_zone_today_date->format('Y-m-d H:i:s');
+        $current_time_zone_offeset = $current_time_zone_today_date->format('P');
+        $logged_in_country_zone_today_date = new DateTime($date, new DateTimeZone($this->loggedin_user_country_data['timezone']));
+        $logged_in_country_zone_today_date->setTimezone(new DateTimeZone($this->loggedin_user_country_data['timezone']));
+        $logged_in_country_zone_today_date_ = $logged_in_country_zone_today_date->format('Y-m-d H:i:s');
+        $logged_in_country_zone_offset = $logged_in_country_zone_today_date->format('P');
+
+        $filter_array['fields'][] = 'DATE_FORMAT(CONVERT_TZ(' . tbl_store . '.created_date,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"),"%Y-%m-%d %H:%i") as store_created_date';
+
         $filter_array['order_by'] = array(tbl_store . '.id_store' => 'DESC');
         $filter_array['group_by'] = array(tbl_store . '.id_store');
         $filter_array['where'] = array(
@@ -611,7 +623,7 @@ class Stores extends MY_Controller {
                         }
                         $this->session->set_flashdata('success_msg', 'Store updated successfully');
                     } else {
-                        $store_data['created_date'] = date('Y-m-d h:i:s');
+                        $store_data['created_date'] = $date;
                         $store_data['is_testdata'] = (ENVIRONMENT !== 'production') ? 1 : 0;
                         $store_data['is_delete'] = IS_NOT_DELETED_STATUS;
 

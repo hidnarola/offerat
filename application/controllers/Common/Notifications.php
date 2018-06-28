@@ -80,7 +80,21 @@ class Notifications extends MY_Controller {
 
         if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements')) && (($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming'))) || ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming', 'expired'))))) {
 
+            $date = date('Y-m-d h:i:s');
+            $current_time_zone_today_date = new DateTime($date, new DateTimeZone(date_default_timezone_get()));
+            $current_time_zone_today_date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+            $current_time_zone_today_date_ = $current_time_zone_today_date->format('Y-m-d H:i:s');
+            $current_time_zone_offeset = $current_time_zone_today_date->format('P');
+            $logged_in_country_zone_today_date = new DateTime($date, new DateTimeZone($this->loggedin_user_country_data['timezone']));
+            $logged_in_country_zone_today_date->setTimezone(new DateTimeZone($this->loggedin_user_country_data['timezone']));
+            $logged_in_country_zone_today_date_ = $logged_in_country_zone_today_date->format('Y-m-d H:i:s');
+            $logged_in_country_zone_offset = $logged_in_country_zone_today_date->format('P');
+
             $filter_array = $this->Common_model->create_datatable_request($this->input->post());
+
+            $filter_array['fields'][] = 'DATE_FORMAT(CONVERT_TZ(' . tbl_offer_announcement . '.created_date,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"),"%Y-%m-%d %H:%i") as offer_announcement_created_date';
+            $filter_array['fields'][] = 'DATE_FORMAT(CONVERT_TZ(' . tbl_offer_announcement . '.broadcasting_time,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"),"%Y-%m-%d %H:%i") as offer_announcement_broadcasting_time';
+            $filter_array['fields'][] = 'DATE_FORMAT(CONVERT_TZ(' . tbl_offer_announcement . '.expiry_time,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"),"%Y-%m-%d %H:%i") as offer_announcement_expiry_time';            
 
             $filter_array['order_by'] = array(tbl_offer_announcement . '.id_offer' => 'DESC');
             $filter_array['group_by'] = array(tbl_offer_announcement . '.id_offer');
@@ -93,13 +107,13 @@ class Notifications extends MY_Controller {
 
             if (!is_null($list_type)) {
                 if ($list_type == 'upcoming')
-                    $filter_array['where_with_sign'][] = '(DATE_FORMAT(' . tbl_offer_announcement . '.broadcasting_time, "%Y-%m-%d %H:%i:%s") > NOW())';
+                    $filter_array['where_with_sign'][] = '(DATE_FORMAT(CONVERT_TZ(' . tbl_offer_announcement . '.broadcasting_time,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"), "%Y-%m-%d %H:%i:%s") > CONVERT_TZ("' . $current_time_zone_today_date_ . '","' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"))';
                 elseif ($list_type == 'expired')
-                    $filter_array['where_with_sign'][] = '(DATE_FORMAT(' . tbl_offer_announcement . '.expiry_time, "%Y-%m-%d %H:%i:%s") < NOW())';
+                    $filter_array['where_with_sign'][] = '(DATE_FORMAT(CONVERT_TZ(' . tbl_offer_announcement . '.broadcasting_time,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"),"%Y-%m-%d %H:%i:%s")  < CONVERT_TZ("' . $current_time_zone_today_date_ . '","' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '") AND DATE_FORMAT(' . tbl_offer_announcement . '.expiry_time,"%Y-%m-%d %H:%i:%s") <> "0000-00-00 00:00:00")';
                 else
-                    $filter_array['where_with_sign'][] = '(( NOW() < DATE_FORMAT(' . tbl_offer_announcement . '.broadcasting_time, "%Y-%m-%d %H:%i:%s") and DATE_FORMAT(' . tbl_offer_announcement . '.expiry_time, "%Y-%m-%d %H:%i:%s") = "00-00-0000 00:00:00") OR (NOW() BETWEEN ' . tbl_offer_announcement . '.broadcasting_time and ' . tbl_offer_announcement . '.expiry_time))';
+                    $filter_array['where_with_sign'][] = '(( DATE_FORMAT(CONVERT_TZ(' . tbl_offer_announcement . '.broadcasting_time,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"), "%Y-%m-%d %H:%i:%s") < CONVERT_TZ("' . $current_time_zone_today_date_ . '","' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '") and DATE_FORMAT(' . tbl_offer_announcement . '.expiry_time,"%Y-%m-%d %H:%i:%s") = "0000-00-00 00:00:00") OR (CONVERT_TZ("' . $current_time_zone_today_date_ . '","' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '") BETWEEN DATE_FORMAT(CONVERT_TZ(' . tbl_offer_announcement . '.broadcasting_time,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"),"%Y-%m-%d %H:%i:%s") and  DATE_FORMAT(CONVERT_TZ(' . tbl_offer_announcement . '.expiry_time,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"),"%Y-%m-%d %H:%i:%s")))';
             } else
-                $filter_array['where_with_sign'][] = '((DATE_FORMAT(' . tbl_offer_announcement . '.broadcasting_time, "%Y-%m-%d %H:%i:%s") >= NOW() and DATE_FORMAT(' . tbl_offer_announcement . '.expiry_time, "%Y-%m-%d %H:%i:%s") = "00-00-0000 00:00:00") OR (NOW() BETWEEN ' . tbl_offer_announcement . '.broadcasting_time and ' . tbl_offer_announcement . '.expiry_time))';
+                $filter_array['where_with_sign'][] = '(( DATE_FORMAT(CONVERT_TZ(' . tbl_offer_announcement . '.broadcasting_time,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"), "%Y-%m-%d %H:%i:%s") < CONVERT_TZ("' . $current_time_zone_today_date_ . '","' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '") and DATE_FORMAT(' . tbl_offer_announcement . '.expiry_time,"%Y-%m-%d %H:%i:%s") = "0000-00-00 00:00:00") OR (CONVERT_TZ("' . $current_time_zone_today_date_ . '","' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '") BETWEEN DATE_FORMAT(CONVERT_TZ(' . tbl_offer_announcement . '.broadcasting_time,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"),"%Y-%m-%d %H:%i:%s") and  DATE_FORMAT(CONVERT_TZ(' . tbl_offer_announcement . '.expiry_time,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"),"%Y-%m-%d %H:%i:%s")))';
 
             $filter_array['join'][] = array(
                 'table' => tbl_mall . ' as mall',
@@ -149,6 +163,7 @@ class Notifications extends MY_Controller {
         if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements'))) {
             $m_name = $media_name = '';
             $media_video_name = '';
+            $media_thumbnail = '';
             $media_width = 0;
             $media_height = 0;
             if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)
@@ -208,9 +223,9 @@ class Notifications extends MY_Controller {
                     'expiry_time'
                 );
 
-                if ($this->input->post('offer_type') == IMAGE_OFFER_CONTENT_TYPE)
+                if ($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE)
                     $validate_fields[] = 'media_name';
-                if ($this->input->post('offer_type') == TEXT_OFFER_CONTENT_TYPE)
+                if ($this->input->post('offer_type', TRUE) == TEXT_OFFER_CONTENT_TYPE)
                     $validate_fields[] = 'content';
 
                 if ($notification_type == 'offers')
@@ -279,40 +294,30 @@ class Notifications extends MY_Controller {
                             $store_id = $store_mall_text[1];
                         if ($store_mall_text[0] == 'mall')
                             $mall_id = $store_mall_text[1];
-//                        echo timezone_offset_get();
-//                        echo $this->input->post('expiry_time', TRUE);
-//                        $expiry_time = date_create($this->input->post('expiry_time', TRUE));
-//                        $d = date_format($expiry_time, "Y-m-d H:i:00");
-//                        date_default_timezone_set('UTC');
-//                        echo strtotime($d);
-////                        $date = new DateTime($this->input->post('expiry_time', TRUE));
-////                        $date->setTimezone(new DateTimeZone('UTC'));
-//                        echo '<br>';
-//                        die();
-//                        echo $date->format('Y-m-d H:i:s'); // 2012-07 -15 05:00:00 
+                        
+                        if ($this->input->post('expiry_time', TRUE) != '') {
+                            $expiry_time = new DateTime($this->input->post('expiry_time', TRUE), new DateTimeZone($this->loggedin_user_country_data['timezone']));
+                            $expiry_time->setTimezone(new DateTimeZone(date_default_timezone_get()));
+                            $expiry_time_text = $expiry_time->format('Y-m-d H:i:00');
+                        } else
+                            $expiry_time_text = '0000-00-00 00:00:00';
+                        
+                        $broadcasting_time = new DateTime($this->input->post('broadcasting_time', TRUE), new DateTimeZone($this->loggedin_user_country_data['timezone']));
+                        $broadcasting_time->setTimezone(new DateTimeZone(date_default_timezone_get()));
+                        $broadcasting_time_text = $broadcasting_time->format('Y-m-d H:i:00');
 
-                        $expiry_time = date_create($this->input->post('expiry_time', TRUE));
-                        echo '<br>';
-                        echo get_country_wise_date($this->input->post('expiry_time', TRUE));
-//                        echo get_country_wise_date(date_format($expiry_time, "Y-m-d H:i:00"));
-                        echo '<br>';
-                        echo $expiry_time_text = date_format($expiry_time, "Y-m-d H:i:00");
-
-                        $broadcasting_time = date_create($this->input->post('broadcasting_time', TRUE));
-                        $broadcasting_time_text = date_format($broadcasting_time, "Y-m-d H:i:00");
-                        die();
                         $notification_data = array(
                             'type' => ($notification_type == 'offers') ? OFFER_OFFER_TYPE : ANNOUNCEMENT_OFFER_TYPE,
                             'offer_type' => (in_array($uploaded_file_type, $video_types)) ? VIDEO_OFFER_CONTENT_TYPE : ($this->input->post('offer_type', TRUE) == TEXT_OFFER_CONTENT_TYPE) ? TEXT_OFFER_CONTENT_TYPE : IMAGE_OFFER_CONTENT_TYPE,
-                            'expiry_time' => $expiry_time_text,
-                            'broadcasting_time' => $broadcasting_time_text,
-                            'content' => ($this->input->post('offer_type', TRUE) == TEXT_OFFER_CONTENT_TYPE) ? $this->input->post('content', TRUE) : '',
-                            'media_name' => ($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE) ? $media_name : '',
-                            'media_thumbnail' => ($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE) ? $media_thumbnail : '',
                             'id_mall' => $mall_id,
                             'id_store' => $store_id,
+                            'media_name' => ($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE) ? $media_name : '',
+                            'media_thumbnail' => ($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE) ? $media_thumbnail : '',
+                            'media_height' => (($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE)) ? $media_height : 0,
                             'media_width' => ($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE) ? $media_width : 0,
-                            'media_height' => (($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE)) ? $media_height : 0
+                            'content' => ($this->input->post('offer_type', TRUE) == TEXT_OFFER_CONTENT_TYPE) ? $this->input->post('content', TRUE) : '',
+                            'broadcasting_time' => $broadcasting_time_text,
+                            'expiry_time' => $expiry_time_text,
                         );
                         if ($notification_type == 'offers')
                             $notification_data['push_message'] = $this->input->post('push_message', TRUE);
@@ -326,7 +331,7 @@ class Notifications extends MY_Controller {
                             }
                         } else {
 
-                            $notification_data['created_date'] = date('Y-m-d h:i:s');
+                            $notification_data['created_date'] = $date;
                             $notification_data['is_testdata'] = (ENVIRONMENT !== 'production') ? 1 : 0;
                             $notification_data['is_delete'] = IS_NOT_DELETED_STATUS;
 
@@ -334,7 +339,6 @@ class Notifications extends MY_Controller {
                             if ($notification_id > 0)
                                 $this->session->set_flashdata('success_msg', ucfirst($notification_type) . ' Added Successfully!');
                         }
-
                         redirect($back_url);
                     }
                 }
@@ -461,28 +465,25 @@ class Notifications extends MY_Controller {
         if ($_FILES[$image_video_control]['name'] != '' && $this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE) {
 //            if ($_FILES[$image_control]['type'] != 'image/jpeg' && $_FILES[$image_control]['type'] != 'image/jpg' && $_FILES[$image_control]['type'] != 'image/gif' && $_FILES[$image_control]['type'] != 'image/png') {
             if (!in_array($_FILES[$image_video_control]['type'], array('image/jpeg', 'image/jpg', 'image/png', 'video/mp4', 'video/webm', 'video/ogg', 'video/ogv', 'video/wmv', 'video/vob', 'video/swf', 'video/mov', 'video/m4v', 'video/flv'))) {
-                $this->form_validation->set_message('custom_notification_image_video', 'The {
-                            field
-                        } contain invalid image/video type.');
+                $this->form_validation->set_message('custom_notification_image_video', 'The {field} contain invalid image/video type.');
                 return FALSE;
             }
             if ($_FILES[$image_video_control]['error'] > 0) {
-                $this->form_validation->set_message('custom_notification_image_video', 'The {
-                            field
-                        } contain invalid image/video.');
+                $this->form_validation->set_message('custom_notification_image_video', 'The {field} contain invalid image/video.');
                 return FALSE;
             }
             if ($_FILES[$image_video_control]['size'] <= 0) {
-                $this->form_validation->set_message('custom_notification_image_video', 'The {
-                            field
-                        } contain invalid image size / video size.');
+                $this->form_validation->set_message('custom_notification_image_video', 'The {field} contain invalid image size / video size.');
                 return FALSE;
             }
         } else {
-            $this->form_validation->set_message('custom_notification_image_video', 'The {
-                            field
-                        } field is required.');
-            return FALSE;
+
+            if ($this->input->post('id_offer', TRUE) == '') {
+                $this->form_validation->set_message('custom_notification_image_video', 'The {field} field is required.');
+                return FALSE;
+            } else {
+                return TRUE;
+            }
         }
 
         return TRUE;
@@ -496,8 +497,12 @@ class Notifications extends MY_Controller {
         if (!empty($expire_time) && $expire_time > $today_time) {
             return TRUE;
         } else {
-            $this->form_validation->set_message('custom_expiry_time_check', 'Expire Date & Time should be greater than Current Date & Time.');
-            return FALSE;
+            if (empty($expire_time))
+                return TRUE;
+            else {
+                $this->form_validation->set_message('custom_expiry_time_check', 'Expire Date & Time should be greater than Current Date & Time.');
+                return FALSE;
+            }
         }
     }
 
