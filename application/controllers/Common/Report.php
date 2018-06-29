@@ -8,9 +8,8 @@ class Report extends MY_Controller {
         parent::__construct();
         $this->load->model('Common_model', '', TRUE);
 
-
-//        if (!in_array($this->loggedin_user_type, array(COUNTRY_ADMIN_USER_TYPE, STORE_OR_MALL_ADMIN_USER_TYPE)))
-//            redirect('/');
+        if (!in_array($this->loggedin_user_type, array(COUNTRY_ADMIN_USER_TYPE, STORE_OR_MALL_ADMIN_USER_TYPE)))
+            redirect('/');
     }
 
     /*
@@ -55,6 +54,8 @@ class Report extends MY_Controller {
                         'id_store' => $location_id
                     )
                 );
+                if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
+                    $select_location['where']['id_users'] = $this->loggedin_user_data['user_id'];
             } elseif ($location_type == 'mall') {
                 $select_location = array(
                     'table' => tbl_mall,
@@ -65,7 +66,11 @@ class Report extends MY_Controller {
                         'id_mall' => $location_id
                     )
                 );
+                if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
+                    $select_location['where']['id_users'] = $this->loggedin_user_data['user_id'];
             }
+
+
 
             $location = $this->Common_model->master_single_select($select_location);
 

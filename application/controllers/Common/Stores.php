@@ -51,12 +51,54 @@ class Stores extends MY_Controller {
             $report_url = 'mall-store-user/report/store/';
         }
 
+        $select_malls = array(
+            'table' => tbl_mall . ' mall',
+            'fields' => array('mall.id_mall', 'mall.mall_name'),
+            'where' => array(
+                'mall.is_delete' => IS_NOT_DELETED_STATUS,
+                'mall.id_country' => $this->loggedin_user_country_data['id_country']
+            ),
+            'where_with_sign' => array(tbl_store_location . '.id_location = ' . tbl_mall . '.id_mall'),
+            'group_by' => array('mall.id_mall'),
+            'join' => array(
+                array(
+                    'table' => tbl_store_location . ' as store_location',
+                    'condition' => tbl_store_location . '.id_location = ' . tbl_mall . '.id_mall',
+                    'join' => 'left'
+                )
+            )
+        );
+        $malls_list = $this->Common_model->master_select($select_malls);
+
+        $select_category = array(
+            'table' => tbl_category,
+            'where' => array(
+                'is_delete' => IS_NOT_DELETED_STATUS,
+                'status' => ACTIVE_STATUS
+            ),
+            'order_by' => array('sort_order' => 'ASC')
+        );
+        $category_list = $this->Common_model->master_select($select_category);
+
+        $select_sub_category = array(
+            'table' => tbl_sub_category,
+            'where' => array(
+                'is_delete' => IS_NOT_DELETED_STATUS,
+                'status' => ACTIVE_STATUS
+            ),
+            'order_by' => array('sort_order' => 'ASC')
+        );
+        $sub_category_list = $this->Common_model->master_select($select_sub_category);
+
         $this->data['store_list_url'] = $store_list_url;
         $this->data['filter_list_url'] = $filter_list_url;
         $this->data['store_details_url'] = $store_details_url;
         $this->data['add_store_url'] = $add_store_url;
         $this->data['edit_store_url'] = $edit_store_url;
         $this->data['report_url'] = $report_url;
+        $this->data['malls_list'] = $malls_list;
+        $this->data['category_list'] = $category_list;
+        $this->data['sub_category_list'] = $sub_category_list;
 
         $this->template->load('user', 'Common/Store/index', $this->data);
     }
@@ -103,6 +145,31 @@ class Stores extends MY_Controller {
         $filter_array['join'][] = array(
             'table' => tbl_country . ' as country',
             'condition' => tbl_country . '.id_country = ' . tbl_store . '.id_country',
+            'join_type' => 'left',
+        );
+        $filter_array['join'][] = array(
+            'table' => tbl_store_location . ' as store_location',
+            'condition' => tbl_store_location . '.id_store = ' . tbl_store . '.id_store',
+            'join_type' => 'left',
+        );
+        $filter_array['join'][] = array(
+            'table' => tbl_mall . ' as mall',
+            'condition' => tbl_mall . '.id_mall = ' . tbl_store_location . '.id_location',
+            'join_type' => 'left',
+        );
+        $filter_array['join'][] = array(
+            'table' => tbl_store_category . ' as store_category',
+            'condition' => tbl_store_category . '.id_store = ' . tbl_store . '.id_store AND store_category.is_delete = ' . IS_NOT_DELETED_STATUS,
+            'join_type' => 'left',
+        );
+        $filter_array['join'][] = array(
+            'table' => tbl_category . ' as category',
+            'condition' => tbl_category . '.id_category = ' . tbl_store_category . '.id_category AND category.id_category = store_category.id_category',
+            'join_type' => 'left',
+        );
+        $filter_array['join'][] = array(
+            'table' => tbl_sub_category . ' as sub_category',
+            'condition' => tbl_sub_category . '.id_sub_category = ' . tbl_store_category . '.id_sub_category AND sub_category.id_sub_category = store_category.id_sub_category',
             'join_type' => 'left',
         );
 
