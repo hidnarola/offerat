@@ -113,6 +113,7 @@ define('tbl_user', 'user');
 define('tbl_verification', 'verification');
 define('tbl_place', 'place');
 define('tbl_sales_trend', 'sales_trend');
+define('tbl_click_store', 'click_store');
 
 /* define('country_img_path', 'assets/images/country/');
   define('category_img_path', 'assets/images/category/');
@@ -153,6 +154,12 @@ define('IS_DELETED_STATUS', 1);
 
 define('OFFER_OFFER_TYPE', 0);
 define('ANNOUNCEMENT_OFFER_TYPE', 1);
+
+define('UNFAVORITE_TYPE', 0);
+define('FAVORITE_TYPE', 1);
+
+define('NOTIFICATION_DISABLED', 0);
+define('NOTIFICATION_ENABLED', 1);
 
 define('IMAGE_OFFER_CONTENT_TYPE', 0);
 define('VIDEO_OFFER_CONTENT_TYPE', 1);

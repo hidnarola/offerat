@@ -53,8 +53,8 @@ $logged_user_type = $this->session->userdata('loggedin_user_type');
                         <li>
                             <a href="#"><i class="icon-office"></i> <span>Stores / Malls</span></a>
                             <ul>
-                                <li <?php echo ($controller === 'stores') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/stores"><i class="icon-store"></i> <span>Stores</span></a></li>
-                                <li <?php echo ($controller === 'malls') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/malls"><i class="icon-store2"></i> <span>Malls</span></a></li>
+                                <li <?php echo (in_array($controller, array('stores', 'report'))) ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/stores"><i class="icon-store"></i> <span>Stores</span></a></li>
+                                <li <?php echo (in_array($controller, array('malls', 'report'))) ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/malls"><i class="icon-store2"></i> <span>Malls</span></a></li>
                             </ul>
                         </li>
                         <li <?php echo ($controller === 'change-password') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-password"><i class="icon-lock2"></i> <span>Change Password</span></a></li>
@@ -73,8 +73,8 @@ $logged_user_type = $this->session->userdata('loggedin_user_type');
                         <li>
                             <a href="#"><i class="icon-office"></i> <span>Stores / Malls</span></a>
                             <ul>
-                                <li <?php echo ($controller === 'stores') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/stores"><i class="icon-store"></i> <span>Stores</span></a></li>
-                                <li <?php echo ($controller === 'malls') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/malls"><i class="icon-store2"></i> <span>Malls</span></a></li>
+                                <li <?php echo (in_array($controller, array('stores', 'report'))) ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/stores"><i class="icon-store"></i> <span>Stores</span></a></li>
+                                <li <?php echo (in_array($controller, array('malls', 'report'))) ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/malls"><i class="icon-store2"></i> <span>Malls</span></a></li>
                             </ul>
                         </li>
                         <li <?php echo ($controller === 'change-password') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-password"><i class="icon-lock2"></i> <span>Change Password</span></a></li>

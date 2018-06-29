@@ -174,7 +174,7 @@ $this->load->view('Common/Store/details_modal');
                     "sortable": false,
                     "searchable": false,
                     "render": function (data, type, full, meta) {
-                        var links = '';
+                        var links = '';                        
                         links += '<a href="javascript:void(0);" target="_blank" title="View Details" data-id="' + full.store_id_store + '" class="btn btn-primary btn-xs tooltip-show margin-right-3 view_store_details" data-placement="top"><i class="icon-eye"></i></a>   ';
                         if (full.store_website !== '' && full.store_website !== undefined) {
                             links += '<a href="//' + full.store_website + '" target="_blank" title="Website" class="btn bg-brown btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-earth"></i></a>   ';
@@ -183,6 +183,7 @@ $this->load->view('Common/Store/details_modal');
                             links += '<a href="//' + full.store_facebook_page + '" target="_blank" title="Facebook Page" class="btn bg-slate btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-facebook"></i></a>   ';
                         }
                         links += '<a href="<?php echo $edit_store_url; ?>' + full.store_id_store + '" title="Update" class="btn bg-teal btn-xs  tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a>   ';
+                        links += '<a href="<?php echo $report_url; ?>' + full.store_id_store + '" title="Report" class="btn bg-indigo btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-clipboard3"></i></a>   ';
 <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
                             links += '<a href="javascript:void(0);" data-path="<?php echo $delete_store_url; ?>' + full.store_id_store + '" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" id="delete"><i class="icon-bin"></i></a>';
 <?php } ?>

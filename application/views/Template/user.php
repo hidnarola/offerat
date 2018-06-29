@@ -206,23 +206,14 @@
                     return day + seperator + month + seperator + year + ' ' + hour + ':' + minute;
                 }
 
-//                function get_dd_mm_yyyy_hh_min_DateTime(date, seperator) {
-//                    if (date === null) {
-//                        return '';
-//                    }
-//                    var date_ = moment.tz(moment.utc(date), "<?php // echo $this->loggedin_user_country_data['timezone'];   ?>");
-//                    return date_.format("DD-MM-YYYY HH:mm");
-//                }
-
+                $("#expire_date_delete_icon").click(function (e) {
+                    $("#expire_date_time").val("").change();
+                });
                 $('#expire_date_icon, #expire_date_time').click(function (e) {
                     $('#expire_date_time').AnyTime_noPicker().AnyTime_picker({format: "%d-%m-%Z %H:%i"}).focus();
-//                    $('#expire_date_time').removeAttr('readonly');
-//                    $('#expire_date_time').removeAttr('aria-invalid');
-                    
                 });
-
                 $('#broad_cast_icon, #broad_cast_date_time').click(function (e) {
-                    $('#broad_cast_date_time').AnyTime_noPicker().AnyTime_picker({format: "%d-%m-%Z %H:%i"}).focus();                    
+                    $('#broad_cast_date_time').AnyTime_noPicker().AnyTime_picker({format: "%d-%m-%Z %H:%i"}).focus();
                     e.preventDefault();
                 });
             </script>    

@@ -68,7 +68,7 @@ a.f_pass {margin-top: 10px;float: left;font-size: 14px;color: #F14150;}
 .business_category_div{padding-top: 15px;}
 hr.style1{border-top: 1px solid #8c8b8b;}
 
-
+.width-100-per{width:100% !important; }
 /** media start here ***/
 
 @media (min-width:1200px){

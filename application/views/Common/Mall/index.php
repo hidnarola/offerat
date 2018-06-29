@@ -179,6 +179,7 @@ $this->load->view('Common/Mall/details_modal');
                             links += '<a href="//' + full.mall_facebook_page + '" target="_blank" title="Facebook Page" class="btn bg-slate btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-facebook"></i></a>   ';
                         }
                         links += '<a href="<?php echo $edit_mall_url; ?>' + full.mall_id_mall + '" title="Update" class="btn bg-teal btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a>   ';
+                        links += '<a href="<?php echo $report_url; ?>' + full.mall_id_mall + '" title="Report" class="btn bg-indigo btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-clipboard3"></i></a>   ';
 <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
                             links += '<a href="javascript:void(0);" data-path="<?php echo $delete_mall_url; ?>' + full.mall_id_mall + '" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" id="delete"><i class="icon-bin"></i></a>';
 <?php } ?>

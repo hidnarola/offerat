@@ -85,6 +85,7 @@ $route['super-admin/sub-category/save/(:any)/(:any)'] = 'superadmin/subcategory/
 
 //Country Admin Routes =================================
 $route['country-admin/dashboard'] = 'countryadmin/dashboard';
+$route['country-admin/verify_offers'] = 'countryadmin/verify_offers';
 $route['country-admin/change-password'] = 'common/change_password';
 $route['country-admin/change-information'] = 'common/change_information';
 $route['country-admin/notifications/get_notification_details/(:any)'] = 'common/notifications/get_notification_details/$1';
@@ -112,6 +113,9 @@ $route['country-admin/stores/loacation_excel_download/(:any)'] = 'common/stores/
 $route['country-admin/malls/delete/(:any)'] = 'common/malls/delete/$1';
 $route['country-admin/malls/save'] = 'common/malls/save';
 $route['country-admin/malls/save/(:any)'] = 'common/malls/save/$1';
+$route['country-admin/report/(:any)/(:any)'] = 'common/report/index/$1/$2';
+$route['country-admin/report/push_notifications/(:any)/(:any)'] = 'common/report/filter_notifications/$1/$2';
+
 
 //Country Mall Store User Routes =================================
 $route['mall-store-user/dashboard'] = 'mall_store/dashboard';
@@ -135,6 +139,8 @@ $route['mall-store-user/malls/filter_malls'] = 'common/malls/filter_malls';
 $route['mall-store-user/malls/get_mall_details/(:any)'] = 'common/malls/get_mall_details/$1';
 $route['mall-store-user/malls/save'] = 'common/malls/save';
 $route['mall-store-user/malls/save/(:any)'] = 'common/malls/save/$1';
+$route['mall-store-user/report/(:any)/(:any)'] = 'common/report/index/$1/$2';
+$route['mall-store-user/report/push_notifications/(:any)/(:any)'] = 'common/report/filter_notifications/$1/$2';
 
 
 //Store Registration

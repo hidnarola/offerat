@@ -1,3 +1,4 @@
+
 <div class="row">
     <div class="col-md-12">
         <form method="POST" action="" enctype="multipart/form-data" class="form-validate-jquery" name="frm_profile" id="frm_profile">
@@ -85,10 +86,11 @@
                                                 if (isset($notification_data) && isset($notification_data['broadcasting_time'])) {
                                                     $broadcasting_time = date_create($notification_data['broadcasting_time']);
                                                     $broadcasting_time = date_format($broadcasting_time, "Y-m-d H:i");
-                                                } else
-                                                    $broadcasting_time = set_value('broadcasting_time');
+                                                } else {
+                                                    $broadcasting_time = date('d-m-Y H:i', strtotime('+2 minutes', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone']))));
+                                                }
                                                 ?>
-                                                <input type="text" class="form-control" placeholder="Broadcast Date & Time" name="broadcasting_time" id="broad_cast_date_time" required="required" value="<?php echo (!empty($broadcasting_time)) ? get_country_wise_date($broadcasting_time, $this->loggedin_user_country_data['timezone']) : get_country_wise_date(date('Y-m-d h:i'), $this->loggedin_user_country_data['timezone']); ?>">
+                                                <input type="text" class="form-control" placeholder="Broadcast Date & Time" name="broadcasting_time" id="broad_cast_date_time" required="required" value="<?php echo $broadcasting_time; ?>">
                                             </div>                                            
                                         </div>
                                     </div>
@@ -114,9 +116,14 @@
                                                         $expiry_time = date_create($notification_data['expiry_time']);
                                                         $expiry_time = date_format($expiry_time, "Y-m-d H:i");
                                                     }
+                                                } else {
+                                                    $expiry_time = date('d-m-Y H:i', strtotime('+10 minutes', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone']))));
                                                 }
                                                 ?>
                                                 <input type="text" class="form-control" placeholder="Expire Date & Time" name="expiry_time" id="expire_date_time" value="<?php echo $expiry_time; ?>">
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default btn-icon" id="expire_date_delete_icon"><i class=" icon-bin"></i></button>
+                                                </span> 
                                             </div>                                                                                        
                                         </div>
                                     </div>                                    

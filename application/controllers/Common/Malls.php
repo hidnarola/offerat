@@ -31,7 +31,7 @@ class Malls extends MY_Controller {
         $delete_mall_url = '';
         $add_mall_url = '';
         $edit_mall_url = '';
-
+        $report_url = '';
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
             $mall_list_url = 'country-admin/malls';
             $filter_list_url = 'country-admin/malls/filter_malls';
@@ -40,12 +40,14 @@ class Malls extends MY_Controller {
             $this->data['delete_mall_url'] = $delete_mall_url;
             $add_mall_url = 'country-admin/malls/save/';
             $edit_mall_url = 'country-admin/malls/save/';
+            $report_url = 'country-admin/report/mall/';
         } elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
             $mall_list_url = 'mall-store-user/malls';
             $filter_list_url = 'mall-store-user/malls/filter_malls';
             $mall_details_url = 'mall-store-user/malls/get_mall_details/';
             $add_mall_url = 'mall-store-user/malls/save/';
             $edit_mall_url = 'mall-store-user/malls/save/';
+            $report_url = 'mall-store-user/report/mall/';
         }
 
         $this->data['mall_list_url'] = $mall_list_url;
@@ -53,6 +55,7 @@ class Malls extends MY_Controller {
         $this->data['mall_details_url'] = $mall_details_url;
         $this->data['add_mall_url'] = $add_mall_url;
         $this->data['edit_mall_url'] = $edit_mall_url;
+        $this->data['report_url'] = $report_url;
 
         $this->data['filter_list_url'] = $filter_list_url;
         $this->template->load('user', 'Common/Mall/index', $this->data);

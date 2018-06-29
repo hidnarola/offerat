@@ -12,6 +12,12 @@ class Testing extends CI_Controller {
 
     function index() {
 
+        $month_ini = new DateTime("first day of last month");
+        $month_end = new DateTime("last day of last month");
+
+        echo $month_ini->format('Y-m-d'); // 2012-02-01
+        echo $month_end->format('Y-m-d'); // 2012-02-29
+        die();
         echo $current_date = date('2018-06-26 08:57:18');
         echo '<br>';
 
