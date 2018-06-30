@@ -187,9 +187,8 @@ class Email_template_model extends CI_Model {
             $success = 'yes';
         else {
             $success = $this->email->print_debugger(array('headers'));
-//            $data['error'] = $this->email->print_debugger(array('headers'));
+            $error = $this->email->print_debugger(array('headers'));
         }
-
         return $success;
     }
 

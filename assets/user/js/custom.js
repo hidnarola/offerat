@@ -35,11 +35,15 @@ $(function () {
         cancelClass: 'btn-default',
         showDropdowns: false,
         selectYears: 0,
+        autoUpdateInput: false,
         locale: {
-            format: 'YYYY/MM/DD'
+            format: 'DD-MM-YYYY'
         }
     });
-    
+
+//    $('.daterange-basic').data('daterangepicker').setStartDate();
+//    $('.daterange-basic').data('daterangepicker').setEndDate(null);
+
     $('.daterange-basic-datatable').daterangepicker({
         ranges: {
             'This Month': [moment().startOf('month'), moment().endOf('month')],
@@ -160,7 +164,7 @@ $(function () {
 
     $(document).find('[data-toggle="tooltip"]').tooltip();
 
-    
+
 });
 
 function jqueryValidate() {

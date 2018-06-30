@@ -29,6 +29,7 @@ class Stores extends MY_Controller {
         $store_list_url = '';
         $filter_list_url = '';
         $store_details_url = '';
+        $featured_store_url = '';
         $delete_store_url = '';
         $add_store_url = '';
         $edit_store_url = '';
@@ -38,7 +39,9 @@ class Stores extends MY_Controller {
             $filter_list_url = 'country-admin/stores/filter_stores';
             $store_details_url = 'country-admin/stores/get_store_details/';
             $delete_store_url = 'country-admin/stores/delete/';
+            $featured_store_url = 'country-admin/stores/featured/';
             $this->data['delete_store_url'] = $delete_store_url;
+            $this->data['featured_store_url'] = $featured_store_url;
             $add_store_url = 'country-admin/stores/save/';
             $edit_store_url = 'country-admin/stores/save/';
             $report_url = 'country-admin/report/store/';
@@ -1171,6 +1174,69 @@ class Stores extends MY_Controller {
             } else {
                 redirect($back_url);
             }
+        } else {
+            override_404();
+        }
+    }
+
+    function featured($id = NULL) {
+
+        $back_url = '';
+
+        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)
+            $back_url = 'country-admin/stores/save/' . $id;
+        elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
+            $back_url = 'mall-store-user/stores';
+
+        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+            
+            if($this->input->post()) {
+                pr($_POST, 1);
+            }
+            
+            
+            $this->bread_crum[] = array(
+                'url' => $back_url,
+                'title' => ' List',
+            );
+
+            $this->data['title'] = $this->data['page_header'] = 'Featured Store';
+            $this->bread_crum[] = array(
+                'url' => '',
+                'title' => 'Featured Store',
+            );
+
+            $select_store_category = array(
+                'table' => tbl_store_category . ' store_category',
+                'fields' => array('id_store_category', 'category.id_category', 'sub_category.id_sub_category', 'category.category_name', 'sub_category.sub_category_name'),
+                'where' => array('store_category.id_store' => $id, 'store_category.is_delete' => IS_NOT_DELETED_STATUS),
+                'join' => array(
+                    array(
+                        'table' => tbl_category . ' as category',
+                        'condition' => 'category.id_category = store_category.id_category',
+                        'join' => 'left'
+                    ),
+                    array(
+                        'table' => tbl_sub_category . ' as sub_category',
+                        'condition' => 'sub_category.id_sub_category = store_category.id_sub_category',
+                        'join' => 'left'
+                    )
+                )
+            );
+            $store_categories = $this->Common_model->master_select($select_store_category);
+
+            $select_category = array(
+                'table' => tbl_category,
+                'where' => array('status' => ACTIVE_STATUS, 'is_delete' => IS_NOT_DELETED_STATUS),
+                'order_by' => array('sort_order' => 'ASC')
+            );
+            $category_list = $this->Common_model->master_select($select_category);
+
+            $this->data['back_url'] = $back_url;
+            $this->data['store_categories'] = $store_categories;
+            $this->data['category_list'] = $category_list;
+            
+            $this->template->load('user', 'Common/Store/featured', $this->data);
         } else {
             override_404();
         }
