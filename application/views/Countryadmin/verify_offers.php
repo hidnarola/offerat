@@ -1,0 +1,171 @@
+<div id="store_dttable_wrapper_row" class="row">
+
+    <div class="col-md-12">
+        <div class="panel panel-flat">            
+            <form id="form" method="post">
+                <div class="panel-body">
+                    <div id="store_error_wrapper" class="alert alert-danger alert-bordered display-none">
+                        <span id="store_error_msg"></span>
+                    </div>
+                    <div class="tabbable">
+                        <div class="tab-content">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="table-responsive popular_list dt-first-col-mw nipl_table_listing col-md-12 mt-20">
+                                        <table id="store_dttable" class="table table-striped datatable-basic custom_dt width-100-per">
+                                            <thead>
+                                                <tr>
+                                                    <th>Store ID</th>
+                                                    <th>Store Name</th>
+                                                    <th>From-To</th>
+                                                    <th>Current Offers Exist</th>
+                                                    <th>Validity</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>Store ID</th>
+                                                    <th>Store Name</th>
+                                                    <th>From-To</th>
+                                                    <th>Current Offers Exist</th>
+                                                    <th>Validity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<?php
+$this->load->view('Common/delete_alert');
+$this->load->view('Common/Store/details_modal');
+?>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        function findAndReplace(string, target, replacement) {
+            var i = 0, length = string.length;
+            for (i; i < length; i++) {
+                string = string.replace(target, replacement);
+            }
+            return string;
+        }
+
+//        console.log(findAndReplace(newStr, " ", "_")); //"I'm_going_to_be_passed_to_the_function,_aren't_I?"
+//        console.log(findAndReplace("No... not me too!", " ", "_")); //"No..._not_me_too!"
+//
+        // Setup - add a text input to each footer cell
+        $('#store_dttable thead tr:eq(0) th').each(function () {
+            var title = $(this).text();
+            if (title !== 'Actions') {
+                if (title === 'Added Date') {
+                    $(this).html('<input type="text" class="form-control daterange-basic-datatable" placeholder="' + title + '" />');
+                } else {
+                    $(this).html('<input type="text" class="form-control" placeholder="' + title + '" />');
+                }
+            }
+        });
+        var table = $('#store_dttable').DataTable({
+            "dom": '<"top"<"dttable_lenth_wrapper"fl>>rt<"bottom"pi><"clear">',
+            "processing": true,
+            "serverSide": true,
+            "scrollX": true,
+            "scrollCollapse": true,
+            "orderCellsTop": false,
+            "aaSorting": [[0, 'asc']],
+            language: {
+                search: '<span>Filter :</span> _INPUT_',
+                lengthMenu: '<span>Show :</span> _MENU_',
+                processing: "<div id='dt_loader'><i class='icon-spinner9 spinner fa-4x' style='z-index:10'></i></div>"
+            },
+            "columns": [
+                {
+                    'data': 'store_id_store',
+                    "visible": false,
+                    "name": 'store.id_store',
+                },
+                {
+                    'data': 'store_store_name',
+                    "visible": true,
+                    "name": 'store.store_name',
+                },
+                {
+                    'data': 'sales_from_to',
+                    "visible": true,
+                    "name": 'sales_trend.from_date',
+                    "render": function (data, type, full, meta) {
+                        var data1 = full.sales_from_to;
+                        if (data1 !== null)
+                            return findAndReplace(data1, ",", "<br>")
+                        else
+                            return '';
+                    }
+                },
+                {
+                    'data': 'expiry_time',
+                    "visible": true,
+                    "name": 'expiry_time',
+                    "render": function (data, type, full, meta) {
+                        return get_dd_mm_yyyy_Date(full.expiry_time, '-');
+                    }
+                },
+                {
+                    'data': 'validity',
+                    "visible": true,
+                    "name": 'expiry_time',
+                    "render": function (data, type, full, meta) {
+                        var status = '<span class="label label-success label-rounded">Valid</span>';
+                        if (full.validity === 'Invalid') {
+                            status = '<span class="label label-info label-rounded">Invalid</span>';
+                        }
+                        return status;
+                    }
+                },
+            ],
+            initComplete: function () {
+                var tableColumns = table.settings().init().columns;
+                this.api().columns().every(function (index) {
+
+
+                });
+            },
+            'fnServerData': function (sSource, aoData, fnCallback) {
+
+                var req_obj = {};
+                aoData.forEach(function (data, key) {
+                    req_obj[data['name']] = data['value'];
+                });
+
+                $.ajax({
+                    'dataType': 'json',
+                    'type': 'POST',
+                    'url': "<?php echo $filter_list_url; ?>",
+                    'data': req_obj,
+                    'success': function (data) {
+                        fnCallback(data);
+                    }
+                });
+            }
+        });
+        // Apply the search
+        table.columns().every(function (index) {
+            $('input[type="text"]', 'th:nth-child(' + (index + 1) + ')').on('keyup change', function () {
+                table
+                        .column(index)
+                        .search(this.value)
+                        .draw();
+            });
+        });
+        $('.dataTables_length select').select2({
+            minimumResultsForSearch: Infinity,
+            width: 'auto'
+        });
+    });
+</script>

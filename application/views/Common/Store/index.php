@@ -232,7 +232,8 @@ if (isset($sub_category_list) && sizeof($sub_category_list) > 0) {
                     links += '<a href="<?php echo $edit_store_url; ?>' + full.store_id_store + '" title="Update" class="btn bg-teal btn-xs  tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a>   ';
                     links += '<a href="<?php echo $report_url; ?>' + full.store_id_store + '" title="Report" class="btn bg-indigo btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-clipboard3"></i></a>   ';
 <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
-                        links += '<a href="<?php echo $featured_store_url; ?>' + full.store_id_store + '" class="btn bg-pink btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Featured"><i class=" icon-star-half"></i></a> ';
+                        if (full.store_status == '<?php echo ACTIVE_STATUS; ?>')
+                                links += '<a href="<?php echo $sponsored_store_url; ?>' + full.store_id_store + '" target="_blank" class="btn bg-pink btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Sponsored"><i class=" icon-star-half"></i></a> ';
                         links += '<a href="javascript:void(0);" data-path="<?php echo $delete_store_url; ?>' + full.store_id_store + '" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" id="delete"><i class="icon-bin"></i></a>';
 <?php } ?>
                     return links;

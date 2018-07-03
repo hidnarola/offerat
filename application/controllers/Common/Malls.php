@@ -28,6 +28,7 @@ class Malls extends MY_Controller {
         $mall_list_url = '';
         $filter_list_url = '';
         $mall_details_url = '';
+        $sponsored_mall_url = '';
         $delete_mall_url = '';
         $add_mall_url = '';
         $edit_mall_url = '';
@@ -37,7 +38,9 @@ class Malls extends MY_Controller {
             $filter_list_url = 'country-admin/malls/filter_malls';
             $mall_details_url = 'country-admin/malls/get_mall_details/';
             $delete_mall_url = 'country-admin/malls/delete/';
+            $sponsored_mall_url = 'country-admin/malls/sponsored/';
             $this->data['delete_mall_url'] = $delete_mall_url;
+            $this->data['sponsored_mall_url'] = $sponsored_mall_url;
             $add_mall_url = 'country-admin/malls/save/';
             $edit_mall_url = 'country-admin/malls/save/';
             $report_url = 'country-admin/report/mall/';
@@ -682,6 +685,166 @@ class Malls extends MY_Controller {
                     $this->Common_model->master_save(tbl_sales_trend, $in_sales_trend_data);
                 }
             }
+        }
+    }
+
+    function sponsored($id = NULL) {
+
+        $back_url = '';
+        $this->data['mall_id'] = $id;
+        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)
+            $back_url = 'country-admin/malls/';
+        elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
+            $back_url = 'mall-store-user/malls';
+
+        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+
+            $select_mall = array(
+                'table' => tbl_mall . ' mall',
+                'fields' => array('mall.id_mall', 'mall.is_sponsored', 'sponsored_log.position', 'sponsored_log.from_date', 'sponsored_log.to_date', 'sponsored_log.id_sponsored_log', 'country.timezone'),
+                'where' => array('mall.id_mall' => $id, 'mall.is_delete' => IS_NOT_DELETED_STATUS, 'mall.id_country' => $this->loggedin_user_country_data['id_country']),
+                'join' => array(
+                    array(
+                        'table' => tbl_sponsored_log . ' as sponsored_log',
+                        'condition' => 'sponsored_log.id_mall = ' . $id . ' AND sponsored_log.id_mall = mall.id_mall AND sponsored_log.is_delete = ' . IS_NOT_DELETED_STATUS,
+                        'join' => 'left'
+                    ),
+                    array(
+                        'table' => tbl_country . ' as country',
+                        'condition' => 'country.id_country = mall.id_country',
+                        'join' => 'left'
+                    )
+                ),
+                'group_by' => array('mall.id_mall')
+            );
+            $mall_details = $this->Common_model->master_single_select($select_mall);            
+            if (isset($mall_details) && sizeof($mall_details) > 0) {
+                $this->bread_crum[] = array(
+                    'url' => $back_url,
+                    'title' => ' List',
+                );
+
+                $this->data['title'] = $this->data['page_header'] = 'Sponsored Mall';
+                $this->bread_crum[] = array(
+                    'url' => '',
+                    'title' => 'Sponsored Mall',
+                );
+
+                if ($this->input->post()) {
+
+                    $date = date('Y-m-d h:i:s');
+                    $add_success_data = 0;
+
+                    $position = $this->input->post('position', TRUE);
+                    $from_to_date_text = $this->input->post('from_to_date', TRUE);
+                    $from_to_date = explode(' - ', $from_to_date_text);
+
+                    if (!empty($position) && !empty($from_to_date_text) && isset($from_to_date[0]) && isset($from_to_date[1])) {
+
+                        $up_sponsored_data = array('is_delete' => IS_DELETED_STATUS);
+                        $wh_sponsored_data = array(
+                            'is_delete' => IS_NOT_DELETED_STATUS,
+                            'id_mall' => $id,
+                            'id_category' => 0,
+                            'id_sub_category' => 0
+                        );
+                        $this->Common_model->master_update(tbl_sponsored_log, $up_sponsored_data, $wh_sponsored_data);
+
+                        $from_date = date_create($from_to_date[0]);
+                        $from_date_text = date_format($from_date, "Y-m-d");
+                        $to_date = date_create($from_to_date[1]);
+                        $to_date_text = date_format($to_date, "Y-m-d");
+                        $in_sponsored_log = array(
+                            'id_store' => 0,
+                            'id_mall' => $id,
+                            'id_category' => 0,
+                            'id_sub_category' => 0,
+                            'from_date' => $from_date_text,
+                            'to_date' => $to_date_text,
+                            'position' => $position,
+                            'created_date' => $date,
+                            'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
+                            'is_delete' => IS_NOT_DELETED_STATUS
+                        );
+                        $this->Common_model->master_save(tbl_sponsored_log, $in_sponsored_log);
+
+//                        $from_date = date_create($from_to_date[0] . ' 00:00:00');
+////                        $from_date_text = strtotime(date_format($from_date, "Y-m-d"));
+//                        $to_date = date_create($from_to_date[1] . ' 00:00:00');
+////                        $to_date_text = strtotime(date_format($to_date, "Y-m-d"));
+//                        $now = time();
+
+                        $date = date('Y-m-d H:i:s');
+                        $converted_today_date = new DateTime($date, new DateTimeZone($mall_details['timezone']));
+                        $converted_today_date->setTimezone(new DateTimeZone($mall_details['timezone']));
+                        $now = strtotime($converted_today_date->format('Y-m-d H:i:s'));
+
+                        $converted_from_date = new DateTime($from_to_date[0] . ' 00:00:00', new DateTimeZone($mall_details['timezone']));
+                        $converted_from_date->setTimezone(new DateTimeZone($mall_details['timezone']));
+                        $from_date_text = strtotime($converted_from_date->format('Y-m-d H:i:s'));
+
+                        $converted_to_date = new DateTime($from_to_date[1] . ' 00:00:00', new DateTimeZone($mall_details['timezone']));
+                        $converted_to_date->setTimezone(new DateTimeZone($mall_details['timezone']));
+                        $to_date_text = strtotime($converted_to_date->format('Y-m-d H:i:s'));
+
+                        if ($from_date_text < $now && $to_date_text >= $now) {
+                            $up_mall = array(
+                                'is_sponsored' => SPONSORED_TYPE,
+                                'sponsored_position' => $position
+                            );
+                            $wh_mall = array(
+                                'id_mall' => $id,
+                                'is_delete' => IS_NOT_DELETED_STATUS
+                            );
+                            $this->Common_model->master_update(tbl_mall, $up_mall, $wh_mall);
+                        } else {
+                            $up_mall = array(
+                                'is_sponsored' => UNSPONSORED_TYPE,
+                                'sponsored_position' => 0
+                            );
+                            $wh_mall = array(
+                                'id_mall' => $id,
+                                'is_delete' => IS_NOT_DELETED_STATUS
+                            );
+                            $this->Common_model->master_update(tbl_mall, $up_mall, $wh_mall);
+                        }
+
+                        $add_success_data++;
+                    }
+
+                    if ($add_success_data > 0)
+                        $this->session->set_flashdata('success_msg', 'Data updated successfully.');
+                    else
+                        $this->session->set_flashdata('error_msg', 'Please select proper Position and From-To Date.');
+
+                    redirect('country-admin/malls/sponsored/' . $id);
+                }
+
+                $this->data['back_url'] = $back_url;
+                $this->data['mall_details'] = $mall_details;
+
+                $this->template->load('user', 'Common/Mall/sponsored', $this->data);
+            } else {
+                override_404();
+            }
+        } else {
+            override_404();
+        }
+    }
+
+    function delete_sponsored($id) {
+        if ($this->input->post()) {
+            if (isset($id) && sizeof($id) > 0) {
+                $result = $this->db->query('UPDATE ' . tbl_sponsored_log . ' SET is_delete=' . IS_DELETED_STATUS .
+                        ' WHERE is_delete = ' . IS_NOT_DELETED_STATUS . ' AND id_mall = ' . $id);
+            }
+
+            if ($result)
+                $this->session->set_flashdata('success_msg', 'Data deleted successfully.');
+            else
+                $this->session->set_flashdata('error_msg', 'Data not deleted.');
+
+            redirect('country-admin/malls/sponsored/' . $id);
         }
     }
 

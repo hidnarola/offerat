@@ -213,17 +213,22 @@
     });
 
     $(document).find('.offer_type').change(function () {
+
         var offer_content_type = $(document).find(this).val();
         if (offer_content_type == '<?php echo IMAGE_OFFER_CONTENT_TYPE; ?>') {
             $(document).find('.offer_text_section').hide();
             $(document).find('.offer_image_video_section').show();
-            $(document).find('#media_name').attr('required', 'required');
-            $(document).find('#content').removeAttr('required');
+<?php if (!isset($notification_data)) { ?>
+                $(document).find('#media_name').attr('required', 'required');
+                $(document).find('#content').removeAttr('required');
+<?php } ?>
         } else {
             $(document).find('.offer_text_section').show();
             $(document).find('.offer_image_video_section').hide();
-            $(document).find('#content').attr('required', 'required');
-            $(document).find('#media_name').removeAttr('required');
+<?php if (!isset($notification_data)) { ?>
+                $(document).find('#content').attr('required', 'required');
+                $(document).find('#media_name').removeAttr('required');
+<?php } ?>
         }
     });
 </script>

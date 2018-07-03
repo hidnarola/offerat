@@ -29,7 +29,7 @@ class Stores extends MY_Controller {
         $store_list_url = '';
         $filter_list_url = '';
         $store_details_url = '';
-        $featured_store_url = '';
+        $sponsored_store_url = '';
         $delete_store_url = '';
         $add_store_url = '';
         $edit_store_url = '';
@@ -39,9 +39,9 @@ class Stores extends MY_Controller {
             $filter_list_url = 'country-admin/stores/filter_stores';
             $store_details_url = 'country-admin/stores/get_store_details/';
             $delete_store_url = 'country-admin/stores/delete/';
-            $featured_store_url = 'country-admin/stores/featured/';
+            $sponsored_store_url = 'country-admin/stores/sponsored/';
             $this->data['delete_store_url'] = $delete_store_url;
-            $this->data['featured_store_url'] = $featured_store_url;
+            $this->data['sponsored_store_url'] = $sponsored_store_url;
             $add_store_url = 'country-admin/stores/save/';
             $edit_store_url = 'country-admin/stores/save/';
             $report_url = 'country-admin/report/store/';
@@ -1179,66 +1179,202 @@ class Stores extends MY_Controller {
         }
     }
 
-    function featured($id = NULL) {
+    function sponsored($id = NULL) {
 
         $back_url = '';
-
+        $this->data['store_id'] = $id;
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)
-            $back_url = 'country-admin/stores/save/' . $id;
+            $back_url = 'country-admin/stores';
         elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
             $back_url = 'mall-store-user/stores';
 
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
-            
-            if($this->input->post()) {
-                pr($_POST, 1);
-            }
-            
-            
-            $this->bread_crum[] = array(
-                'url' => $back_url,
-                'title' => ' List',
-            );
 
-            $this->data['title'] = $this->data['page_header'] = 'Featured Store';
-            $this->bread_crum[] = array(
-                'url' => '',
-                'title' => 'Featured Store',
-            );
-
-            $select_store_category = array(
-                'table' => tbl_store_category . ' store_category',
-                'fields' => array('id_store_category', 'category.id_category', 'sub_category.id_sub_category', 'category.category_name', 'sub_category.sub_category_name'),
-                'where' => array('store_category.id_store' => $id, 'store_category.is_delete' => IS_NOT_DELETED_STATUS),
+            $select_store = array(
+                'table' => tbl_store.' store',
+                'where' => array('store.id_store' => $id, 'store.id_country' => $this->loggedin_user_country_data['id_country'], 'store.is_delete' => IS_NOT_DELETED_STATUS),
                 'join' => array(
                     array(
-                        'table' => tbl_category . ' as category',
-                        'condition' => 'category.id_category = store_category.id_category',
-                        'join' => 'left'
-                    ),
-                    array(
-                        'table' => tbl_sub_category . ' as sub_category',
-                        'condition' => 'sub_category.id_sub_category = store_category.id_sub_category',
+                        'table' => tbl_country . ' as country',
+                        'condition' => 'country.id_country = store.id_country',
                         'join' => 'left'
                     )
-                )
+                ),
+                'group_by' => array('store.id_store')
             );
-            $store_categories = $this->Common_model->master_select($select_store_category);
+            $store_details = $this->Common_model->master_single_select($select_store);
 
-            $select_category = array(
-                'table' => tbl_category,
-                'where' => array('status' => ACTIVE_STATUS, 'is_delete' => IS_NOT_DELETED_STATUS),
-                'order_by' => array('sort_order' => 'ASC')
-            );
-            $category_list = $this->Common_model->master_select($select_category);
+            if (isset($store_details) && sizeof($store_details) > 0) {
+                $this->bread_crum[] = array(
+                    'url' => $back_url,
+                    'title' => ' List',
+                );
 
-            $this->data['back_url'] = $back_url;
-            $this->data['store_categories'] = $store_categories;
-            $this->data['category_list'] = $category_list;
-            
-            $this->template->load('user', 'Common/Store/featured', $this->data);
+                $this->data['title'] = $this->data['page_header'] = 'Sponsored Store';
+                $this->bread_crum[] = array(
+                    'url' => '',
+                    'title' => 'Sponsored Store',
+                );
+
+                $select_store_category = array(
+                    'table' => tbl_store_category . ' store_category',
+                    'fields' => array('id_store_category', 'category.id_category', 'sub_category.id_sub_category', 'category.category_name', 'sub_category.sub_category_name', 'sponsored_log.position', 'sponsored_log.from_date', 'sponsored_log.to_date', 'sponsored_log.id_sponsored_log'),
+                    'where' => array('store_category.id_store' => $id, 'store_category.is_delete' => IS_NOT_DELETED_STATUS),
+                    'join' => array(
+                        array(
+                            'table' => tbl_category . ' as category',
+                            'condition' => 'category.id_category = store_category.id_category',
+                            'join' => 'left'
+                        ),
+                        array(
+                            'table' => tbl_sub_category . ' as sub_category',
+                            'condition' => 'sub_category.id_sub_category = store_category.id_sub_category',
+                            'join' => 'left'
+                        ),
+                        array(
+                            'table' => tbl_sponsored_log . ' as sponsored_log',
+                            'condition' => 'sponsored_log.id_category = category.id_category AND (sponsored_log.id_sub_category = sub_category.id_sub_category OR sponsored_log.id_sub_category = 0) AND sponsored_log.id_store = ' . $id . ' AND sponsored_log.is_delete = ' . IS_NOT_DELETED_STATUS,
+                            'join' => 'left'
+                        )
+                    ),
+                    'group_by' => array('id_store_category')
+                );
+                $store_categories = $this->Common_model->master_select($select_store_category);
+
+                $select_category = array(
+                    'table' => tbl_category,
+                    'where' => array('status' => ACTIVE_STATUS, 'is_delete' => IS_NOT_DELETED_STATUS),
+                    'order_by' => array('sort_order' => 'ASC')
+                );
+                $category_list = $this->Common_model->master_select($select_category);
+
+                if ($this->input->post()) {
+
+                    $loop_count = count($store_categories);
+                    $date = date('Y-m-d h:i:s');
+                    $add_success_data = 0;
+
+                    for ($i = 0; $i <= $loop_count - 1; $i++) {
+
+                        $category_id = $this->input->post('category_' . $i, TRUE);
+                        $sub_category_id = $this->input->post('sub_category_' . $i, TRUE);
+                        $position = $this->input->post('position_' . $i, TRUE);
+                        $from_to_date_text = $this->input->post('from_to_date_' . $i, TRUE);
+                        $from_to_date = explode(' - ', $from_to_date_text);
+
+                        if (!empty($category_id) && !empty($position) && !empty($from_to_date_text) && isset($from_to_date[0]) && isset($from_to_date[1])) {
+
+                            $up_sponsored_data = array('is_delete' => IS_DELETED_STATUS);
+                            $wh_sponsored_data = array(
+                                'is_delete' => IS_NOT_DELETED_STATUS,
+                                'id_store' => $id,
+                                'id_category' => $category_id,
+                                'id_sub_category' => $sub_category_id
+                            );
+                            $this->Common_model->master_update(tbl_sponsored_log, $up_sponsored_data, $wh_sponsored_data);
+
+                            $from_date = date_create($from_to_date[0]);
+                            $from_date_text = date_format($from_date, "Y-m-d");
+                            $to_date = date_create($from_to_date[1]);
+                            $to_date_text = date_format($to_date, "Y-m-d");
+                            $in_sponsored_log = array(
+                                'id_store' => $id,
+                                'id_mall' => 0,
+                                'id_category' => $category_id,
+                                'id_sub_category' => ($sub_category_id > 0) ? $sub_category_id : 0,
+                                'from_date' => $from_date_text,
+                                'to_date' => $to_date_text,
+                                'position' => $position,
+                                'created_date' => $date,
+                                'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
+                                'is_delete' => IS_NOT_DELETED_STATUS
+                            );
+                            $this->Common_model->master_save(tbl_sponsored_log, $in_sponsored_log);
+
+//                            $from_date = date_create($from_to_date[0] . ' 00:00:00');
+//                            $from_date_text = strtotime(date_format($from_date, "Y-m-d"));
+//                            $to_date = date_create($from_to_date[1] . ' 00:00:00');
+//                            $to_date_text = strtotime(date_format($to_date, "Y-m-d"));
+//                            $now = time();
+
+                            $date = date('Y-m-d H:i:s');
+                            $converted_today_date = new DateTime($date, new DateTimeZone($store_details['timezone']));
+                            $converted_today_date->setTimezone(new DateTimeZone($store_details['timezone']));
+                            $now = strtotime($converted_today_date->format('Y-m-d H:i:s'));
+
+                            $converted_from_date = new DateTime($from_date . ' 00:00:00', new DateTimeZone($store_details['timezone']));
+                            $converted_from_date->setTimezone(new DateTimeZone($store_details['timezone']));
+                            $from_date_text = strtotime($converted_from_date->format('Y-m-d H:i:s'));
+
+                            $converted_to_date = new DateTime($to_date . ' 00:00:00', new DateTimeZone($store_details['timezone']));
+                            $converted_to_date->setTimezone(new DateTimeZone($store_details['timezone']));
+                            $to_date_text = strtotime($converted_to_date->format('Y-m-d H:i:s'));
+
+                            if ($from_date_text < $now && $to_date_text >= $now) {
+                                $up_store_category = array(
+                                    'is_sponsored' => SPONSORED_TYPE,
+                                    'sponsored_position' => $position
+                                );
+                                $wh_store_category = array(
+                                    'id_category' => $category_id,
+                                    'id_sub_category' => $sub_category_id,
+                                    'id_store' => $id,
+                                    'is_delete' => IS_NOT_DELETED_STATUS
+                                );
+                                $this->Common_model->master_update(tbl_store_category, $up_store_category, $wh_store_category);
+                            } else {
+                                $up_store_category = array(
+                                    'is_sponsored' => UNSPONSORED_TYPE,
+                                    'sponsored_position' => 0
+                                );
+                                $wh_store_category = array(
+                                    'id_category' => $category_id,
+                                    'id_sub_category' => $sub_category_id,
+                                    'id_store' => $id,
+                                    'is_delete' => IS_NOT_DELETED_STATUS
+                                );
+                                $this->Common_model->master_update(tbl_store_category, $up_store_category, $wh_store_category);
+                            }
+                            $add_success_data++;
+                        }
+                    }
+
+                    if ($add_success_data > 0)
+                        $this->session->set_flashdata('success_msg', 'Data updated successfully.');
+                    else
+                        $this->session->set_flashdata('error_msg', 'Please select proper Position and From-To Date.');
+
+                    redirect('country-admin/stores/sponsored/' . $id);
+                }
+
+                $this->data['back_url'] = $back_url;
+                $this->data['store_categories'] = $store_categories;
+                $this->data['category_list'] = $category_list;
+
+                $this->template->load('user', 'Common/Store/sponsored', $this->data);
+            } else {
+                override_404();
+            }
         } else {
             override_404();
+        }
+    }
+
+    function delete_sponsored($id) {
+
+        if ($this->input->post()) {
+            $delete_sponsored_ids = $this->input->post('delete_sponsored_ids', TRUE);
+            if (isset($delete_sponsored_ids) && sizeof($delete_sponsored_ids) > 0) {
+                $result = $this->db->query('UPDATE ' . tbl_sponsored_log . ' SET is_delete=' . IS_DELETED_STATUS .
+                        ' WHERE is_delete = ' . IS_NOT_DELETED_STATUS . ' AND id_sponsored_log IN (' . implode(',', $delete_sponsored_ids) . ') AND id_store = ' . $id);
+            }
+
+            if ($result)
+                $this->session->set_flashdata('success_msg', 'Data deleted successfully.');
+            else
+                $this->session->set_flashdata('error_msg', 'Data not deleted.');
+
+            redirect('country-admin/stores/sponsored/' . $id);
         }
     }
 

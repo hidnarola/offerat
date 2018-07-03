@@ -94,7 +94,7 @@ class Notifications extends MY_Controller {
 
             $filter_array['fields'][] = 'DATE_FORMAT(CONVERT_TZ(' . tbl_offer_announcement . '.created_date,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"),"%Y-%m-%d %H:%i") as offer_announcement_created_date';
             $filter_array['fields'][] = 'DATE_FORMAT(CONVERT_TZ(' . tbl_offer_announcement . '.broadcasting_time,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"),"%Y-%m-%d %H:%i") as offer_announcement_broadcasting_time';
-            $filter_array['fields'][] = 'DATE_FORMAT(CONVERT_TZ(' . tbl_offer_announcement . '.expiry_time,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"),"%Y-%m-%d %H:%i") as offer_announcement_expiry_time';            
+            $filter_array['fields'][] = 'DATE_FORMAT(CONVERT_TZ(' . tbl_offer_announcement . '.expiry_time,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"),"%Y-%m-%d %H:%i") as offer_announcement_expiry_time';
 
             $filter_array['order_by'] = array(tbl_offer_announcement . '.id_offer' => 'DESC');
             $filter_array['group_by'] = array(tbl_offer_announcement . '.id_offer');
@@ -162,6 +162,7 @@ class Notifications extends MY_Controller {
 
         if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements'))) {
             $m_name = $media_name = '';
+            $media_extension = '';
             $media_video_name = '';
             $media_thumbnail = '';
             $media_width = 0;
@@ -198,6 +199,10 @@ class Notifications extends MY_Controller {
                 $notification_data = $this->Common_model->master_single_select($select_notification);
                 if (isset($notification_data) && sizeof($notification_data) > 0) {
                     $media_name = $notification_data['media_name'];
+                    if (!empty($notification_data['media_name'])) {
+                        $media_extension_text = explode('.', $notification_data['media_name']);
+                        $media_extension = $media_extension_text[1];
+                    }
                     $media_thumbnail = $notification_data['media_thumbnail'];
                     $media_width = $notification_data['media_width'];
                     $media_height = $notification_data['media_height'];
@@ -274,6 +279,11 @@ class Notifications extends MY_Controller {
                                     $media_width = $width;
                                     $media_height = $height;
                                 }
+
+                                if (!empty($media_name)) {
+                                    $media_extension_text = explode('.', $media_name);
+                                    $media_extension = $media_extension_text[1];
+                                }
                             }
                         } else {
                             if (!empty($_FILES['media_name']['tmp_name'])) {
@@ -294,21 +304,29 @@ class Notifications extends MY_Controller {
                             $store_id = $store_mall_text[1];
                         if ($store_mall_text[0] == 'mall')
                             $mall_id = $store_mall_text[1];
-                        
+
                         if ($this->input->post('expiry_time', TRUE) != '') {
                             $expiry_time = new DateTime($this->input->post('expiry_time', TRUE), new DateTimeZone($this->loggedin_user_country_data['timezone']));
                             $expiry_time->setTimezone(new DateTimeZone(date_default_timezone_get()));
                             $expiry_time_text = $expiry_time->format('Y-m-d H:i:00');
                         } else
                             $expiry_time_text = '0000-00-00 00:00:00';
-                        
+
                         $broadcasting_time = new DateTime($this->input->post('broadcasting_time', TRUE), new DateTimeZone($this->loggedin_user_country_data['timezone']));
                         $broadcasting_time->setTimezone(new DateTimeZone(date_default_timezone_get()));
                         $broadcasting_time_text = $broadcasting_time->format('Y-m-d H:i:00');
+                        $offer_type = '';
+                        
+                        if ($this->input->post('offer_type', TRUE) == TEXT_OFFER_CONTENT_TYPE)
+                            $offer_type = TEXT_OFFER_CONTENT_TYPE;
+                        elseif ((in_array(strtolower($media_extension), $this->video_extensions_arr)))
+                            $offer_type = VIDEO_OFFER_CONTENT_TYPE;
+                        else
+                            $offer_type = IMAGE_OFFER_CONTENT_TYPE;
 
                         $notification_data = array(
                             'type' => ($notification_type == 'offers') ? OFFER_OFFER_TYPE : ANNOUNCEMENT_OFFER_TYPE,
-                            'offer_type' => (in_array($uploaded_file_type, $video_types)) ? VIDEO_OFFER_CONTENT_TYPE : ($this->input->post('offer_type', TRUE) == TEXT_OFFER_CONTENT_TYPE) ? TEXT_OFFER_CONTENT_TYPE : IMAGE_OFFER_CONTENT_TYPE,
+                            'offer_type' => $offer_type,
                             'id_mall' => $mall_id,
                             'id_store' => $store_id,
                             'media_name' => ($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE) ? $media_name : '',
@@ -319,6 +337,7 @@ class Notifications extends MY_Controller {
                             'broadcasting_time' => $broadcasting_time_text,
                             'expiry_time' => $expiry_time_text,
                         );
+                        
                         if ($notification_type == 'offers')
                             $notification_data['push_message'] = $this->input->post('push_message', TRUE);
 

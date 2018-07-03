@@ -35,14 +35,10 @@ $(function () {
         cancelClass: 'btn-default',
         showDropdowns: false,
         selectYears: 0,
-        autoUpdateInput: false,
         locale: {
             format: 'DD-MM-YYYY'
         }
     });
-
-//    $('.daterange-basic').data('daterangepicker').setStartDate();
-//    $('.daterange-basic').data('daterangepicker').setEndDate(null);
 
     $('.daterange-basic-datatable').daterangepicker({
         ranges: {
@@ -284,4 +280,12 @@ function removeJqueryValidationMsgs(formId) {
     $.each($(document).find(formId + ' .validation-error-label'), function () {
         $(this).html('');
     });
+}
+
+function findAndReplace(string, target, replacement) {
+    var i = 0, length = string.length;
+    for (i; i < length; i++) {
+        string = string.replace(target, replacement);
+    }
+    return string;
 }

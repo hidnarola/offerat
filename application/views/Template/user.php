@@ -216,8 +216,39 @@
                     $('#broad_cast_date_time').AnyTime_noPicker().AnyTime_picker({format: "%d-%m-%Z %H:%i"}).focus();
                     e.preventDefault();
                 });
-            </script>    
 
+                $('.daterange-from-to').daterangepicker({
+                    applyClass: 'bg-slate-600',
+                    cancelClass: 'btn-default',
+                    showDropdowns: false,
+                    selectYears: 0,
+                    locale: {
+                        format: 'DD-MM-YYYY'
+                    }
+                });
+                $('.daterange-from-to').on('cancel.daterangepicker', function (ev, picker) {
+                    $(this).val('');
+                });
+                $('.daterange-from-to').on('hide.daterangepicker', function (ev, picker) {                
+                    var defaultValue = ev.currentTarget.defaultValue;                
+                    $(this).val(defaultValue);
+                });
+                
+                $('.daterange-from-to').on('apply.daterangepicker', function (ev, picker) {
+                    $(this).val(picker.startDate.format('DD-MM-YYYY') + ' - ' + picker.endDate.format('DD-MM-YYYY'));
+                });
+
+<?php
+$remove_values = $this->session->userdata('remove_values');
+if (isset($remove_values) && sizeof($remove_values) > 0) {
+    foreach ($remove_values as $val) {
+        ?>
+                        $(document).find('#from_to_date_<?php echo $val; ?>').val("");
+        <?php
+    }
+}
+?>
+            </script>
         </div>
     </body>
 </html>
