@@ -15,18 +15,18 @@
                                         <table id="store_dttable" class="table table-striped datatable-basic custom_dt width-100-per">
                                             <thead>
                                                 <tr>
-                                                    <th>Store ID</th>
-                                                    <th>Store Name</th>
+                                                    <th>Mall Name</th>
                                                     <th>From-To</th>
                                                     <th>Current Offers Exist</th>
                                                     <th>Validity</th>
+                                                    <th>Mall ID</th>
                                                 </tr>
                                                 <tr>
-                                                    <th>Store ID</th>
-                                                    <th>Store Name</th>
+                                                    <th>Mall Name</th>
                                                     <th>From-To</th>
                                                     <th>Current Offers Exist</th>
                                                     <th>Validity</th>
+                                                    <th>Mall ID</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -43,43 +43,23 @@
         </div>
     </div>
 </div>
-<?php
-$this->load->view('Common/delete_alert');
-$this->load->view('Common/Store/details_modal');
-?>
 <script type="text/javascript">
     $(document).ready(function () {
-
-        function findAndReplace(string, target, replacement) {
-            var i = 0, length = string.length;
-            for (i; i < length; i++) {
-                string = string.replace(target, replacement);
-            }
-            return string;
-        }
-
-//        console.log(findAndReplace(newStr, " ", "_")); //"I'm_going_to_be_passed_to_the_function,_aren't_I?"
-//        console.log(findAndReplace("No... not me too!", " ", "_")); //"No..._not_me_too!"
-//
         // Setup - add a text input to each footer cell
         $('#store_dttable thead tr:eq(0) th').each(function () {
             var title = $(this).text();
-            if (title !== 'Actions') {
-                if (title === 'Added Date') {
-                    $(this).html('<input type="text" class="form-control daterange-basic-datatable" placeholder="' + title + '" />');
-                } else {
-                    $(this).html('<input type="text" class="form-control" placeholder="' + title + '" />');
-                }
+            if (title === 'Mall Name') {
+                $(this).html('<input type="text" class="form-control" placeholder="' + title + '" />');
             }
         });
         var table = $('#store_dttable').DataTable({
-            "dom": '<"top"<"dttable_lenth_wrapper"fl>>rt<"bottom"pi><"clear">',
+            "dom": '<"top"<"dttable_lenth_wrapper"l>>rt<"bottom"pi><"clear">',
             "processing": true,
             "serverSide": true,
             "scrollX": true,
             "scrollCollapse": true,
             "orderCellsTop": false,
-            "aaSorting": [[0, 'asc']],
+            "aaSorting": [[4, 'desc']],
             language: {
                 search: '<span>Filter :</span> _INPUT_',
                 lengthMenu: '<span>Show :</span> _MENU_',
@@ -87,19 +67,14 @@ $this->load->view('Common/Store/details_modal');
             },
             "columns": [
                 {
-                    'data': 'store_id_store',
-                    "visible": false,
-                    "name": 'store.id_store',
-                },
-                {
-                    'data': 'store_store_name',
+                    'data': 'mall_mall_name',
                     "visible": true,
-                    "name": 'store.store_name',
+                    "name": 'mall.mall_name',
                 },
                 {
                     'data': 'sales_from_to',
                     "visible": true,
-                    "name": 'sales_trend.from_date',
+                    "name": 'mall.mall_name',
                     "render": function (data, type, full, meta) {
                         var data1 = full.sales_from_to;
                         if (data1 !== null)
@@ -113,7 +88,10 @@ $this->load->view('Common/Store/details_modal');
                     "visible": true,
                     "name": 'expiry_time',
                     "render": function (data, type, full, meta) {
-                        return get_dd_mm_yyyy_Date(full.expiry_time, '-');
+                        if (full.expiry_time !== '0000-00-00 00:00:00')
+                            return get_dd_mm_yyyy_Date(full.expiry_time, '-');
+                        else if (full.expiry_time === '0000-00-00 00:00:00')
+                            return 'Yes';
                     }
                 },
                 {
@@ -123,18 +101,21 @@ $this->load->view('Common/Store/details_modal');
                     "render": function (data, type, full, meta) {
                         var status = '<span class="label label-success label-rounded">Valid</span>';
                         if (full.validity === 'Invalid') {
-                            status = '<span class="label label-info label-rounded">Invalid</span>';
-                        }
+                            status = '<span class="label label-danger label-rounded">Invalid</span>';
+                        } else if (full.validity === 'No match found')
+                            status = '<span class="label label-info label-rounded">No match found</span>';
                         return status;
                     }
+                },
+                {
+                    'data': 'mall_id_mall',
+                    "visible": false,
+                    "name": 'mall.id_mall',
                 },
             ],
             initComplete: function () {
                 var tableColumns = table.settings().init().columns;
-                this.api().columns().every(function (index) {
-
-
-                });
+                this.api().columns().every(function (index) { });
             },
             'fnServerData': function (sSource, aoData, fnCallback) {
 

@@ -57,6 +57,14 @@ $logged_user_type = $this->session->userdata('loggedin_user_type');
                                 <li <?php echo (in_array($controller, array('malls', 'report'))) ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/malls"><i class="icon-store2"></i> <span>Malls</span></a></li>
                             </ul>
                         </li>
+                        <li>
+                            <a href="#"><i class="icon-checkmark-circle2"></i> <span>Verify Offers</span></a>
+                            <ul>
+                                <li <?php echo ($controller === 'verify-store-offers') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/verify-store-offers"><i class="icon-store"></i> <span>Stores</span></a></li>
+                                <li <?php echo ($controller === 'verify-mall-offers') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/verify-mall-offers"><i class="icon-store2"></i> <span>Malls</span></a></li>
+
+                            </ul>
+                        </li>
                         <li <?php echo ($controller === 'change-password') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-password"><i class="icon-lock2"></i> <span>Change Password</span></a></li>
                         <li <?php echo ($controller === 'change-information') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-information"><i class="fa fa-user"></i> <span>Change Information</span></a></li>
                     </ul>

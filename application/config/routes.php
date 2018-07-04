@@ -85,8 +85,10 @@ $route['super-admin/sub-category/save/(:any)/(:any)'] = 'superadmin/subcategory/
 
 //Country Admin Routes =================================
 $route['country-admin/dashboard'] = 'countryadmin/dashboard';
-$route['country-admin/verify_offers'] = 'countryadmin/verify_offers';
-$route['country-admin/filter_offers'] = 'countryadmin/verify_offers/filter_offers';
+$route['country-admin/verify-store-offers'] = 'countryadmin/verify_offers/stores';
+$route['country-admin/filter_store_offers'] = 'countryadmin/verify_offers/filter_store_offers';
+$route['country-admin/verify-mall-offers'] = 'countryadmin/verify_offers/malls';
+$route['country-admin/filter_mall_offers'] = 'countryadmin/verify_offers/filter_mall_offers';
 $route['country-admin/change-password'] = 'common/change_password';
 $route['country-admin/change-information'] = 'common/change_information';
 $route['country-admin/notifications/get_notification_details/(:any)'] = 'common/notifications/get_notification_details/$1';

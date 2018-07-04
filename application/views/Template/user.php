@@ -170,42 +170,6 @@
 
             <script type="text/javascript" src="assets/user/js/custom.js"></script>
             <script type="text/javascript">
-
-                function get_dd_mm_yyyy_Date(date, seperator) {
-                    if (date === null) {
-                        return '';
-                    }
-                    var d = new Date(date),
-                            month = '' + (d.getMonth() + 1),
-                            day = '' + d.getDate(),
-                            year = d.getFullYear();
-                    if (month.length < 2)
-                        month = '0' + month;
-                    if (day.length < 2)
-                        day = '0' + day;
-                    return day + seperator + month + seperator + year;
-                }
-
-                function get_dd_mm_yyyy_hh_min_DateTime(date, seperator) {
-                    if (date === null) {
-                        return '';
-                    }
-
-                    var d = new Date(date),
-                            month = '' + (d.getMonth() + 1),
-                            day = '' + d.getDate(),
-                            year = d.getFullYear(),
-                            hour = d.getHours(),
-                            minute = d.getMinutes();
-
-                    if (month.length < 2)
-                        month = '0' + month;
-                    if (day.length < 2)
-                        day = '0' + day;
-
-                    return day + seperator + month + seperator + year + ' ' + hour + ':' + minute;
-                }
-
                 $("#expire_date_delete_icon").click(function (e) {
                     $("#expire_date_time").val("").change();
                 });
@@ -229,11 +193,11 @@
                 $('.daterange-from-to').on('cancel.daterangepicker', function (ev, picker) {
                     $(this).val('');
                 });
-                $('.daterange-from-to').on('hide.daterangepicker', function (ev, picker) {                
-                    var defaultValue = ev.currentTarget.defaultValue;                
+                $('.daterange-from-to').on('hide.daterangepicker', function (ev, picker) {
+                    var defaultValue = ev.currentTarget.defaultValue;
                     $(this).val(defaultValue);
                 });
-                
+
                 $('.daterange-from-to').on('apply.daterangepicker', function (ev, picker) {
                     $(this).val(picker.startDate.format('DD-MM-YYYY') + ' - ' + picker.endDate.format('DD-MM-YYYY'));
                 });
