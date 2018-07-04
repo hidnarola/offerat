@@ -306,4 +306,70 @@ class Cron extends CI_Controller {
         }
     }
 
+    //Send Push Notification
+    public function push_notification() {
+
+        echo $currnt_datetime = date('Y-m-d H:i');
+        echo '==' . $get_3_min_ago_datetime = date('Y-m-d H:i', strtotime("-3 minute"));
+        die();
+        $yesterday_date = date('Y-m-d', strtotime("-1 days"));
+        $next_date = date('Y-m-d', strtotime("+1 days"));
+
+        $select_offer = array(
+            'table' => tbl_offer_announcement . ' offer_announcement',
+            'fields' => array('offer_announcement.*', 'country.timezone'),
+            'where' => array(
+                'offer_announcement.is_delete' => IS_NOT_DELETED_STATUS,
+                'offer_announcement.type' => OFFER_OFFER_TYPE
+            ),
+            'where_with_sign' => array(
+                '(country.id_country = store.id_country OR country.id_country = mall.id_country)',
+                '(store.status = ' . ACTIVE_STATUS . ' OR mall.status = ' . ACTIVE_STATUS . ')',
+                '(store.is_delete = ' . IS_NOT_DELETED_STATUS . ' OR mall.is_delete = ' . IS_NOT_DELETED_STATUS . ')',
+                '(DATE_FORMAT(offer_announcement.broadcasting_time, "%Y-%m-%d") BETWEEN "' . $yesterday_date . '" AND "' . $yesterday_date . '" )'
+            ),
+            'join' => array(
+                array(
+                    'table' => tbl_store . ' as store',
+                    'condition' => 'store.id_store = offer_announcement.id_store',
+                    'join' => 'left',
+                ),
+                array(
+                    'table' => tbl_mall . ' as mall',
+                    'condition' => 'mall.id_mall = offer_announcement.id_mall',
+                    'join' => 'left'
+                ),
+                array(
+                    'table' => tbl_country . ' as country',
+                    'condition' => 'country.id_country = store.id_country OR country.id_country = mall.id_country',
+                    'join' => 'left'
+                )
+            ),
+            'group_by' => array('offer_announcement.id_offer'),
+        );
+
+        $offers_list = $this->Common_model->master_select($select_offer);
+        query();
+        pr($offers_list);
+        if (isset($offers_list) && sizeof($offers_list) > 0) {
+            foreach ($offers_list as $list) {
+
+                $country_zone_today_date = new DateTime($currnt_datetime, new DateTimeZone($list['timezone']));
+                $country_zone_today_date->setTimezone(new DateTimeZone($list['timezone']));
+                $country_zone_today_date_ = strtotime($country_zone_today_date->format('Y-m-d H:i'));
+
+                $country_zone_broacast_time = new DateTime($list['broadcasting_time'], new DateTimeZone($list['timezone']));
+                $country_zone_broacast_time->setTimezone(new DateTimeZone($list['timezone']));
+                $country_zone_broacast_time_ = strtotime($country_zone_broacast_time->format('Y-m-d H:i'));
+
+                if ($country_zone_broacast_time_ > strtotime($get_3_min_ago_datetime) && $country_zone_broacast_time_ <= strtotime($country_zone_today_date_)) {
+
+                    $select_user = array(
+                        'table' => tbl_user
+                    );
+                }
+            }
+        }
+    }
+
 }
