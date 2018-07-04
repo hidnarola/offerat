@@ -464,7 +464,7 @@
                                                     <label></label>
                                                     <div>
                                                         <input type="checkbox" class="styled-checkbox-1" name="terms_condition" required="required"/>                
-                                                        <span class="text-size-mini">  Yes, I agree with <a href="javascript:void(0);" target="_blank"><span>Terms And Conditions</span></a></span>            
+                                                        <span class="text-size-mini">  Yes, I agree with <a href="terms-and-conditions" target="_blank"><span>Terms And Conditions</span></a></span>
                                                         <label id="terms_condition-error" class="validation-error-label" for="terms_condition"></label>
                                                     </div>
                                                 </div>

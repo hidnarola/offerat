@@ -157,6 +157,10 @@ $route['account-verification'] = 'storeregistration/verification';
 
 $route['email-change-verify'] = 'login/change_verify';
 
+$route['about-us'] = 'Content_pages/about_us';
+$route['contact-us'] = 'Content_pages/contact_us';
+$route['terms-and-conditions'] = 'Content_pages/terms_conditions';
+
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
