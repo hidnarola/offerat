@@ -236,7 +236,7 @@ class Notifications extends MY_Controller {
                 if ($notification_type == 'offers')
                     $validate_fields[] = 'push_message';
 
-                if ($this->_validate_form($validate_fields, $id)) {
+                if ($this->_validate_form($validate_fields, $id, $notification_type)) {
 
                     $uploaded_file_type = @$_FILES['media_name']['type'];
                     $image_types = $this->image_types_arr;
@@ -316,7 +316,7 @@ class Notifications extends MY_Controller {
                         $broadcasting_time->setTimezone(new DateTimeZone(date_default_timezone_get()));
                         $broadcasting_time_text = $broadcasting_time->format('Y-m-d H:i:00');
                         $offer_type = '';
-                        
+
                         if ($this->input->post('offer_type', TRUE) == TEXT_OFFER_CONTENT_TYPE)
                             $offer_type = TEXT_OFFER_CONTENT_TYPE;
                         elseif ((in_array(strtolower($media_extension), $this->video_extensions_arr)))
@@ -337,7 +337,7 @@ class Notifications extends MY_Controller {
                             'broadcasting_time' => $broadcasting_time_text,
                             'expiry_time' => $expiry_time_text,
                         );
-                        
+
                         if ($notification_type == 'offers')
                             $notification_data['push_message'] = $this->input->post('push_message', TRUE);
 
@@ -420,7 +420,7 @@ class Notifications extends MY_Controller {
      * @param array $validate_fields array of control names
      * @return boolean
      */
-    function _validate_form($validate_fields, $id = NULL) {
+    function _validate_form($validate_fields, $id = NULL, $notification_type = NULL) {
         $validation_rules = array();
 
         if (in_array('store_mall_id', $validate_fields)) {
@@ -472,7 +472,15 @@ class Notifications extends MY_Controller {
                 'rules' => 'trim|callback_custom_notification_image_video[media_name]|htmlentities',
             );
         }
-
+        if ($notification_type == 'offers') {
+            if (in_array('push_message', $validate_fields)) {
+                $validation_rules[] = array(
+                    'field' => 'push_message',
+                    'label' => 'Push Notification Summary',
+                    'rules' => 'trim|required|min_length[5]|max_length[50]|htmlentities',
+                );
+            }
+        }
         $this->form_validation->set_rules($validation_rules);
 
         return $this->form_validation->run();

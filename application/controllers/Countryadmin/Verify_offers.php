@@ -10,6 +10,10 @@ class Verify_offers extends MY_Controller {
         $this->data['title'] = $this->data['page_header'] = 'Verify Offers';
     }
 
+    /*
+     * Store Listing with Details
+     */
+
     public function stores() {
 
         $this->data['title'] = $this->data['page_header'] = 'Verify Store Offers';
@@ -19,6 +23,10 @@ class Verify_offers extends MY_Controller {
 
         $this->template->load('user', 'Countryadmin/Verify_offers/stores', $this->data);
     }
+
+    /*
+     * Filter Store Offer Relatred Data
+     */
 
     public function filter_store_offers() {
 
@@ -94,6 +102,10 @@ class Verify_offers extends MY_Controller {
         echo json_encode($output);
     }
 
+    /*
+     * Mall Listing with Details
+     */
+
     public function malls() {
 
         $this->data['title'] = $this->data['page_header'] = 'Verify Mall Offers';
@@ -103,6 +115,10 @@ class Verify_offers extends MY_Controller {
 
         $this->template->load('user', 'Countryadmin/Verify_offers/malls', $this->data);
     }
+
+    /*
+     * Filter Mall Offer Relatred Data
+     */
 
     public function filter_mall_offers() {
 

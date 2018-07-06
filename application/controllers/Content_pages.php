@@ -56,7 +56,7 @@ class Content_pages extends CI_Controller {
                             </html>
                             ";
                 $response = $this->Email_template_model->send_email($email_id, site_info_email, 'Offerat | Contact US', $send_message);
-
+                
                 if (isset($response) && $response == 'yes') {
                     $this->session->set_flashdata('success_msg', 'Message sent successfully');
                 } else
@@ -108,7 +108,7 @@ class Content_pages extends CI_Controller {
             $validation_rules[] = array(
                 'field' => 'contact_number',
                 'label' => 'Contact Number',
-                'rules' => 'trim|required|max_length[30]|htmlentities',
+                'rules' => 'trim|max_length[30]|htmlentities',
             );
         }
         if (in_array('message', $validate_fields)) {

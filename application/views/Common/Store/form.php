@@ -316,17 +316,18 @@
                                             </div>
                                         <?php } ?>
                                     </div>
-                                    <?php if (isset($store_details)) { ?>
-                                        <div class="col-xs-12">
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label>Upload from Excel</label>
-                                                    <div>                                                
-                                                        <input type="file" class="form-control file-input" name="location_excel" id="location_excel">
-                                                    </div>
-                                                </div>        
-                                            </div>
-                                            <div class="col-md-6">
+
+                                    <div class="col-xs-12">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Upload from Excel</label>
+                                                <div>                                                
+                                                    <input type="file" class="form-control file-input" name="location_excel" id="location_excel">
+                                                </div>
+                                            </div>        
+                                        </div>
+                                        <div class="col-md-6">
+                                            <?php if (isset($store_details)) { ?>
                                                 <div class="form-group">                                                
                                                     <label><br></label>
                                                     <div>
@@ -334,9 +335,17 @@
                                                         <a href="<?php echo 'country-admin/stores/locations/' . $store_details['id_store']; ?>" target="_blank" class="btn bg-teal">Locations List</a>
                                                     </div>
                                                 </div>        
-                                            </div>
+                                            <?php } ?>
                                         </div>
-                                    <?php } ?>
+                                        <div class="col-md-3 text-right">
+                                            <div class="form-group">                                                
+                                                <label><br></label>
+                                                <div>                                                        
+                                                    <a href="<?php echo $download_locations_format_url; ?>" target="_blank" class="btn bg-teal">Download File Format</a>
+                                                </div>
+                                            </div>        
+                                        </div>
+                                    </div>
                                 </fieldset>
                             <?php } ?>
 

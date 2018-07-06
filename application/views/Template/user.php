@@ -10,10 +10,9 @@
 
     <body>
         <div id="site_wrapper">
-            <!--            <div id="loader" class="display-none" style="padding-top: 350px;">
-                            <i class="icon-spinner9 spinner fa-5x"></i>
-                        </div>-->
-
+            <div id="loader" class="display-none">
+                <i class="icon-spinner9 spinner fa-5x"></i>
+            </div>
             <!-- Main navbar -->
             <?php
             $this->load->view('Template/Userpanel/navbar');
@@ -175,9 +174,11 @@
                 });
                 $('#expire_date_icon, #expire_date_time').click(function (e) {
                     $('#expire_date_time').AnyTime_noPicker().AnyTime_picker({format: "%d-%m-%Z %H:%i"}).focus();
+//                    $(document).find('.AnyTime-min1-btn, .AnyTime-min2-btn, .AnyTime-min3-btn, .AnyTime-min4-btn, .AnyTime-min5-btn, .AnyTime-min6-btn, .AnyTime-min7-btn, .AnyTime-min8-btn, .AnyTime-min9-btn ').remove()
                 });
                 $('#broad_cast_icon, #broad_cast_date_time').click(function (e) {
                     $('#broad_cast_date_time').AnyTime_noPicker().AnyTime_picker({format: "%d-%m-%Z %H:%i"}).focus();
+//                    $(document).find('.AnyTime-min1-btn, .AnyTime-min2-btn, .AnyTime-min3-btn, .AnyTime-min4-btn, .AnyTime-min5-btn, .AnyTime-min6-btn, .AnyTime-min7-btn, .AnyTime-min8-btn, .AnyTime-min9-btn ').remove()
                     e.preventDefault();
                 });
 

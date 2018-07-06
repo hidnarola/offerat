@@ -19,6 +19,10 @@ class Stores extends MY_Controller {
             redirect('/');
     }
 
+    /*
+     * Stores List
+     */
+
     public function index() {
 
         $this->data['title'] = $this->data['page_header'] = 'Stores List';
@@ -106,6 +110,10 @@ class Stores extends MY_Controller {
         $this->template->load('user', 'Common/Store/index', $this->data);
     }
 
+    /*
+     * Filter Stores
+     */
+
     public function filter_stores() {
 
         $filter_array = $this->Common_model->create_datatable_request($this->input->post());
@@ -121,6 +129,7 @@ class Stores extends MY_Controller {
         $logged_in_country_zone_offset = $logged_in_country_zone_today_date->format('P');
 
         $filter_array['fields'][] = 'DATE_FORMAT(CONVERT_TZ(' . tbl_store . '.created_date,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"),"%Y-%m-%d %H:%i") as store_created_date';
+        $filter_array['fields'][] = 'GROUP_CONCAT(DISTINCT mall.mall_name) mall_list';
 
         $filter_array['order_by'] = array(tbl_store . '.id_store' => 'DESC');
         $filter_array['group_by'] = array(tbl_store . '.id_store');
@@ -189,6 +198,11 @@ class Stores extends MY_Controller {
         echo json_encode($output);
     }
 
+    /*
+     * Get Store Details of specific Store
+     * @param int store_id : Store ID
+     */
+
     public function get_store_details($store_id = NULL) {
         $response = array(
             'status' => '0',
@@ -244,6 +258,10 @@ class Stores extends MY_Controller {
         echo json_encode($response);
     }
 
+    /*
+     * Add / Edit Store Details
+     */
+
     public function save($id = NULL) {
 
         $date = date('Y-m-d h:i:s');
@@ -251,10 +269,12 @@ class Stores extends MY_Controller {
         $img_name = $image_name = '';
         $country_id = $this->loggedin_user_country_data['id_country'];
         $download_locations_url = '';
+        $download_locations_format_url = '';
 
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
             $back_url = 'country-admin/stores';
             $download_locations_url = 'country-admin/stores/loacation_excel_download/' . $id;
+            $download_locations_format_url = 'country-admin/stores/loacation_excel_format_download';
         } elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
             $back_url = 'mall-store-user/stores';
         }
@@ -464,75 +484,7 @@ class Stores extends MY_Controller {
                     }
                 }
 
-                //Upload Excel Sheet to add new Locations
-                if (!is_null($id) && $id > 0 && isset($_FILES['location_excel'])) {
-                    if (($_FILES['location_excel']['size']) > 0) {
-
-                        $file_path = $_SERVER['DOCUMENT_ROOT'] . location_excel_img_path;
-                        if (!file_exists($file_path)) {
-                            $this->Common_model->created_directory($file_path);
-                        }
-                        $supported_files = 'xlsx';
-                        $new_file_name = trim(str_replace(' ', '_', $this->input->post('store_name', TRUE))) . '_' . date('Y_m_d_h_i_s');
-
-                        $uplaoded_file_name = $this->Common_model->upload_file('location_excel', $file_path, $supported_files, $new_file_name);
-                        if (empty($uplaoded_file_name)) {
-                            $do_location_file_has_error = true;
-                            $this->data['file_errors'] = $this->upload->display_errors();
-                        } else {
-                            $file_name = $uplaoded_file_name;
-                            $this->load->library('excel');
-                            $file_location = $_SERVER['DOCUMENT_ROOT'] . location_excel_img_path . $file_name;
-                            $file_type = PHPExcel_IOFactory::identify($file_location);
-                            $objReader = PHPExcel_IOFactory::createReader($file_type);
-                            $objPHPExcel = $objReader->load($file_location);
-                            $sheet_data = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-
-                            foreach ($sheet_data as $key => $data) {
-                                if (isset($data['A']) && isset($data['B']) && !empty($data['A']) && !empty($data['B']) && $key > 1) {
-
-                                    $latitude = $data['A'];
-                                    $longitude = $data['B'];
-                                    $select_location = array(
-                                        'table' => tbl_store_location,
-                                        'where' => array(
-                                            'id_store' => $id,
-                                            'is_delete' => IS_NOT_DELETED_STATUS,
-                                            'latitude' => $latitude,
-                                            'longitude' => $longitude
-                                        )
-                                    );
-                                    $locations = $this->Common_model->master_single_select($select_location);
-
-                                    if (isset($locations) && sizeof($locations) > 0) {
-                                        
-                                    } else {
-                                        $in_store_location = array(
-                                            'id_store' => $id,
-                                            'latitude' => $latitude,
-                                            'longitude' => $longitude,
-                                            'id_location' => 0,
-                                            'location_type' => STORE_LOCATION_TYPE,
-                                            'contact_number' => $this->input->post('mobile', TRUE),
-                                            'created_date' => $date,
-                                            'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
-                                            'is_delete' => IS_NOT_DELETED_STATUS
-                                        );
-
-                                        $this->Common_model->master_save(tbl_store_location, $in_store_location);
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        if (!empty($_FILES['location_excel']['tmp_name'])) {
-                            $do_location_file_has_error = true;
-                            $this->data['file_errors'] = 'Invalid File';
-                        }
-                    }
-                }
-
-                if (!$do_store_image_has_error && !$do_location_file_has_error) {
+                if (!$do_store_image_has_error) {
                     $store_data = array(
                         'store_name' => $this->input->post('store_name', TRUE),
                         'store_logo' => $image_name,
@@ -644,7 +596,7 @@ class Stores extends MY_Controller {
                         }
 
                         $this->add_category_sub_category($date, $id);
-                        $this->add_locations($date, $id, $country_id);
+                        $this->add_locations($date, $id);
                         $this->add_sales_trend($date, $id);
 
                         if (isset($store_categories) && sizeof($store_categories) > 0) {
@@ -696,6 +648,8 @@ class Stores extends MY_Controller {
                             }
                         }
                         $this->session->set_flashdata('success_msg', 'Store updated successfully');
+
+                        $store_id = $id;
                     } else {
                         $store_data['created_date'] = $date;
                         $store_data['is_testdata'] = (ENVIRONMENT !== 'production') ? 1 : 0;
@@ -722,9 +676,77 @@ class Stores extends MY_Controller {
                         }
 
                         $this->add_category_sub_category($date, $store_id);
-                        $this->add_locations($date, $store_id, $country_id);
+                        $this->add_locations($date, $store_id);
                         $this->add_sales_trend($date, $store_id);
                         $this->session->set_flashdata('success_msg', 'Store added successfully');
+                    }
+
+                    if (!is_null($store_id) && $store_id > 0 && isset($_FILES['location_excel'])) {
+
+                        if (($_FILES['location_excel']['size']) > 0) {
+
+                            $file_path = $_SERVER['DOCUMENT_ROOT'] . location_excel_img_path;
+                            if (!file_exists($file_path)) {
+                                $this->Common_model->created_directory($file_path);
+                            }
+                            $supported_files = 'xlsx';
+                            $new_file_name = $store_id . '_' . date('Y_m_d_h_i_s');
+                            $uplaoded_file_name = $this->Common_model->upload_file('location_excel', $file_path, $supported_files, $new_file_name);
+
+                            if (empty($uplaoded_file_name)) {
+                                $do_location_file_has_error = true;
+//                                $this->data['file_errors'] = $this->upload->display_errors();
+                            } else {
+                                $file_name = $uplaoded_file_name;
+                                $this->load->library('excel');
+                                $file_location = $_SERVER['DOCUMENT_ROOT'] . location_excel_img_path . $file_name;
+                                $file_type = PHPExcel_IOFactory::identify($file_location);
+                                $objReader = PHPExcel_IOFactory::createReader($file_type);
+                                $objPHPExcel = $objReader->load($file_location);
+                                $sheet_data = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+//                                pr($sheet_data, 1);
+                                foreach ($sheet_data as $key => $data) {
+
+                                    if (isset($data['A']) && isset($data['B']) && !empty($data['A']) && !empty($data['B']) && $key > 1) {
+                                        $latitude = $data['A'];
+                                        $longitude = $data['B'];
+                                        $select_location = array(
+                                            'table' => tbl_store_location,
+                                            'where' => array(
+                                                'id_store' => $store_id,
+                                                'is_delete' => IS_NOT_DELETED_STATUS,
+                                                'latitude' => $latitude,
+                                                'longitude' => $longitude
+                                            )
+                                        );
+                                        $locations = $this->Common_model->master_single_select($select_location);
+
+                                        if (isset($locations) && sizeof($locations) > 0) {
+                                            
+                                        } else {
+                                            $in_store_location = array(
+                                                'id_store' => $store_id,
+                                                'latitude' => $latitude,
+                                                'longitude' => $longitude,
+                                                'id_location' => 0,
+                                                'location_type' => STORE_LOCATION_TYPE,
+                                                'contact_number' => $this->input->post('mobile', TRUE),
+                                                'created_date' => $date,
+                                                'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
+                                                'is_delete' => IS_NOT_DELETED_STATUS
+                                            );
+
+                                            $this->Common_model->master_save(tbl_store_location, $in_store_location);
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            if (!empty($_FILES['location_excel']['tmp_name'])) {
+                                $do_location_file_has_error = true;
+//                                $this->data['file_errors'] = 'Invalid File';
+                            }
+                        }
                     }
 
                     if (isset($store_data['status']) && $store_data['status'] == NOT_VERIFIED_STATUS && is_null($id)) {
@@ -789,6 +811,7 @@ class Stores extends MY_Controller {
         $this->data['malls_list'] = $malls_list;
         $this->data['country_id'] = $country_id;
         $this->data['download_locations_url'] = $download_locations_url;
+        $this->data['download_locations_format_url'] = $download_locations_format_url;
         $this->data['back_url'] = $back_url;
         $this->template->load('user', 'Common/Store/form', $this->data);
     }
@@ -945,6 +968,11 @@ class Stores extends MY_Controller {
         }
     }
 
+    /*
+     * Delete Store
+     * @param int id : Store ID
+     */
+
     public function delete($id) {
 
         if (!is_null($id) && $id > 0 && $this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
@@ -962,6 +990,12 @@ class Stores extends MY_Controller {
             dashboard_redirect($this->loggedin_user_type);
         }
     }
+
+    /*
+     * Add Store's Category and Subcategory
+     * @param date date : Today's Date
+     * @param int store_id : Store ID
+     */
 
     function add_category_sub_category($date = NULL, $store_id = NULL) {
 
@@ -984,7 +1018,13 @@ class Stores extends MY_Controller {
         }
     }
 
-    function add_locations($date = NULL, $store_id = NULL, $country_id = NULL) {
+    /*
+     * Add Locatiosn at time of Add Store
+     * @param date date : Today's Date
+     * @param store_id : Store ID      
+     */
+
+    function add_locations($date = NULL, $store_id = NULL) {
 
         $location_count = $this->input->post('location_count', TRUE);
         for ($i = 0; $i <= $location_count; $i++) {
@@ -1005,6 +1045,12 @@ class Stores extends MY_Controller {
             }
         }
     }
+
+    /*
+     * Add Sales Trend At time of Add and Edit Mall
+     * @param date : date : Today's Date
+     * @param int store_id : Store id
+     */
 
     function add_sales_trend($date = NULL, $store_id = NULL) {
 
@@ -1031,6 +1077,11 @@ class Stores extends MY_Controller {
             }
         }
     }
+
+    /*
+     * Download Locations Excel Sheet
+     * @param int id : Store ID
+     */
 
     function loacation_excel_download($id = NULL) {
 
@@ -1076,6 +1127,11 @@ class Stores extends MY_Controller {
             }
         }
     }
+
+    /*
+     * List Locations and Delete Locations
+     * @param int id : Store ID
+     */
 
     function locations($id) {
 
@@ -1179,6 +1235,11 @@ class Stores extends MY_Controller {
         }
     }
 
+    /*
+     * Sponsopred Featured Page
+     * @param int id : store id
+     */
+
     function sponsored($id = NULL) {
 
         $back_url = '';
@@ -1191,7 +1252,7 @@ class Stores extends MY_Controller {
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
 
             $select_store = array(
-                'table' => tbl_store.' store',
+                'table' => tbl_store . ' store',
                 'where' => array('store.id_store' => $id, 'store.id_country' => $this->loggedin_user_country_data['id_country'], 'store.is_delete' => IS_NOT_DELETED_STATUS),
                 'join' => array(
                     array(
@@ -1210,10 +1271,15 @@ class Stores extends MY_Controller {
                     'title' => ' List',
                 );
 
-                $this->data['title'] = $this->data['page_header'] = 'Sponsored Store';
+                $this->bread_crum[] = array(
+                    'url' => 'country-admin/stores/save/' . $store_details['id_store'],
+                    'title' => 'Edit ' . $store_details['store_name'],
+                );
+
+                $this->data['title'] = $this->data['page_header'] = $store_details['store_name'] . ' - Sponsored Details';
                 $this->bread_crum[] = array(
                     'url' => '',
-                    'title' => 'Sponsored Store',
+                    'title' => $store_details['store_name'] . ' - Sponsored Details',
                 );
 
                 $select_store_category = array(
@@ -1360,6 +1426,11 @@ class Stores extends MY_Controller {
         }
     }
 
+    /*
+     * Delete sponsored feature from Store
+     * @param int id : store id
+     */
+
     function delete_sponsored($id) {
 
         if ($this->input->post()) {
@@ -1375,6 +1446,18 @@ class Stores extends MY_Controller {
                 $this->session->set_flashdata('error_msg', 'Data not deleted.');
 
             redirect('country-admin/stores/sponsored/' . $id);
+        }
+    }
+
+    function loacation_excel_format_download() {
+        $file_name = 'location.xlsx';
+        $filepath = $_SERVER['DOCUMENT_ROOT'] . location_excel_img_path . $file_name;
+        if (file_exists($filepath)) {
+            header('Content-Disposition: attachment; filename="' . basename($filepath) . '"');
+            header("Content-Length: " . filesize($filepath));
+            header("Content-Type: application/octet-stream;");
+            readfile($filepath);
+            exit;
         }
     }
 

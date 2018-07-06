@@ -22,16 +22,20 @@ class Report extends MY_Controller {
 
         if (!is_null($location_type) && !is_null($location_id) && in_array($location_type, array('store', 'mall')) && $location_id > 0) {
 
+            $notification_details_url = '';
+
             if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
                 if ($location_type == 'store')
                     $back_url = 'country-admin/stores';
                 else
                     $back_url = 'country-admin/malls';
+                $notification_details_url = 'country-admin/notifications/get_notification_details/';
             } elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
                 if ($location_type == 'store')
                     $back_url = 'mall-store-user/stores';
                 else
                     $back_url = 'mall-store-user/malls';
+                $notification_details_url = 'mall-store-user/notifications/get_notification_details/';
             }
 
             $this->bread_crum[] = array(
@@ -39,15 +43,12 @@ class Report extends MY_Controller {
                 'title' => ' List',
             );
 
-            $this->bread_crum[] = array(
-                'url' => '',
-                'title' => 'Report',
-            );
+
 
             if ($location_type == 'store') {
                 $select_location = array(
                     'table' => tbl_store,
-                    'fields' => array('store_name AS location_name'),
+                    'fields' => array('store_name AS location_name', 'id_store AS location_id'),
                     'where' => array(
                         'is_delete' => IS_NOT_DELETED_STATUS,
                         'id_country' => $this->loggedin_user_country_data['id_country'],
@@ -59,7 +60,7 @@ class Report extends MY_Controller {
             } elseif ($location_type == 'mall') {
                 $select_location = array(
                     'table' => tbl_mall,
-                    'fields' => array('mall_name AS location_name'),
+                    'fields' => array('mall_name AS location_name', 'id_mall AS location_id'),
                     'where' => array(
                         'is_delete' => IS_NOT_DELETED_STATUS,
                         'id_country' => $this->loggedin_user_country_data['id_country'],
@@ -70,9 +71,17 @@ class Report extends MY_Controller {
                     $select_location['where']['id_users'] = $this->loggedin_user_data['user_id'];
             }
 
-
-
             $location = $this->Common_model->master_single_select($select_location);
+
+            $this->bread_crum[] = array(
+                'url' => 'country-admin/stores/save/' . $location['location_id'],
+                'title' => 'Edit ' . $location['location_name'],
+            );
+
+            $this->bread_crum[] = array(
+                'url' => '',
+                'title' => 'Report - ' .$location['location_name'],
+            );
 
             if (isset($location) && sizeof($location) > 0) {
                 $select_store_or_mall_favories = array(
@@ -149,7 +158,7 @@ class Report extends MY_Controller {
                     $filter_list_url = 'mall-store-user/report/push_notifications/' . $location_type . '/' . $location_id;
                 }
                 $this->data['filter_list_url'] = $filter_list_url;
-
+                $this->data['notification_details_url'] = $notification_details_url;
                 $this->template->load('user', 'Common/Report/index', $this->data);
             } else {
                 dashboard_redirect($this->loggedin_user_type);
@@ -158,6 +167,12 @@ class Report extends MY_Controller {
             dashboard_redirect($this->loggedin_user_type);
         }
     }
+
+    /*
+     * Filter Details
+     * @param location_type : mall , store
+     * @param location_id : id_mall or id_store
+     */
 
     public function filter_notifications($location_type = NULL, $location_id = NULL) {
 

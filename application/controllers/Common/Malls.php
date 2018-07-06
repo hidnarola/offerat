@@ -17,6 +17,7 @@ class Malls extends MY_Controller {
             redirect('/');
     }
 
+    //Mall List
     public function index() {
 
         $this->data['title'] = $this->data['page_header'] = 'Mall List';
@@ -64,6 +65,7 @@ class Malls extends MY_Controller {
         $this->template->load('user', 'Common/Mall/index', $this->data);
     }
 
+    //Filter Malls
     public function filter_malls() {
 
         $filter_array = $this->Common_model->create_datatable_request($this->input->post());
@@ -120,6 +122,10 @@ class Malls extends MY_Controller {
         echo json_encode($output);
     }
 
+    /* Get Mall Details for specific Mall
+     * @param int $mall_id
+     */
+
     public function get_mall_details($mall_id = NULL) {
         $response = array(
             'status' => '0',
@@ -160,6 +166,10 @@ class Malls extends MY_Controller {
         }
         echo json_encode($response);
     }
+
+    /*
+     * Add, Edit Mall Details
+     */
 
     public function save($id = NULL) {
 
@@ -628,6 +638,11 @@ class Malls extends MY_Controller {
         }
     }
 
+    /*
+     * Delete Mall
+     * @param int id: mall id
+     */
+
     function delete($id) {
 
         if (!is_null($id) && $id > 0 && $this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
@@ -662,6 +677,12 @@ class Malls extends MY_Controller {
         }
     }
 
+    /*
+     * Add Sales Trend At time of Add and Edit Mall
+     * @param date : date : Today's Date
+     * @param int mall_id : mall id
+     */
+
     function add_sales_trend($date = NULL, $mall_id = NULL) {
 
         if (!is_null($mall_id) && $mall_id > 0) {
@@ -687,6 +708,11 @@ class Malls extends MY_Controller {
             }
         }
     }
+
+    /*
+     * Sponsopred Featured Page
+     * @param int id : mall id
+     */
 
     function sponsored($id = NULL) {
 
@@ -717,11 +743,16 @@ class Malls extends MY_Controller {
                 ),
                 'group_by' => array('mall.id_mall')
             );
-            $mall_details = $this->Common_model->master_single_select($select_mall);            
+            $mall_details = $this->Common_model->master_single_select($select_mall);
             if (isset($mall_details) && sizeof($mall_details) > 0) {
                 $this->bread_crum[] = array(
                     'url' => $back_url,
                     'title' => ' List',
+                );
+
+                $this->bread_crum[] = array(
+                    'url' => 'country-admin/malls/save/' . $mall_details['id_mall'],
+                    'title' => 'Edit ' . $mall_details['mall_name'],
                 );
 
                 $this->data['title'] = $this->data['page_header'] = 'Sponsored Mall';
@@ -831,6 +862,11 @@ class Malls extends MY_Controller {
             override_404();
         }
     }
+
+    /*
+     * Delete sponsored feature from Mall
+     * @param int id : mall id
+     */
 
     function delete_sponsored($id) {
         if ($this->input->post()) {

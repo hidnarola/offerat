@@ -197,7 +197,7 @@ if (isset($sub_category_list) && sizeof($sub_category_list) > 0) {
                     "visible": true,
                     "name": 'mall.id_mall',
                     "render": function (data, type, full, meta) {
-                    return '';
+                    return full.mall_list;
                     }
             },
             {

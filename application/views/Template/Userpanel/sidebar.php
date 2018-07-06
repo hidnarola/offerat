@@ -65,6 +65,7 @@ $logged_user_type = $this->session->userdata('loggedin_user_type');
 
                             </ul>
                         </li>
+                        <li <?php echo ($controller === 'sponsored') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/sponsored/stores"><i class="icon-star-half"></i> <span>Sponsored Stores</span></a></li>
                         <li <?php echo ($controller === 'change-password') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-password"><i class="icon-lock2"></i> <span>Change Password</span></a></li>
                         <li <?php echo ($controller === 'change-information') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-information"><i class="fa fa-user"></i> <span>Change Information</span></a></li>
                     </ul>
@@ -87,8 +88,6 @@ $logged_user_type = $this->session->userdata('loggedin_user_type');
                         </li>
                         <li <?php echo ($controller === 'change-password') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-password"><i class="icon-lock2"></i> <span>Change Password</span></a></li>
                         <li <?php echo ($controller === 'change-information') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-information"><i class="fa fa-user"></i> <span>Change Information</span></a></li>
-
-
                     </ul>
                 <?php } ?>
             </div>

@@ -221,7 +221,7 @@ class Storeregistration extends CI_Controller {
     }
 
     /**
-     * function to load sub categories using ajax
+     * To load sub categories using ajax
      */
     public function show_sub_category() {
 

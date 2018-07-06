@@ -19,8 +19,8 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label>Contact Number <span class="text-danger">*</span></label>
-                                        <input type="text" name="contact_number" value="<?php echo set_value('contact_number'); ?>" placeholder="Contact Number" required="required" class="form-control">
+                                        <label>Contact Number </label>
+                                        <input type="text" name="contact_number" value="<?php echo set_value('contact_number'); ?>" placeholder="Contact Number" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-6">

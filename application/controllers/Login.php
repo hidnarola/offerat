@@ -204,7 +204,7 @@ class Login extends CI_Controller {
                             );
                             $this->Common_model->master_save(tbl_verification, $in_veri_data);
 
-                            $this->session->set_flashdata('success_msg', 'Verification Email Sent. Please click on link in Email for Reset Password.');
+                            $this->session->set_flashdata('success_msg', 'Reset Password Email Sent. Please click on link in Email for Reset Password.');
                             redirect('login');
                         } else {
                             $this->session->set_flashdata('error_msg', 'Unable to send Email for Reset Password. Please try again later.');

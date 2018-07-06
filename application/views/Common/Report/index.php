@@ -50,6 +50,7 @@
                                                         <th>Notification Type</th>                                                                                                                        
                                                         <th>Impressions</th>
                                                         <th>Views</th>                                                            
+                                                        <th>Action</th>
                                                     </tr>
                                                     <tr>
                                                         <th>Added Date</th>
@@ -58,6 +59,7 @@
                                                         <th>Notification Type</th>
                                                         <th>Impressions</th>
                                                         <th>Views</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -75,10 +77,46 @@
         </div>
     </div>
 </div>
-
+<?php
+$this->load->view('Common/Notifications/details_modal');
+?>
 <script type="text/javascript">
 
     $(document).ready(function () {
+
+        $(document).on('click', '.view_notification_details', function () {
+            var notifications_id = $(document).find(this).attr('data-id');
+
+            displayElementBlock('loader');
+            var urlGNotificationDetailsURL = '<?php echo $notification_details_url; ?>' + notifications_id;
+            $.ajax({
+                'method': 'GET',
+                'url': urlGNotificationDetailsURL,
+                'success': function (response) {
+//                console.log(response);
+//                return false
+                    if (response !== '') {
+                        var obj = JSON.parse(response);
+                        if (obj.status === '1') {
+                            $(document).find('#notification_view_model').modal('show');
+                            $(document).find('.details_view').html(obj.sub_view);
+                            displayElementNone('loader');
+                        } else {
+                            displayServerMsg('notification_error_wrapper', 'notification_error_msg', 'Something went wrong! please try again later.');
+                            displayElementNone('loader');
+                        }
+                    } else {
+                        displayServerMsg('notification_error_wrapper', 'notification_error_msg', 'Something went wrong! please try again later.');
+                        displayElementNone('loader');
+                    }
+                },
+                'error': function () {
+                    displayServerMsg('notification_error_wrapper', 'notification_error_msg', 'Something went wrong! please try again later.');
+                    displayElementNone('loader');
+                },
+            });
+        });
+
 
         var notification_type_arr = {
             '0': "Image",
@@ -154,7 +192,19 @@
                     'data': 'offer_announcement_view_count',
                     "visible": true,
                     "name": 'offer_announcement.view_count',
-                }
+                },
+                {
+                    "sortable": false,
+                    "searchable": false,
+                    'data': 'offer_announcement_id_offer',
+                    "visible": true,
+                    "name": 'offer_announcement.id_offer',
+                    "render": function (data, type, full, meta) {
+                        var links = '';
+                        links += '<a href="javascript:void(0);" target="_blank" title="View Details" data-id="' + full.offer_announcement_id_offer + '" class="btn btn-primary btn-xs tooltip-show margin-right-3 view_notification_details" data-placement="top"><i class="icon-eye"></i></a>   ';
+                        return links;
+                    }
+                },
             ],
             initComplete: function () {
                 var tableColumns = table.settings().init().columns;

@@ -172,6 +172,11 @@ define('TEXT_OFFER_CONTENT_TYPE', 2);
 define('MEDIA_THUMB_IMAGE_WIDTH', '30');
 define('MEDIA_THUMB_IMAGE_HEIGHT', '30');
 
+define('IOS_DEVICE_TYPE', 0);
+define('ANDROID_DEVICE_TYPE', 1);
+
 define('FFMPEG_PATH', 'C:/FFMPEG/bin/ffmpeg.exe');
 
 define('SUCCESS_CHANGE_EMAIL', 'Verification Email Sent. Please click on link in Email to complete the verification, Email change will take effect after verification.');
+
+define('GOOGLE_PUSH_NOTIFICATION_API_KEY', 'AAAA6XFXelw:APA91bERf913DmHsnc34eri6k9_5D7qhK7rAgW1-KLz4pP_2ZaPR1RaOIbdxXl0lRDJ0r2Ap_-crQ1qUkGMIbM3QQ3q9TUDj4zIqhZB5j0KHldNVq0RakkbVS-hF_JFtCctQ4x4jdvQEpYayzUhgLHOnBak_k8w-Qg');
