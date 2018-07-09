@@ -1276,10 +1276,10 @@ class Stores extends MY_Controller {
                     'title' => 'Edit ' . $store_details['store_name'],
                 );
 
-                $this->data['title'] = $this->data['page_header'] = $store_details['store_name'] . ' - Sponsored Details';
+                $this->data['title'] = $this->data['page_header'] = 'Sponsored - ' . $store_details['store_name'];
                 $this->bread_crum[] = array(
                     'url' => '',
-                    'title' => $store_details['store_name'] . ' - Sponsored Details',
+                    'title' => 'Sponsored - ' . $store_details['store_name'],
                 );
 
                 $select_store_category = array(

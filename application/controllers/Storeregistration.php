@@ -31,7 +31,7 @@ class Storeregistration extends CI_Controller {
             if ($this->_validate_form($validate_fields)) {
 
                 $date = date('Y-m-d h:i:s');
-
+                $country_id = 0;
                 $do_store_image_has_error = false;
                 $img_name = $image_name = '';
                 if (isset($_FILES['store_logo'])) {
@@ -74,6 +74,38 @@ class Storeregistration extends CI_Controller {
                 if (isset($user_data) && sizeof($user_data) > 0) {
                     $user_id = $user_data['id_user'];
                     $email_id = $user_data['email_id'];
+
+                    $select_country = array(
+                        'table' => tbl_country . ' country',
+                        'fields' => array('country.id_country'),
+                        'where' => array(
+                            'country.is_delete' => IS_NOT_DELETED_STATUS,
+                            'country.status' => ACTIVE_STATUS
+                        ),
+                        'where_with_sign' => array(
+                            '(country.id_country = mall.id_country OR country.id_country = store.id_country)',
+                            '(mall.id_users = ' . $user_id . ' OR store.id_users = ' . $user_id . ')'
+                        ),
+                        'join' => array(
+                            array(
+                                'table' => tbl_mall . ' as mall',
+                                'condition' => 'mall.id_country = country.id_country',
+                                'join_type' => 'left',
+                            ),
+                            array(
+                                'table' => tbl_store . ' as store',
+                                'condition' => 'store.id_country = country.id_country',
+                                'join_type' => 'left',
+                            )
+                        )
+                    );
+
+                    $country_details = $this->Common_model->master_single_select($select_country);
+                    
+                    if (isset($country_details) && sizeof($country_details) > 0)
+                        $country_id = $country_details['id_country'];
+                    else
+                        $country_id = $this->input->post('id_country', TRUE);
                 } else {
                     $in_user_data = array(
                         'user_type' => STORE_OR_MALL_ADMIN_USER_TYPE,
@@ -93,6 +125,7 @@ class Storeregistration extends CI_Controller {
                     $user_id = $this->Common_model->master_save(tbl_user, $in_user_data);
 
                     $new_user_status = true;
+                    $country_id = $this->input->post('id_country', TRUE);
                 }
 
                 $in_store_data = array(
@@ -102,7 +135,7 @@ class Storeregistration extends CI_Controller {
                     'website' => $this->input->post('website', TRUE),
                     'facebook_page' => $this->input->post('facebook_page', TRUE),
                     'telephone' => $this->input->post('telephone', TRUE),
-                    'id_country' => $this->input->post('id_country', TRUE),
+                    'id_country' => $country_id,
                     'status' => NOT_VERIFIED_STATUS,
                     'created_date' => $date,
                     'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
@@ -159,13 +192,13 @@ class Storeregistration extends CI_Controller {
                         redirect('store-registration');
                     }
                 } else {
-
+                    
                     //to send email to Country Admin
                     $country_admin_data = array(
                         'table' => tbl_country . ' country',
                         'fields' => array('user.email_id'),
                         'where' => array(
-                            'country.id_country' => $this->input->post('id_country', TRUE),
+                            'country.id_country' => $country_id,
                             'user.is_delete' => IS_NOT_DELETED_STATUS,
                             'country.is_delete' => IS_NOT_DELETED_STATUS,
                             'user.status' => ACTIVE_STATUS,
@@ -183,18 +216,18 @@ class Storeregistration extends CI_Controller {
                     $country_admin_details = $this->Common_model->master_single_select($country_admin_data);
 
                     if (isset($country_admin_details) && sizeof($country_admin_details) > 0) {
-
-                        $country_admin_email_id = $country_admin_details['email_id'];
+                        
+                        $country_admin_email_id = $country_admin_details['email_id'];                        
                         $subject = 'Add new Store - ' . $this->input->post('store_name', TRUE);
                         $content = ' ';
                         $response = $this->Email_template_model->send_email(NULL, $country_admin_email_id, $subject, $content);
-
+                        
                         if (isset($response) && $response == 'yes') {
                             $this->session->set_flashdata('success_msg', 'Thank you for Your Store Registration. Please allow 1-2 business days for store activation.');
                             redirect('/');
                         } else {
                             $this->Common_model->master_delete(tbl_store, array('id_store' => $store_id));
-                            $this->session->set_flashdata('error_msg', 'Unable to send Email for Account Verification. Please try again later.');
+                            $this->session->set_flashdata('error_msg', 'Unable to send request for Store Registration. Please try again later.');
                             redirect('store-registration');
                         }
                     }

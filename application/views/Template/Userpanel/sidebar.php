@@ -1,6 +1,7 @@
 <?php
 $uri_segment_1 = strtolower($this->uri->segment(1));
 $logged_user_type = $this->session->userdata('loggedin_user_type');
+$controller = $this->uri->segment(2);
 ?>
 <div class="sidebar sidebar-main">
     <div class="sidebar-content">
@@ -9,7 +10,7 @@ $logged_user_type = $this->session->userdata('loggedin_user_type');
             <div class="category-content">
                 <div class="media">                    
                     <div class="media-body">
-                        <a href="/dashboard">
+                        <a href="<?php echo $uri_segment_1; ?>/dashboard">
                             <span class="media-heading text-semibold"><i class="fa fa-user fa-3x margin-right-10"></i> 
                                 <?php
                                 if ($logged_user_type == SUPER_ADMIN_USER_TYPE)
@@ -17,7 +18,7 @@ $logged_user_type = $this->session->userdata('loggedin_user_type');
                                 elseif ($logged_user_type == COUNTRY_ADMIN_USER_TYPE)
                                     echo 'Country Admin';
                                 elseif ($logged_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
-                                    echo 'Mall / Store User';
+                                    echo 'Mall / Store Admin';
                                 ?>                            
                             </span>
                         </a>
@@ -30,7 +31,6 @@ $logged_user_type = $this->session->userdata('loggedin_user_type');
         <div class="sidebar-category sidebar-category-visible">
             <div class="category-content no-padding">
                 <?php
-                $controller = $this->uri->segment(2);
                 if ($logged_user_type == SUPER_ADMIN_USER_TYPE) {
                     ?>
                     <ul class="navigation navigation-main navigation-accordion">

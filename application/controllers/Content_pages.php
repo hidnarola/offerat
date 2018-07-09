@@ -55,8 +55,7 @@ class Content_pages extends CI_Controller {
                                 </body>
                             </html>
                             ";
-                $response = $this->Email_template_model->send_email($email_id, site_info_email, 'Offerat | Contact US', $send_message);
-                
+                $response = $this->Email_template_model->send_email(NULL, site_info_email, 'Offerat | Contact US', $send_message);
                 if (isset($response) && $response == 'yes') {
                     $this->session->set_flashdata('success_msg', 'Message sent successfully');
                 } else

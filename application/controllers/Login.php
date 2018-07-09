@@ -63,9 +63,7 @@ class Login extends CI_Controller {
                                 'fields' => array('country.id_country', 'country.country_name', 'country.timezone'),
                                 'where' => array(
                                     'country.is_delete' => IS_NOT_DELETED_STATUS,
-                                    'country.id_users' => $user['id_user'],
-                                    'country.status' => ACTIVE_STATUS,
-                                    ''
+                                    'country.status' => ACTIVE_STATUS
                                 ),
                                 'where_with_sign' => array(
                                     '(country.id_country = mall.id_country OR country.id_country = store.id_country)',
@@ -191,9 +189,7 @@ class Login extends CI_Controller {
                         $subject = 'Forgot Password on Offerat';
                         $content = $this->Email_template_model->forgot_password_format($reset_link);
                         $response = $this->Email_template_model->send_email(NULL, $user['email_id'], $subject, $content);
-
                         if (isset($response) && $response == 'yes') {
-
                             $in_veri_data = array(
                                 'id_user' => $user['id_user'],
                                 'verification_code' => $reset_code,

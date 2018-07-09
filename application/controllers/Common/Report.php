@@ -43,8 +43,6 @@ class Report extends MY_Controller {
                 'title' => ' List',
             );
 
-
-
             if ($location_type == 'store') {
                 $select_location = array(
                     'table' => tbl_store,
@@ -80,7 +78,7 @@ class Report extends MY_Controller {
 
             $this->bread_crum[] = array(
                 'url' => '',
-                'title' => 'Report - ' .$location['location_name'],
+                'title' => 'Report - ' . $location['location_name'],
             );
 
             if (isset($location) && sizeof($location) > 0) {
@@ -149,7 +147,7 @@ class Report extends MY_Controller {
                 }
 
                 $this->data['proirity_list'] = $proirity_list;
-                $this->data['title'] = $this->data['page_header'] = $location['location_name'] . ' Report';
+                $this->data['title'] = $this->data['page_header'] = 'Report - ' . $location['location_name'];
 
                 $filter_list_url = '';
                 if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
