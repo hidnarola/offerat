@@ -20,7 +20,7 @@
         </div>
     <?php } ?>
     <div class="header_cstm">
-        <!--<h1 class="site_name"><?php //echo SITENAME;      ?></h1>-->
+        <!--<h1 class="site_name"><?php //echo SITENAME;               ?></h1>-->
         <div class="svg_logo">             
             <?php $this->load->view('svg_html/home_page_logo'); ?>
         </div>
@@ -37,3 +37,9 @@
         <li><a href="javascript:void(0);"><img src="assets/user/images/site/gogle_lay.png"></a></li>
     </ul>
 </div>
+<script>
+    $(document).find('.home_page_html').css('height', $(document).height());
+    $(window).on("resize orientationchange", function (event) {
+        $(document).find('.home_page_html').css('height', $(document).height());
+    });
+</script>

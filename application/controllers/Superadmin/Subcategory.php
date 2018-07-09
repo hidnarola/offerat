@@ -38,7 +38,7 @@ class Subcategory extends MY_Controller {
                     'url' => '',
                     'title' => 'List - ' . $parent_category['category_name']
                 );
-                echo $this->data['page_header'] = 'Sub-categories - ' . $parent_category['category_name'];
+                $this->data['page_header'] = 'Sub-categories - ' . $parent_category['category_name'];
 
                 $this->template->load('user', 'Superadmin/Subcategory/index', $this->data);
             } else {

@@ -1,39 +1,37 @@
-<div class="row">
-    <div class="col-md-12">
-        <div id="sponsored_error_wrapper" class="alert alert-danger alert-bordered display-none">
-            <span id="sponsored_details_error_msg"></span>
-        </div>
-        <form method="POST" action="" enctype="multipart/form-data" class="form-validate-jquery" name="manage_record" id="manage_record">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="panel panel-flat">
-                        <div class="panel-heading">                            
-                            <div class="heading-elements">
-                                <ul class="icons-list">
-                                    <li><a data-action="collapse"></a></li>
-                                </ul>
-                            </div>
+<div class="col-md-12">
+    <div id="sponsored_error_wrapper" class="alert alert-danger alert-bordered display-none">
+        <span id="sponsored_details_error_msg"></span>
+    </div>
+    <form method="POST" action="" enctype="multipart/form-data" class="form-validate-jquery" name="manage_record" id="manage_record">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel panel-flat">
+                    <div class="panel-heading">                            
+                        <div class="heading-elements">
+                            <ul class="icons-list">
+                                <li><a data-action="collapse"></a></li>
+                            </ul>
                         </div>
-                        <div class="panel-body"> 
-                            <fieldset class="content-group">                                                                                                    
-                                <div class="col-md-3">
-                                    <?php if (isset($stores_list) && sizeof($stores_list) > 0) { ?>
-                                        <select id="store_id" name="store_id" class="form-control select-search">
-                                            <option class="">Select Store</option>
-                                            <?php foreach ($stores_list as $list) { ?>
-                                                <option value="<?php echo $list['id_store']; ?>"><?php echo $list['store_name']; ?></option>
-                                            <?php } ?>
-                                        </select>
-                                    <?php } ?>
-                                </div>                                            
-                            </fieldset>
-                            <div class="data-sponsored-display"></div>                            
-                        </div>
+                    </div>
+                    <div class="panel-body"> 
+                        <fieldset class="content-group">                                                                                                    
+                            <div class="col-md-3">
+                                <?php if (isset($stores_list) && sizeof($stores_list) > 0) { ?>
+                                    <select id="store_id" name="store_id" class="form-control select-search">
+                                        <option class="">Select Store</option>
+                                        <?php foreach ($stores_list as $list) { ?>
+                                            <option value="<?php echo $list['id_store']; ?>"><?php echo $list['store_name']; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                <?php } ?>
+                            </div>                                            
+                        </fieldset>
+                        <div class="data-sponsored-display"></div>                            
                     </div>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 <script language="javascript">
     $('#store_id').change(function (e) {

@@ -6,7 +6,7 @@ class Home extends CI_Controller {
 
     public function index() {
         $this->data['page'] = 'home_page';
-        $this->data['page_header'] = 'Offerat';
+        $this->data['page_header'] = $this->data['title'] = 'Offerat';
 
 
         $this->template->load('home', 'Home/index', $this->data);

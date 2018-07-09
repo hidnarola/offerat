@@ -1,75 +1,73 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-flat">            
-            <div class="panel-body">
-                <div id="notification_error_wrapper" class="alert alert-danger alert-bordered display-none">
-                    <span id="notification_error_msg"></span>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="panel panel-body border-top-info">
-                            <ul class="list-group"> 
-                                <?php for ($i = 1; $i <= 5; $i++) { ?>
-                                    <li class="list-group-item">
-                                        Position <?php echo $i; ?> : 
-                                        <span class="label border-left-info label-striped"><?php echo (@$proirity_list[$i] > 0) ? @$proirity_list[$i] : 0; ?> Users</span>
-                                    </li> 
-                                <?php } ?>
-                            </ul>            
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="panel panel-body border-top-info">            
-                            <ul class="list-group"> 
+<div class="col-md-12">
+    <div class="panel panel-flat">            
+        <div class="panel-body">
+            <div id="notification_error_wrapper" class="alert alert-danger alert-bordered display-none">
+                <span id="notification_error_msg"></span>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-body border-top-info">
+                        <ul class="list-group"> 
+                            <?php for ($i = 1; $i <= 5; $i++) { ?>
                                 <li class="list-group-item">
-                                    Number of users receiving push notifications from you :
-                                    <span class="label border-left-info label-striped"><?php echo $enable_notification_count; ?></span>
+                                    Position <?php echo $i; ?> : 
+                                    <span class="label border-left-info label-striped"><?php echo (@$proirity_list[$i] > 0) ? @$proirity_list[$i] : 0; ?> Users</span>
                                 </li> 
-                                <li class="list-group-item">
-                                    Users who has checked your store on last month : 
-                                    <span class="label border-left-info label-striped"><?php echo $click_count; ?></span>
-                                </li>                
-                            </ul>
-                        </div>
-                    </div>    
+                            <?php } ?>
+                        </ul>            
+                    </div>
                 </div>
-                <hr>
-                <div class="tabbable">
-                    <div class="tab-content">                            
-                        <div class="row">
-                            <div class="col-md-12">                                    
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="highlighted-tab1">
-                                        <div class="table-responsive popular_list dt-first-col-mw nipl_table_listing col-md-12 mt-20">
-                                            <table id="notification_dttable" class="table table-striped datatable-basic custom_dt width-100-per">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Added Date</th>
-                                                        <th>Broadcast Date</th>
-                                                        <th>Expiry Date</th>
-                                                        <th>Notification Type</th>                                                                                                                        
-                                                        <th>Impressions</th>
-                                                        <th>Views</th>                                                            
-                                                        <th>Action</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Added Date</th>
-                                                        <th>Broadcast Date</th>
-                                                        <th>Expiry Date</th>
-                                                        <th>Notification Type</th>
-                                                        <th>Impressions</th>
-                                                        <th>Views</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
+                <div class="col-md-6">
+                    <div class="panel panel-body border-top-info">            
+                        <ul class="list-group"> 
+                            <li class="list-group-item">
+                                Number of users receiving push notifications from you :
+                                <span class="label border-left-info label-striped"><?php echo $enable_notification_count; ?></span>
+                            </li> 
+                            <li class="list-group-item">
+                                Users who has checked your store on last month : 
+                                <span class="label border-left-info label-striped"><?php echo $click_count; ?></span>
+                            </li>                
+                        </ul>
+                    </div>
+                </div>    
+            </div>
+            <hr>
+            <div class="tabbable">
+                <div class="tab-content">                            
+                    <div class="row">
+                        <div class="col-md-12">                                    
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="highlighted-tab1">
+                                    <div class="table-responsive popular_list dt-first-col-mw nipl_table_listing col-md-12 mt-20">
+                                        <table id="notification_dttable" class="table table-striped datatable-basic custom_dt width-100-per">
+                                            <thead>
+                                                <tr>
+                                                    <th>Added Date</th>
+                                                    <th>Broadcast Date</th>
+                                                    <th>Expiry Date</th>
+                                                    <th>Notification Type</th>                                                                                                                        
+                                                    <th>Impressions</th>
+                                                    <th>Views</th>                                                            
+                                                    <th>Action</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>Added Date</th>
+                                                    <th>Broadcast Date</th>
+                                                    <th>Expiry Date</th>
+                                                    <th>Notification Type</th>
+                                                    <th>Impressions</th>
+                                                    <th>Views</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
 
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </div>                                    
-                            </div>
+                                </div>
+                            </div>                                    
                         </div>
                     </div>
                 </div>

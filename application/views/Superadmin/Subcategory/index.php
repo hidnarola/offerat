@@ -1,4 +1,4 @@
-<div id="category_dttable_wrapper_row" class="row">
+<div id="category_dttable_wrapper_row">
     <div class="col-md-12">
         <div class="panel panel-flat">
             <form id="form" method="post">

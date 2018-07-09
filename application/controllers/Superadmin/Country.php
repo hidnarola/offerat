@@ -330,9 +330,17 @@ class Country extends MY_Controller {
                 )
             );
             $check_mall_country = $this->Common_model->master_single_select($mall_data);
+            $store_data = array(
+                'table' => tbl_store,
+                'where' => array(
+                    'is_delete' => IS_NOT_DELETED_STATUS,
+                    'id_country' => $country_id
+                )
+            );
+            $check_store_country = $this->Common_model->master_single_select($store_data);
 
-            if (isset($check_mall_country) && sizeof($check_mall_country) > 0)
-                $this->session->set_flashdata('error_msg', 'You can not delete this Country, Mall is using this Country.');
+            if ((isset($check_mall_country) && sizeof($check_mall_country) > 0 ) || (isset($check_store_country) && sizeof($check_store_country) > 0 ))
+                $this->session->set_flashdata('error_msg', 'You can not delete this Country, Mall OR Store is using this Country.');
             else {
                 $update_data = array('is_delete' => IS_DELETED_STATUS);
                 $where_data = array(

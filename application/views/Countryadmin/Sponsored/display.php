@@ -15,8 +15,12 @@ if (isset($store_categories) && sizeof($store_categories) > 0) {
                 <div class="col-md-2">
                     <label>Position</label>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label>From - To Date</label>
+                </div>                
+                <div class="col-md-4">
+                    <a href="<?php echo 'country-admin/stores/sponsored/' . $store_id; ?>" target="_blank" class="btn btn-info btn-labeled"><b><i class="icon-star-half"></i></b>Edit Sponsored Details</a>
+                    <a href="<?php echo 'country-admin/stores/save/' . $store_id; ?>" target="_blank" class="btn btn-primary btn-labeled"><b><i class="icon-store"></i></b>Edit Store</a>
                 </div>                
             </div>
         </div>                                    

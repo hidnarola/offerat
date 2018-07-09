@@ -1,4 +1,4 @@
-<div id="mall_dttable_wrapper_row" class="row">
+<div id="mall_dttable_wrapper_row">
     <div class="col-md-12">
         <div class="panel panel-flat">
             <form id="form" method="post">
@@ -11,7 +11,7 @@
                                         <div class="tbl-btn-wrap pull-right">
                                             <a href="<?php echo $mall_list_url; ?>" class="btn bg-teal-400 btn-labeled"><b><i class="icon-sync"></i></b>Refresh</a>
                                             <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
-                                                <a href="<?php echo $add_mall_url; ?>" class="btn btn-primary btn-labeled"><b><i class="icon-plus22"></i></b>Add Mall</a>                                            
+                                                <a href="<?php echo $add_mall_url; ?>" class="btn btn-primary btn-labeled"><b><i class="icon-plus22"></i></b>Add Mall</a>
                                             <?php } ?>
                                         </div>
                                     </div>

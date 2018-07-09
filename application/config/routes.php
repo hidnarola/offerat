@@ -60,9 +60,8 @@ $route['reset-password'] = 'login/reset_password';
 //change password
 $route['change-password'] = 'login/change_password';
 
-
-
 //Super Admin Routes =================================
+$route['super-admin'] = 'superadmin/dashboard';
 $route['super-admin/dashboard'] = 'superadmin/dashboard';
 $route['super-admin/change-password'] = 'common/change_password';
 $route['super-admin/change-information'] = 'common/change_information';
@@ -84,6 +83,7 @@ $route['super-admin/sub-category/save/(:any)/(:any)'] = 'superadmin/subcategory/
 
 
 //Country Admin Routes =================================
+$route['country-admin'] = 'countryadmin/dashboard';
 $route['country-admin/dashboard'] = 'countryadmin/dashboard';
 $route['country-admin/verify-store-offers'] = 'countryadmin/verify_offers/stores';
 $route['country-admin/filter_store_offers'] = 'countryadmin/verify_offers/filter_store_offers';
@@ -128,6 +128,7 @@ $route['country-admin/report/push_notifications/(:any)/(:any)'] = 'common/report
 
 
 //Country Mall Store User Routes =================================
+$route['mall-store-user'] = 'mall_store/dashboard';
 $route['mall-store-user/dashboard'] = 'mall_store/dashboard';
 $route['mall-store-user/change-password'] = 'common/change_password';
 $route['mall-store-user/change-information'] = 'common/change_information';
@@ -163,7 +164,6 @@ $route['email-change-verify'] = 'login/change_verify';
 $route['about-us'] = 'Content_pages/about_us';
 $route['contact-us'] = 'Content_pages/contact_us';
 $route['terms-and-conditions'] = 'Content_pages/terms_conditions';
-
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

@@ -101,6 +101,7 @@ class Sponsored extends MY_Controller {
 
             $this->data['store_categories'] = $store_categories;
             $this->data['category_list'] = $category_list;
+            $this->data['store_id'] = $store_details['id_store'];
 
             $html = $this->load->view('Countryadmin/Sponsored/display', $this->data, TRUE);
             $response = array(

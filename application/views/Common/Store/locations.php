@@ -1,71 +1,69 @@
-<div class="row">
-    <div class="col-md-12">
-        <form method="POST" action="<?php echo $action_url; ?>" enctype="multipart/form-data" class="form-validate-jquery" name="manage_record" id="manage_record">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="panel panel-flat">
-                        <div class="panel-heading">                            
-                            <div class="heading-elements">
-                                <ul class="icons-list">
-                                    <li><a data-action="collapse"></a></li>
-                                </ul>
-                            </div>
+<div class="col-md-12">
+    <form method="POST" action="<?php echo $action_url; ?>" enctype="multipart/form-data" class="form-validate-jquery" name="manage_record" id="manage_record">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel panel-flat">
+                    <div class="panel-heading">                            
+                        <div class="heading-elements">
+                            <ul class="icons-list">
+                                <li><a data-action="collapse"></a></li>
+                            </ul>
                         </div>
-                        <div class="panel-body">
-                            <?php if (isset($store_locations) && sizeof($store_locations) > 0) { ?>                                
-                                <div class="col-md-12 col-xs-12 text-right">
-                                    <div class="form-group">
-                                        <div>
-                                            <input type="checkbox" class="styled-checkbox-1" name="select_all" id="select_all"  placeholder="" value="">
-                                            <span class="text-size-mini">Check All</span>            
-                                        </div>
-                                    </div>        
-                                </div>
-                                <?php
-                                foreach ($store_locations as $loc) {
-                                    ?>                            
-                                    <div class="col-md-3 col-xs-12">
-                                        <div class="col-md-2 col-xs-2">
-                                            <div class="form-group">                                                
-                                                <div>
-                                                    <!--styled-checkbox-1-->
-                                                    <input type="checkbox" class="checkbox" name="delete_location_ids[]" id="delete_location_id" placeholder="" value="<?php echo $loc['id_store_location']; ?>">
-                                                </div>
-                                            </div>        
-                                        </div>
-                                        <div class="col-md-5 col-xs-5">
-                                            <div class="form-group">                                            
-                                                <div>
-                                                    <input type="text" class="form-control" placeholder="Latitude"  value="<?php echo $loc['latitude']; ?>" readonly>
-                                                </div>
-                                            </div>        
-                                        </div>
-                                        <div class="col-md-5 col-xs-5">
-                                            <div class="form-group">                                            
-                                                <div>
-                                                    <input type="text" class="form-control" placeholder="Longitude"  value="<?php echo $loc['longitude']; ?>" readonly>
-                                                </div>
-                                            </div>
-                                        </div>                                     
+                    </div>
+                    <div class="panel-body">
+                        <?php if (isset($store_locations) && sizeof($store_locations) > 0) { ?>                                
+                            <div class="col-md-12 col-xs-12 text-right">
+                                <div class="form-group">
+                                    <div>
+                                        <input type="checkbox" class="styled-checkbox-1" name="select_all" id="select_all"  placeholder="" value="">
+                                        <span class="text-size-mini">Check All</span>            
                                     </div>
-                                <?php } ?>
-                                <div class="text-right">
-                                    <input type="hidden" id="checked_val" name="checked_val"/>
-                                    <a href="<?php echo $back_url ?>" class="btn bg-grey-300 btn-labeled"><b><i class="icon-arrow-left13"></i></b>Back</a>
-                                    <button type="submit" id="delete_locations" class="btn bg-danger btn-labeled btn-labeled-right"><b><i class="icon-arrow-right14"></i></b>Delete</button>
+                                </div>        
+                            </div>
+                            <?php
+                            foreach ($store_locations as $loc) {
+                                ?>                            
+                                <div class="col-md-3 col-xs-12">
+                                    <div class="col-md-2 col-xs-2">
+                                        <div class="form-group">                                                
+                                            <div>
+                                                <!--styled-checkbox-1-->
+                                                <input type="checkbox" class="checkbox" name="delete_location_ids[]" id="delete_location_id" placeholder="" value="<?php echo $loc['id_store_location']; ?>">
+                                            </div>
+                                        </div>        
+                                    </div>
+                                    <div class="col-md-5 col-xs-5">
+                                        <div class="form-group">                                            
+                                            <div>
+                                                <input type="text" class="form-control" placeholder="Latitude"  value="<?php echo $loc['latitude']; ?>" readonly>
+                                            </div>
+                                        </div>        
+                                    </div>
+                                    <div class="col-md-5 col-xs-5">
+                                        <div class="form-group">                                            
+                                            <div>
+                                                <input type="text" class="form-control" placeholder="Longitude"  value="<?php echo $loc['longitude']; ?>" readonly>
+                                            </div>
+                                        </div>
+                                    </div>                                     
                                 </div>
+                            <?php } ?>
+                            <div class="text-right">
+                                <input type="hidden" id="checked_val" name="checked_val"/>
+                                <a href="<?php echo $back_url ?>" class="btn bg-grey-300 btn-labeled"><b><i class="icon-arrow-left13"></i></b>Back</a>
+                                <button type="submit" id="delete_locations" class="btn bg-danger btn-labeled btn-labeled-right"><b><i class="icon-arrow-right14"></i></b>Delete</button>
+                            </div>
 
-                                <?php
-                            } else {
-                                echo 'No Results Found.';
-                            }
-                            ?>
-                        </div>
+                            <?php
+                        } else {
+                            echo 'No Results Found.';
+                        }
+                        ?>
                     </div>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 <?php
 $this->load->view('Common/delete_alert');
