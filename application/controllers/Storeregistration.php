@@ -101,7 +101,7 @@ class Storeregistration extends CI_Controller {
                     );
 
                     $country_details = $this->Common_model->master_single_select($select_country);
-                    
+
                     if (isset($country_details) && sizeof($country_details) > 0)
                         $country_id = $country_details['id_country'];
                     else
@@ -192,7 +192,7 @@ class Storeregistration extends CI_Controller {
                         redirect('store-registration');
                     }
                 } else {
-                    
+
                     //to send email to Country Admin
                     $country_admin_data = array(
                         'table' => tbl_country . ' country',
@@ -216,12 +216,12 @@ class Storeregistration extends CI_Controller {
                     $country_admin_details = $this->Common_model->master_single_select($country_admin_data);
 
                     if (isset($country_admin_details) && sizeof($country_admin_details) > 0) {
-                        
-                        $country_admin_email_id = $country_admin_details['email_id'];                        
+
+                        $country_admin_email_id = $country_admin_details['email_id'];
                         $subject = 'Add new Store - ' . $this->input->post('store_name', TRUE);
                         $content = ' ';
                         $response = $this->Email_template_model->send_email(NULL, $country_admin_email_id, $subject, $content);
-                        
+
                         if (isset($response) && $response == 'yes') {
                             $this->session->set_flashdata('success_msg', 'Thank you for Your Store Registration. Please allow 1-2 business days for store activation.');
                             redirect('/');
@@ -428,14 +428,14 @@ class Storeregistration extends CI_Controller {
             $validation_rules[] = array(
                 'field' => 'website',
                 'label' => 'Website',
-                'rules' => 'trim|min_length[2]|max_length[250]|callback_custom_valid_url|htmlentities'
+                'rules' => 'trim|min_length[5]|max_length[250]|callback_custom_valid_url|htmlentities'
             );
         }
         if (in_array('facebook_page', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'facebook_page',
                 'label' => 'Facebook Page URL',
-                'rules' => 'trim|min_length[2]|max_length[250]|callback_custom_valid_url|htmlentities'
+                'rules' => 'trim|required|min_length[5]|max_length[250]|callback_custom_valid_url|htmlentities'
             );
         }
         if (in_array('store_logo', $validate_fields)) {
@@ -463,7 +463,7 @@ class Storeregistration extends CI_Controller {
             $validation_rules[] = array(
                 'field' => 'email_id',
                 'label' => 'Email Address',
-                'rules' => 'trim|required|min_length[2]|max_length[100]|htmlentities'
+                'rules' => 'trim|required|min_length[5]|max_length[100]|htmlentities'
             );
         }
         if (in_array('telephone', $validate_fields)) {
@@ -471,13 +471,6 @@ class Storeregistration extends CI_Controller {
                 'field' => 'telephone',
                 'label' => 'Contact Number',
                 'rules' => 'trim|required|min_length[8]|max_length[20]|htmlentities'
-            );
-        }
-        if (in_array('id_country', $validate_fields)) {
-            $validation_rules[] = array(
-                'field' => 'id_country',
-                'label' => 'Country',
-                'rules' => 'trim|required|htmlentities'
             );
         }
         if (in_array('category_count', $validate_fields)) {
@@ -490,11 +483,18 @@ class Storeregistration extends CI_Controller {
                 )
             );
         }
+        if (in_array('id_country', $validate_fields)) {
+            $validation_rules[] = array(
+                'field' => 'id_country',
+                'label' => 'Country',
+                'rules' => 'trim|required|htmlentities'
+            );
+        }
         if (in_array('terms_condition', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'terms_condition',
                 'label' => 'Terms and Conditions',
-                'rules' => 'trim|required|min_length[2]|max_length[255]|htmlentities'
+                'rules' => 'trim|required|htmlentities'
             );
         }
         $this->form_validation->set_rules($validation_rules);
@@ -517,10 +517,11 @@ class Storeregistration extends CI_Controller {
                 $this->form_validation->set_message('custom_store_logo', 'The {field} contain invalid image size.');
                 return FALSE;
             }
-        } else {
-            $this->form_validation->set_message('custom_store_logo', 'The {field} field is required.');
-            return FALSE;
-        }
+        } 
+//        else {
+//            $this->form_validation->set_message('custom_store_logo', 'The {field} field is required.');
+//            return FALSE;
+//        }
         return TRUE;
     }
 

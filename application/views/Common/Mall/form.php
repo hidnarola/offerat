@@ -33,9 +33,9 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Facebook Page</label>
+                                        <label>Facebook Page <span class="text-danger">*</span></label>
                                         <div>
-                                            <input type="text" class="form-control" name="facebook_page" id="facebook_page"  placeholder="Facebook Page URL" value="<?php echo (isset($mall_details['facebook_page'])) ? $mall_details['facebook_page'] : set_value('facebook_page'); ?>">
+                                            <input type="text" class="form-control" name="facebook_page" id="facebook_page" required="required" placeholder="Facebook Page URL" value="<?php echo (isset($mall_details['facebook_page'])) ? $mall_details['facebook_page'] : set_value('facebook_page'); ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -43,9 +43,9 @@
                             <div class="col-xs-12">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Logo <span class="text-danger">*</span></label>
+                                        <label>Logo </label>
                                         <div>
-                                            <input type="file" class="form-control file-input" name="mall_logo" id="mall_logo"  <?php echo (isset($mall_details)) ? '' : 'required="required"'; ?>>
+                                            <input type="file" class="form-control file-input" name="mall_logo" id="mall_logo">
                                             <input type="hidden" name="is_valid" id="is_valid" value="1">
                                             <div id="mall_logo_errors_wrapper" class="alert alert-danger alert-bordered display-none">
                                                 <span id="mall_logo_errors"></span>

@@ -13,7 +13,7 @@ class Notifications extends MY_Controller {
         );
 
         if (!in_array($this->loggedin_user_type, array(COUNTRY_ADMIN_USER_TYPE, STORE_OR_MALL_ADMIN_USER_TYPE)))
-            redirect('/');
+            override_404();
     }
 
     /*
@@ -603,11 +603,11 @@ class Notifications extends MY_Controller {
 
             redirect($list_url);
         } else {
-            dashboard_redirect($this->loggedin_user_type);
+            override_404();
         }
     }
 
-    public function get_notification_details($notification_id = NULL) {
+    public function get_notification_details($notification_id = NULL) {        
         $response = array(
             'status' => '0',
             'sub_view' => '0',

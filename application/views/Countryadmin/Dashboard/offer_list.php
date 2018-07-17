@@ -1,35 +1,14 @@
 <div class="col-md-12">
     <div class="panel panel-flat">
         <form id="form" method="post">
-            <div class="panel-body">
+            <div class="panel-body">                
                 <div id="notification_error_wrapper" class="alert alert-danger alert-bordered display-none">
                     <span id="notification_error_msg"></span>
                 </div>
                 <div class="tabbable">
                     <div class="tab-content">                            
                         <div class="row">
-                            <div class="col-md-12">
-                                <ul class="nav nav-tabs">
-                                    <li <?php echo (is_null($list_type)) ? 'class="active"' : ''; ?>><a href="<?php echo $list_type_url; ?>">Current</a></li>
-                                    <li <?php echo (!is_null($list_type) && $list_type == 'upcoming') ? 'class="active"' : ''; ?>><a href="<?php echo $list_type_url; ?>upcoming">Upcoming</a></li>
-                                    <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
-                                        <li <?php echo (!is_null($list_type) && $list_type == 'expired') ? 'class="active"' : ''; ?>><a href="<?php echo $list_type_url; ?>expired">Expired</a></li>
-                                    <?php } ?>
-                                </ul>
-                                <div class="tbl-btn-wrap text-right">                                                          
-                                    <div class="form-group">                                                                                        
-                                        <a href="<?php echo $list_url; ?>" class="btn bg-teal-400 btn-labeled"><b><i class="icon-sync"></i></b>Refresh</a>                    
-                                        <a href="<?php echo $add_url; ?>" class="btn bg-primary btn-labeled"><b><i class="icon-plus2"></i></b>
-                                            <?php
-                                            if (isset($notification_type) && $notification_type == 'offers')
-                                                echo 'Add Offer';
-                                            elseif (isset($notification_type) && $notification_type == 'announcements')
-                                                echo 'Add Announcement';
-                                            ?>
-                                        </a>
-                                    </div>
-                                </div>
-
+                            <div class="col-md-12">                                
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="highlighted-tab1">
                                         <div class="table-responsive popular_list dt-first-col-mw nipl_table_listing col-md-12 mt-20">
@@ -37,22 +16,12 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Added Date</th>
-                                                        <th>Broadcast Date</th>
-                                                        <th>Expiry Date</th>
-                                                        <th>Content Type</th>
+                                                        <th>Broadcast Date</th>                                                        
+                                                        <th>Notification Type</th>                                                        
                                                         <th>Mall</th>
-                                                        <th>Store</th>                
-                                                        <th>Actions</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Added Date</th>
-                                                        <th>Broadcast Date</th>
-                                                        <th>Expiry Date</th>
-                                                        <th>Content Type</th>
-                                                        <th>Mall</th>
-                                                        <th>Store</th>                
-                                                        <th>Actions</th>
-                                                    </tr>
+                                                        <th>Store</th>
+                                                        <th>Action</th>
+                                                    </tr>                                                    
                                                 </thead>
                                                 <tbody>
 
@@ -69,10 +38,7 @@
         </form>
     </div>
 </div>
-<?php
-$this->load->view('Common/delete_alert');
-$this->load->view('Common/Notifications/details_modal');
-?>
+<?php $this->load->view('Common/Notifications/details_modal'); ?>
 <script type="text/javascript">
 
     $(document).on('click', '.view_notification_details', function () {
@@ -84,8 +50,6 @@ $this->load->view('Common/Notifications/details_modal');
             'method': 'GET',
             'url': urlGNotificationDetailsURL,
             'success': function (response) {
-//                console.log(response);
-//                return false
                 if (response !== '') {
                     var obj = JSON.parse(response);
                     if (obj.status === '1') {
@@ -111,25 +75,13 @@ $this->load->view('Common/Notifications/details_modal');
     $(document).ready(function () {
 
         var notification_type_arr = {
-            '0': "Image",
-            '1': "Video",
-            '2': "Text",
+            '0': "Offer",
+            '1': "Announcement"
         };
 
-        // Setup - add a text input to each footer cell
-        $('#notification_dttable thead tr:eq(0) th').each(function () {
-            var title = $(this).text();
-            if (title !== 'Actions') {
-                if (title === 'Added Date' || title === 'Broadcast Date' || title === 'Expiry Date') {
-                    $(this).html('<input type="text" class="form-control daterange-basic-datatable" placeholder="' + title + '" />');
-                } else {
-                    $(this).html('<input type="text" class="form-control" placeholder="' + title + '" />');
-                }
-            }
-        });
-
         var table = $('#notification_dttable').DataTable({
-            "dom": '<"top"<"dttable_lenth_wrapper"fl>>rt<"bottom"pi><"clear">',
+//            "dom": '<"top"<" #notification_dttable dttable_lenth_wrapper"fl>>rt<"bottom"pi><"clear">',
+            "dom": '<"top"<"dttable_lenth_wrapper">>rt<"bottom"pi><"clear">',
             "processing": true,
             "serverSide": true,
             "scrollX": true,
@@ -145,6 +97,8 @@ $this->load->view('Common/Notifications/details_modal');
                 {
                     'data': 'offer_announcement_created_date',
                     "visible": true,
+                    "sortable": false,
+                    "searchable": false,
                     "name": 'offer_announcement.created_date',
                     "render": function (data, type, full, meta) {
                         return get_dd_mm_yyyy_hh_min_DateTime(full.offer_announcement_created_date, '-');
@@ -153,36 +107,36 @@ $this->load->view('Common/Notifications/details_modal');
                 {
                     'data': 'offer_announcement_broadcasting_time',
                     "visible": true,
+                    "sortable": false,
+                    "searchable": false,
                     "name": 'offer_announcement.broadcasting_time',
                     "render": function (data, type, full, meta) {
                         return get_dd_mm_yyyy_hh_min_DateTime(full.offer_announcement_broadcasting_time, '-');
                     }
                 },
                 {
-                    'data': 'offer_announcement_expiry_time',
+                    'data': 'offer_announcement_type',
                     "visible": true,
-                    "name": 'offer_announcement.expiry_time',
+                    "sortable": false,
+                    "searchable": false,
+                    "name": 'offer_announcement.type',
                     "render": function (data, type, full, meta) {
-                        return get_dd_mm_yyyy_hh_min_DateTime(full.offer_announcement_expiry_time, '-');
-                    }
-                },
-                {
-                    'data': 'offer_announcement_offer_type',
-                    "visible": true,
-                    "name": 'offer_announcement.offer_type',
-                    "render": function (data, type, full, meta) {
-                        var notification_type = notification_type_arr[full.offer_announcement_offer_type];
+                        var notification_type = notification_type_arr[full.offer_announcement_type];
                         return notification_type;
                     }
                 },
                 {
                     'data': 'mall_mall_name',
                     "visible": true,
+                    "sortable": false,
+                    "searchable": false,
                     "name": 'mall.mall_name',
                 },
                 {
                     'data': 'store_store_name',
                     "visible": true,
+                    "sortable": false,
+                    "searchable": false,
                     "name": 'store.store_name',
                 },
                 {
@@ -194,11 +148,6 @@ $this->load->view('Common/Notifications/details_modal');
                     "render": function (data, type, full, meta) {
                         var links = '';
                         links += '<a href="javascript:void(0);" target="_blank" title="View Details" data-id="' + full.offer_announcement_id_offer + '" class="btn btn-primary btn-xs tooltip-show margin-right-3 view_notification_details" data-placement="top"><i class="icon-eye"></i></a>   ';
-<?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
-                            links += '<a href="<?php echo base_url() ?>country-admin/notifications/<?php echo $notification_type; ?>/save/' + full.offer_announcement_id_offer + '/<?php echo $list_type; ?>" title="Update" class="btn bg-teal btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-pencil"></i></a> ';
-<?php } ?>
-                        links += '<a href="javascript:void(0);" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" data-path="<?php echo $delete_url; ?>' + full.offer_announcement_id_offer + '/<?php echo $list_type; ?>" id="delete"><i class="icon-bin"></i></a>';
-
                         return links;
                     }
                 },
@@ -206,10 +155,10 @@ $this->load->view('Common/Notifications/details_modal');
             initComplete: function () {
                 var tableColumns = table.settings().init().columns;
                 this.api().columns().every(function (index) {
-                    if (tableColumns[index].name == 'offer_announcement.offer_type') {
+                    if (tableColumns[index].name == 'offer_announcement.type') {                        
                         var column = this;
                         var select = $('<select class="form-control"><option value="">Select</option></select>')
-                                .appendTo($('th:nth-child(' + (index + 1) + '):first').empty())
+                                .appendTo($('#notification_dttable_wrapper .dataTables_scroll .dataTables_scrollHead .dataTables_scrollHeadInner .datatable-basic th:nth-child(' + (index + 1) + '):first').empty())
                                 .on('change', function () {
                                     var val = $.fn.dataTable.util.escapeRegex(
                                             $(this).val()
@@ -218,13 +167,12 @@ $this->load->view('Common/Notifications/details_modal');
                                             .search(val ? val : '', true, false)
                                             .draw();
                                 });
-                        if (tableColumns[index].name == 'offer_announcement.offer_type') {
+                        if (tableColumns[index].name == 'offer_announcement.type') {
                             for (var key in notification_type_arr) {
                                 if (notification_type_arr.hasOwnProperty(key)) {
                                     select.append('<option value="' + key + '">' + notification_type_arr[key] + '</option>');
                                 }
                             }
-
                         }
                     }
                 });
@@ -239,7 +187,6 @@ $this->load->view('Common/Notifications/details_modal');
                 req_obj['datatable_date_range'] = [
                     {'column': 'offer_announcement.created_date', 'filter_format': 'Y-m-d', 'range_deliminator': '-'},
                     {'column': 'offer_announcement.broadcasting_time', 'filter_format': 'Y-m-d', 'range_deliminator': '-'},
-                    {'column': 'offer_announcement.expiry_time', 'filter_format': 'Y-m-d', 'range_deliminator': '-'},
                 ];
 
                 $.ajax({

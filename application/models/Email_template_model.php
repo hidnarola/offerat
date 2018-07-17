@@ -12,12 +12,12 @@ class Email_template_model extends CI_Model {
 
 <p>Your account has been created on Offerat, your new temporary password is {new_password}</p>
 
-<p>Please change your password after you Login (Link <a href="' . $login_link . '">' . $login_link . '</a>). Thank you.</p>
+<p>Please login with your email address to <a href="' . $login_link . '">' . $login_link . '</a> and remember to change your password.</p>
 
-<p>&nbsp;</p>
+<p>For support, contact us on support@offerat.sale</p>
 
 <p>Regards</p>
-<p>Your Offerat Team</p>';
+<p>Offerat Team</p>';
 
         $find = array("{first_name}", "{last_name}", "{new_password}");
         $replace = array($first_name, $last_name, $new_password);
@@ -28,17 +28,15 @@ class Email_template_model extends CI_Model {
 
     public function forgot_password_format($link = NULL) {
 
-        $message_text = '<p>Hello, </p>
+        $message_text = '<p>Dear Sir, </p>
 
-<p>We were asked to reset your Offerat account. Follow the instructions below if this request comes from you.<p> 
-
-<p>Ignore the E-mail if the request to reset your password does not come from you.<p>
-
-<p>Click the following link to set a new password.<p>
+<p>We received a reset password request for your account. Please click the link below to reset your password.<p> 
 
 <p><a href="{reset_link}">{reset_link}</a></p>
 
-<p>If clicking the link doesn\'t work then you can copy the link into your browser window or type it there directly.</p>
+<p>If clicking the link does not work then you can copy the link into your browser window or type it there directly.</p>
+
+<p>If you did not make this request, please report this suspicious activity to info@offerat.sale</p>
 
 <p>&nbsp;</p>
 

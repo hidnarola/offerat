@@ -61,97 +61,106 @@ $route['reset-password'] = 'login/reset_password';
 $route['change-password'] = 'login/change_password';
 
 //Super Admin Routes =================================
-$route['super-admin'] = 'superadmin/dashboard';
-$route['super-admin/dashboard'] = 'superadmin/dashboard';
-$route['super-admin/change-password'] = 'common/change_password';
-$route['super-admin/change-information'] = 'common/change_information';
+$route['super-admin'] = 'Superadmin/dashboard';
+$route['super-admin/dashboard'] = 'Superadmin/dashboard';
+$route['super-admin/change-password'] = 'Common/change_password';
+$route['super-admin/change-information'] = 'Common/change_information';
+
+$route['superadmin/country/filter_countries'] = 'Superadmin/Country/filter_countries';
+$route['superadmin/category/filter_categories'] = 'Superadmin/Category/filter_categories';
+$route['superadmin/subcategory/filter_sub_categories/(:any)'] = 'Superadmin/Subcategory/filter_sub_categories/$1';
 
 //Country
-$route['super-admin/country'] = 'superadmin/country';
-$route['super-admin/country/save'] = 'superadmin/country/save';
-$route['super-admin/country/save/(:any)'] = 'superadmin/country/save/$1';
+$route['super-admin/country'] = 'Superadmin/country';
+$route['super-admin/country/save'] = 'Superadmin/country/save';
+$route['super-admin/country/save/(:any)'] = 'Superadmin/country/save/$1';
 
 //Category
-$route['super-admin/category'] = 'superadmin/category';
-$route['super-admin/category/save'] = 'superadmin/category/save';
-$route['super-admin/category/save/(:any)'] = 'superadmin/category/save/$1';
+$route['super-admin/category'] = 'Superadmin/category';
+$route['super-admin/category/save'] = 'Superadmin/category/save';
+$route['super-admin/category/save/(:any)'] = 'Superadmin/category/save/$1';
 
 //Sub-category
-$route['super-admin/sub-category/(:any)'] = 'superadmin/subcategory/index/$1';
-$route['super-admin/sub-category/save/(:any)'] = 'superadmin/subcategory/save/$1';
-$route['super-admin/sub-category/save/(:any)/(:any)'] = 'superadmin/subcategory/save/$1/$2';
+$route['super-admin/sub-category/(:any)'] = 'Superadmin/subcategory/index/$1';
+$route['super-admin/sub-category/save/(:any)'] = 'Superadmin/subcategory/save/$1';
+$route['super-admin/sub-category/save/(:any)/(:any)'] = 'Superadmin/subcategory/save/$1/$2';
 
 
 //Country Admin Routes =================================
-$route['country-admin'] = 'countryadmin/dashboard';
-$route['country-admin/dashboard'] = 'countryadmin/dashboard';
-$route['country-admin/verify-store-offers'] = 'countryadmin/verify_offers/stores';
-$route['country-admin/filter_store_offers'] = 'countryadmin/verify_offers/filter_store_offers';
-$route['country-admin/verify-mall-offers'] = 'countryadmin/verify_offers/malls';
-$route['country-admin/filter_mall_offers'] = 'countryadmin/verify_offers/filter_mall_offers';
-$route['country-admin/change-password'] = 'common/change_password';
-$route['country-admin/change-information'] = 'common/change_information';
-$route['country-admin/notifications/get_notification_details/(:any)'] = 'common/notifications/get_notification_details/$1';
-$route['country-admin/notifications/(:any)/save'] = 'common/notifications/save/$1';
-$route['country-admin/notifications/(:any)/save/(:any)'] = 'common/notifications/save/$1/$2';
-$route['country-admin/notifications/(:any)/save/(:any)/(:any)'] = 'common/notifications/save/$1/$2/$3';
-$route['country-admin/notifications/(:any)'] = 'common/notifications/index/$1';
-$route['country-admin/notifications/(:any)/(:any)'] = 'common/notifications/index/$1/$2';
-$route['country-admin/filter_notifications/(:any)'] = 'common/notifications/filter_notifications/$1';
-$route['country-admin/filter_notifications/(:any)/(:any)'] = 'common/notifications/filter_notifications/$1/$2';
-$route['country-admin/notifications/(:any)/delete/(:any)/(:any)'] = 'common/notifications/delete/$1/$2/$3';
+$route['country-admin'] = 'Countryadmin/dashboard';
+$route['country-admin/dashboard'] = 'Countryadmin/dashboard';
+$route['country-admin/verify-store-offers'] = 'Countryadmin/verify_offers/stores';
+$route['country-admin/filter_store_offers'] = 'Countryadmin/verify_offers/filter_store_offers';
+$route['country-admin/verify-mall-offers'] = 'Countryadmin/verify_offers/malls';
+$route['country-admin/filter_mall_offers'] = 'Countryadmin/verify_offers/filter_mall_offers';
+$route['country-admin/change-password'] = 'Common/change_password';
+$route['country-admin/change-information'] = 'Common/change_information';
+$route['country-admin/notifications/get_notification_details/(:any)'] = 'Common/notifications/get_notification_details/$1';
+$route['country-admin/notifications/(:any)/save'] = 'Common/notifications/save/$1';
+$route['country-admin/notifications/(:any)/save/(:any)'] = 'Common/notifications/save/$1/$2';
+$route['country-admin/notifications/(:any)/save/(:any)/(:any)'] = 'Common/notifications/save/$1/$2/$3';
+$route['country-admin/notifications/(:any)'] = 'Common/notifications/index/$1';
+$route['country-admin/notifications/(:any)/(:any)'] = 'Common/notifications/index/$1/$2';
+$route['country-admin/filter_notifications/(:any)'] = 'Common/notifications/filter_notifications/$1';
+$route['country-admin/filter_notifications/(:any)/(:any)'] = 'Common/notifications/filter_notifications/$1/$2';
+$route['country-admin/dashboard/filter_notifications'] = 'Countryadmin/dashboard/filter_notifications';
+$route['country-admin/notifications/(:any)/delete/(:any)/(:any)'] = 'Common/notifications/delete/$1/$2/$3';
 
-$route['country-admin/stores'] = 'common/stores/index';
-$route['country-admin/stores/filter_stores'] = 'common/stores/filter_stores';
-$route['country-admin/stores/get_store_details/(:any)'] = 'common/stores/get_store_details/$1';
-$route['country-admin/stores/save'] = 'common/stores/save';
-$route['country-admin/stores/save/(:any)'] = 'common/stores/save/$1';
-$route['country-admin/stores/locations/(:any)'] = 'common/stores/locations/$1';
-$route['country-admin/stores/delete_locations/(:any)'] = 'common/stores/delete_locations/$1';
-$route['country-admin/stores/delete/(:any)'] = 'common/stores/delete/$1';
-$route['country-admin/stores/sponsored/(:any)'] = 'common/stores/sponsored/$1';
-$route['country-admin/stores/sponsored/delete/(:any)'] = 'common/stores/delete_sponsored/$1';
-$route['country-admin/malls'] = 'common/malls/index';
-$route['country-admin/malls/filter_malls'] = 'common/malls/filter_malls';
-$route['country-admin/malls/get_mall_details/(:any)'] = 'common/malls/get_mall_details/$1';
-$route['country-admin/stores/loacation_excel_download/(:any)'] = 'common/stores/loacation_excel_download/$1';
-$route['country-admin/stores/loacation_excel_format_download'] = 'common/stores/loacation_excel_format_download';
-$route['country-admin/malls/delete/(:any)'] = 'common/malls/delete/$1';
-$route['country-admin/malls/sponsored/(:any)'] = 'common/malls/sponsored/$1';
-$route['country-admin/malls/sponsored/delete/(:any)'] = 'common/malls/delete_sponsored/$1';
-$route['country-admin/sponsored/stores'] = 'countryadmin/sponsored/stores';
-$route['country-admin/sponsored/details/(:any)'] = 'countryadmin/sponsored/get_store_sponseored_details/$1';
-$route['country-admin/malls/save'] = 'common/malls/save';
-$route['country-admin/malls/save/(:any)'] = 'common/malls/save/$1';
-$route['country-admin/report/(:any)/(:any)'] = 'common/report/index/$1/$2';
-$route['country-admin/report/push_notifications/(:any)/(:any)'] = 'common/report/filter_notifications/$1/$2';
+$route['country-admin/stores'] = 'Common/stores/index';
+$route['country-admin/stores/filter_stores'] = 'Common/stores/filter_stores';
+$route['country-admin/dashboard/filter_stores'] = 'Countryadmin/dashboard/filter_stores';
+$route['country-admin/stores/get_store_details/(:any)'] = 'Common/stores/get_store_details/$1';
+$route['country-admin/stores/save'] = 'Common/stores/save';
+$route['country-admin/stores/save/(:any)'] = 'Common/stores/save/$1';
+$route['country-admin/stores/locations/(:any)'] = 'Common/stores/locations/$1';
+$route['country-admin/stores/delete_locations/(:any)'] = 'Common/stores/delete_locations/$1';
+$route['country-admin/stores/delete/(:any)'] = 'Common/stores/delete/$1';
+$route['country-admin/stores/sponsored/(:any)'] = 'Common/stores/sponsored/$1';
+$route['country-admin/stores/sponsored/delete/(:any)'] = 'Common/stores/delete_sponsored/$1';
+$route['country-admin/malls'] = 'Common/malls/index';
+$route['country-admin/malls/filter_malls'] = 'Common/malls/filter_malls';
+$route['country-admin/malls/get_mall_details/(:any)'] = 'Common/malls/get_mall_details/$1';
+$route['country-admin/stores/loacation_excel_download/(:any)'] = 'Common/stores/loacation_excel_download/$1';
+$route['country-admin/stores/loacation_excel_format_download'] = 'Common/stores/loacation_excel_format_download';
+$route['country-admin/malls/delete/(:any)'] = 'Common/malls/delete/$1';
+$route['country-admin/malls/sponsored/(:any)'] = 'Common/malls/sponsored/$1';
+$route['country-admin/malls/sponsored/delete/(:any)'] = 'Common/malls/delete_sponsored/$1';
+$route['country-admin/sponsored/stores'] = 'Countryadmin/sponsored/stores';
+$route['country-admin/sponsored/malls'] = 'Countryadmin/sponsored/malls';
+$route['country-admin/sponsored/details/(:any)'] = 'Countryadmin/sponsored/get_store_sponseored_details/$1';
+$route['country-admin/sponsored/mall_details/(:any)'] = 'Countryadmin/sponsored/get_mall_sponseored_details/$1';
+$route['country-admin/malls/save'] = 'Common/malls/save';
+$route['country-admin/malls/save/(:any)'] = 'Common/malls/save/$1';
+$route['country-admin/report/(:any)/(:any)'] = 'Common/report/index/$1/$2';
+$route['country-admin/report/push_notifications/(:any)/(:any)'] = 'Common/report/filter_notifications/$1/$2';
 
 
 //Country Mall Store User Routes =================================
-$route['mall-store-user'] = 'mall_store/dashboard';
-$route['mall-store-user/dashboard'] = 'mall_store/dashboard';
-$route['mall-store-user/change-password'] = 'common/change_password';
-$route['mall-store-user/change-information'] = 'common/change_information';
-$route['mall-store-user/notifications/(:any)/save'] = 'common/notifications/save/$1';
-$route['mall-store-user/notifications/(:any)'] = 'common/notifications/index/$1';
-$route['mall-store-user/notifications/(:any)/(:any)'] = 'common/notifications/index/$1/$2';
-$route['mall-store-user/filter_notifications/(:any)'] = 'common/notifications/filter_notifications/$1';
-$route['mall-store-user/filter_notifications/(:any)/(:any)'] = 'common/notifications/filter_notifications/$1/$2';
-$route['mall-store-user/notifications/(:any)/delete/(:any)/(:any)'] = 'common/notifications/delete/$1/$2/$3';
+$route['mall-store-user'] = 'Mall_store/dashboard';
+$route['mall-store-user/dashboard'] = 'Mall_store/dashboard';
+$route['mall-store-user/change-password'] = 'Common/change_password';
+$route['mall-store-user/change-information'] = 'Common/change_information';
+$route['mall-store-user/notifications/(:any)/save'] = 'Common/notifications/save/$1';
+$route['mall-store-user/notifications/(:any)'] = 'Common/notifications/index/$1';
+$route['mall-store-user/notifications/(:any)/(:any)'] = 'Common/notifications/index/$1/$2';
+$route['mall-store-user/filter_notifications/(:any)'] = 'Common/notifications/filter_notifications/$1';
+$route['mall-store-user/filter_notifications/(:any)/(:any)'] = 'Common/notifications/filter_notifications/$1/$2';
+$route['mall-store-user/notifications/(:any)/delete/(:any)/(:any)'] = 'Common/notifications/delete/$1/$2/$3';
+$route['mall-store-user/notifications/get_notification_details/(:any)'] = 'Common/notifications/get_notification_details/$1';
 
-$route['mall-store-user/stores'] = 'common/stores/index';
-$route['mall-store-user/stores/filter_stores'] = 'common/stores/filter_stores';
-$route['mall-store-user/stores/get_store_details/(:any)'] = 'common/stores/get_store_details/$1';
-$route['mall-store-user/stores/save'] = 'common/stores/save';
-$route['mall-store-user/stores/save/(:any)'] = 'common/stores/save/$1';
+$route['mall-store-user/stores'] = 'Common/stores/index';
+$route['mall-store-user/stores/filter_stores'] = 'Common/stores/filter_stores';
+$route['mall-store-user/stores/get_store_details/(:any)'] = 'Common/stores/get_store_details/$1';
+$route['mall-store-user/stores/save'] = 'Common/stores/save';
+$route['mall-store-user/stores/save/(:any)'] = 'Common/stores/save/$1';
 
-$route['mall-store-user/malls'] = 'common/malls/index';
-$route['mall-store-user/malls/filter_malls'] = 'common/malls/filter_malls';
-$route['mall-store-user/malls/get_mall_details/(:any)'] = 'common/malls/get_mall_details/$1';
-$route['mall-store-user/malls/save'] = 'common/malls/save';
-$route['mall-store-user/malls/save/(:any)'] = 'common/malls/save/$1';
-$route['mall-store-user/report/(:any)/(:any)'] = 'common/report/index/$1/$2';
-$route['mall-store-user/report/push_notifications/(:any)/(:any)'] = 'common/report/filter_notifications/$1/$2';
+$route['mall-store-user/malls'] = 'Common/malls/index';
+$route['mall-store-user/malls/filter_malls'] = 'Common/malls/filter_malls';
+$route['mall-store-user/malls/get_mall_details/(:any)'] = 'Common/malls/get_mall_details/$1';
+$route['mall-store-user/malls/save'] = 'Common/malls/save';
+$route['mall-store-user/malls/save/(:any)'] = 'Common/malls/save/$1';
+$route['mall-store-user/report/(:any)/(:any)'] = 'Common/report/index/$1/$2';
+$route['mall-store-user/report/push_notifications/(:any)/(:any)'] = 'Common/report/filter_notifications/$1/$2';
 
 
 //Store Registration

@@ -13,12 +13,12 @@
         </div>
         <div class="form_grp_inline">
             <div class="form-group">
-                <label class="control-label col-lg-2">Facebook Page</label>
-                <input type="text" class="form-control" name="facebook_page" id="facebook_page"  placeholder="Facebook Page URL" value="<?php echo set_value('facebook_page'); ?>">
+                <label class="control-label col-lg-2">Facebook Page <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="facebook_page" id="facebook_page" required="required" placeholder="Facebook Page URL" value="<?php echo set_value('facebook_page'); ?>">
             </div>
             <div class="form-group upload-store-logo-div">
-                <label class="control-label col-lg-2">Logo <span class="text-danger">*</span></label>
-                <input type="file" class="form-control file-input" name="store_logo" id="store_logo" required="required">
+                <label class="control-label col-lg-2">Logo</label>
+                <input type="file" class="form-control file-input" name="store_logo" id="store_logo">
                 <input type="hidden" name="is_valid" id="is_valid" value="1">
                 <div id="store_logo_errors_wrapper" class="alert alert-danger alert-bordered display-none">
                     <span id="store_logo_errors"></span>

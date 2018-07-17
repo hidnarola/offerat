@@ -18,7 +18,7 @@ $controller = $this->uri->segment(2);
                                 elseif ($logged_user_type == COUNTRY_ADMIN_USER_TYPE)
                                     echo 'Country Admin';
                                 elseif ($logged_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
-                                    echo 'Mall / Store Admin';
+                                    echo 'Store - Mall Admin';
                                 ?>                            
                             </span>
                         </a>
@@ -65,7 +65,13 @@ $controller = $this->uri->segment(2);
 
                             </ul>
                         </li>
-                        <li <?php echo ($controller === 'sponsored') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/sponsored/stores"><i class="icon-star-half"></i> <span>Sponsored Stores</span></a></li>
+                         <li>
+                            <a href="#"><i class="icon-star-half"></i> <span>Sponsored</span></a>
+                            <ul>
+                                <li <?php echo ($controller === 'sponsored') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/sponsored/stores"><i class="icon-store"></i> <span>Stores</span></a></li>
+                                <li <?php echo ($controller === 'sponsored') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/sponsored/malls"><i class="icon-store2"></i> <span>Malls</span></a></li>
+                            </ul>
+                        </li>                        
                         <li <?php echo ($controller === 'change-password') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-password"><i class="icon-lock2"></i> <span>Change Password</span></a></li>
                         <li <?php echo ($controller === 'change-information') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-information"><i class="fa fa-user"></i> <span>Change Information</span></a></li>
                     </ul>

@@ -134,7 +134,7 @@ class Change_information
             $validation_rules[] = array(
                 'field' => 'email_id',
                 'label' => 'Email Address',
-                'rules' => 'trim|required|min_length[2]|max_length[100]|htmlentities|callback_validate_email_id'
+                'rules' => 'trim|required|min_length[5]|max_length[100]|htmlentities|callback_validate_email_id'
             );
         }
         if (in_array('mobile', $validate_fields)) {

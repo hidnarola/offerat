@@ -120,7 +120,6 @@ define('tbl_sponsored_log', 'sponsored_log');
   define('category_img_path', 'assets/images/category/');
   define('sub_category_img_path', 'assets/images/subcategory/');
   define('store_img_path', 'assets/images/store/'); */
-
 if ($_SERVER['HTTP_HOST'] == 'localhost') {
     define('country_img_path', '/media/CountryFlag/');
     define('category_img_path', '/media/CategoryIcon/');
@@ -129,7 +128,17 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
     define('location_excel_img_path', '/media/LocationsExcels/');
     define('offer_media_path', '/media/OfferMedia/');
     define('offer_media_thumbnail_path', '/media/OfferMediaThumbail/');
-} else {
+} 
+elseif($_SERVER['HTTP_HOST'] == 'offerat.sale') {
+	define('country_img_path', '/media/CountryFlag/');
+    define('category_img_path', '/media/CategoryIcon/');
+    define('sub_category_img_path', '/media/SubCategoryIcon/');
+    define('store_img_path', '/media/StoreLogo/');
+    define('location_excel_img_path', '/media/LocationsExcels/');
+    define('offer_media_path', '/media/OfferMedia/');
+    define('offer_media_thumbnail_path', '/media/OfferMediaThumbail/');	
+}
+else {
     define('country_img_path', '/PG/TG/Offerat/media/CountryFlag/');
     define('category_img_path', '/PG/TG/Offerat/media/CategoryIcon/');
     define('sub_category_img_path', '/PG/TG/Offerat/media/SubCategoryIcon/');

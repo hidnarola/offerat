@@ -182,7 +182,7 @@ $this->load->view('Common/Mall/details_modal');
                         links += '<a href="<?php echo $report_url; ?>' + full.mall_id_mall + '" title="Report" class="btn bg-indigo btn-xs tooltip-show margin-right-3" data-placement="top"><i class="icon-clipboard3"></i></a>   ';
 <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
                             if (full.mall_status == '<?php echo ACTIVE_STATUS; ?>')
-//                                links += '<a href="<?php // echo $sponsored_mall_url; ?>' + full.mall_id_mall + '" target="_blank" class="btn bg-pink btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Sponsored"><i class=" icon-star-half"></i></a> ';
+                                links += '<a href="<?php echo $sponsored_mall_url; ?>' + full.mall_id_mall + '" target="_blank" class="btn bg-pink btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Sponsored"><i class=" icon-star-half"></i></a> ';
                             links += '<a href="javascript:void(0);" data-path="<?php echo $delete_mall_url; ?>' + full.mall_id_mall + '" class="btn btn-danger btn-icon btn-xs tooltip-show margin-right-3" data-toggle="tooltip" data-placement="top" title="Delete" id="delete"><i class="icon-bin"></i></a>';
 <?php } ?>
                         return links;

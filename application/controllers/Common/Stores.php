@@ -16,7 +16,7 @@ class Stores extends MY_Controller {
         );
 
         if (!in_array($this->loggedin_user_type, array(COUNTRY_ADMIN_USER_TYPE, STORE_OR_MALL_ADMIN_USER_TYPE)))
-            redirect('/');
+            override_404();
     }
 
     /*
@@ -145,7 +145,7 @@ class Stores extends MY_Controller {
             $filter_array['where_with_sign'][] = 'user.id_user = store.id_users';
         }
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
-            $filter_array['where_with_sign'][] = 'country.id_users =  ' . $this->loggedin_user_data['user_id'];
+            $filter_array['where_with_sign'][] = 'country.id_country =  ' . $this->loggedin_user_country_data['id_country'];
             $filter_array['where_with_sign'][] = 'country.id_country = store.id_country';
         }
 
@@ -387,40 +387,6 @@ class Stores extends MY_Controller {
                 'url' => '',
                 'title' => 'Add Store',
             );
-            $select_country = array(
-                'table' => tbl_store . ' store',
-                'where' => array(
-                    'store.is_delete' => IS_NOT_DELETED_STATUS,
-                    'user.is_delete' => IS_NOT_DELETED_STATUS,
-                    'country.is_delete' => IS_NOT_DELETED_STATUS
-                ),
-                'where_with_sign' => array(
-                    'country.id_country = store.id_country',
-                    'user.id_user = store.id_users'
-                ),
-                'join' => array(
-                    array(
-                        'table' => tbl_user . ' as user',
-                        'condition' => tbl_store . '.id_users = ' . tbl_user . '.id_user',
-                        'join' => 'left',
-                    ),
-                    array(
-                        'table' => tbl_country . ' as country',
-                        'condition' => tbl_country . '.id_country = ' . tbl_store . '.id_country',
-                        'join' => 'left',
-                    )
-                )
-            );
-
-            if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
-                $select_country['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", store.id_users) <> 0');
-            if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)
-                $select_country['where_with_sign'] = array('FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0');
-
-            $country_details = $this->Common_model->master_single_select($select_country);
-            if (isset($country_details) && sizeof($country_details) > 0) {
-//                $country_id = $country_details['id_country'];
-            }
         }
 
         if ($this->input->post()) {
@@ -829,14 +795,14 @@ class Stores extends MY_Controller {
             $validation_rules[] = array(
                 'field' => 'website',
                 'label' => 'Website',
-                'rules' => 'trim|min_length[2]|max_length[250]|callback_custom_valid_url|htmlentities'
+                'rules' => 'trim|min_length[5]|max_length[250]|callback_custom_valid_url|htmlentities'
             );
         }
         if (in_array('facebook_page', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'facebook_page',
                 'label' => 'Facebook Page URL',
-                'rules' => 'trim|min_length[2]|max_length[250]|callback_custom_valid_url|htmlentities'
+                'rules' => 'trim|required|min_length[5]|max_length[250]|callback_custom_valid_url|htmlentities'
             );
         }
         if (in_array('store_logo', $validate_fields)) {
@@ -868,7 +834,7 @@ class Stores extends MY_Controller {
             $validation_rules[] = array(
                 'field' => 'email_id',
                 'label' => 'Email Address',
-                'rules' => 'trim|min_length[2]|max_length[100]|htmlentities'
+                'rules' => 'trim|min_length[5]|max_length[100]|htmlentities'
             );
         }
         if (in_array('mobile', $validate_fields)) {
@@ -892,7 +858,7 @@ class Stores extends MY_Controller {
             $validation_rules[] = array(
                 'field' => 'terms_condition',
                 'label' => 'Terms and Conditions',
-                'rules' => 'trim|required|min_length[2]|max_length[255]|htmlentities'
+                'rules' => 'trim|required|htmlentities'
             );
         }
         $this->form_validation->set_rules($validation_rules);
@@ -915,14 +881,15 @@ class Stores extends MY_Controller {
                 $this->form_validation->set_message('custom_store_logo', 'The {field} contain invalid image size.');
                 return FALSE;
             }
-        } else {
-            if ($this->input->post('store_id', TRUE) == '') {
-                $this->form_validation->set_message('custom_store_logo', 'The {field} field is required.');
-                return FALSE;
-            } else {
-                return TRUE;
-            }
         }
+//        else {
+//            if ($this->input->post('store_id', TRUE) == '') {
+//                $this->form_validation->set_message('custom_store_logo', 'The {field} field is required.');
+//                return FALSE;
+//            } else {
+//                return TRUE;
+//            }
+//        }
         return TRUE;
     }
 
@@ -987,7 +954,7 @@ class Stores extends MY_Controller {
                 $this->session->set_flashdata('error_msg', 'Invalid request sent to delete Store. Please try again later.');
             redirect('country-admin/stores');
         } else {
-            dashboard_redirect($this->loggedin_user_type);
+            override_404();
         }
     }
 

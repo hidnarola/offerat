@@ -158,8 +158,16 @@ $(function () {
         radioClass: 'choice'
     });
 
-    $(document).find('[data-toggle="tooltip"]').tooltip();
+//    $(document).find('[data-toggle="tooltip"]').tooltip();
+    if ($(window).width() >= 1024) {
+        $(document).on('mouseenter', '.tooltip-show', function () {
+            $(this).tooltip('show');
+        });
 
+        $(document).on('mouseleave', '.tooltip-show', function () {
+            $(this).tooltip('hide');
+        });
+    }
 
 });
 

@@ -9,7 +9,7 @@ class Report extends MY_Controller {
         $this->load->model('Common_model', '', TRUE);
 
         if (!in_array($this->loggedin_user_type, array(COUNTRY_ADMIN_USER_TYPE, STORE_OR_MALL_ADMIN_USER_TYPE)))
-            redirect('/');
+            override_404();
     }
 
     /*
@@ -162,7 +162,7 @@ class Report extends MY_Controller {
                 dashboard_redirect($this->loggedin_user_type);
             }
         } else {
-            dashboard_redirect($this->loggedin_user_type);
+            override_404();
         }
     }
 

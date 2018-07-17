@@ -31,7 +31,7 @@
 
                         <?php
                         $controller = strtolower($this->uri->segment(2));
-                        if ($controller != 'dashboard') {
+//                        if ($controller == 'dashboard') {
                             ?>
                             <div class="page-header page-header-default">
                                 <div class="page-header-content">
@@ -128,9 +128,7 @@
                                     </div>
                                 <?php } ?>
                             </div>
-                        <?php } ?>
-
-
+                        <?php // } ?>
                         <div class="content">
                             <?php echo $body; ?>
                         </div> 

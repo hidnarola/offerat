@@ -33,9 +33,9 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Facebook Page</label>
+                                        <label>Facebook Page <span class="text-danger">*</span></label>
                                         <div>
-                                            <input type="text" class="form-control" name="facebook_page" id="facebook_page"  placeholder="Facebook Page URL" value="<?php echo (isset($store_details['facebook_page'])) ? $store_details['facebook_page'] : set_value('facebook_page'); ?>">
+                                            <input type="text" class="form-control" name="facebook_page" id="facebook_page" required="required" placeholder="Facebook Page URL" value="<?php echo (isset($store_details['facebook_page'])) ? $store_details['facebook_page'] : set_value('facebook_page'); ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -43,9 +43,9 @@
                             <div class="col-xs-12">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Logo <span class="text-danger">*</span></label>
+                                        <label>Logo</label>
                                         <div>
-                                            <input type="file" class="form-control file-input" name="store_logo" id="store_logo"  <?php echo (isset($store_details) && isset($store_details['store_logo']) && !empty($store_details['store_logo'])) ? '' : 'required="required"'; ?>>
+                                            <input type="file" class="form-control file-input" name="store_logo" id="store_logo">
                                             <input type="hidden" name="is_valid" id="is_valid" value="1">
                                             <div id="store_logo_errors_wrapper" class="alert alert-danger alert-bordered display-none">
                                                 <span id="store_logo_errors"></span>
