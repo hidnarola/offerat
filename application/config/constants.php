@@ -128,17 +128,15 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
     define('location_excel_img_path', '/media/LocationsExcels/');
     define('offer_media_path', '/media/OfferMedia/');
     define('offer_media_thumbnail_path', '/media/OfferMediaThumbail/');
-} 
-elseif($_SERVER['HTTP_HOST'] == 'offerat.sale') {
-	define('country_img_path', '/media/CountryFlag/');
+} elseif ($_SERVER['HTTP_HOST'] == 'offerat.sale') {
+    define('country_img_path', '/media/CountryFlag/');
     define('category_img_path', '/media/CategoryIcon/');
     define('sub_category_img_path', '/media/SubCategoryIcon/');
     define('store_img_path', '/media/StoreLogo/');
     define('location_excel_img_path', '/media/LocationsExcels/');
     define('offer_media_path', '/media/OfferMedia/');
-    define('offer_media_thumbnail_path', '/media/OfferMediaThumbail/');	
-}
-else {
+    define('offer_media_thumbnail_path', '/media/OfferMediaThumbail/');
+} else {
     define('country_img_path', '/PG/TG/Offerat/media/CountryFlag/');
     define('category_img_path', '/PG/TG/Offerat/media/CategoryIcon/');
     define('sub_category_img_path', '/PG/TG/Offerat/media/SubCategoryIcon/');
@@ -184,7 +182,10 @@ define('MEDIA_THUMB_IMAGE_HEIGHT', '30');
 define('IOS_DEVICE_TYPE', 0);
 define('ANDROID_DEVICE_TYPE', 1);
 
-define('FFMPEG_PATH', 'C:/FFMPEG/bin/ffmpeg.exe');
+if ($_SERVER['HTTP_HOST'] == 'offerat.sale')
+    define('FFMPEG_PATH', 'C:/FFMPEG/bin/ffmpeg.exe');
+else
+    define('FFMPEG_PATH', '/usr/bin/ffmpeg');
 
 define('SUCCESS_CHANGE_EMAIL', 'Verification Email Sent. Please click on link in Email to complete the verification, Email change will take effect after verification.');
 
