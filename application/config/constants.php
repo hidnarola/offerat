@@ -182,11 +182,12 @@ define('MEDIA_THUMB_IMAGE_HEIGHT', '30');
 define('IOS_DEVICE_TYPE', 0);
 define('ANDROID_DEVICE_TYPE', 1);
 
-if ($_SERVER['HTTP_HOST'] == 'offerat.sale')
-    define('FFMPEG_PATH', 'C:/FFMPEG/bin/ffmpeg.exe');
-else
-    define('FFMPEG_PATH', '/usr/bin/ffmpeg');
+//define('FFMPEG_PATH', 'C:/FFMPEG/bin/ffmpeg.exe');
+define('FFMPEG_PATH', '/usr/bin/ffmpeg');
 
 define('SUCCESS_CHANGE_EMAIL', 'Verification Email Sent. Please click on link in Email to complete the verification, Email change will take effect after verification.');
 
-define('GOOGLE_PUSH_NOTIFICATION_API_KEY', 'AAAA6XFXelw:APA91bERf913DmHsnc34eri6k9_5D7qhK7rAgW1-KLz4pP_2ZaPR1RaOIbdxXl0lRDJ0r2Ap_-crQ1qUkGMIbM3QQ3q9TUDj4zIqhZB5j0KHldNVq0RakkbVS-hF_JFtCctQ4x4jdvQEpYayzUhgLHOnBak_k8w-Qg');
+if ($_SERVER['HTTP_HOST'] == 'localhost')
+    define('GOOGLE_PUSH_NOTIFICATION_API_KEY', 'AAAA6XFXelw:APA91bERf913DmHsnc34eri6k9_5D7qhK7rAgW1-KLz4pP_2ZaPR1RaOIbdxXl0lRDJ0r2Ap_-crQ1qUkGMIbM3QQ3q9TUDj4zIqhZB5j0KHldNVq0RakkbVS-hF_JFtCctQ4x4jdvQEpYayzUhgLHOnBak_k8w-Qg');
+else
+    define('GOOGLE_PUSH_NOTIFICATION_API_KEY', 'AAAAmzBgjPI:APA91bFR80_TrE10EEd8VWI3MZSr6Mrl1bBlgMQ6kD6JQpKu0XsYPd2Za_IT92OAiXqO3dkFilsUA49s7IXQXODRZEJR3YelzVTKSizb1Jds-UwefnuuuwZHd_3qkbQBa4D5Sx3lBlAcNlkUhCPyQ5iXpqRuxzybGg');

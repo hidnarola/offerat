@@ -457,21 +457,21 @@ class Malls extends MY_Controller {
             $validation_rules[] = array(
                 'field' => 'mall_name',
                 'label' => 'Mall Name',
-                'rules' => 'trim|required|min_length[2]|callback_check_mall_name[' . $country_id . ']|max_length[250]|htmlentities'
+                'rules' => 'trim|required|min_length[2]|callback_check_mall_name[' . $country_id . ']|max_length[250]'
             );
         }
         if (in_array('website', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'website',
                 'label' => 'Website',
-                'rules' => 'trim|min_length[5]|max_length[250]|callback_custom_valid_url|htmlentities'
+                'rules' => 'trim|min_length[5]|max_length[250]|callback_custom_valid_url'
             );
         }
         if (in_array('facebook_page', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'facebook_page',
                 'label' => 'Facebook Page URL',
-                'rules' => 'trim|required|min_length[5]|max_length[250]|callback_custom_valid_url|htmlentities'
+                'rules' => 'trim|required|min_length[5]|max_length[250]|callback_custom_valid_url'
             );
         }
         if (in_array('mall_logo', $validate_fields)) {

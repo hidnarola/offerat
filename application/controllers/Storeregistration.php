@@ -421,21 +421,21 @@ class Storeregistration extends CI_Controller {
             $validation_rules[] = array(
                 'field' => 'store_name',
                 'label' => 'Store Name',
-                'rules' => 'trim|required|min_length[2]|max_length[250]|callback_check_store_name|htmlentities'
+                'rules' => 'trim|required|min_length[2]|max_length[250]|callback_check_store_name'
             );
         }
         if (in_array('website', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'website',
                 'label' => 'Website',
-                'rules' => 'trim|min_length[5]|max_length[250]|callback_custom_valid_url|htmlentities'
+                'rules' => 'trim|min_length[5]|max_length[250]|callback_custom_valid_url'
             );
         }
         if (in_array('facebook_page', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'facebook_page',
                 'label' => 'Facebook Page URL',
-                'rules' => 'trim|required|min_length[5]|max_length[250]|callback_custom_valid_url|htmlentities'
+                'rules' => 'trim|required|min_length[5]|max_length[250]|callback_custom_valid_url'
             );
         }
         if (in_array('store_logo', $validate_fields)) {

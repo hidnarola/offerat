@@ -33,11 +33,11 @@ class Verify_offers extends MY_Controller {
         $filter_array = $this->Common_model->create_datatable_request($this->input->post());
 
         $date = date('Y-m-d h:i:s');
-        $current_time_zone_today_date = new DateTime($date, new DateTimeZone(date_default_timezone_get()));
+        $current_time_zone_today_date = new DateTime($date);
         $current_time_zone_today_date->setTimezone(new DateTimeZone(date_default_timezone_get()));
         $current_time_zone_today_date_ = $current_time_zone_today_date->format('Y-m-d H:i:s');
         $current_time_zone_offeset = $current_time_zone_today_date->format('P');
-        $logged_in_country_zone_today_date = new DateTime($date, new DateTimeZone($this->loggedin_user_country_data['timezone']));
+        $logged_in_country_zone_today_date = new DateTime($date);
         $logged_in_country_zone_today_date->setTimezone(new DateTimeZone($this->loggedin_user_country_data['timezone']));
         $logged_in_country_zone_today_date_ = $logged_in_country_zone_today_date->format('Y-m-d H:i:s');
         $logged_in_country_zone_offset = $logged_in_country_zone_today_date->format('P');

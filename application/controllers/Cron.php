@@ -63,15 +63,15 @@ class Cron extends CI_Controller {
         if (isset($sponsorsors) && sizeof($sponsorsors) > 0) {
             foreach ($sponsorsors as $spo) {
                 $date = date('Y-m-d H:i:s');
-                $converted_today_date = new DateTime($date, new DateTimeZone($spo['timezone']));
+                $converted_today_date = new DateTime($date);
                 $converted_today_date->setTimezone(new DateTimeZone($spo['timezone']));
                 $converted_today_date_ = strtotime($converted_today_date->format('Y-m-d'));
 
-                $converted_from_date = new DateTime($spo['from_date'] . ' 00:00:00', new DateTimeZone($spo['timezone']));
+                $converted_from_date = new DateTime($spo['from_date'] . ' 00:00:00');
                 $converted_from_date->setTimezone(new DateTimeZone($spo['timezone']));
                 $converted_from_date_ = strtotime($converted_from_date->format('Y-m-d'));
 
-                $converted_to_date = new DateTime($spo['to_date'] . ' 00:00:00', new DateTimeZone($spo['timezone']));
+                $converted_to_date = new DateTime($spo['to_date'] . ' 00:00:00');
                 $converted_to_date->setTimezone(new DateTimeZone($spo['timezone']));
                 $converted_to_date_ = strtotime($converted_to_date->format('Y-m-d'));
 
@@ -136,15 +136,15 @@ class Cron extends CI_Controller {
         if (isset($sponsorsors) && sizeof($sponsorsors) > 0) {
             foreach ($sponsorsors as $spo) {
                 $date = date('Y-m-d H:i:s');
-                $converted_today_date = new DateTime($date, new DateTimeZone($spo['timezone']));
+                $converted_today_date = new DateTime($date);
                 $converted_today_date->setTimezone(new DateTimeZone($spo['timezone']));
                 $converted_today_date_ = strtotime($converted_today_date->format('Y-m-d'));
 
-                $converted_from_date = new DateTime($spo['from_date'] . ' 00:00:00', new DateTimeZone($spo['timezone']));
+                $converted_from_date = new DateTime($spo['from_date'] . ' 00:00:00');
                 $converted_from_date->setTimezone(new DateTimeZone($spo['timezone']));
                 $converted_from_date_ = strtotime($converted_from_date->format('Y-m-d'));
 
-                $converted_to_date = new DateTime($spo['to_date'] . ' 00:00:00', new DateTimeZone($spo['timezone']));
+                $converted_to_date = new DateTime($spo['to_date'] . ' 00:00:00');
                 $converted_to_date->setTimezone(new DateTimeZone($spo['timezone']));
                 $converted_to_date_ = strtotime($converted_to_date->format('Y-m-d'));
 
@@ -216,11 +216,11 @@ class Cron extends CI_Controller {
         if (isset($sponsorsors) && sizeof($sponsorsors) > 0) {
             foreach ($sponsorsors as $spo) {
                 $date = date('Y-m-d H:i:s');
-                $converted_today_date = new DateTime($date, new DateTimeZone($spo['timezone']));
+                $converted_today_date = new DateTime($date);
                 $converted_today_date->setTimezone(new DateTimeZone($spo['timezone']));
                 $converted_today_date_ = strtotime($converted_today_date->format('Y-m-d'));
 
-                $converted_to_date = new DateTime($spo['to_date'] . ' 00:00:00', new DateTimeZone($spo['timezone']));
+                $converted_to_date = new DateTime($spo['to_date'] . ' 00:00:00');
                 $converted_to_date->setTimezone(new DateTimeZone($spo['timezone']));
                 $converted_to_date_ = strtotime($converted_to_date->format('Y-m-d'));
 
@@ -283,11 +283,11 @@ class Cron extends CI_Controller {
         if (isset($sponsorsors) && sizeof($sponsorsors) > 0) {
             foreach ($sponsorsors as $spo) {
                 $date = date('Y-m-d H:i:s');
-                $converted_today_date = new DateTime($date, new DateTimeZone($spo['timezone']));
+                $converted_today_date = new DateTime($date);
                 $converted_today_date->setTimezone(new DateTimeZone($spo['timezone']));
                 $converted_today_date_ = strtotime($converted_today_date->format('Y-m-d'));
 
-                $converted_to_date = new DateTime($spo['to_date'] . ' 00:00:00', new DateTimeZone($spo['timezone']));
+                $converted_to_date = new DateTime($spo['to_date'] . ' 00:00:00');
                 $converted_to_date->setTimezone(new DateTimeZone($spo['timezone']));
                 $converted_to_date_ = strtotime($converted_to_date->format('Y-m-d'));
 
@@ -313,7 +313,7 @@ class Cron extends CI_Controller {
 
         $currnt_datetime = date('Y-m-d H:i');
 
-        $currnt_datetime = new DateTime($currnt_datetime, new DateTimeZone(date_default_timezone_get()));
+        $currnt_datetime = new DateTime($currnt_datetime);
         $currnt_datetime->setTimezone(new DateTimeZone(date_default_timezone_get()));
         $currnt_datetime = $currnt_datetime->format('Y-m-d H:i');
         $get_5_min_ago_datetime = date('Y-m-d H:i', strtotime("-5 minute"));
@@ -388,23 +388,24 @@ class Cron extends CI_Controller {
                 $messageArray['action'] = 100;
                 $messageArrayJson = json_encode($messageArray);
 
-                $country_zone_today_date = new DateTime($currnt_datetime, new DateTimeZone(date_default_timezone_get()));
+                $country_zone_today_date = new DateTime($currnt_datetime);
                 $country_zone_today_date->setTimezone(new DateTimeZone($list['timezone']));
                 $country_zone_today_date->format('Y-m-d H:i');
                 $country_zone_today_date_ = strtotime($country_zone_today_date->format('Y-m-d H:i'));
 //                echo '<br>' . $country_zone_today_date->format('Y-m-d H:i');
 //                echo '<br>' . $country_zone_today_date_ = strtotime($country_zone_today_date->format('Y-m-d H:i'));
 
-                $country_zone_broacast_time = new DateTime($list['broadcasting_time'], new DateTimeZone(date_default_timezone_get()));
+                $country_zone_broacast_time = new DateTime($list['broadcasting_time']);
                 $country_zone_broacast_time->setTimezone(new DateTimeZone($list['timezone']));
                 $country_zone_broacast_time->format('Y-m-d H:i');
                 $country_zone_broacast_time_ = strtotime($country_zone_broacast_time->format('Y-m-d H:i'));
+                
 //                echo '<br>' . $country_zone_broacast_time->format('Y-m-d H:i');
 //                echo '<br>' . $country_zone_broacast_time_ = strtotime($country_zone_broacast_time->format('Y-m-d H:i'));
 //                echo '<br>' . strtotime($get_5_min_ago_datetime);
 //                echo '<br>' . $country_zone_today_date_;
 //                die();
-                if ($country_zone_broacast_time_ > strtotime($get_5_min_ago_datetime) && $country_zone_broacast_time_ <= $country_zone_today_date_) {
+                if ($country_zone_broacast_time_ > strtotime($get_5_min_ago_datetime) && $country_zone_broacast_time_ <= $country_zone_today_date_) {                    
 //                    die("hello");
                     $select_user = array(
                         'table' => tbl_user . ' user',

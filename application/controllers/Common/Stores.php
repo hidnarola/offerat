@@ -1,5 +1,5 @@
 <?php
-
+//echo phpinfo();
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Stores extends MY_Controller {
@@ -648,9 +648,9 @@ class Stores extends MY_Controller {
                     }
 
                     if (!is_null($store_id) && $store_id > 0 && isset($_FILES['location_excel'])) {
-
+                        
                         if (($_FILES['location_excel']['size']) > 0) {
-
+                            
                             $file_path = $_SERVER['DOCUMENT_ROOT'] . location_excel_img_path;
                             if (!file_exists($file_path)) {
                                 $this->Common_model->created_directory($file_path);
@@ -658,19 +658,20 @@ class Stores extends MY_Controller {
                             $supported_files = 'xlsx';
                             $new_file_name = $store_id . '_' . date('Y_m_d_h_i_s');
                             $uplaoded_file_name = $this->Common_model->upload_file('location_excel', $file_path, $supported_files, $new_file_name);
-
-                            if (empty($uplaoded_file_name)) {
+                            
+                            if (empty($uplaoded_file_name)) {                                
                                 $do_location_file_has_error = true;
 //                                $this->data['file_errors'] = $this->upload->display_errors();
-                            } else {
+                            } else {                                
                                 $file_name = $uplaoded_file_name;
-                                $this->load->library('excel');
+                                $this->load->library('Excel');
+                                PHPExcel_Settings::setZipClass(PHPExcel_Settings::PCLZIP);
                                 $file_location = $_SERVER['DOCUMENT_ROOT'] . location_excel_img_path . $file_name;
                                 $file_type = PHPExcel_IOFactory::identify($file_location);
                                 $objReader = PHPExcel_IOFactory::createReader($file_type);
                                 $objPHPExcel = $objReader->load($file_location);
                                 $sheet_data = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-//                                pr($sheet_data, 1);
+                                
                                 foreach ($sheet_data as $key => $data) {
 
                                     if (isset($data['A']) && isset($data['B']) && !empty($data['A']) && !empty($data['B']) && $key > 1) {
@@ -713,6 +714,8 @@ class Stores extends MY_Controller {
 //                                $this->data['file_errors'] = 'Invalid File';
                             }
                         }
+                        
+//                        die();
                     }
 
                     if (isset($store_data['status']) && $store_data['status'] == NOT_VERIFIED_STATUS && is_null($id)) {
@@ -788,21 +791,21 @@ class Stores extends MY_Controller {
             $validation_rules[] = array(
                 'field' => 'store_name',
                 'label' => 'Store Name',
-                'rules' => 'trim|required|min_length[2]|callback_check_store_name[' . $country_id . ']|max_length[250]|htmlentities'
+                'rules' => 'trim|required|min_length[2]|callback_check_store_name[' . $country_id . ']|max_length[250]'
             );
         }
         if (in_array('website', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'website',
                 'label' => 'Website',
-                'rules' => 'trim|min_length[5]|max_length[250]|callback_custom_valid_url|htmlentities'
+                'rules' => 'trim|min_length[5]|max_length[250]|callback_custom_valid_url'
             );
         }
         if (in_array('facebook_page', $validate_fields)) {
             $validation_rules[] = array(
                 'field' => 'facebook_page',
                 'label' => 'Facebook Page URL',
-                'rules' => 'trim|required|min_length[5]|max_length[250]|callback_custom_valid_url|htmlentities'
+                'rules' => 'trim|required|min_length[5]|max_length[250]|callback_custom_valid_url'
             );
         }
         if (in_array('store_logo', $validate_fields)) {

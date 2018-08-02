@@ -20,9 +20,10 @@ class Push_notification {
         );
         $data_string = json_encode($data);
         $ch = curl_init();
-
-        // curl_setopt($ch, CURLOPT_URL, "https://android.googleapis.com/gcm/send");
-        curl_setopt($ch, CURLOPT_URL, "https://fcm.googleapis.com/fcm/send");
+        if ($_SERVER['HTTP_HOST'] == 'localhost')
+            curl_setopt($ch, CURLOPT_URL, "https://fcm.googleapis.com/fcm/send");
+        else
+            curl_setopt($ch, CURLOPT_URL, "https://android.googleapis.com/gcm/send");
 
         if ($headers)
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);

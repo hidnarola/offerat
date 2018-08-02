@@ -81,13 +81,13 @@ class Notifications extends MY_Controller {
         if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements')) && (($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming'))) || ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming', 'expired'))))) {
 
             $date = date('Y-m-d h:i:s');
-            $current_time_zone_today_date = new DateTime($date, new DateTimeZone(date_default_timezone_get()));
+            $current_time_zone_today_date = new DateTime($date);
             $current_time_zone_today_date->setTimezone(new DateTimeZone(date_default_timezone_get()));
             $current_time_zone_today_date_ = $current_time_zone_today_date->format('Y-m-d H:i:s');
             $current_time_zone_offeset = $current_time_zone_today_date->format('P');
-            $logged_in_country_zone_today_date = new DateTime($date, new DateTimeZone($this->loggedin_user_country_data['timezone']));
+            $logged_in_country_zone_today_date = new DateTime($date);
             $logged_in_country_zone_today_date->setTimezone(new DateTimeZone($this->loggedin_user_country_data['timezone']));
-            $logged_in_country_zone_today_date_ = $logged_in_country_zone_today_date->format('Y-m-d H:i:s');
+            $logged_in_country_zone_today_date_ = $logged_in_country_zone_today_date->format('Y-m-d H:i:s');            
             $logged_in_country_zone_offset = $logged_in_country_zone_today_date->format('P');
 
             $filter_array = $this->Common_model->create_datatable_request($this->input->post());
@@ -607,7 +607,7 @@ class Notifications extends MY_Controller {
         }
     }
 
-    public function get_notification_details($notification_id = NULL) {        
+    public function get_notification_details($notification_id = NULL) {
         $response = array(
             'status' => '0',
             'sub_view' => '0',

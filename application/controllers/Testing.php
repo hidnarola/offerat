@@ -11,10 +11,15 @@ class Testing extends CI_Controller {
     }
 
     function index() {
-        
-        $minute = 57;
-        echo $ans = (float) $minute % 5 ;
-        
+                    
+//        $expiry_time = new DateTime('2018-07-23 08:46:00', new DateTimeZone('Asia/Beirut'));
+//        $expiry_time->setTimezone(new DateTimeZone(date_default_timezone_get()));
+//        echo $expiry_time_text = $expiry_time->format('Y-m-d H:i:00');
+
+//        $date = date('Y-m-d h:i:s');
+//        $current_time_zone_today_date = new DateTime($date);
+//        $current_time_zone_today_date->setTimezone(new DateTimeZone('America/New_York'));
+//        pr($current_time_zone_today_date);
     }
 
     function stores_locations($id = 7) {
