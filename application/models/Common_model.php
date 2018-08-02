@@ -728,7 +728,6 @@ class Common_model extends CI_Model {
             //set white background
             $white = imagecolorallocate($dst_r, 255, 255, 255);
             imagefill($dst_r, 0, 0, $white);
-
             imagecopyresampled($dst_r, $img_r, 0, 0, $widthPadding, $heightPadding, $width, $height, $w, $h);
             if ($function($dst_r, $destination)) {
                 $return = 1;

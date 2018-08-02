@@ -151,7 +151,7 @@ $(function () {
      * then it will help to hide that validation message as user change its value.
      */
     $(document).on('change', 'input[type="file"]', function () {
-        $(this).valid();
+//        $(this).valid();
     });
 
     $(".styled, .multiselect-container input").uniform({

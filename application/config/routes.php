@@ -133,7 +133,7 @@ $route['country-admin/malls/save'] = 'Common/malls/save';
 $route['country-admin/malls/save/(:any)'] = 'Common/malls/save/$1';
 $route['country-admin/report/(:any)/(:any)'] = 'Common/report/index/$1/$2';
 $route['country-admin/report/push_notifications/(:any)/(:any)'] = 'Common/report/filter_notifications/$1/$2';
-
+$route['country-admin/upload/index'] = 'Common/Uploads/index';
 
 //Country Mall Store User Routes =================================
 $route['mall-store-user'] = 'Mall_store/dashboard';
@@ -161,7 +161,7 @@ $route['mall-store-user/malls/save'] = 'Common/malls/save';
 $route['mall-store-user/malls/save/(:any)'] = 'Common/malls/save/$1';
 $route['mall-store-user/report/(:any)/(:any)'] = 'Common/report/index/$1/$2';
 $route['mall-store-user/report/push_notifications/(:any)/(:any)'] = 'Common/report/filter_notifications/$1/$2';
-
+$route['mall-store-user/upload/index'] = 'Common/Uploads/index';
 
 //Store Registration
 $route['store-registration'] = 'storeregistration/index';
