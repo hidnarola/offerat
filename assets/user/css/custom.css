@@ -75,6 +75,10 @@ hr.style1{border-top: 1px solid #8c8b8b;}
 #dt_loader {text-align: center;z-index: 9999;width: 100%;margin-top: 40px;}
 div#dt_loader i.icon-spinner9.spinner.fa-4x {color: #9a9a9a;}
 
+
+/*tr.template-upload.fade{ opacity:1 !important;}*/
+.fade{opacity:1;}
+
 /*.ap_store_btn{margin-bottom: 20px !important;}*/
 /** media start here ***/
 

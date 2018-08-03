@@ -120,6 +120,9 @@ define('tbl_sponsored_log', 'sponsored_log');
   define('category_img_path', 'assets/images/category/');
   define('sub_category_img_path', 'assets/images/subcategory/');
   define('store_img_path', 'assets/images/store/'); */
+
+define('default_img_path', 'assets/user/images/');
+
 if ($_SERVER['HTTP_HOST'] == 'localhost') {
     define('country_img_path', '/media/CountryFlag/');
     define('category_img_path', '/media/CategoryIcon/');

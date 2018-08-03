@@ -150,14 +150,14 @@
                                             <input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name">
                                             <label id="media_name-error" class="validation-error-label" for="media_name" style=""></label>
 
-                                            <span class="btn btn-success fileinput-button">
+<!--                                            <span class="btn btn-success fileinput-button">
                                                 <i class="glyphicon glyphicon-plus"></i>
                                                 <span>Add files...</span>
-                                                <!-- The file input field used as target for the file upload widget -->
+                                                 The file input field used as target for the file upload widget 
                                                 <input id="fileupload" type="file" name="file[]" multiple>
 
                                                 <input type="file" name="files[]" multiple >
-                                            </span>
+                                            </span>-->
 
                                         </div>
                                     </div>
@@ -199,15 +199,36 @@
                                     </div>
                                 <?php } ?>
                             </div>
-                        </div>               
-                        <span id="error_img"></span>
-                        <!-- The global progress bar -->
-                        <div id="progress" class="progress">
-                            <div class="progress-bar progress-bar-success"></div>
+                        </div>        
+                        <div class="row fileupload-buttonbar">
+                            <div class="col-lg-7">
+                                <!-- The fileinput-button span is used to style the file input field as button -->
+                                <span class="btn btn-success fileinput-button">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                    <span>Add files...</span>
+                                    <input type="file" name="files[]" multiple>
+                                </span>                                 
+                            </div>
+                            <!-- The global progress state -->
+                            <div class="col-lg-5 fileupload-progress fade">
+                                <!-- The global progress bar -->
+                                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                                </div>
+                                <!-- The extended global progress state -->
+                                <div class="progress-extended">&nbsp;</div>
+                            </div>
                         </div>
-                        <!-- The container for the uploaded files -->
-                        <div id="files" class="files"></div>
-                        <br>    
+                        <!-- The table listing the files available for upload/download -->
+                        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+                <!--                        <span id="error_img"></span>
+                                         The global progress bar 
+                                        <div id="progress" class="progress">
+                                            <div class="progress-bar progress-bar-success"></div>
+                                        </div>
+                                         The container for the uploaded files 
+                                        <div id="files" class="files"></div>
+                                        <br>    -->
 
 
                         <table role="presentation" class="table table-striped"><tbody class="files" id="table_image"></tbody></table>	
@@ -222,6 +243,42 @@
         </div>
     </form>
 </div>
+
+
+            <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<!-- The Templates plugin is included to render the upload/download listings -->
+<script src="https://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<script src="https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+<!-- The Canvas to Blob plugin is included for image resizing functionality -->
+<script src="https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+<!-- blueimp Gallery script -->
+<script src="https://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+
+<script src="assets/user/js/file_upload/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="assets/user/js/file_upload/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="assets/user/js/file_upload/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="assets/user/js/file_upload/jquery.fileupload-image.js"></script>
+<!-- The File Upload audio preview plugin -->
+<script src="assets/user/js/file_upload/jquery.fileupload-audio.js"></script>
+<!-- The File Upload video preview plugin -->
+<script src="assets/user/js/file_upload/jquery.fileupload-video.js"></script>
+<!-- The File Upload validation plugin -->
+<script src="assets/user/js/file_upload/jquery.fileupload-validate.js"></script>
+<script src="assets/user/js/file_upload/jquery.fileupload-ui.js"></script>
+<!-- The File Upload jQuery UI plugin -->
+<script src="assets/user/js/file_upload/jquery.fileupload-jquery-ui.js"></script>
+<!-- The main application script -->
+<!--<script src="assets/user/js/file_upload/main.js"></script>-->
+
+
+
+<?php $this->load->view('Common/Notifications/script'); ?>
 <?php $this->load->view('Common/message_alert'); ?>
 <script>
     var img_arr = [];
@@ -289,8 +346,8 @@
     $(function () {
         'use strict';
         // Change this to the location of your server-side upload handler:
-//        var url = window.location.hostname === 'blueimp.github.io' ?
-//                '//jquery-file-upload.appspot.com/' : 'server/php/',
+        //        var url = window.location.hostname === 'blueimp.github.io' ?
+        //                '//jquery-file-upload.appspot.com/' : 'server/php/',
         var url = window.location.hostname === '<?php echo SITEURL . 'country-admin/upload/index'; ?>',
                 uploadButton = $('<button/>')
                 .addClass('btn btn-primary')
@@ -311,11 +368,13 @@
                     });
                 });
         $('#fileupload').fileupload({
+            dropZone: $('#dropzone'),
             url: url,
             dataType: 'json',
             autoUpload: true,
             acceptFileTypes: /(\.|\/)(jpe?g|jpg|png)$/i,
-            maxFileSize: 999000,
+            maxFileSize: 250000,
+            maxNumberOfFiles: 50,
             // Enable image resizing, except for Android and Opera,
             // which actually support image resizing, but fail to
             // send Blob objects via XHR requests:
@@ -324,20 +383,24 @@
             previewMaxWidth: 100,
             previewMaxHeight: 100,
             previewCrop: true,
+            messages: {
+                maxNumberOfFiles: 'Sorry, You can upload 50 Images,Please remove unneccessary files',
+            },
             success: function (response) {
+                console.log("hellooooo");
                 $("#error_img").html("");
-//                console.log(response.files[0].name);
                 var table_content = $(".table .table-striped").html();
-                if (table_content != '') {
-                    $("#update_div").show();
-                    $("#chk_del").show();
-                }
+                console.log(response);
                 img_arr.push(window.btoa(response.files[0].name));
                 $("#uploaded_images_arr").val(img_arr);
             },
+            error: function (e) {
+                //alert("here");
+                console.log("Error");
+                console.log(e);
+            }
         }).on('fileuploadadd', function (e, data) {
 
-            console.log('fileuploadadd');
             data.context = $('<div/>').appendTo('#files');
             $.each(data.files, function (index, file) {
                 var node = $('<p/>')
@@ -347,7 +410,8 @@
                             .append('<br>')
                             .append(uploadButton.clone(true).data(data));
                 }
-                node.appendTo(data.context);
+//                node.appendTo(data.context);
+                console.log('fileuploadadd');
             });
         }).on('fileuploadprocessalways', function (e, data) {
             console.log('fileuploadprocessalways');
@@ -370,14 +434,15 @@
                         .prop('disabled', !!data.files.error);
             }
         }).on('fileuploadprogressall', function (e, data) {
-            console.log('fileuploadprogressall');
             var progress = parseInt(data.loaded / data.total * 100, 10);
             $('#progress .progress-bar').css(
                     'width',
                     progress + '%'
                     );
+            console.log('fileuploadprogressall');
         }).on('fileuploaddone', function (e, data) {
             console.log('fileuploaddone');
+            console.log(data);
             $.each(data.result.files, function (index, file) {
                 if (file.url) {
                     var link = $('<a>')
@@ -393,15 +458,31 @@
                 }
             });
         }).on('fileuploadfail', function (e, data) {
-            console.log('fileuploadfail');
             $.each(data.files, function (index) {
-                console.log('data.files');
-                console.log(data.files);
                 var error = $('<span class="text-danger"/>').text('File upload failed.');
                 $(data.context.children()[index])
                         .append('<br>')
                         .append(error);
             });
+        }).on('fileuploaddestroy', function (e, data) {
+            $("#error_img").html("");
+            console.log(data.context[0].id);
+            var index = img_arr.indexOf(data.context[0].id);
+            console.log("index" + index);
+            console.log(data);
+//            if (index > -1) {
+                img_arr.splice(index, 1);
+                console.log("#uploaded_images_arr");
+                console.log($("#uploaded_images_arr").val());
+                console.log('img_arr');
+                console.log(img_arr);
+                var url = "<?php echo base_url(); ?>country-admin/notifications/remove_image_uploaded";
+                $.post(url, {all_data: $("#uploaded_images_arr").val(), not_to_delete: img_arr}, function (response)
+                { });
+//            }
+            $("#uploaded_images_arr").val(img_arr);
+            data.context.remove();
+            return false;
         }).prop('disabled', !$.support.fileInput)
                 .parent().addClass($.support.fileInput ? undefined : 'disabled');
     });

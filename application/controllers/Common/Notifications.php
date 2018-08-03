@@ -12,6 +12,8 @@ class Notifications extends MY_Controller {
             'title' => 'Notifications',
         );
 
+//        $this->load->library('UploadHandler');
+
         if (!in_array($this->loggedin_user_type, array(COUNTRY_ADMIN_USER_TYPE, STORE_OR_MALL_ADMIN_USER_TYPE)))
             override_404();
     }
@@ -551,6 +553,21 @@ class Notifications extends MY_Controller {
             );
         }
         echo json_encode($response);
+    }
+
+    //remove jquery uploaded images
+    public function remove_image_uploaded() {
+
+        $target_dir = $_SERVER['DOCUMENT_ROOT'];
+        $array = explode(",", $this->input->post('all_data', TRUE));
+        $not_to = $this->input->post('not_to_delete', TRUE);        
+        $result = array_diff($array, $not_to);        
+        foreach ($result as $ar) {
+//            echo base64_decode($ar) . '====' . base64_decode($ar);
+//            echo '<br>';
+            @unlink($target_dir . offer_media_path . base64_decode($ar));
+            @unlink($target_dir . offer_media_thumbnail_path . base64_decode($ar));
+        }
     }
 
 }

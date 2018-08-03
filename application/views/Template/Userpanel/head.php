@@ -13,9 +13,26 @@
 <link href="assets/user/css/core.css" rel="stylesheet" type="text/css">
 <link href="assets/user/css/components.css" rel="stylesheet" type="text/css">
 <link href="assets/user/css/colors.css" rel="stylesheet" type="text/css">
-<link href="assets/user/css/custom.css" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Muli:300,400,600,700,800,900" rel="stylesheet">
 <!-- /global stylesheets -->
+
+<!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/dark-hive/jquery-ui.css" id="theme">-->
+<link rel="stylesheet" href="assets/user/css/file_upload/style.css">
+<!--<link rel="stylesheet" href="assets/user/css/file_upload/jquery-ui-demo.css">-->
+
+<link rel="stylesheet" href="assets/user/css/file_upload/style.css">
+<link rel="stylesheet" href="assets/user/css/file_upload/jquery.fileupload.css">
+
+<link rel="stylesheet" href="https://blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
+<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+<link rel="stylesheet" href="assets/user/css/file_upload/jquery.fileupload.css">
+<link rel="stylesheet" href="assets/user/css/file_upload/jquery.fileupload-ui.css">
+
+<noscript><link rel="stylesheet" href="assets/user/css/file_upload/jquery.fileupload-noscript.css"></noscript>
+<noscript><link rel="stylesheet" href="assets/user/css/file_upload/jquery.fileupload-ui-noscript.css"></noscript>
+<link href="assets/user/css/custom.css" rel="stylesheet" type="text/css">
+
+
 <noscript><META HTTP-EQUIV="Refresh" CONTENT="0; URL=js_disabled"></noscript>
 <!-- Core JS files -->
 <script type="text/javascript" src="assets/user/js/plugins/loaders/pace.min.js"></script>
@@ -25,30 +42,7 @@
 <!-- /core JS files -->
 
 
-<link rel="stylesheet" href="assets/user/css/file_upload/style.css">
-<link rel="stylesheet" href="assets/user/css/file_upload/jquery.fileupload.css">
 
-<script src="assets/user/js/file_upload/vendor/jquery.ui.widget.js"></script>
-<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-<script src="https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
-<!-- The Canvas to Blob plugin is included for image resizing functionality -->
-<script src="https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
-<!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-<script src="assets/user/js/file_upload/jquery.iframe-transport.js"></script>
-<!-- The basic File Upload plugin -->
-<script src="assets/user/js/file_upload/jquery.fileupload.js"></script>
-<!-- The File Upload processing plugin -->
-<script src="assets/user/js/file_upload/jquery.fileupload-process.js"></script>
-<!-- The File Upload image preview & resize plugin -->
-<script src="assets/user/js/file_upload/jquery.fileupload-image.js"></script>
-<!-- The File Upload audio preview plugin -->
-<script src="assets/user/js/file_upload/jquery.fileupload-audio.js"></script>
-<!-- The File Upload video preview plugin -->
-<script src="assets/user/js/file_upload/jquery.fileupload-video.js"></script>
-<!-- The File Upload validation plugin -->
-<script src="assets/user/js/file_upload/jquery.fileupload-validate.js"></script>
 
 <script type="text/javascript">
     var base_url = '<?php echo SITEURL; ?>';

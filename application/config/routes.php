@@ -95,6 +95,7 @@ $route['country-admin/verify-mall-offers'] = 'Countryadmin/verify_offers/malls';
 $route['country-admin/filter_mall_offers'] = 'Countryadmin/verify_offers/filter_mall_offers';
 $route['country-admin/change-password'] = 'Common/change_password';
 $route['country-admin/change-information'] = 'Common/change_information';
+$route['country-admin/notifications/remove_image_uploaded'] = 'Common/notifications/remove_image_uploaded';
 $route['country-admin/notifications/get_notification_details/(:any)'] = 'Common/notifications/get_notification_details/$1';
 $route['country-admin/notifications/(:any)/save'] = 'Common/notifications/save/$1';
 $route['country-admin/notifications/(:any)/save/(:any)'] = 'Common/notifications/save/$1/$2';
