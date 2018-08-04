@@ -105,6 +105,7 @@ define('tbl_category', 'category');
 define('tbl_favorite', 'favorite');
 define('tbl_mall', 'mall');
 define('tbl_offer_announcement', 'offer_announcement');
+define('tbl_offer_announcement_image', 'offer_announcement_image');
 define('tbl_store', 'store');
 define('tbl_store_category', 'store_category');
 define('tbl_store_location', 'store_location');

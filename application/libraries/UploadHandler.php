@@ -283,7 +283,13 @@ class UploadHandler {
                 . $version_path . rawurlencode($file_name);
     }
 
-    protected function set_additional_file_properties($file) {
+    protected function set_additional_file_properties($file) {        
+        
+        list($width1, $height1) = getimagesize($_SERVER['DOCUMENT_ROOT'] . offer_media_path . $file->name);
+        $media_width = $width1;
+        $media_height = $height1;
+        $file->width = $media_width;
+        $file->height = $media_height;
         $file->deleteUrl = $this->options['script_url']
                 . $this->get_query_separator($this->options['script_url'])
                 . $this->get_singular_param_name()
@@ -1316,9 +1322,7 @@ class UploadHandler {
                 $files[] = $this->handle_file_upload(
                         isset($upload['tmp_name']) ? $upload['tmp_name'] : null,
 //                        $file_name ? $file_name : (isset($upload['name']) ? $upload['name'] : null), 
-                        $filename1, $size ? $size : (isset($upload['size']) ?
-                        $upload['size'] : $this->get_server_var('CONTENT_LENGTH')), isset($upload['type']) ?
-                        $upload['type'] : $this->get_server_var('CONTENT_TYPE'), isset($upload['error']) ? $upload['error'] : null, null, $content_range
+                        $filename1, $size ? $size : (isset($upload['size']) ? $upload['size'] : $this->get_server_var('CONTENT_LENGTH')), isset($upload['type']) ? $upload['type'] : $this->get_server_var('CONTENT_TYPE'), isset($upload['error']) ? $upload['error'] : null, null, $content_range
                 );
             }
         }

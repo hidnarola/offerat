@@ -99,6 +99,10 @@ $route['country-admin/notifications/remove_image_uploaded'] = 'Common/notificati
 $route['country-admin/notifications/get_notification_details/(:any)'] = 'Common/notifications/get_notification_details/$1';
 $route['country-admin/notifications/(:any)/save'] = 'Common/notifications/save/$1';
 $route['country-admin/notifications/(:any)/save/(:any)'] = 'Common/notifications/save/$1/$2';
+
+$route['country-admin/notifications/images/(:any)'] = 'Common/notifications/images/$1';
+$route['country-admin/notifications/delete_images/(:any)'] = 'Common/notifications/delete_images/$1';
+
 $route['country-admin/notifications/(:any)/save/(:any)/(:any)'] = 'Common/notifications/save/$1/$2/$3';
 $route['country-admin/notifications/(:any)'] = 'Common/notifications/index/$1';
 $route['country-admin/notifications/(:any)/(:any)'] = 'Common/notifications/index/$1/$2';

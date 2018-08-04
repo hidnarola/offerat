@@ -1,17 +1,19 @@
 <div class="col-md-12">
-    <form method="POST" action="<?php echo SITEURL . 'country-admin/upload/index'; ?>" enctype="multipart/form-data" class="form-validate-jquery" name="fileupload" id="fileupload">
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="panel panel-flat">
-                    <div class="panel-heading">
-                        <h5 class="panel-title"><i class="icon-bell2 btn-icon"></i><?php echo $page_header ?></h5>
-                        <div class="heading-elements">
-                            <ul class="icons-list">
-                                <li><a data-action="collapse"></a></li>
-                            </ul>
-                        </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-flat">
+                <div class="panel-heading">
+                    <h5 class="panel-title"><i class="icon-bell2 btn-icon"></i><?php echo $page_header ?></h5>
+                    <div class="heading-elements">
+                        <ul class="icons-list">
+                            <li><a data-action="collapse"></a></li>
+                        </ul>
                     </div>
-                    <div class="panel-body">
+                </div>
+                <div class="panel-body">
+                    <form method="POST" action="" enctype="multipart/form-data" class="form-validate-jquery" name="frm_profile" id="frm_profile">
+                    <!--<form method="POST" action="<?php echo SITEURL . 'country-admin/upload/index'; ?>" enctype="multipart/form-data" class="form-validate-jquery" name="fileupload" id="fileupload">-->
                         <div class="col-xs-12">
                             <div class="col-md-12">
                                 <div class="col-md-4">
@@ -200,6 +202,16 @@
                                 <?php } ?>
                             </div>
                         </div>        
+
+                        <div class="text-right">
+                            <a href="<?php echo $back_url; ?>" class="btn bg-grey-300 btn-labeled"><b><i class="icon-arrow-left13"></i></b>Back</a>
+                            <button type="submit" id="offer_submit" name="offer_submit" class="btn bg-teal btn-labeled btn-labeled-right"><b><i class="icon-arrow-right14"></i></b>Save</button>
+                            <input type="hidden" name="uploaded_images_data" id="uploaded_images_data">
+                        </div>
+
+                    </form>
+                    <form method="POST" action="<?php echo SITEURL . 'country-admin/upload/index'; ?>" enctype="multipart/form-data" class="form-validate-jquery" name="fileupload" id="fileupload">
+                        <input type="hidden" name="uploaded_images_arr" id="uploaded_images_arr">
                         <div class="row fileupload-buttonbar">
                             <div class="col-lg-7">
                                 <!-- The fileinput-button span is used to style the file input field as button -->
@@ -207,7 +219,11 @@
                                     <i class="glyphicon glyphicon-plus"></i>
                                     <span>Add files...</span>
                                     <input type="file" name="files[]" multiple>
-                                </span>                                 
+                                </span>
+                                <div class="upload-div" style="display:none;" id="update_div">
+                                    <button type="button" class="delete">Delete</button>
+                                    <input type="checkbox" class="toggle styled-checkbox-1">
+                                </div>
                             </div>
                             <!-- The global progress state -->
                             <div class="col-lg-5 fileupload-progress fade">
@@ -229,23 +245,15 @@
                                          The container for the uploaded files 
                                         <div id="files" class="files"></div>
                                         <br>    -->
-
-
                         <table role="presentation" class="table table-striped"><tbody class="files" id="table_image"></tbody></table>	
-                        <div class="text-right">
-                            <input type="hidden" name="uploaded_images_arr" id="uploaded_images_arr">
-                            <a href="<?php echo $back_url; ?>" class="btn bg-grey-300 btn-labeled"><b><i class="icon-arrow-left13"></i></b>Back</a>
-                            <button type="submit" class="btn bg-teal btn-labeled btn-labeled-right"><b><i class="icon-arrow-right14"></i></b>Save</button>
-                        </div>
-                    </div>
+
+                    </form>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
+
 </div>
-
-
-            <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <!-- The Templates plugin is included to render the upload/download listings -->
 <script src="https://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
@@ -387,12 +395,16 @@
                 maxNumberOfFiles: 'Sorry, You can upload 50 Images,Please remove unneccessary files',
             },
             success: function (response) {
-                console.log("hellooooo");
-                $("#error_img").html("");
-                var table_content = $(".table .table-striped").html();
+
+                console.log('response');
                 console.log(response);
-                img_arr.push(window.btoa(response.files[0].name));
+                $("#error_img").html("");
+                var table_content = $(document).find(".table .table-striped").html();                
+                img_arr.push(window.btoa(response.files[0].name + "/" + response.files[0].width + "/" + response.files[0].height));
                 $("#uploaded_images_arr").val(img_arr);
+                if (table_content != '') {
+                    $("#update_div").show();
+                }
             },
             error: function (e) {
                 //alert("here");
@@ -411,10 +423,10 @@
                             .append(uploadButton.clone(true).data(data));
                 }
 //                node.appendTo(data.context);
-                console.log('fileuploadadd');
+//                console.log('fileuploadadd');
             });
         }).on('fileuploadprocessalways', function (e, data) {
-            console.log('fileuploadprocessalways');
+//            console.log('fileuploadprocessalways');
             var index = data.index,
                     file = data.files[index],
                     node = $(data.context.children()[index]);
@@ -429,8 +441,8 @@
                         .append($('<span class="text-danger"/>').text(file.error));
             }
             if (index + 1 === data.files.length) {
-                data.context.find('button')
-                        .text('Upload')
+                data.context.find('a')
+                        .text('Cancel')
                         .prop('disabled', !!data.files.error);
             }
         }).on('fileuploadprogressall', function (e, data) {
@@ -439,10 +451,10 @@
                     'width',
                     progress + '%'
                     );
-            console.log('fileuploadprogressall');
+//            console.log('fileuploadprogressall');
         }).on('fileuploaddone', function (e, data) {
-            console.log('fileuploaddone');
-            console.log(data);
+//            console.log('fileuploaddone');
+//            console.log(data);
             $.each(data.result.files, function (index, file) {
                 if (file.url) {
                     var link = $('<a>')
@@ -466,24 +478,27 @@
             });
         }).on('fileuploaddestroy', function (e, data) {
             $("#error_img").html("");
-            console.log(data.context[0].id);
             var index = img_arr.indexOf(data.context[0].id);
-            console.log("index" + index);
-            console.log(data);
-//            if (index > -1) {
+            if (index > -1) {
                 img_arr.splice(index, 1);
-                console.log("#uploaded_images_arr");
-                console.log($("#uploaded_images_arr").val());
-                console.log('img_arr');
-                console.log(img_arr);
                 var url = "<?php echo base_url(); ?>country-admin/notifications/remove_image_uploaded";
                 $.post(url, {all_data: $("#uploaded_images_arr").val(), not_to_delete: img_arr}, function (response)
                 { });
-//            }
+            }
             $("#uploaded_images_arr").val(img_arr);
             data.context.remove();
+            var table_content = $(document).find("#table_image").html();
+            if (table_content == '' || table_content == 'undefined') {
+                $("#update_div").hide();
+            }
             return false;
         }).prop('disabled', !$.support.fileInput)
                 .parent().addClass($.support.fileInput ? undefined : 'disabled');
+    });
+
+    $(document).on('click', '#offer_submit', function () {
+        console.log($(document).find('#uploaded_images_arr').val());
+        $(document).find('#uploaded_images_data').val($(document).find('#uploaded_images_arr').val());
+        return true;
     });
 </script>

@@ -288,11 +288,38 @@ class Notifications extends MY_Controller {
                         $notification_data['is_delete'] = IS_NOT_DELETED_STATUS;
 
                         $notification_id = $this->Common_model->master_save(tbl_offer_announcement, $notification_data);
-                        if ($notification_id > 0)
+                        if ($notification_id > 0) {
+
+                            if ($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE && $this->input->post('uploaded_images_data', TRUE) != '') {
+
+                                $uploaded_images_data = explode(',', $this->input->post('uploaded_images_data', TRUE));
+                                pr($uploaded_images_data);
+                                if (isset($uploaded_images_data) && sizeof($uploaded_images_data) > 0) {
+                                    $image_data = array();
+                                    foreach ($uploaded_images_data as $image) {
+                                        $file_name = base64_decode($image);
+                                        $file_name = explode('/', $file_name);
+                                        $image_data[] = array(
+                                            'image_name' => $file_name[0],
+                                            'image_thumbnail' => $file_name[0],
+                                            'image_width' => $file_name[1],
+                                            'image_height' => $file_name[2],
+                                            'id_offer' => $notification_id,
+                                            'created_date' => $date,
+                                            'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
+                                            'is_delete' => IS_NOT_DELETED_STATUS
+                                        );
+                                    }
+                                    if (isset($image_data) && sizeof($image_data) > 0)
+                                        $this->Common_model->master_save(tbl_offer_announcement_image, $image_data, 1);
+                                }
+                            }
                             $this->session->set_flashdata('success_msg', ucfirst($notification_type) . ' Added Successfully!');
+                        }
                     }
+//                    die("end");
                     redirect($back_url);
-                    die();
+//                    die();
                 }
             }
 
@@ -403,7 +430,7 @@ class Notifications extends MY_Controller {
             $validation_rules[] = array(
                 'field' => 'video_url',
                 'label' => 'Video URL',
-                'rules' => 'trim|required|min_length[5]|max_length[255]|htmlentities',
+                'rules' => 'trim|required|min_length[5]|max_length[255]|callback_custom_valid_url|htmlentities',
             );
         }
 
@@ -421,8 +448,20 @@ class Notifications extends MY_Controller {
         return $this->form_validation->run();
     }
 
-    function custom_expiry_time_check($expire_time) {
+    function custom_valid_url($url) {
 
+        if (isset($url) && !empty($url)) {
+            if (preg_match('%^((https?://)|(www\.))([a-z0-9-].?)+(:[0-9]+)?(/.*)?$%i', $url)) {
+                return TRUE;
+            } else {
+                $this->form_validation->set_message('custom_valid_url', 'The {field} not a valid url.');
+                return FALSE;
+            }
+        }
+    }
+
+    function custom_expiry_time_check($expire_time) {
+        return true;
         $expire_time = strtotime($expire_time);
         $today_time = strtotime(date('Y-m-d H:i'));
 
@@ -439,7 +478,7 @@ class Notifications extends MY_Controller {
     }
 
     function custom_broadcast_time_check($broadcast_time) {
-
+        return true;
         $broadcast_time = strtotime($broadcast_time);
         $today_time = strtotime(date('Y-m-d H:i'));
 
@@ -560,13 +599,101 @@ class Notifications extends MY_Controller {
 
         $target_dir = $_SERVER['DOCUMENT_ROOT'];
         $array = explode(",", $this->input->post('all_data', TRUE));
-        $not_to = $this->input->post('not_to_delete', TRUE);        
-        $result = array_diff($array, $not_to);        
+        $not_to = $this->input->post('not_to_delete', TRUE);
+        $result = array_diff($array, $not_to);
         foreach ($result as $ar) {
-//            echo base64_decode($ar) . '====' . base64_decode($ar);
-//            echo '<br>';
             @unlink($target_dir . offer_media_path . base64_decode($ar));
             @unlink($target_dir . offer_media_thumbnail_path . base64_decode($ar));
+        }
+    }
+
+    /*
+     * Display List of Images for Offer / Announcements
+     * @param id : id_offer (Int)
+     */
+
+    public function images($id) {
+//        die($this->loggedin_user_type);
+        $back_url = '';
+
+        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)
+            $back_url = 'country-admin/stores/save/' . $id;
+        elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
+            $back_url = 'mall-store-user/stores';
+
+        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+
+            $select_image = array(
+                'table' => tbl_offer_announcement_image . ' image',
+                'where' => array(
+                    'offer.id_offer' => $id,
+                    'offer.is_delete' => IS_NOT_DELETED_STATUS,
+                    'image.is_delete' => IS_NOT_DELETED_STATUS
+                ),
+                'join' => array(
+                    array(
+                        'table' => tbl_offer_announcement . ' as offer',
+                        'condition' => 'offer.id_offer = image.id_offer',
+                        'join' => 'left',
+                    )
+                )
+            );
+
+            $image_list = $this->Common_model->master_select($select_image);
+            pr($image_list, 1);
+            if (isset($store_details) && sizeof($store_details) > 0) {
+//
+                if ($this->input->post()) {
+
+                    $delete_location_ids = $this->input->post('delete_location_ids', TRUE);
+                    if (isset($delete_location_ids) && sizeof($delete_location_ids) > 0) {
+                        $result = $this->db->query('UPDATE ' . tbl_store_location . ' SET is_delete=' . IS_DELETED_STATUS .
+                                ' WHERE is_delete = ' . IS_NOT_DELETED_STATUS . ' AND id_store_location IN (' . implode(',', $delete_location_ids) . ') ');
+                    }
+                    if ($result)
+                        $this->session->set_flashdata('success_msg', 'Location(s) deleted successfully.');
+                    else
+                        $this->session->set_flashdata('error_msg', 'Location(s) not deleted.');
+                    redirect('country-admin/stores/locations/' . $id);
+                }
+
+                $this->data['title'] = $this->data['page_header'] = 'Edit Locations - ' . $store_details['store_name'];
+                $this->bread_crum[] = array(
+                    'url' => SITEURL . 'country-admin/stores',
+                    'title' => 'List',
+                );
+                $this->bread_crum[] = array(
+                    'url' => SITEURL . 'country-admin/stores/save/' . $id,
+                    'title' => 'Edit ' . $store_details['store_name'],
+                );
+                $this->bread_crum[] = array(
+                    'url' => '',
+                    'title' => 'Locations',
+                );
+
+                $select_store_location = array(
+                    'table' => tbl_store_location,
+                    'where' => array(
+                        'id_store' => $id,
+                        'is_delete' => IS_NOT_DELETED_STATUS,
+                        'location_type' => STORE_LOCATION_TYPE,
+                        'id_location' => 0
+                    )
+                );
+
+                $store_locations = $this->Common_model->master_select($select_store_location);
+
+                $this->data['store_name'] = $store_details['store_name'];
+                $this->data['store_locations'] = $store_locations;
+                $this->data['back_url'] = $back_url;
+                $this->data['action_url'] = 'country-admin/stores/locations/' . $id;
+
+                $this->template->load('user', 'Common/Store/locations', $this->data);
+            } else {
+                redirect($back_url);
+            }
+        } else {
+            override_404();
         }
     }
 
