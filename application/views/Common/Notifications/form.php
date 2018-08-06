@@ -11,11 +11,11 @@
                         </ul>
                     </div>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body panel_offer">
                     <form method="POST" action="" enctype="multipart/form-data" class="form-validate-jquery" name="frm_profile" id="frm_profile">
                     <!--<form method="POST" action="<?php echo SITEURL . 'country-admin/upload/index'; ?>" enctype="multipart/form-data" class="form-validate-jquery" name="fileupload" id="fileupload">-->
                         <div class="col-xs-12">
-                            <div class="col-md-12">
+                            <div class="">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <input type="hidden" class="form-control" placeholder="" name="id_offer" id="id_offer" value="<?php echo (isset($notification_data['id_offer'])) ? $notification_data['id_offer'] : ''; ?>">
@@ -104,94 +104,50 @@
                             </div>
                         </div>
 
-                        <div class="col-xs-12">
-                            <div class="col-md-12">   
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Expire Date & Time</label>
-                                        <div class="input-group">
-                                            <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default btn-icon" id="expire_date_icon"><i class="icon-calendar3"></i></button>
-                                            </span>                                                
-                                            <?php
-                                            $expiry_time = '';
-                                            if (isset($notification_data) && isset($notification_data['expiry_time'])) {
-                                                if ($notification_data['expiry_time'] == '0000-00-00 00:00:00') {
-                                                    $expiry_time = '';
-                                                } else {
-                                                    $expiry_time = date_create($notification_data['expiry_time']);
-                                                    $expiry_time = date_format($expiry_time, "Y-m-d H:i");
-                                                }
-                                            } else {
-                                                $expiry_time = date('d-m-Y H:i', strtotime('+10 minutes', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone']))));
-                                            }
-                                            ?>
-                                            <input type="text" class="form-control" placeholder="Expire Date & Time" name="expiry_time" id="expire_date_time" value="<?php echo $expiry_time; ?>">
-                                            <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default btn-icon" id="expire_date_delete_icon"><i class=" icon-bin"></i></button>
-                                            </span> 
-                                        </div>                                                                                        
-                                    </div>
-                                </div>                                    
-                                <div class="col-md-4">
-                                    <div class="form-group offer_text_section">
-                                        <label>Offer Text <span class="text-danger">*</span></label>
-                                        <div>
-                                            <textarea class="form-control" rows="5" placeholder="Type here appears in the <?php echo ($notification_type == 'offers') ? 'offers' : 'announcement'; ?> section in mobile app" name="content" id="content"><?php echo (isset($notification_data['content'])) ? $notification_data['content'] : set_value('content'); ?></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-group offer_video_section">
-                                        <label>Video URL <span class="text-danger">*</span></label>
-                                        <div>
-                                            <input type="text" class="form-control" placeholder="Video URL" name="video_url" id="video_url" value="<?php echo (isset($notification_data['video_url'])) ? $notification_data['video_url'] : set_value('video_url'); ?>">
-                                        </div>
-                                    </div>
-                                    <div class="form-group offer_image_section">
-                                        <label>Upload Image(s)<span class="text-danger">*</span></label>
-                                        <div>
-                                            <input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name">
-                                            <label id="media_name-error" class="validation-error-label" for="media_name" style=""></label>
-
-<!--                                            <span class="btn btn-success fileinput-button">
-                                                <i class="glyphicon glyphicon-plus"></i>
-                                                <span>Add files...</span>
-                                                 The file input field used as target for the file upload widget 
-                                                <input id="fileupload" type="file" name="file[]" multiple>
-
-                                                <input type="file" name="files[]" multiple >
-                                            </span>-->
-
-                                        </div>
-                                    </div>
-                                    <div>
+                        <div class="col-xs-12">                            
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Expire Date & Time</label>
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default btn-icon" id="expire_date_icon"><i class="icon-calendar3"></i></button>
+                                        </span>                                                
                                         <?php
-                                        if (isset($notification_data['media_name']) && !empty($notification_data['media_name'])) {
-                                            $extension = explode('.', $notification_data['media_name']);
-                                            if (isset($extension) && isset($extension[1]) && in_array($extension[1], $this->image_extensions_arr)) {
-                                                ?>
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <div>                                                                    
-                                                            <a href="<?php echo offer_media_path . $notification_data['media_name'] ?>" class="btn btn-info btn-lg" target="_blank"><i class="icon-image5"></i> View Image</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            <?php } elseif (isset($extension) && isset($extension[1]) && in_array($extension[1], $this->video_extensions_arr)) { ?>
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <div>
-                                                            <a href="<?php echo offer_media_path . $notification_data['media_name'] ?>" class="btn btn-info btn-lg" target="_blank"><i class="icon-video-camera2"></i> View Video</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <?php
+                                        $expiry_time = '';
+                                        if (isset($notification_data) && isset($notification_data['expiry_time'])) {
+                                            if ($notification_data['expiry_time'] == '0000-00-00 00:00:00') {
+                                                $expiry_time = '';
+                                            } else {
+                                                $expiry_time = date_create($notification_data['expiry_time']);
+                                                $expiry_time = date_format($expiry_time, "Y-m-d H:i");
                                             }
+                                        } else {
+                                            $expiry_time = date('d-m-Y H:i', strtotime('+10 minutes', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone']))));
                                         }
                                         ?>
+                                        <input type="text" class="form-control" placeholder="Expire Date & Time" name="expiry_time" id="expire_date_time" value="<?php echo $expiry_time; ?>">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default btn-icon" id="expire_date_delete_icon"><i class=" icon-bin"></i></button>
+                                        </span> 
+                                    </div>                                                                                        
+                                </div>
+                            </div>                                    
+                            <div class="col-md-4">
+                                <div class="form-group offer_text_section">
+                                    <label>Offer Text <span class="text-danger">*</span></label>
+                                    <div>
+                                        <textarea class="form-control" rows="5" placeholder="Type here appears in the <?php echo ($notification_type == 'offers') ? 'offers' : 'announcement'; ?> section in mobile app" name="content" id="content"><?php echo (isset($notification_data['content'])) ? $notification_data['content'] : set_value('content'); ?></textarea>
                                     </div>
                                 </div>
+                                <div class="form-group offer_video_section">
+                                    <label>Video URL <span class="text-danger">*</span></label>
+                                    <div>
+                                        <input type="text" class="form-control" placeholder="Video URL" name="video_url" id="video_url" value="<?php echo (isset($notification_data['video_url'])) ? $notification_data['video_url'] : set_value('video_url'); ?>">
+                                    </div>
+                                </div>
+
                                 <?php if (isset($notification_type) && $notification_type == 'offers') { ?>
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 responsive_view_status">
                                         <div class="form-group">
                                             <label>Push Notification Summary <span class="text-danger">*</span></label>
                                             <div>
@@ -200,10 +156,36 @@
                                         </div>
                                     </div>
                                 <?php } ?>
+
+                                <div class="form-group offer_image_section desktop_view">
+                                    <label>Upload Image(s)<span class="text-danger">*</span></label>
+                                    <div>
+<!--                                            <input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name">
+                                        <label id="media_name-error" class="validation-error-label" for="media_name" style=""></label>-->
+                                    </div>
+                                </div>                                    
                             </div>
+                            <?php if (isset($notification_type) && $notification_type == 'offers') { ?>
+                                <div class="col-md-4 desktop_view">
+                                    <div class="form-group">
+                                        <label>Push Notification Summary <span class="text-danger">*</span></label>
+                                        <div>
+                                            <input type="text" class="form-control" placeholder="Appears in push notification" name="push_message" id="push_message" required="required" value="<?php echo (isset($notification_data['push_message'])) ? $notification_data['push_message'] : set_value('push_message'); ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php } ?>   
+
+                            <div class="form-group offer_image_section responsive_view_status">
+                                <label>Upload Image(s)<span class="text-danger">*</span></label>
+                                <div>
+<!--                                            <input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name">
+                                    <label id="media_name-error" class="validation-error-label" for="media_name" style=""></label>-->
+                                </div>
+                            </div>  
                         </div>        
 
-                        <div class="text-right">
+                        <div class="text-right btn_end">
                             <a href="<?php echo $back_url; ?>" class="btn bg-grey-300 btn-labeled"><b><i class="icon-arrow-left13"></i></b>Back</a>
                             <button type="submit" id="offer_submit" name="offer_submit" class="btn bg-teal btn-labeled btn-labeled-right"><b><i class="icon-arrow-right14"></i></b>Save</button>
                             <input type="hidden" name="uploaded_images_data" id="uploaded_images_data">
@@ -213,12 +195,13 @@
                     <form method="POST" action="<?php echo SITEURL . 'country-admin/upload/index'; ?>" enctype="multipart/form-data" class="form-validate-jquery" name="fileupload" id="fileupload">
                         <input type="hidden" name="uploaded_images_arr" id="uploaded_images_arr">
                         <div class="row fileupload-buttonbar">
-                            <div class="col-lg-7">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4 upload_up">
                                 <!-- The fileinput-button span is used to style the file input field as button -->
                                 <span class="btn btn-success fileinput-button">
                                     <i class="glyphicon glyphicon-plus"></i>
-                                    <span>Add files...</span>
-                                    <input type="file" name="files[]" multiple>
+                                    <span>Upload Image(s) <span class="text-danger">*</span></span>
+                                    <input type="file" name="files[]" id="" multiple class="form-control">
                                 </span>
                                 <div class="upload-div" style="display:none;" id="update_div">
                                     <button type="button" class="delete">Delete</button>
@@ -226,7 +209,7 @@
                                 </div>
                             </div>
                             <!-- The global progress state -->
-                            <div class="col-lg-5 fileupload-progress fade">
+                            <div class="col-lg-5 fileupload-progress fade display-none">
                                 <!-- The global progress bar -->
                                 <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
                                     <div class="progress-bar progress-bar-success" style="width:0%;"></div>
@@ -245,8 +228,7 @@
                                          The container for the uploaded files 
                                         <div id="files" class="files"></div>
                                         <br>    -->
-                        <table role="presentation" class="table table-striped"><tbody class="files" id="table_image"></tbody></table>	
-
+                        <table role="presentation" class="table table-striped"><tbody class="files" id="table_image"></tbody></table>
                     </form>
                 </div>
             </div>
@@ -399,7 +381,7 @@
                 console.log('response');
                 console.log(response);
                 $("#error_img").html("");
-                var table_content = $(document).find(".table .table-striped").html();                
+                var table_content = $(document).find(".table .table-striped").html();
                 img_arr.push(window.btoa(response.files[0].name + "/" + response.files[0].width + "/" + response.files[0].height));
                 $("#uploaded_images_arr").val(img_arr);
                 if (table_content != '') {
@@ -501,4 +483,18 @@
         $(document).find('#uploaded_images_data').val($(document).find('#uploaded_images_arr').val());
         return true;
     });
+
+    if ($(window).width() <= 1024) {
+        console.log("if con");
+        $(document).find('.desktop_view').prop("disabled", true);
+        $(document).find('.desktop_view').hide();
+        $(document).find('.responsive_view_status').prop("disabled", false);
+        $(document).find('.responsive_view_status').show();
+    } else {
+        $(document).find('.responsive_view_status').prop("disabled", true);
+        $(document).find('.responsive_view_status').hide();
+        $(document).find('.desktop_view').prop("disabled", false);
+        $(document).find('.desktop_view').show();
+        console.log("else part");
+    }
 </script>

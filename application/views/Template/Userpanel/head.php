@@ -16,22 +16,14 @@
 <link href="https://fonts.googleapis.com/css?family=Muli:300,400,600,700,800,900" rel="stylesheet">
 <!-- /global stylesheets -->
 
-<!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/dark-hive/jquery-ui.css" id="theme">-->
-<link rel="stylesheet" href="assets/user/css/file_upload/style.css">
-<!--<link rel="stylesheet" href="assets/user/css/file_upload/jquery-ui-demo.css">-->
-
-<link rel="stylesheet" href="assets/user/css/file_upload/style.css">
-<link rel="stylesheet" href="assets/user/css/file_upload/jquery.fileupload.css">
-
-<link rel="stylesheet" href="https://blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
-<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+<link rel="stylesheet" href="https://blueimp.github.io/Gallery/css/blueimp-gallery.min.css"> 
 <link rel="stylesheet" href="assets/user/css/file_upload/jquery.fileupload.css">
 <link rel="stylesheet" href="assets/user/css/file_upload/jquery.fileupload-ui.css">
 
 <noscript><link rel="stylesheet" href="assets/user/css/file_upload/jquery.fileupload-noscript.css"></noscript>
 <noscript><link rel="stylesheet" href="assets/user/css/file_upload/jquery.fileupload-ui-noscript.css"></noscript>
-<link href="assets/user/css/custom.css" rel="stylesheet" type="text/css">
 
+<link href="assets/user/css/custom.css" rel="stylesheet" type="text/css">
 
 <noscript><META HTTP-EQUIV="Refresh" CONTENT="0; URL=js_disabled"></noscript>
 <!-- Core JS files -->
@@ -40,9 +32,6 @@
 <script type="text/javascript" src="assets/user/js/core/libraries/bootstrap.min.js"></script>
 <script type="text/javascript" src="assets/user/js/plugins/loaders/blockui.min.js"></script>
 <!-- /core JS files -->
-
-
-
 
 <script type="text/javascript">
     var base_url = '<?php echo SITEURL; ?>';

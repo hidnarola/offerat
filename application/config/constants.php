@@ -85,9 +85,8 @@ defined('EXIT_DATABASE') OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN') OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX') OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
-
-$root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'];
-$root .= str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
+$root_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'];
+$root = $root_url . str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
 define('SITEURL', $root);
 define('SITENAME', 'Offerat');
 
@@ -132,6 +131,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
     define('location_excel_img_path', '/media/LocationsExcels/');
     define('offer_media_path', '/media/OfferMedia/');
     define('offer_media_thumbnail_path', '/media/OfferMediaThumbail/');
+    define('offer_img_start_part', $root . 'assets/user/timthumb1.php?src=' . $root_url . '/media/OfferMedia/');
 } elseif ($_SERVER['HTTP_HOST'] == 'offerat.sale') {
     define('country_img_path', '/media/CountryFlag/');
     define('category_img_path', '/media/CategoryIcon/');
@@ -140,6 +140,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
     define('location_excel_img_path', '/media/LocationsExcels/');
     define('offer_media_path', '/media/OfferMedia/');
     define('offer_media_thumbnail_path', '/media/OfferMediaThumbail/');
+    define('offer_img_start_part', $root . 'assets/user/timthumb1.php?src=' . $root_url . '/media/OfferMedia/');
 } else {
     define('country_img_path', '/PG/TG/Offerat/media/CountryFlag/');
     define('category_img_path', '/PG/TG/Offerat/media/CategoryIcon/');
@@ -148,7 +149,11 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
     define('location_excel_img_path', '/PG/TG/Offerat/media/LocationsExcels/');
     define('offer_media_path', '/PG/TG/Offerat/media/OfferMedia/');
     define('offer_media_thumbnail_path', '/PG/TG/Offerat/media/OfferMediaThumbail/');
+    define('offer_img_start_part', $root . 'assets/user/timthumb1.php?src=' . $root_url . '/PG/TG/Offerat/media/OfferMedia/');
 }
+
+define('offer_img_end_part', '&zc=0&w=150&h=150&q=70');
+
 define('SUPER_ADMIN_USER_TYPE', '1');
 define('COUNTRY_ADMIN_USER_TYPE', '2');
 define('STORE_OR_MALL_ADMIN_USER_TYPE', '3');

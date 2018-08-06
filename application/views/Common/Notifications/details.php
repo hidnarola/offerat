@@ -116,6 +116,15 @@
                         </div>
                     </div>
                 <?php } ?>
+                <?php if ($notification_details['offer_type'] == IMAGE_OFFER_CONTENT_TYPE) { ?>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div>                                                                    
+                                <a href="<?php echo $images_list_url . $notification_details['id_offer']; ?>" class="btn btn-info btn-lg" target="_blank"><i class="icon-image5"></i> View Image(s)</a>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
             </div>
         </div>
     </div>

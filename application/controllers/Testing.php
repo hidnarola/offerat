@@ -12,8 +12,18 @@ class Testing extends CI_Controller {
 
     function index() {
 
-
-        echo base64_decode('MTUzMzM2NDkzMTQ1NTBfaW1hZ2UucG5nLzIyMC8yNDQ=');
+//        $videoID = the_field('video_link');
+//        $jsonurl = 'http://vimeo.com/api/v2/video/239882943.json';
+//        $json = file_get_contents($jsonurl, 0, null, null);
+//        $json_output = json_decode($json, true);
+//        pr($json_output);
+//        echo '<img src="' . $json_output[0]['thumbnail_large'] . '" />';
+        //http://www.metacafe.com/watch/11705253/son-riding-car-at-the-mall/
+//        $jsonurl = 'http://vimeo.com/api/v2/video/239882943.json';
+//        $json = file_get_contents($jsonurl, 0, null, null);
+//        $json_output = json_decode($json, true);
+//        pr($json_output);
+//        echo '<img src="' . $json_output[0]['thumbnail_large'] . '" />';
     }
 
     function stores_locations($id = 7) {

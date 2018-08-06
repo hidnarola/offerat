@@ -168,6 +168,8 @@ $route['mall-store-user/report/(:any)/(:any)'] = 'Common/report/index/$1/$2';
 $route['mall-store-user/report/push_notifications/(:any)/(:any)'] = 'Common/report/filter_notifications/$1/$2';
 $route['mall-store-user/upload/index'] = 'Common/Uploads/index';
 
+$route['mall-store-user/notifications/images/(:any)'] = 'Common/notifications/images/$1';
+
 //Store Registration
 $route['store-registration'] = 'storeregistration/index';
 //Store user account verification
