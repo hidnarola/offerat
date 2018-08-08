@@ -40,15 +40,29 @@ class UploadHandler {
 
     public function __construct($options = null, $initialize = true, $error_messages = null) {
 
-        $d = explode('/', dirname($this->get_server_var('SCRIPT_FILENAME')));
-        $data = dirname($this->get_server_var('SCRIPT_FILENAME'));
-        $upload_dir = str_replace($d[3], offer_media_path, $data);
-        $upload_url = str_replace('offerat/', '', $this->get_full_url() . offer_media_path);
-
-        $d = explode('/', dirname($this->get_server_var('SCRIPT_FILENAME')));
-        $data = dirname($this->get_server_var('SCRIPT_FILENAME'));
-        $thumb_upload_dir = str_replace($d[3], offer_media_thumbnail_path, $data);
-        $thumb_upload_url = str_replace('offerat/', '', $this->get_full_url() . offer_media_thumbnail_path);
+        if ($_SERVER['HTTP_HOST'] == 'localhost') {
+            $d = explode('/', dirname($this->get_server_var('SCRIPT_FILENAME')));
+            $data = dirname($this->get_server_var('SCRIPT_FILENAME'));
+            $upload_dir = str_replace($d[3], offer_media_path, $data);
+            $upload_url = str_replace('offerat/', '', $this->get_full_url() . offer_media_path);
+            $d = explode('/', dirname($this->get_server_var('SCRIPT_FILENAME')));
+            $data = dirname($this->get_server_var('SCRIPT_FILENAME'));
+            $thumb_upload_dir = str_replace($d[3], offer_media_thumbnail_path, $data);
+            $thumb_upload_url = str_replace('offerat/', '', $this->get_full_url() . offer_media_thumbnail_path);
+        } elseif ($_SERVER['HTTP_HOST'] == 'offerat.sale') {
+            
+        } else {
+            $d = explode('/', dirname($this->get_server_var('SCRIPT_FILENAME')));
+            $data = dirname($this->get_server_var('SCRIPT_FILENAME'));
+            $upload_dir = str_replace($d[5], offer_media_path, $data);
+            $this->get_full_url();
+            offer_media_path;
+            $upload_url = str_replace('PG/TG/Offerat/cms/', '/', $this->get_full_url() . offer_media_path);
+            $d = explode('/', dirname($this->get_server_var('SCRIPT_FILENAME')));
+            $data = dirname($this->get_server_var('SCRIPT_FILENAME'));
+            $thumb_upload_dir = str_replace($d[5], offer_media_thumbnail_path, $data);
+            $thumb_upload_url = str_replace('PG/TG/Offerat/cms/', '/', $this->get_full_url() . offer_media_thumbnail_path);
+        }
 
         $this->response = array();
         $this->options = array(
@@ -245,14 +259,20 @@ class UploadHandler {
         if (empty($version)) {
             $version_path = '';
         } else {
-            $version_dir = @$this->options['image_versions'][$version]['upload_dir'];
+            $version_dir = str_replace('PG/TG//PG/TG', 'PG/TG', @$this->options['image_versions'][$version]['upload_dir']);
             if ($version_dir) {
                 return $version_dir . $this->get_user_path() . $file_name;
             }
             $version_path = $version . '/';
         }
-        return $this->options['upload_dir'] . $this->get_user_path()
-                . $version_path . $file_name;
+        
+        if ($_SERVER['HTTP_HOST'] == 'localhost')
+            $text = $this->options['upload_dir'] . $this->get_user_path() . $version_path . $file_name;
+        else {
+            $text = str_replace('PG/TG//PG/TG', 'PG/TG', $this->options['upload_dir'] . $this->get_user_path() . $version_path . $file_name);
+            $text = str_replace('cms', '',$text) ;
+        }        
+        return $text;
     }
 
     protected function get_query_separator($url) {
@@ -283,8 +303,8 @@ class UploadHandler {
                 . $version_path . rawurlencode($file_name);
     }
 
-    protected function set_additional_file_properties($file) {        
-        
+    protected function set_additional_file_properties($file) {
+
         list($width1, $height1) = getimagesize($_SERVER['DOCUMENT_ROOT'] . offer_media_path . $file->name);
         $media_width = $width1;
         $media_height = $height1;
@@ -1054,6 +1074,9 @@ class UploadHandler {
                             $file_path, fopen($uploaded_file, 'r'), FILE_APPEND
                     );
                 } else {
+//                    pr($_FILES);
+//                    pr($uploaded_file);
+//                    pr($file_path);
                     move_uploaded_file($uploaded_file, $file_path);
                 }
             } else {

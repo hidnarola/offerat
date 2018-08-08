@@ -13,7 +13,7 @@
                 </div>
                 <div class="panel-body panel_offer">
                     <form method="POST" action="" enctype="multipart/form-data" class="form-validate-jquery" name="frm_profile" id="frm_profile">
-                    <!--<form method="POST" action="<?php echo SITEURL . 'country-admin/upload/index'; ?>" enctype="multipart/form-data" class="form-validate-jquery" name="fileupload" id="fileupload">-->
+                    <!--<form method="POST" action="<?php echo $upload_url; ?>" enctype="multipart/form-data" class="form-validate-jquery" name="fileupload" id="fileupload">-->
                         <div class="col-xs-12">
                             <div class="">
                                 <div class="col-md-4">
@@ -147,7 +147,7 @@
                                 </div>
 
                                 <?php if (isset($notification_type) && $notification_type == 'offers') { ?>
-                                    <div class="col-md-4 responsive_view_status">
+                                    <div class="responsive_view_status">
                                         <div class="form-group">
                                             <label>Push Notification Summary <span class="text-danger">*</span></label>
                                             <div>
@@ -156,13 +156,8 @@
                                         </div>
                                     </div>
                                 <?php } ?>
-
                                 <div class="form-group offer_image_section desktop_view">
-                                    <label>Upload Image(s)<span class="text-danger">*</span></label>
-                                    <div>
-<!--                                            <input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name">
-                                        <label id="media_name-error" class="validation-error-label" for="media_name" style=""></label>-->
-                                    </div>
+                                    <label>Upload Image(s)<span class="text-danger">*</span></label>                                    
                                 </div>                                    
                             </div>
                             <?php if (isset($notification_type) && $notification_type == 'offers') { ?>
@@ -174,25 +169,16 @@
                                         </div>
                                     </div>
                                 </div>
-                            <?php } ?>   
-
-                            <div class="form-group offer_image_section responsive_view_status">
-                                <label>Upload Image(s)<span class="text-danger">*</span></label>
-                                <div>
-<!--                                            <input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name">
-                                    <label id="media_name-error" class="validation-error-label" for="media_name" style=""></label>-->
-                                </div>
-                            </div>  
-                        </div>        
-
+                            <?php } ?>
+                            <!--<div class="form-group offer_image_section responsive_view_status"></div>  -->
+                        </div>
                         <div class="text-right btn_end">
                             <a href="<?php echo $back_url; ?>" class="btn bg-grey-300 btn-labeled"><b><i class="icon-arrow-left13"></i></b>Back</a>
                             <button type="submit" id="offer_submit" name="offer_submit" class="btn bg-teal btn-labeled btn-labeled-right"><b><i class="icon-arrow-right14"></i></b>Save</button>
                             <input type="hidden" name="uploaded_images_data" id="uploaded_images_data">
                         </div>
-
                     </form>
-                    <form method="POST" action="<?php echo SITEURL . 'country-admin/upload/index'; ?>" enctype="multipart/form-data" class="form-validate-jquery" name="fileupload" id="fileupload">
+                    <form method="POST" action="<?php echo $upload_url; ?>" enctype="multipart/form-data" class="form-validate-jquery" name="fileupload" id="fileupload">
                         <input type="hidden" name="uploaded_images_arr" id="uploaded_images_arr">
                         <div class="row fileupload-buttonbar">
                             <div class="col-md-4"></div>
@@ -200,13 +186,16 @@
                                 <!-- The fileinput-button span is used to style the file input field as button -->
                                 <span class="btn btn-success fileinput-button">
                                     <i class="glyphicon glyphicon-plus"></i>
-                                    <span>Upload Image(s) <span class="text-danger">*</span></span>
-                                    <input type="file" name="files[]" id="" multiple class="form-control">
+                                    <span> Add Files</span>
+                                    <input type="file" name="files[]" id="" multiple class="form-control" required="required">
                                 </span>
                                 <div class="upload-div" style="display:none;" id="update_div">
                                     <button type="button" class="delete">Delete</button>
                                     <input type="checkbox" class="toggle styled-checkbox-1">
                                 </div>
+                                <?php if (isset($notification_data) && $notification_data['offer_type'] == IMAGE_OFFER_CONTENT_TYPE) { ?>
+                                    <a href="<?php echo $images_list_url . $notification_data['id_offer']; ?>" target="_blank" class="btn btn-primary">Images List</a>
+                                <?php } ?>
                             </div>
                             <!-- The global progress state -->
                             <div class="col-lg-5 fileupload-progress fade display-none">
@@ -266,79 +255,16 @@
 <!-- The main application script -->
 <!--<script src="assets/user/js/file_upload/main.js"></script>-->
 
-
-
 <?php $this->load->view('Common/Notifications/script'); ?>
 <?php $this->load->view('Common/message_alert'); ?>
 <script>
     var img_arr = [];
     $(function () {
-        jqueryValidate();
-        $(document).find('.offer_text_section').hide();
-
-<?php if (isset($notification_data) && isset($notification_data['offer_type']) && $notification_data['offer_type'] == TEXT_OFFER_CONTENT_TYPE) { ?>
-            $(document).find('.offer_text_section').show();
-            $(document).find('.offer_image_section').hide();
-            $(document).find('.offer_video_section').hide();
-            $(document).find('#content').attr('required', 'required');
-            $(document).find('#media_name').removeAttr('required');
-<?php } elseif (isset($notification_data) && isset($notification_data['offer_type']) && $notification_data['offer_type'] == IMAGE_OFFER_CONTENT_TYPE) { ?>
-            $(document).find('.offer_text_section').hide();
-            $(document).find('.offer_image_section').show();
-            $(document).find('.offer_video_section').hide();
-            $(document).find('#content').attr('required', 'required');
-            $(document).find('#media_name').removeAttr('required');
-<?php } elseif (isset($notification_data) && isset($notification_data['offer_type']) && $notification_data['offer_type'] == VIDEO_OFFER_CONTENT_TYPE) { ?>
-            $(document).find('.offer_text_section').hide();
-            $(document).find('.offer_image_section').hide();
-            $(document).find('.offer_video_section').show();
-            $(document).find('#content').attr('required', 'required');
-            $(document).find('#media_name').removeAttr('required');
-<?php } else { ?>
-            $(document).find('.offer_text_section').hide();
-            $(document).find('.offer_video_section').hide();
-            $(document).find('.offer_image_section').show();
-            //            $(document).find('#media_name').attr('required', 'required');
-            $(document).find('#content').removeAttr('required');
-<?php } ?>
-    });
-
-    $(document).find('.offer_type').change(function () {
-
-        var offer_content_type = $(document).find(this).val();
-        if (offer_content_type == '<?php echo IMAGE_OFFER_CONTENT_TYPE; ?>') {
-            $(document).find('.offer_text_section').hide();
-            $(document).find('.offer_video_section').hide();
-            $(document).find('.offer_image_section').show();
-<?php if (!isset($notification_data)) { ?>
-                $(document).find('#media_name').attr('required', 'required');
-                $(document).find('#content').removeAttr('required');
-<?php } ?>
-        } else if (offer_content_type == '<?php echo VIDEO_OFFER_CONTENT_TYPE; ?>') {
-            $(document).find('.offer_text_section').hide();
-            $(document).find('.offer_image_section').hide();
-            $(document).find('.offer_video_section').show();
-<?php if (!isset($notification_data)) { ?>
-                $(document).find('#media_name').attr('required', 'required');
-                $(document).find('#content').removeAttr('required');
-<?php } ?>
-        } else {
-            $(document).find('.offer_text_section').show();
-            $(document).find('.offer_image_section').hide();
-            $(document).find('.offer_video_section').hide();
-<?php if (!isset($notification_data)) { ?>
-                $(document).find('#content').attr('required', 'required');
-                $(document).find('#media_name').removeAttr('required');
-<?php } ?>
-        }
-    });
-
-    $(function () {
         'use strict';
         // Change this to the location of your server-side upload handler:
         //        var url = window.location.hostname === 'blueimp.github.io' ?
         //                '//jquery-file-upload.appspot.com/' : 'server/php/',
-        var url = window.location.hostname === '<?php echo SITEURL . 'country-admin/upload/index'; ?>',
+        var url = window.location.hostname === '<?php echo $upload_url; ?>',
                 uploadButton = $('<button/>')
                 .addClass('btn btn-primary')
                 .prop('disabled', true)
@@ -364,7 +290,7 @@
             autoUpload: true,
             acceptFileTypes: /(\.|\/)(jpe?g|jpg|png)$/i,
             maxFileSize: 250000,
-            maxNumberOfFiles: 50,
+            maxNumberOfFiles: <?php echo $max_image_upload_count; ?>,
             // Enable image resizing, except for Android and Opera,
             // which actually support image resizing, but fail to
             // send Blob objects via XHR requests:
@@ -374,12 +300,10 @@
             previewMaxHeight: 100,
             previewCrop: true,
             messages: {
-                maxNumberOfFiles: 'Sorry, You can upload 50 Images,Please remove unneccessary files',
+                maxNumberOfFiles: 'Sorry, You can upload <?php echo $max_image_upload_count; ?> Images,Please remove unneccessary files',
             },
             success: function (response) {
 
-                console.log('response');
-                console.log(response);
                 $("#error_img").html("");
                 var table_content = $(document).find(".table .table-striped").html();
                 img_arr.push(window.btoa(response.files[0].name + "/" + response.files[0].width + "/" + response.files[0].height));
@@ -461,9 +385,10 @@
         }).on('fileuploaddestroy', function (e, data) {
             $("#error_img").html("");
             var index = img_arr.indexOf(data.context[0].id);
+//            console.log(index);
+            img_arr.splice(index, 1);
             if (index > -1) {
-                img_arr.splice(index, 1);
-                var url = "<?php echo base_url(); ?>country-admin/notifications/remove_image_uploaded";
+                var url = "<?php echo base_url() . $remove_image_url; ?>";
                 $.post(url, {all_data: $("#uploaded_images_arr").val(), not_to_delete: img_arr}, function (response)
                 { });
             }
@@ -479,22 +404,95 @@
     });
 
     $(document).on('click', '#offer_submit', function () {
-        console.log($(document).find('#uploaded_images_arr').val());
+//        console.log($(document).find('#uploaded_images_arr').val());
         $(document).find('#uploaded_images_data').val($(document).find('#uploaded_images_arr').val());
         return true;
     });
 
-    if ($(window).width() <= 1024) {
-        console.log("if con");
-        $(document).find('.desktop_view').prop("disabled", true);
-        $(document).find('.desktop_view').hide();
-        $(document).find('.responsive_view_status').prop("disabled", false);
-        $(document).find('.responsive_view_status').show();
-    } else {
-        $(document).find('.responsive_view_status').prop("disabled", true);
-        $(document).find('.responsive_view_status').hide();
-        $(document).find('.desktop_view').prop("disabled", false);
-        $(document).find('.desktop_view').show();
-        console.log("else part");
-    }
+    $(document).find('.offer_type').change(function () {
+
+        var offer_content_type = $(document).find(this).val();
+        if (offer_content_type == '<?php echo IMAGE_OFFER_CONTENT_TYPE; ?>') {
+            $(document).find('.offer_text_section').hide();
+            $(document).find('.offer_video_section').hide();
+            $(document).find('.offer_image_section').show();
+            $(document).find('#fileupload').show();
+            $(document).find('.upload_up').show();
+<?php if (!isset($notification_data)) { ?>
+                $(document).find('#media_name').attr('required', 'required');
+                $(document).find('#content').removeAttr('required');
+<?php } ?>
+        } else if (offer_content_type == '<?php echo VIDEO_OFFER_CONTENT_TYPE; ?>') {
+            $(document).find('.offer_text_section').hide();
+            $(document).find('.offer_image_section').hide();
+            $(document).find('#fileupload').hide();
+            $(document).find('.upload_up').hide();
+            $(document).find('.offer_video_section').show();
+<?php if (!isset($notification_data)) { ?>
+                $(document).find('#media_name').attr('required', 'required');
+                $(document).find('#content').removeAttr('required');
+<?php } ?>
+        } else {
+            $(document).find('.offer_text_section').show();
+            $(document).find('.offer_image_section').hide();
+            $(document).find('#fileupload').hide();
+            $(document).find('.upload_up').hide();
+            $(document).find('.offer_video_section').hide();
+<?php if (!isset($notification_data)) { ?>
+                $(document).find('#content').attr('required', 'required');
+                $(document).find('#media_name').removeAttr('required');
+<?php } ?>
+        }
+    });
+
+    $(function () {
+
+//        jQuery(window).resize(function () {
+        if (jQuery(window).width() <= 1024) {
+            $(document).find('.desktop_view').prop("disabled", true);
+            $(document).find('.desktop_view').hide();
+            $(document).find('.responsive_view_status').prop("disabled", false);
+            $(document).find('.responsive_view_status').show();
+        } else {
+            $(document).find('.responsive_view_status').prop("disabled", true);
+            $(document).find('.responsive_view_status').hide();
+            $(document).find('.desktop_view').prop("disabled", false);
+            $(document).find('.desktop_view').show();
+        }
+//        });
+
+        jqueryValidate();
+
+//        $(document).find('.offer_text_section').hide();
+
+<?php if (isset($notification_data) && isset($notification_data['offer_type']) && $notification_data['offer_type'] == TEXT_OFFER_CONTENT_TYPE) { ?>            
+            $(document).find('.offer_text_section').show();
+            $(document).find('.offer_image_section').hide();
+            $(document).find('.upload_up').hide();
+            $(document).find('.offer_video_section').hide();
+            $(document).find('#content').attr('required', 'required');
+            $(document).find('#media_name').removeAttr('required');
+<?php } elseif (isset($notification_data) && isset($notification_data['offer_type']) && $notification_data['offer_type'] == IMAGE_OFFER_CONTENT_TYPE) { ?>            
+            $(document).find('.offer_text_section').hide();
+            $(document).find('.offer_image_section').show();
+            $(document).find('.upload_up').show();
+            $(document).find('.offer_video_section').hide();
+            $(document).find('#content').attr('required', 'required');
+            $(document).find('#media_name').removeAttr('required');
+<?php } elseif (isset($notification_data) && isset($notification_data['offer_type']) && $notification_data['offer_type'] == VIDEO_OFFER_CONTENT_TYPE) { ?>            
+            $(document).find('.offer_text_section').hide();
+            $(document).find('.offer_image_section').hide();
+            $(document).find('.upload_up').hide();
+            $(document).find('.offer_video_section').show();
+            $(document).find('#content').attr('required', 'required');
+            $(document).find('#media_name').removeAttr('required');
+<?php } else { ?>
+            $(document).find('.offer_text_section').hide();
+            $(document).find('.offer_video_section').hide();
+            $(document).find('.offer_image_section').show();
+            $(document).find('.upload_up').show();
+            //            $(document).find('#media_name').attr('required', 'required');
+            $(document).find('#content').removeAttr('required');
+<?php } ?>
+    });
 </script>

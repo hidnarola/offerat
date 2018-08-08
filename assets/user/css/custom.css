@@ -101,7 +101,7 @@ div#update_div {margin-bottom: 5px;margin: 0 10px 10px 0;float: left;}
 .panel_offer {padding-bottom: 50px;}
 ul.ul_list_wrapper {display: -ms-flexbox;display: flex;-ms-flex-wrap: wrap;flex-wrap: wrap;margin-right: -15px;margin-left: -15px;list-style: none;margin-left: -25px;justify-content: center;}
 ul.ul_list_wrapper li {-ms-flex: 0 0 150px;flex: 0 0 150px;max-width: 150px;margin-bottom: 20px;padding: 8px 10px;background: #f5f5f5;border: 1px solid #ccc; margin:10px;}
-.img_listing {box-shadow: 10px 10px 10px 0 rgba(0,0,0,0.15);padding: 10px;position: relative;}
+.img_listing {box-shadow: 10px 10px 10px 0 rgba(0,0,0,0);padding: 10px;position: relative;}
 .list_check {position: absolute;left: -5px;top: 0px;}
 .list_check input[type="checkbox"] {margin: 0;}
 ul.ul_list_wrapper li img {width: 100%;}

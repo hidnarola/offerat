@@ -11,40 +11,43 @@
                         </div>
                     </div>
                     <div class="panel-body">
-                        <?php if (isset($image_list) && sizeof($image_list) > 0) { ?>                                
-                            <div class="col-md-12 col-xs-12 text-right">
-                                <div class="form-group">
-                                    <div>
-                                        <input type="checkbox" class="styled-checkbox-1" name="select_all" id="select_all"  placeholder="" value="">
-                                        <span class="text-size-mini">Check All</span>            
-                                    </div>
-                                </div>        
-                            </div>
-                        <ul class="ul_list_wrapper">
-                            <?php
-                            foreach ($image_list as $list) {
-                                ?>          
-                        
-                                <li>
-                                    <div class="img_listing">
-                                        <div class="list_check">
-                                        <!--styled-checkbox-1-->
-                                        <input type="checkbox" class="checkbox" name="delete_image_ids[]" id="delete_image_id" placeholder="" value="<?php echo $list['id_offer_announcement_image']; ?>">
-                                    </div>
-                                        <div class="img_list_data">
-                                        <a data-fancybox="gallery" href="<?php echo offer_media_path . $list['image_name']; ?>"><img src="<?php echo offer_img_start_part . $list['image_name'] . offer_img_end_part; ?>"></a>
-                                    </div>
-                                    </div>
-                                </li>
-                            
+                        <?php
+                        if (isset($image_list) && sizeof($image_list) > 0) {
+                            if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+                                ?>                                
+                                <div class="col-md-12 col-xs-12 text-right">
+                                    <div class="form-group">
+                                        <div>
+                                            <input type="checkbox" class="styled-checkbox-1" name="select_all" id="select_all"  placeholder="" value="">
+                                            <span class="text-size-mini">Check All</span>            
+                                        </div>
+                                    </div>        
+                                </div>
                             <?php } ?>
-                                </ul>
+                            <ul class="ul_list_wrapper">
+                                <?php foreach ($image_list as $list) { ?>
+                                    <li>
+                                        <div class="img_listing">
+                                            <div class="list_check">
+                                                <!--styled-checkbox-1-->
+                                                <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
+                                                    <input type="checkbox" class="checkbox" name="delete_image_ids[]" id="delete_image_id" placeholder="" value="<?php echo $list['id_offer_announcement_image']; ?>">
+                                                <?php } ?>
+                                            </div>
+                                            <div class="img_list_data">
+                                                <a data-fancybox="gallery" href="<?php echo offer_media_path . $list['image_name']; ?>"><img src="<?php echo offer_img_start_part . $list['image_name'] . offer_img_end_part; ?>"></a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                <?php } ?>
+                            </ul>
                             <div class="text-right">
                                 <input type="hidden" id="checked_val" name="checked_val"/>
                                 <a href="<?php echo $back_url ?>" class="btn bg-grey-300 btn-labeled"><b><i class="icon-arrow-left13"></i></b>Back</a>
-                                <button type="submit" id="delete_images" class="btn bg-danger btn-labeled btn-labeled-right"><b><i class="icon-arrow-right14"></i></b>Delete</button>
+                                <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
+                                    <button type="submit" id="delete_images" class="btn bg-danger btn-labeled btn-labeled-right"><b><i class="icon-arrow-right14"></i></b>Delete</button>
+                                            <?php } ?>
                             </div>
-
                             <?php
                         } else {
                             echo 'No Results Found.';

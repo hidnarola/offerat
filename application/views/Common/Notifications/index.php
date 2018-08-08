@@ -79,13 +79,13 @@ $this->load->view('Common/Notifications/details_modal');
         var notifications_id = $(document).find(this).attr('data-id');
 
         displayElementBlock('loader');
-        var urlGNotificationDetailsURL = '<?php echo $notification_details_url; ?>' + notifications_id;
+        var urlGNotificationDetailsURL = '<?php echo SITEURL . $notification_details_url; ?>' + notifications_id;
+        
         $.ajax({
             'method': 'GET',
             'url': urlGNotificationDetailsURL,
             'success': function (response) {
-//                console.log(response);
-//                return false
+                
                 if (response !== '') {
                     var obj = JSON.parse(response);
                     if (obj.status === '1') {

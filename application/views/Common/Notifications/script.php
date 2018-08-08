@@ -21,8 +21,8 @@
     <td>
     <span class="preview">
         <span class="img_view">
-    {% if (file.thumbnailUrl) { %}
-    <img src="{%=file.thumbnailUrl%}">
+    {% if (file.url) { %}
+    <img src="{%=file.url%}">
     {% } %}
     </span>    
     <button class="delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}><i class="glyphicon glyphicon-ban-circle"></i></button>
