@@ -191,8 +191,10 @@ define('MEDIA_THUMB_IMAGE_HEIGHT', '30');
 define('IOS_DEVICE_TYPE', 0);
 define('ANDROID_DEVICE_TYPE', 1);
 
-//define('FFMPEG_PATH', 'C:/FFMPEG/bin/ffmpeg.exe');
-define('FFMPEG_PATH', '/usr/bin/ffmpeg');
+if ($_SERVER['HTTP_HOST'] == 'offerat.sale')
+    define('FFMPEG_PATH', '/usr/bin/ffmpeg');
+else
+    define('FFMPEG_PATH', 'C:/FFMPEG/bin/ffmpeg.exe');
 
 define('SUCCESS_CHANGE_EMAIL', 'Verification Email Sent. Please click on link in Email to complete the verification, Email change will take effect after verification.');
 

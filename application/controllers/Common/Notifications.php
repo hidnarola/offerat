@@ -163,7 +163,14 @@ class Notifications extends MY_Controller {
     public function save($notification_type = NULL, $id = NULL, $list_type = NULL) {
 
         if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements'))) {
+
             $max_image_upload_count = MAX_OFFER_IMAGE_UPLOAD;
+            $m_name = $media_name = '';
+            $media_extension = '';
+            $media_video_name = '';
+            $media_thumbnail = '';
+            $media_width = 0;
+            $media_height = 0;
             $back_url = '';
             $upload_url = '';
             $images_list_url = '';
@@ -250,75 +257,125 @@ class Notifications extends MY_Controller {
 
                 if ($this->_validate_form($validate_fields, $id, $notification_type)) {
 
-                    $date = date('Y-m-d h:i:s');
-                    $store_id = 0;
-                    $mall_id = 0;
-                    $store_mall_id = $this->input->post('store_mall_id', TRUE);
-                    $store_mall_text = explode('_', $store_mall_id);
-                    if ($store_mall_text[0] == 'store')
-                        $store_id = $store_mall_text[1];
-                    if ($store_mall_text[0] == 'mall')
-                        $mall_id = $store_mall_text[1];
+                    $uploaded_file_type = @$_FILES['media_name']['type'];
+                    $video_types = $this->video_types_arr;
+                    $do_notification_video_has_error = false;
 
-                    if ($this->input->post('expiry_time', TRUE) != '') {
-                        $expiry_time = new DateTime($this->input->post('expiry_time', TRUE), new DateTimeZone($this->loggedin_user_country_data['timezone']));
-                        $expiry_time->setTimezone(new DateTimeZone(date_default_timezone_get()));
-                        $expiry_time_text = $expiry_time->format('Y-m-d H:i:00');
-                    } else
-                        $expiry_time_text = '0000-00-00 00:00:00';
+                    if ($this->input->post('offer_type', TRUE) == VIDEO_OFFER_CONTENT_TYPE) {
 
-                    $broadcasting_time = new DateTime($this->input->post('broadcasting_time', TRUE), new DateTimeZone($this->loggedin_user_country_data['timezone']));
-                    $broadcasting_time->setTimezone(new DateTimeZone(date_default_timezone_get()));
-                    $broadcasting_time_text = $broadcasting_time->format('Y-m-d H:i:00');
+                        if (($_FILES['media_name']['size']) > 0) {
+                            $image_path = $_SERVER['DOCUMENT_ROOT'] . offer_media_path;
+                            if (!file_exists($image_path)) {
+                                $this->Common_model->created_directory($image_path);
+                            }
+                            $supported_files = 'mp4|webm|ogg|ogv|wmv|vob|swf|mov|m4v|flv';
+                            $m_name = $this->Common_model->upload_video('media_name', $image_path, $supported_files);
 
-                    $offer_type = $this->input->post('offer_type', TRUE);
-                    $video_url = $this->input->post('video_url', TRUE);
-                    $content = $this->input->post('content', TRUE);
+                            if (empty($m_name)) {
+                                $do_notification_video_has_error = true;
+                                $this->data['image_errors'] = $this->upload->display_errors();
+                            } else {
+                                $media_thumbnail = $media_name = $m_name;
 
-                    if ($offer_type == IMAGE_OFFER_CONTENT_TYPE) {
-                        $video_url = '';
-                        $content = '';
-                    } elseif ($offer_type == VIDEO_OFFER_CONTENT_TYPE) {
-                        $content = '';
-                    } elseif ($offer_type == TEXT_OFFER_CONTENT_TYPE) {
-                        $video_url = '';
-                    }
+                                if (in_array($uploaded_file_type, $this->video_types_arr)) {
 
-                    $notification_data = array(
-                        'type' => ($notification_type == 'offers') ? OFFER_OFFER_TYPE : ANNOUNCEMENT_OFFER_TYPE,
-                        'offer_type' => $offer_type,
-                        'id_mall' => $mall_id,
-                        'id_store' => $store_id,
-                        'video_url' => $video_url,
-                        'content' => $content,
-                        'broadcasting_time' => $broadcasting_time_text,
-                        'expiry_time' => $expiry_time_text,
-                    );
+                                    $target_file = $_SERVER['DOCUMENT_ROOT'] . offer_media_path . $media_name;
+                                    $media_thumbnail = time() . "_videoimg.jpg";
+                                    $destination = $_SERVER['DOCUMENT_ROOT'] . offer_media_thumbnail_path . $media_thumbnail;
+                                    $command = FFMPEG_PATH . '  -i ' . $target_file . "  -ss 00:00:1.435  -vframes 1 " . $destination;
+                                    exec($command, $a, $b);
+                                    list($width, $height) = getimagesize($destination);
+                                    $media_width = $width;
+                                    $media_height = $height;
+                                }
 
-                    if ($notification_type == 'offers')
-                        $notification_data['push_message'] = $this->input->post('push_message', TRUE);
-
-                    if (isset($id) && $id > 0) {
-                        $where = array('id_offer' => $id);
-                        $notification_data['modified_date'] = $date;
-                        $is_updated = $this->Common_model->master_update(tbl_offer_announcement, $notification_data, $where);
-                        if ($is_updated) {
-                            $this->upload_images($id, $date, $max_image_upload_count);
-                            $this->session->set_flashdata('success_msg', ucfirst($notification_type) . ' Updated Successfully!');
-                        }
-                    } else {
-                        $notification_data['created_date'] = $date;
-                        $notification_data['is_testdata'] = (ENVIRONMENT !== 'production') ? 1 : 0;
-                        $notification_data['is_delete'] = IS_NOT_DELETED_STATUS;
-
-                        $notification_id = $this->Common_model->master_save(tbl_offer_announcement, $notification_data);
-                        if ($notification_id > 0) {
-
-                            $this->upload_images($notification_id, $date, $max_image_upload_count);
-                            $this->session->set_flashdata('success_msg', ucfirst($notification_type) . ' Added Successfully!');
+                                if (!empty($media_name)) {
+                                    $media_extension_text = explode('.', $media_name);
+                                    $media_extension = $media_extension_text[1];
+                                }
+                            }
+                        } else {
+                            if (!empty($_FILES['media_name']['tmp_name'])) {
+                                $do_notification_video_has_error = true;
+                                $this->data['image_errors'] = 'Invalid File';
+                            }
                         }
                     }
-                    redirect($back_url);
+
+                    if (!$do_notification_video_has_error) {
+
+                        $date = date('Y-m-d h:i:s');
+                        $store_id = 0;
+                        $mall_id = 0;
+                        $store_mall_id = $this->input->post('store_mall_id', TRUE);
+                        $store_mall_text = explode('_', $store_mall_id);
+                        if ($store_mall_text[0] == 'store')
+                            $store_id = $store_mall_text[1];
+                        if ($store_mall_text[0] == 'mall')
+                            $mall_id = $store_mall_text[1];
+
+                        if ($this->input->post('expiry_time', TRUE) != '') {
+                            $expiry_time = new DateTime($this->input->post('expiry_time', TRUE), new DateTimeZone($this->loggedin_user_country_data['timezone']));
+                            $expiry_time->setTimezone(new DateTimeZone(date_default_timezone_get()));
+                            $expiry_time_text = $expiry_time->format('Y-m-d H:i:00');
+                        } else
+                            $expiry_time_text = '0000-00-00 00:00:00';
+
+                        $broadcasting_time = new DateTime($this->input->post('broadcasting_time', TRUE), new DateTimeZone($this->loggedin_user_country_data['timezone']));
+                        $broadcasting_time->setTimezone(new DateTimeZone(date_default_timezone_get()));
+                        $broadcasting_time_text = $broadcasting_time->format('Y-m-d H:i:00');
+
+                        $offer_type = $this->input->post('offer_type', TRUE);
+                        $video_url = $this->input->post('video_url', TRUE);
+                        $content = $this->input->post('content', TRUE);
+
+                        if ($offer_type == IMAGE_OFFER_CONTENT_TYPE || $offer_type == VIDEO_OFFER_CONTENT_TYPE) {                            
+                            $content = '';
+                        }
+
+                        $notification_data = array(
+                            'type' => ($notification_type == 'offers') ? OFFER_OFFER_TYPE : ANNOUNCEMENT_OFFER_TYPE,
+                            'offer_type' => $offer_type,
+                            'id_mall' => $mall_id,
+                            'id_store' => $store_id,
+                            'video_url' => $video_url,
+                            'content' => $content,
+                            'broadcasting_time' => $broadcasting_time_text,
+                            'expiry_time' => $expiry_time_text,
+                        );
+
+                        if ($offer_type == VIDEO_OFFER_CONTENT_TYPE) {
+                            $notification_data['media_name'] = $media_name;
+                            $notification_data['media_thumbnail'] = $media_thumbnail;
+                            $notification_data['media_height'] = $media_height;
+                            $notification_data['media_width'] = $media_width;
+                        }
+
+                        if ($notification_type == 'offers')
+                            $notification_data['push_message'] = $this->input->post('push_message', TRUE);
+
+                        if (isset($id) && $id > 0) {
+                            $where = array('id_offer' => $id);
+                            $notification_data['modified_date'] = $date;
+                            $is_updated = $this->Common_model->master_update(tbl_offer_announcement, $notification_data, $where);
+                            if ($is_updated) {
+                                $this->upload_images($id, $date, $max_image_upload_count);
+                                $this->session->set_flashdata('success_msg', ucfirst($notification_type) . ' Updated Successfully!');
+                            }
+                        } else {
+                            $notification_data['created_date'] = $date;
+                            $notification_data['is_testdata'] = (ENVIRONMENT !== 'production') ? 1 : 0;
+                            $notification_data['is_delete'] = IS_NOT_DELETED_STATUS;
+
+                            $notification_id = $this->Common_model->master_save(tbl_offer_announcement, $notification_data);
+                            if ($notification_id > 0) {
+
+                                $this->upload_images($notification_id, $date, $max_image_upload_count);
+                                $this->session->set_flashdata('success_msg', ucfirst($notification_type) . ' Added Successfully!');
+                            }
+                        }
+                        redirect($back_url);
+                    }
                 }
             }
 
@@ -460,11 +517,11 @@ class Notifications extends MY_Controller {
             );
         }
 
-        if (in_array('video_url', $validate_fields)) {
+        if (in_array('media_name', $validate_fields)) {
             $validation_rules[] = array(
-                'field' => 'video_url',
-                'label' => 'Video URL',
-                'rules' => 'trim|required|min_length[5]|max_length[255]|callback_custom_valid_url|htmlentities',
+                'field' => 'media_name',
+                'label' => 'Video',
+                'rules' => 'trim|callback_custom_notification_video[media_name]|htmlentities',
             );
         }
 
@@ -480,6 +537,33 @@ class Notifications extends MY_Controller {
         $this->form_validation->set_rules($validation_rules);
 
         return $this->form_validation->run();
+    }
+
+    function custom_notification_video($media_name, $video_control) {
+
+        if ($_FILES[$video_control]['name'] != '' && $this->input->post('offer_type', TRUE) == VIDEO_OFFER_CONTENT_TYPE) {
+            if (!in_array($_FILES[$video_control]['type'], array('video/mp4', 'video/webm', 'video/ogg', 'video/ogv', 'video/wmv', 'video/vob', 'video/swf', 'video/mov', 'video/m4v', 'video/flv'))) {
+                $this->form_validation->set_message('custom_notification_video', 'The {field} contain invalid video type.');
+                return FALSE;
+            }
+            if ($_FILES[$video_control]['error'] > 0) {
+                $this->form_validation->set_message('custom_notification_video', 'The {field} contain invalid video.');
+                return FALSE;
+            }
+            if ($_FILES[$video_control]['size'] <= 0) {
+                $this->form_validation->set_message('custom_notification_video', 'The {field} contain invalid video size.');
+                return FALSE;
+            }
+        } else {
+            if ($this->input->post('id_offer', TRUE) == '') {
+                $this->form_validation->set_message('custom_notification_video', 'The {field} field is required.');
+                return FALSE;
+            } else {
+                return TRUE;
+            }
+        }
+
+        return TRUE;
     }
 
     function custom_valid_url($url) {
