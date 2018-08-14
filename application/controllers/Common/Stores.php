@@ -1211,7 +1211,7 @@ class Stores extends MY_Controller {
      */
 
     function sponsored($id = NULL) {
-
+        
         $back_url = '';
         $this->data['store_id'] = $id;
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)

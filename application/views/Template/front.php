@@ -50,15 +50,7 @@
                 </div>
             </div>
         </div>
-
         <script type="text/javascript" src="assets/user/js/plugins/forms/selects/select2.min.js"></script>
-        <!--Data table Start-->
-
-        <script type="text/javascript" src="assets/user/js/plugins/tables/datatables/datatables.min.js"></script>
-
-        <script type="text/javascript" src="assets/user/js/plugins/tables/datatables/dataTables.fixedColumns.min.js"></script>
-        <!--/Data table End-->
-
         <!--Date Picker Start-->
         <script type="text/javascript" src="assets/user/js/plugins/ui/moment/moment.min.js"></script>
         <script type="text/javascript" src="assets/user/js/plugins/pickers/pickadate/picker.js"></script>

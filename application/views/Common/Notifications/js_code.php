@@ -79,7 +79,7 @@
 
                 $("#error_img").html("");
                 var table_content = $(document).find(".table .table-striped").html();
-                img_arr.push(window.btoa(response.files[0].name + "/" + response.files[0].width + "/" + response.files[0].height));
+                img_arr.push(window.btoa(response.files[0].name));
                 $("#uploaded_images_arr").val(img_arr);
                 if (table_content != '') {
                     $("#update_div").show();
@@ -107,7 +107,6 @@
             });
             $(document).find('#load_image_label').text('Load Image(s) / ' + file_uploaded_count + ' Images Added');
         }).on('fileuploadprocessalways', function (e, data) {
-//            console.log('fileuploadprocessalways');
             var index = data.index,
                     file = data.files[index],
                     node = $(data.context.children()[index]);
@@ -132,10 +131,8 @@
                     'width',
                     progress + '%'
                     );
-//            console.log('fileuploadprogressall');
         }).on('fileuploaddone', function (e, data) {
-//            console.log('fileuploaddone');
-//            console.log(data);
+
             $.each(data.result.files, function (index, file) {
                 if (file.url) {
                     var link = $('<a>')

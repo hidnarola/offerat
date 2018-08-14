@@ -1,6 +1,5 @@
 $(document).ready(function () {
-    jqueryValidate();
-
+    jqueryValidate();    
     errorMgsToDefault();
     $("#store_logo").on("change", function () {
         validate_logo('#store_logo');

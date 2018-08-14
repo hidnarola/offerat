@@ -308,7 +308,8 @@ class Cron extends CI_Controller {
 
     //Send Push Notification
     public function push_notification() {
-
+        
+        $this->Common_model->master_save('test', array('id' => 1, 'created_date' => date('Y-m-d H:i:s')));
         $this->load->library('Push_notification');
 
         $currnt_datetime = date('Y-m-d H:i');

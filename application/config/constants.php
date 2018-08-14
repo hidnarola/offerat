@@ -152,7 +152,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
     define('offer_img_start_part', $root . 'assets/user/timthumb1.php?src=' . $root_url . '/PG/TG/Offerat/media/OfferMedia/');
 }
 
-define('offer_img_end_part', '&zc=0&w=150&h=150&q=70');
+define('offer_img_end_part', '&zc=0&w=250&h=250&q=70');
 
 define('SUPER_ADMIN_USER_TYPE', '1');
 define('COUNTRY_ADMIN_USER_TYPE', '2');

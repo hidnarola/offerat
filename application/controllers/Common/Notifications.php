@@ -163,7 +163,7 @@ class Notifications extends MY_Controller {
     public function save($notification_type = NULL, $id = NULL, $list_type = NULL) {
 
         if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements'))) {
-
+            $image_count = 0;
             $max_image_upload_count = MAX_OFFER_IMAGE_UPLOAD;
             $m_name = $media_name = '';
             $media_extension = '';
@@ -329,7 +329,7 @@ class Notifications extends MY_Controller {
                         $video_url = $this->input->post('video_url', TRUE);
                         $content = $this->input->post('content', TRUE);
 
-                        if ($offer_type == IMAGE_OFFER_CONTENT_TYPE || $offer_type == VIDEO_OFFER_CONTENT_TYPE) {                            
+                        if ($offer_type == IMAGE_OFFER_CONTENT_TYPE || $offer_type == VIDEO_OFFER_CONTENT_TYPE) {
                             $content = '';
                         }
 
@@ -359,7 +359,7 @@ class Notifications extends MY_Controller {
                             $notification_data['modified_date'] = $date;
                             $is_updated = $this->Common_model->master_update(tbl_offer_announcement, $notification_data, $where);
                             if ($is_updated) {
-                                $this->upload_images($id, $date, $max_image_upload_count);
+                                $this->upload_images($id, $date, $max_image_upload_count, $image_count + 1);
                                 $this->session->set_flashdata('success_msg', ucfirst($notification_type) . ' Updated Successfully!');
                             }
                         } else {
@@ -370,7 +370,7 @@ class Notifications extends MY_Controller {
                             $notification_id = $this->Common_model->master_save(tbl_offer_announcement, $notification_data);
                             if ($notification_id > 0) {
 
-                                $this->upload_images($notification_id, $date, $max_image_upload_count);
+                                $this->upload_images($notification_id, $date, $max_image_upload_count, 1);
                                 $this->session->set_flashdata('success_msg', ucfirst($notification_type) . ' Added Successfully!');
                             }
                         }
@@ -435,7 +435,7 @@ class Notifications extends MY_Controller {
         }
     }
 
-    function upload_images($notification_id, $date, $max_image_upload_count) {
+    function upload_images($notification_id = NULL, $date = NULL, $max_image_upload_count = NULL, $sort_order = NULL) {
 
         if ($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE && $this->input->post('uploaded_images_data', TRUE) != '') {
 
@@ -448,17 +448,24 @@ class Notifications extends MY_Controller {
                 $image_data = array();
                 foreach ($uploaded_images_data as $image) {
                     $file_name = base64_decode($image);
-                    $file_name = explode('/', $file_name);
+//                    $file_name = explode('/', $file_name);
+
+                    list($width1, $height1) = getimagesize($_SERVER['DOCUMENT_ROOT'] . offer_media_path . $file_name);
+                    $media_width = $width1;
+                    $media_height = $height1;
+                    
                     $image_data[] = array(
-                        'image_name' => $file_name[0],
-                        'image_thumbnail' => $file_name[0],
-                        'image_width' => $file_name[1],
-                        'image_height' => $file_name[2],
+                        'image_name' => $file_name,
+                        'image_thumbnail' => $file_name,
+                        'image_width' => $media_width,
+                        'image_height' => $media_height,
                         'id_offer' => $notification_id,
                         'created_date' => $date,
                         'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
-                        'is_delete' => IS_NOT_DELETED_STATUS
+                        'is_delete' => IS_NOT_DELETED_STATUS,
+                        'sort_order' => $sort_order
                     );
+                    $sort_order++;
                 }
                 if (isset($image_data) && sizeof($image_data) > 0)
                     $this->Common_model->master_save(tbl_offer_announcement_image, $image_data, 1);
@@ -740,8 +747,15 @@ class Notifications extends MY_Controller {
 
     public function images($id) {
 
+        $image_sort_order_url = '';
         $this->data['title'] = $this->data['page_header'] = 'Image(s)';
         $this->data['action_url'] = 'country-admin/notifications/images/' . $id;
+
+        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+            $image_sort_order_url = 'country-admin/notifications/update_images_sort_order/' . $id;
+        } elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
+            $image_sort_order_url = 'mall-store-user/notifications/update_images_sort_order/' . $id;
+        }
 
         $select_image = array(
             'table' => tbl_offer_announcement_image . ' image',
@@ -758,7 +772,8 @@ class Notifications extends MY_Controller {
                     'join' => 'left',
                 )
             ),
-            'group_by' => array('image.id_offer_announcement_image')
+            'group_by' => array('image.id_offer_announcement_image'),
+            'order_by' => array('image.sort_order' => 'ASC')
         );
 
         $image_list = $this->Common_model->master_select($select_image);
@@ -806,10 +821,31 @@ class Notifications extends MY_Controller {
             );
 
             $this->data['back_url'] = $back_url;
+            $this->data['edit_url'] = $edit_url;
             $this->data['image_list'] = $image_list;
             $this->data['notification_type'] = $notification_type;
+            $this->data['image_sort_order_url'] = $image_sort_order_url;
         }
         $this->template->load('user', 'Common/Notifications/images', $this->data);
+    }
+
+    function update_images_sort_order($offer_id) {
+
+        $ids = $this->input->post('ids', TRUE);
+        if (isset($ids) && !empty($ids)) {
+            $ids = explode(',', $ids);
+            $count = 1;
+            foreach ($ids as $id) {
+                $update_data = array('sort_order' => $count);
+                $where_data = array('id_offer_announcement_image' => $id, 'id_offer' => $offer_id, 'is_delete' => 0);
+                $this->Common_model->master_update(tbl_offer_announcement_image, $update_data, $where_data);
+
+                query();
+                echo '<br>';
+                $count++;
+            }
+            return true;
+        }
     }
 
 }

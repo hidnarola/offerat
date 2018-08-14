@@ -99,6 +99,7 @@ $route['country-admin/notifications/remove_image_uploaded'] = 'Common/notificati
 $route['country-admin/notifications/get_notification_details/(:any)'] = 'Common/notifications/get_notification_details/$1';
 $route['country-admin/notifications/images/(:any)'] = 'Common/notifications/images/$1';
 $route['country-admin/notifications/delete_images/(:any)'] = 'Common/notifications/delete_images/$1';
+$route['country-admin/notifications/update_images_sort_order/(:any)'] = 'Common/notifications/update_images_sort_order/$1';
 $route['country-admin/notifications/(:any)/save'] = 'Common/notifications/save/$1';
 $route['country-admin/notifications/(:any)/save/(:any)'] = 'Common/notifications/save/$1/$2';
 
@@ -110,6 +111,7 @@ $route['country-admin/filter_notifications/(:any)'] = 'Common/notifications/filt
 $route['country-admin/filter_notifications/(:any)/(:any)'] = 'Common/notifications/filter_notifications/$1/$2';
 $route['country-admin/dashboard/filter_notifications'] = 'Countryadmin/dashboard/filter_notifications';
 $route['country-admin/notifications/(:any)/delete/(:any)/(:any)'] = 'Common/notifications/delete/$1/$2/$3';
+$route['country-admin/notifications/(:any)/delete/(:any)'] = 'Common/notifications/delete/$1/$2';
 
 $route['country-admin/stores'] = 'Common/stores/index';
 $route['country-admin/stores/filter_stores'] = 'Common/stores/filter_stores';
@@ -148,12 +150,14 @@ $route['mall-store-user/change-information'] = 'Common/change_information';
 $route['mall-store-user/notifications/remove_image_uploaded'] = 'Common/notifications/remove_image_uploaded';
 $route['mall-store-user/notifications/get_notification_details/(:any)'] = 'Common/notifications/get_notification_details/$1';
 $route['mall-store-user/notifications/images/(:any)'] = 'Common/notifications/images/$1';
+$route['mall-store-user/notifications/update_images_sort_order/(:any)'] = 'Common/notifications/update_images_sort_order/$1';
 $route['mall-store-user/notifications/(:any)/save'] = 'Common/notifications/save/$1';
 $route['mall-store-user/notifications/(:any)'] = 'Common/notifications/index/$1';
 $route['mall-store-user/notifications/(:any)/(:any)'] = 'Common/notifications/index/$1/$2';
 $route['mall-store-user/filter_notifications/(:any)'] = 'Common/notifications/filter_notifications/$1';
 $route['mall-store-user/filter_notifications/(:any)/(:any)'] = 'Common/notifications/filter_notifications/$1/$2';
 $route['mall-store-user/notifications/(:any)/delete/(:any)/(:any)'] = 'Common/notifications/delete/$1/$2/$3';
+$route['mall-store-user/notifications/(:any)/delete/(:any)'] = 'Common/notifications/delete/$1/$2';
 
 $route['mall-store-user/stores'] = 'Common/stores/index';
 $route['mall-store-user/stores/filter_stores'] = 'Common/stores/filter_stores';

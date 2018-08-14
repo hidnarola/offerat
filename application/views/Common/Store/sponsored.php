@@ -123,8 +123,8 @@
                                                     if ((int) $cat['id_sponsored_log'] > 0) {
                                                         $id_sponsored_log++;
                                                         ?>
-                                                        <div>
-                                                            <input type="checkbox" class="checkbox" name="delete_sponsored_ids[]" id="delete_sponsored_id" placeholder="" value="<?php echo $cat['id_sponsored_log']; ?>">                                                                
+                                                        <div class="checkbox img-checkbox">
+                                                            <input type="checkbox" class="checkbox" name="delete_sponsored_ids[]" id="delete_sponsored_id<?php echo $cat['id_sponsored_log']; ?>" placeholder="" value="<?php echo $cat['id_sponsored_log']; ?>"><label for="delete_sponsored_id<?php echo $cat['id_sponsored_log']; ?>"></label>
                                                         </div>
                                                     <?php } ?>
                                                 </div>

@@ -9,9 +9,9 @@
 <link href="assets/user/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
 <link href="assets/user/css/icons/fontawesome/styles.min.css" rel="stylesheet" type="text/css">
 <link href="assets/front/css/bootstrap.css" rel="stylesheet" type="text/css">
-<link href="assets/user/css/core.css" rel="stylesheet" type="text/css">
-<link href="assets/user/css/components.css" rel="stylesheet" type="text/css">
-<link href="assets/user/css/colors.css" rel="stylesheet" type="text/css">
+<link href="assets/user/css/core.min.css" rel="stylesheet" type="text/css">
+<link href="assets/user/css/components.min.css" rel="stylesheet" type="text/css">
+<link href="assets/user/css/colors.min.css" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Muli:300,400,600,700,800,900" rel="stylesheet">
 <!-- /global stylesheets -->
 

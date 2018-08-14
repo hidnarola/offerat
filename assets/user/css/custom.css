@@ -106,9 +106,48 @@ ul.ul_list_wrapper li {-ms-flex: 0 0 150px;flex: 0 0 150px;max-width: 150px;marg
 .list_check input[type="checkbox"] {margin: 0;}
 ul.ul_list_wrapper li img {width: 100%;}
 
+
+.reorder_link {color: #fff !important;border: solid 2px #009688;border-radius: 3px;background: #009688;font-size: 18px;padding: 10px 20px;margin: 15px 15px 15px 0px;font-weight: bold;text-decoration: none;transition: all 0.35s;-moz-transition: all 0.35s;-webkit-transition: all 0.35s;-o-transition: all 0.35s;white-space: nowrap;}
+.reorder_link:hover {color: #ffffff;border: solid 2px #009688;background: #009688;box-shadow: none;}
+#reorder-helper{margin: 18px 10px;padding: 10px;}
+.light_box {background: #efefef;text-align: center;font-size: 1.2em;}
+.gallery{width:100%; float:left; margin-top:20px;margin-bottom: 50px;}
+.gallery ul{margin:0; padding:0; list-style-type:none;}
+.gallery ul li{padding:15px; border:2px solid #ccc; float:left; margin:10px 15px; background:none; width:auto; height:auto; position:relative;}
+.gallery img{width:250px;}
+.notice, .notice a{color: #fff !important;}
+.notice {z-index: 8888;padding: 10px;margin-top: 20px;}
+.notice a {font-weight: bold;}
+.notice_error {background: #E46360;}
+.notice_success {background: #657E3F;}
+.image_back_link{margin-right: 30px;}
+.btn-success{background-color: #4CAF50;border-color: #4CAF50;color:#FFF;}
+
+
+/*[type="checkbox"]:not(:checked), [type="checkbox"]:checked {display: none;}*/
+[type="checkbox"]:not(:checked),
+[type="checkbox"]:checked {position: absolute;}
+[type="checkbox"]:not(:checked) + label,
+[type="checkbox"]:checked + label {position: relative;padding-left: 25px;cursor: pointer; box-shadow: none;}
+
+/* checkbox aspect */
+[type="checkbox"]:not(:checked) + label:before, 
+[type="checkbox"]:checked + label:before { content: ''; position: absolute; left: 0; top: 0; width: 20px; height: 20px; border: 1px solid #ddd; background: #fff; border-radius:0; box-shadow:none;}
+/* checked mark aspect */
+[type="checkbox"]:not(:checked) + label:after,
+[type="checkbox"]:checked + label:after {content: '✔';position: absolute;top: 0; left: 4px;font-size: 14px;color: #09ad7e;line-height: 1.75;-webkit-transition: all .2s;-moz-transition: all .2s;-ms-transition: all .2s;transition: all .2s;}
+/* checked mark aspect changes */
+
+[type="checkbox"]:not(:checked) + label:after {opacity: 0;-webkit-transform: scale(0);-moz-transform: scale(0);-ms-transform: scale(0);transform: scale(0);}
+[type="checkbox"]:checked + label:after {opacity: 1;-webkit-transform: scale(1);-moz-transform: scale(1);-ms-transform: scale(1);transform: scale(1);}
+
+.checkbox.img-checkbox {margin: 0; padding: 0; position: absolute; top: 10px;left: 10px;}
+/*.ui-state-active, .ui-state-active:hover{background-color: #26A69A;color: #fff;border-radius: 3px;}*/
+.AnyTime-dom-btn-empty {display: table-cell;}
+
 /** media start here ***/
 @media (max-width:1024px){
-    
+
 }
 
 @media (min-width:1200px){
@@ -117,11 +156,7 @@ ul.ul_list_wrapper li img {width: 100%;}
 
 @media (min-width:992px) and (max-width:1199px){
     html.home_page_html {height: 100%;}
-    /*.upload_up {margin: 0;position: absolute;top: 358px;left: 30px;}
-    form#fileupload {clear: both;}
-    .form-group.offer_image_section label + div {padding-bottom: 44px;}*/
-    .form-group.offer_image_section {margin-bottom: 0;}
-    form#frm_profile {margin: 0 -10px;}
+    /*.upload_up margin: 0;position: absolute;top: 358px;left: 30px;}     form#fileupload {clear: both;}     .form-group.offer_image_section label + div {padding-bottom: 44px;}*/     .form-group.offer_image_section {margin-bottom: 0;}    form#frm_profile {margin: 0 -10px;}
 }
 
 @media (width:812px){
@@ -149,9 +184,9 @@ ul.ul_list_wrapper li img {width: 100%;}
     .dttable_lenth_wrapper .dataTables_filter label {margin-top: 20px;}
     ul.ul_list_wrapper li {-ms-flex: 0 0 150px;flex: 0 0 130px;max-width: 130px;margin-bottom: 10px;padding: 0 5px;}
     ul.ul_list_wrapper {margin-right: -5px;margin-left: -30px;}
-     form#frm_profile {margin: 0 -10px;}
-     #fileupload table.table-striped tr {margin: 0 15px 30px 0;}
-     div#update_div {display: none !important;}
+    form#frm_profile {margin: 0 -10px;}
+    #fileupload table.table-striped tr {margin: 0 15px 30px 0;}
+    div#update_div {display: none !important;}
 }
 
 @media (min-width:320px) and (max-width:480px){

@@ -26,9 +26,9 @@
                                 <div class="col-md-3 col-xs-12">
                                     <div class="col-md-2 col-xs-2">
                                         <div class="form-group">                                                
-                                            <div>
+                                            <div class="checkbox img-checkbox">
                                                 <!--styled-checkbox-1-->
-                                                <input type="checkbox" class="checkbox" name="delete_location_ids[]" id="delete_location_id" placeholder="" value="<?php echo $loc['id_store_location']; ?>">
+                                                <input type="checkbox" class="checkbox" name="delete_location_ids[]" id="delete_location_id<?php echo $loc['id_store_location']; ?>" placeholder="" value="<?php echo $loc['id_store_location']; ?>"><label for="delete_location_id<?php echo $loc['id_store_location']; ?>"></label>
                                             </div>
                                         </div>        
                                     </div>

@@ -72,9 +72,8 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="col-md-5 sub_cat_section_0">
-                            <select id="sub_category_0" name="sub_category_0" class="select sub_category_selection_dropdown form-control display-none" data-clone-number="0">
+                            <select id="sub_category_0" name="sub_category_0" class="select sub_category_selection_dropdown form-control" data-clone-number="0">
                                 <option value="">Select Sub Category</option>
                             </select>
                         </div>

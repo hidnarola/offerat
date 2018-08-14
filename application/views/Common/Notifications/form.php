@@ -1,5 +1,4 @@
 <div class="col-md-12">
-
     <div class="row">
         <div class="col-xs-12">
             <div class="panel panel-flat">
@@ -57,22 +56,17 @@
                                             <div class="disabled">
                                                 <div class="radio-inline">
                                                     <label>
-                                                        <input type="radio" name="offer_type" class="styled offer_type" required="required"  value="<?php echo IMAGE_OFFER_CONTENT_TYPE; ?>" <?php echo (isset($notification_data) && isset($notification_data['offer_type']) && $notification_data['offer_type'] == IMAGE_OFFER_CONTENT_TYPE) ? 'checked="checked"' : (!isset($notification_data)) ? 'checked="checked"' : ''; ?>>
-                                                        Image(s)
+                                                        <input type="radio" name="offer_type11" class="styled offer_type" required="required"  checked="checked" readonly="">
+                                                        <?php 
+                                                        if($notification_data['offer_type'] == IMAGE_OFFER_CONTENT_TYPE)
+                                                            echo 'Image(s)';
+                                                        elseif($notification_data['offer_type'] == VIDEO_OFFER_CONTENT_TYPE)
+                                                            echo 'Video';
+                                                        elseif($notification_data['offer_type'] == TEXT_OFFER_CONTENT_TYPE)
+                                                            echo 'Text';
+                                                        ?>                                                        
                                                     </label>
-                                                </div>
-                                                <div class="radio-inline">
-                                                    <label>
-                                                        <input type="radio" name="offer_type" class="styled offer_type" value="<?php echo VIDEO_OFFER_CONTENT_TYPE; ?>" <?php echo (isset($notification_data) && isset($notification_data['offer_type']) && $notification_data['offer_type'] == VIDEO_OFFER_CONTENT_TYPE) ? 'checked="checked"' : ''; ?>>
-                                                        Video
-                                                    </label>
-                                                </div>
-                                                <div class="radio-inline">
-                                                    <label>
-                                                        <input type="radio" name="offer_type" class="styled offer_type" value="<?php echo TEXT_OFFER_CONTENT_TYPE; ?>" <?php echo (isset($notification_data) && isset($notification_data['offer_type']) && $notification_data['offer_type'] == TEXT_OFFER_CONTENT_TYPE) ? 'checked="checked"' : ''; ?>>
-                                                        Text
-                                                    </label>
-                                                </div>
+                                                </div>                                                
                                             </div>
                                             <input type="hidden" name="offer_type" id="offer_type" value="<?php echo $notification_data['offer_type']; ?>">
                                         </div>
@@ -233,7 +227,7 @@
                         <div class="row fileupload-buttonbar">
                             <div class="col-md-4"></div>
 
-                            <div class="col-md-4 upload_up">                                
+                            <div class="col-md-4 upload_up">
                                 <!-- The fileinput-button span is used to style the file input field as button -->
                                 <span class="btn btn-success fileinput-button">
                                     <i class="glyphicon glyphicon-plus"></i>

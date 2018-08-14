@@ -623,15 +623,15 @@ class Common_model extends CI_Model {
         return $imgname;
     }
     
-    function upload_video($image_name, $image_path, $file_extensions = NULL) {
+    function upload_video($video_name, $video_path, $file_extensions = NULL) {
         $CI = & get_instance();
-        $extension = substr(strrchr($_FILES[$image_name]['name'], '.'), 1);
+        $extension = substr(strrchr($_FILES[$video_name]['name'], '.'), 1);
         $randname = time() . '.' . $extension;
 
         if (in_array($extension, array('mp4', 'webm', 'ogg', 'ogv', 'wmv', 'vob', 'swf', 'mov', 'm4v', 'flv')))
             $randname = time() . '_video.' . $extension;
 
-        $config = array('upload_path' => $image_path,
+        $config = array('upload_path' => $video_path,
             'allowed_types' => $file_extensions,
             'max_size' => "20000KB",
             'file_name' => $randname
@@ -639,7 +639,7 @@ class Common_model extends CI_Model {
         #Load the upload library
         $CI->load->library('upload');
         $CI->upload->initialize($config);
-        if ($CI->upload->do_upload($image_name)) {
+        if ($CI->upload->do_upload($video_name)) {
             $img_data = $CI->upload->data();
             $imgname = $img_data['file_name'];
         } //if

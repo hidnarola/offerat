@@ -67,34 +67,27 @@ class Testing extends CI_Controller {
         }
     }
 
-    public function crop() {
-//        echo phpinfo();
-//        die();
+    function hello() {
 
-        $file_name = '1528969593_video.mp4';
-        $target_file = $_SERVER['DOCUMENT_ROOT'] . offer_media_path . $file_name;
-        $destination = $_SERVER['DOCUMENT_ROOT'] . offer_media_thumbnail_path . $file_name;
-        $destination_ = $_SERVER['DOCUMENT_ROOT'] . offer_media_thumbnail_path;
-//        $command = '~/bin/ffmpeg  -i ' . $target_file . "  -ss 00:00:1.435  -vframes 1 " . $destination_ . "_videoimg.jpg";
-        $command = 'C:/FFMPEG/bin/ffmpeg.exe  -i ' . $target_file . "  -ss 00:00:1.435  -vframes 1 " . $destination_ . "videoimg.jpg";
-//        $thumbFile = "hello_videoimg.png";
-//        $command = "ffmpeg -i $target_file -vf scale=320:240 $thumbFile";
-//        $command = "C:/FFMPEG/bin/ffmpeg.exe  -i $target_file -vf scale=320:240 $thumbFile";
-//        $command = '~/bin/ffmpeg -h';
-        exec($command, $a, $b);
-        pr($a);
-        echo '<br>';
-        pr($b);
-        if (!$b) {
-            echo 'here';
+
+        $result = $this->db->query('SELECT * FROM offer_announcement WHERE offer_type = 0')->result_array();
+
+        foreach ($result as $res) {
+
+            $in_data = array(
+                'image_name' => $res['media_name'],
+                'image_thumbnail' => $res['media_thumbnail'],
+                'image_height' => $res['media_height'],
+                'image_width' => $res['media_width'],
+                'id_offer' => $res['id_offer'],
+                'sort_order' => 1,
+                'created_date' => $res['created_date'],
+                'is_testdata' => $res['is_testdata'],
+                'is_delete' => $res['is_delete']
+            );
+            $this->Common_model->master_save(tbl_offer_announcement_image, $in_data);
         }
-
-//        echo phpinfo();
-        die();
-        echo 'hello';
-
-
-        $this->Common_model->crop_product_image($target_file, MEDIA_THUMB_IMAGE_WIDTH, MEDIA_THUMB_IMAGE_HEIGHT, $destination);
+//        pr($result);
     }
 
 }
