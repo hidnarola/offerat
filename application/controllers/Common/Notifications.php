@@ -839,9 +839,8 @@ class Notifications extends MY_Controller {
                 $update_data = array('sort_order' => $count);
                 $where_data = array('id_offer_announcement_image' => $id, 'id_offer' => $offer_id, 'is_delete' => 0);
                 $this->Common_model->master_update(tbl_offer_announcement_image, $update_data, $where_data);
-
-                query();
-                echo '<br>';
+//                query();
+//                echo '<br>';
                 $count++;
             }
             return true;

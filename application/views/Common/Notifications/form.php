@@ -57,12 +57,12 @@
                                                 <div class="radio-inline">
                                                     <label>
                                                         <input type="radio" name="offer_type11" class="styled offer_type" required="required"  checked="checked" readonly="">
-                                                        <?php 
-                                                        if($notification_data['offer_type'] == IMAGE_OFFER_CONTENT_TYPE)
+                                                        <?php
+                                                        if ($notification_data['offer_type'] == IMAGE_OFFER_CONTENT_TYPE)
                                                             echo 'Image(s)';
-                                                        elseif($notification_data['offer_type'] == VIDEO_OFFER_CONTENT_TYPE)
+                                                        elseif ($notification_data['offer_type'] == VIDEO_OFFER_CONTENT_TYPE)
                                                             echo 'Video';
-                                                        elseif($notification_data['offer_type'] == TEXT_OFFER_CONTENT_TYPE)
+                                                        elseif ($notification_data['offer_type'] == TEXT_OFFER_CONTENT_TYPE)
                                                             echo 'Text';
                                                         ?>                                                        
                                                     </label>
@@ -113,6 +113,7 @@
                                             if (isset($notification_data) && isset($notification_data['broadcasting_time'])) {
                                                 $broadcasting_time = date_create($notification_data['broadcasting_time']);
                                                 $broadcasting_time = date_format($broadcasting_time, "Y-m-d H:i");
+                                                $broadcasting_time = date('d-m-Y H:i', strtotime(get_country_wise_date($broadcasting_time, $this->loggedin_user_country_data['timezone'])));
                                             } else {
                                                 $broadcasting_time = date('d-m-Y H:i', strtotime('+2 minutes', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone']))));
                                             }
@@ -141,6 +142,7 @@
                                             } else {
                                                 $expiry_time = date_create($notification_data['expiry_time']);
                                                 $expiry_time = date_format($expiry_time, "Y-m-d H:i");
+                                                $expiry_time = date('d-m-Y H:i', strtotime(get_country_wise_date($expiry_time, $this->loggedin_user_country_data['timezone'])));
                                             }
                                         } else {
                                             $expiry_time = date('d-m-Y H:i', strtotime('+10 minutes', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone']))));

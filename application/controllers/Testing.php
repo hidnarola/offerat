@@ -11,6 +11,8 @@ class Testing extends CI_Controller {
     }
 
     function index() {
+        
+        phpinfo();
 
 //        $videoID = the_field('video_link');
 //        $jsonurl = 'http://vimeo.com/api/v2/video/239882943.json';

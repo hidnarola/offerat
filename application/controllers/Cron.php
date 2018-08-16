@@ -308,7 +308,7 @@ class Cron extends CI_Controller {
 
     //Send Push Notification
     public function push_notification() {
-        
+
         $this->Common_model->master_save('test', array('id' => 1, 'created_date' => date('Y-m-d H:i:s')));
         $this->load->library('Push_notification');
 
@@ -326,7 +326,7 @@ class Cron extends CI_Controller {
 
         $select_offer = array(
             'table' => tbl_offer_announcement . ' offer_announcement',
-            'fields' => array('offer_announcement.*', 'country.timezone'),
+            'fields' => array('offer_announcement.*', 'country.timezone', 'store.store_name', 'store.store_logo', 'mall.mall_name', 'mall.mall_logo'),
             'where' => array(
                 'offer_announcement.is_delete' => IS_NOT_DELETED_STATUS,
                 'offer_announcement.type' => OFFER_OFFER_TYPE
@@ -337,6 +337,11 @@ class Cron extends CI_Controller {
                 '(DATE_FORMAT(offer_announcement.broadcasting_time, "%Y-%m-%d") BETWEEN "' . $yesterday_date . '" AND "' . $next_date . '" )'
             ),
             'join' => array(
+                array(
+                    'table' => tbl_offer_announcement_image . ' as offer_announcement_image',
+                    'condition' => 'offer_announcement_image.id_offer = offer_announcement.id_offer',
+                    'join' => 'left',
+                ),
                 array(
                     'table' => tbl_store . ' as store',
                     'condition' => 'store.id_store = offer_announcement.id_store',
@@ -364,28 +369,65 @@ class Cron extends CI_Controller {
 
                 $messageArray = array();
 
-                $messageArray['title'] = '';
-                $messageArray['id_offer'] = $list['id_offer'];
-                $messageArray['type'] = $list['type'];
-                $messageArray['offer_type'] = $list['offer_type'];
-                $messageArray['text'] = $list['push_message'];
-                $messageArray['id_mall'] = $list['id_mall'];
-                $messageArray['id_store'] = $list['id_store'];
-                $messageArray['media_height'] = $list['media_height'];
-                $messageArray['media_width'] = $list['media_width'];
+                $messageArray['id_offer'] = (int) $list['id_offer'];
+                $messageArray['type'] = (int) $list['type'];
+                $messageArray['offer_type'] = (int) $list['offer_type'];
+                $messageArray['id_mall'] = (int) $list['id_mall'];
+                $messageArray['id_store'] = (int) $list['id_store'];
+                $messageArray['video_url'] = null;
+                $messageArray['id_offer_announcement_image'] = (int) ($list['id_offer_announcement_image'] > 0) ? $list['id_offer_announcement_image'] : 0;
+
+                $messageArray['push_message'] = $list['push_message'];
+                $messageArray['media_height'] = ($list['offer_type'] == TEXT_OFFER_CONTENT_TYPE) ? 0 : (int) $list['media_height'];
+                $messageArray['media_width'] = ($list['offer_type'] == TEXT_OFFER_CONTENT_TYPE) ? 0 : (int) $list['media_width'];
                 $messageArray['content'] = $list['content'];
                 $messageArray['broadcasting_time'] = $list['broadcasting_time'];
                 $messageArray['expiry_time'] = $list['expiry_time'];
+                $messageArray['view_count'] = (int) $list['view_count'];
+                $messageArray['impression_count'] = (int) $list['impression_count'];
+                $messageArray['created_date'] = $list['created_date'];
+                $messageArray['modified_date'] = $list['modified_date'];
+                $messageArray['is_testdata'] = (int) $list['is_testdata'];
+                $messageArray['is_delete'] = (int) $list['is_delete'];
 
-                if (in_array($list['offer_type'], array(IMAGE_OFFER_CONTENT_TYPE, VIDEO_OFFER_CONTENT_TYPE)) && !empty($list['media_name']))
-                    $messageArray['image_url'] = $list['media_name'];
-                else
-                    $messageArray['image_url'] = '';
-                if (in_array($list['offer_type'], array(IMAGE_OFFER_CONTENT_TYPE, VIDEO_OFFER_CONTENT_TYPE)) && !empty($list['media_thumbnail']))
-                    $messageArray['thumbnail_url'] = $list['media_thumbnail'];
-                else
-                    $messageArray['thumbnail_url'] = '';
+                $messageArray['media_name'] = $list['media_name'];
+                $messageArray['media_thumbnail'] = $list['media_thumbnail'];
 
+                if ($list['id_mall'] > 0) {
+
+                    $messageArray['name'] = $list['mall_name'];
+                    $messageArray['logo'] = $list['mall_logo'];
+                } elseif ($list['id_store']) {
+                    $messageArray['name'] = $list['store_name'];
+                    $messageArray['logo'] = $list['store_logo'];
+                }
+
+                if ($list['offer_type'] == IMAGE_OFFER_CONTENT_TYPE) {
+                    $select_image = array(
+                        'table' => tbl_offer_announcement_image,
+                        'where' => array(
+                            'is_delete' => IS_NOT_DELETED_STATUS,
+                            'id_offer' => $list['id_offer']
+                        ),
+                        'order_by' => array('sort_order' => 'ASC')
+                    );
+                    $image_data = $this->Common_model->master_single_select($select_image);
+                    if (isset($image_data) && sizeof($image_data) > 0) {
+                        $messageArray['media_name'] = $image_data['image_name'];
+                        $messageArray['media_thumbnail'] = $image_data['image_thumbnail'];
+                        $messageArray['media_height'] = $image_data['image_height'];
+                        $messageArray['media_width'] = $image_data['image_width'];
+                    }
+                }
+
+                if ($list['offer_type'] == VIDEO_OFFER_CONTENT_TYPE) {
+                    $messageArray['media_name'] = $list['media_name'];
+                    $messageArray['media_thumbnail'] = $list['media_thumbnail'];
+                }
+
+//                pr($messageArray);
+//                echo '<br>';
+//                die();
                 $messageArray['action'] = 100;
                 $messageArrayJson = json_encode($messageArray);
 
@@ -400,13 +442,25 @@ class Cron extends CI_Controller {
                 $country_zone_broacast_time->setTimezone(new DateTimeZone($list['timezone']));
                 $country_zone_broacast_time->format('Y-m-d H:i');
                 $country_zone_broacast_time_ = strtotime($country_zone_broacast_time->format('Y-m-d H:i'));
-                
+
+                $get_5_min_ago_datetime = date('Y-m-d H:i', strtotime("-5 minute"));
+                $get_5_min_ago_datetime = new DateTime($get_5_min_ago_datetime);
+                $get_5_min_ago_datetime->setTimezone(new DateTimeZone($list['timezone']));
+                $get_5_min_ago_datetime->format('Y-m-d H:i');
+                $get_5_min_ago_datetime_ = strtotime($get_5_min_ago_datetime->format('Y-m-d H:i'));
+
 //                echo '<br>' . $country_zone_broacast_time->format('Y-m-d H:i');
 //                echo '<br>' . $country_zone_broacast_time_ = strtotime($country_zone_broacast_time->format('Y-m-d H:i'));
 //                echo '<br>' . strtotime($get_5_min_ago_datetime);
 //                echo '<br>' . $country_zone_today_date_;
 //                die();
-                if ($country_zone_broacast_time_ > strtotime($get_5_min_ago_datetime) && $country_zone_broacast_time_ <= $country_zone_today_date_) {                    
+//                echo $country_zone_broacast_time->format('Y-m-d H:i').'=====' . $get_5_min_ago_datetime->format('Y-m-d H:i').'======' . $country_zone_today_date->format('Y-m-d H:i');
+//                echo '<br>';
+                if ($country_zone_broacast_time_ > $get_5_min_ago_datetime_ && $country_zone_broacast_time_ <= $country_zone_today_date_) {
+//                    echo 'messageArray';
+//                    echo '<pre>';
+//                    var_dump($messageArray);
+//                    echo '<br>';
 //                    die("hello");
                     $select_user = array(
                         'table' => tbl_user . ' user',
@@ -434,7 +488,7 @@ class Cron extends CI_Controller {
                     $users_list = $this->Common_model->master_select($select_user);
 //                    query();
 //                    pr($users_list, 1);
-                    $user_group = array_chunk($users_list, 2);
+                    $user_group = array_chunk($users_list, 50);
 //                pr($user_group, 1);
                     if (isset($user_group) && sizeof($user_group) > 0) {
                         foreach ($user_group as $key => $group) {
@@ -449,11 +503,33 @@ class Cron extends CI_Controller {
 
                                 $response = $this->push_notification->sendMessageToAndroidPhone(GOOGLE_PUSH_NOTIFICATION_API_KEY, $android_device_token_ids, $messageArrayJson);
                                 $response = json_decode($response, true);
+//                                echo 'rresponse';
 //                                pr($response);
-                                if (!empty($registration_ids)) {
+                                if (!empty($android_device_token_ids)) {
                                     $output['response'] = $response;
                                     $output['success_count'] = (int) $response['success'];
                                     $output['failure_count'] = (int) $response['failure'];
+//                                    echo 'results';
+//                                    pr($response['results']);
+                                    if (isset($response['results']) && sizeof($response['results']) > 0) {
+                                        $insert_offer_cron = array();
+                                        foreach ($response['results'] as $key => $val) {
+                                            $response_message = '';
+                                            if (isset($val) && isset($val['error']))
+                                                $response_message = $val['error'];
+                                            elseif (isset($val) && isset($val['message_id']))
+                                                $response_message = $val['message_id'];
+
+                                            $insert_offer_cron[] = array(
+                                                'id_offer' => $list['id_offer'],
+                                                'device_token' => $android_device_token_ids[$key],
+                                                'response' => $response_message,
+                                                'created_date' => date('Y-m-d H:i:s')
+                                            );
+                                        }
+                                        if (isset($insert_offer_cron) && sizeof($insert_offer_cron) > 0)
+                                            $this->Common_model->master_save(tbl_offer_cron, $insert_offer_cron, TRUE);
+                                    }
                                 }
                             } elseif (isset($iphone_device_token_ids) && sizeof($iphone_device_token_ids) > 0) {
                                 //iphone push notification
