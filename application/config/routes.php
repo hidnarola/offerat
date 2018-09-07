@@ -74,16 +74,19 @@ $route['superadmin/subcategory/filter_sub_categories/(:any)'] = 'Superadmin/Subc
 $route['super-admin/country'] = 'Superadmin/country';
 $route['super-admin/country/save'] = 'Superadmin/country/save';
 $route['super-admin/country/save/(:any)'] = 'Superadmin/country/save/$1';
+$route['superadmin/country/delete/(:any)'] = 'Superadmin/country/delete/$1';
 
 //Category
 $route['super-admin/category'] = 'Superadmin/category';
 $route['super-admin/category/save'] = 'Superadmin/category/save';
 $route['super-admin/category/save/(:any)'] = 'Superadmin/category/save/$1';
+$route['superadmin/category/delete/(:any)'] = 'Superadmin/category/delete/$1';
 
 //Sub-category
 $route['super-admin/sub-category/(:any)'] = 'Superadmin/subcategory/index/$1';
 $route['super-admin/sub-category/save/(:any)'] = 'Superadmin/subcategory/save/$1';
 $route['super-admin/sub-category/save/(:any)/(:any)'] = 'Superadmin/subcategory/save/$1/$2';
+$route['superadmin/subcategory/delete/(:any)/(:any)'] = 'Superadmin/subcategory/delete/$1/$2';
 
 
 //Country Admin Routes =================================

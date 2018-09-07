@@ -44,7 +44,7 @@ $controller = $this->uri->segment(2);
                     <ul class="navigation navigation-main navigation-accordion">
                         <li <?php echo ($controller === 'dashboard') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/dashboard"><i class="icon-home4"></i> <span>Dashboard</span></a></li>
                         <li>
-                            <a href="#"><i class="icon-bell2"></i> <span>Notifications</span></a>
+                            <a href="#"><i class="icon-bell2"></i> <span>Posts</span></a>
                             <ul>
                                 <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'offers') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/offers"><i class="icon-bubble-notification"></i> <span>Offers</span></a></li>
                                 <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'announcements') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/announcements"><i class="icon-volume-medium"></i> <span>Announcements</span></a></li>

@@ -16,7 +16,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Added Date</th>
-                                                        <th>Broadcast Date</th>                                                        
+                                                        <th>Post Date & Time</th>                                                        
                                                         <th>Notification Type</th>                                                        
                                                         <th>Mall</th>
                                                         <th>Store</th>

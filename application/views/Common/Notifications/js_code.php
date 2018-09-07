@@ -1,3 +1,6 @@
+<?php
+$expire_time_display = date('d-m-Y', strtotime('+7 days', strtotime(get_country_wise_date(date('d-m-Y'), $this->loggedin_user_country_data['timezone']))));
+?>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <!-- The Templates plugin is included to render the upload/download listings -->
 <script src="https://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
@@ -333,4 +336,16 @@
             return false;
         }
     }
+
+    $(document).on('click', '#fixed_expire_date', function () {
+        $(document).find('#expire_date_time').val('');
+    });
+
+    $(document).on('click', '#limited_expire_date', function () {
+        $(document).find('#expire_date_time').val('<?php echo $expire_time_display; ?>');
+    });
+
+<?php if ($notification_type == 'offers') { ?>
+        $(document).find('.upload_up').css('margin-top', '-220px');
+<?php } ?>
 </script>

@@ -362,8 +362,7 @@ class Cron extends CI_Controller {
         );
 
         $offers_list = $this->Common_model->master_select($select_offer);
-//        query();
-//        pr($offers_list, 1);
+        
         if (isset($offers_list) && sizeof($offers_list) > 0) {
             foreach ($offers_list as $list) {
 
@@ -486,8 +485,8 @@ class Cron extends CI_Controller {
                     );
 
                     $users_list = $this->Common_model->master_select($select_user);
-//                    query();
-//                    pr($users_list, 1);
+                    query();
+                    pr($users_list, 1);
                     $user_group = array_chunk($users_list, 50);
 //                pr($user_group, 1);
                     if (isset($user_group) && sizeof($user_group) > 0) {

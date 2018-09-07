@@ -66,7 +66,7 @@
                                                             echo 'Text';
                                                         ?>                                                        
                                                     </label>
-                                                </div>                                                
+                                                </div>
                                             </div>
                                             <input type="hidden" name="offer_type" id="offer_type" value="<?php echo $notification_data['offer_type']; ?>">
                                         </div>
@@ -98,7 +98,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Broadcast Date & Time <span class="text-danger">*</span></label>
+                                        <label>Post Date & Time <span class="text-danger">*</span></label>
                                         <div class="input-group">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default btn-icon" id="broad_cast_icon"><i class="icon-calendar3"></i></button>
@@ -118,81 +118,181 @@
                                                 $broadcasting_time = date('d-m-Y H:i', strtotime('+2 minutes', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone']))));
                                             }
                                             ?>
-                                            <input type="text" class="form-control" placeholder="Broadcast Date & Time" name="broadcasting_time" id="broad_cast_date_time" required="required" value="<?php echo $broadcasting_time; ?>">
+                                            <input type="text" class="form-control" placeholder="Post Date & Time" name="broadcasting_time" id="broad_cast_date_time" required="required" value="<?php echo $broadcasting_time; ?>">
                                         </div>                                            
                                     </div>
                                 </div>
 
                             </div>
                         </div>
-
-                        <div class="col-xs-12">                            
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Expire Date & Time</label>
-                                    <div class="input-group">
-                                        <span class="input-group-btn">
-                                            <button type="button" class="btn btn-default btn-icon" id="expire_date_icon"><i class="icon-calendar3"></i></button>
-                                        </span>                                                
-                                        <?php
-                                        $expiry_time = '';
-                                        if (isset($notification_data) && isset($notification_data['expiry_time'])) {
-                                            if ($notification_data['expiry_time'] == '0000-00-00 00:00:00') {
-                                                $expiry_time = '';
-                                            } else {
-                                                $expiry_time = date_create($notification_data['expiry_time']);
-                                                $expiry_time = date_format($expiry_time, "Y-m-d H:i");
-                                                $expiry_time = date('d-m-Y H:i', strtotime(get_country_wise_date($expiry_time, $this->loggedin_user_country_data['timezone'])));
-                                            }
-                                        } else {
-                                            $expiry_time = date('d-m-Y H:i', strtotime('+10 minutes', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone']))));
-                                        }
-                                        ?>
-                                        <input type="text" class="form-control" placeholder="Expire Date & Time" name="expiry_time" id="expire_date_time" value="<?php echo $expiry_time; ?>">
-                                        <span class="input-group-btn">
-                                            <button type="button" class="btn btn-default btn-icon" id="expire_date_delete_icon"><i class=" icon-bin"></i></button>
-                                        </span> 
-                                    </div>                                                                                        
-                                </div>
-                            </div>                                    
-                            <div class="col-md-4">
-                                <div class="form-group offer_text_section">
-                                    <label>Offer Text <span class="text-danger">*</span></label>
-                                    <div>
-                                        <textarea class="form-control" rows="5" placeholder="Type here appears in the <?php echo ($notification_type == 'offers') ? 'offers' : 'announcement'; ?> section in mobile app" name="content" id="content"><?php echo (isset($notification_data['content'])) ? $notification_data['content'] : set_value('content'); ?></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group offer_video_section">
-                                    <label>Upload Video <span class="text-danger">*</span></label>
-                                    <div>
-                                        <input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name" accept="video/*">
-                                        <input type="hidden" name="is_valid" id="is_valid" value="1">
-                                        <div id="media_errors_wrapper" class="alert alert-danger alert-bordered display-none">
-                                            <span id="media_errors"></span>
+                        <?php if (isset($notification_type) && $notification_type == 'announcements') { ?>
+                            <div class="col-xs-12">                            
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Optional Text</label>
+                                        <div>
+                                            <textarea class="form-control" rows="5" placeholder="Optional Text" name="expire_text" id="expire_text"><?php echo (isset($notification_data['expire_text'])) ? $notification_data['expire_text'] : set_value('expire_text'); ?></textarea>
                                         </div>
-                                        <label id="media_name-error" class="validation-error-label" for="media_name" style=""></label>
                                     </div>
                                 </div>
-                                <div class="offer_video_section">
-                                    <?php
-                                    if (isset($notification_data['media_name']) && !empty($notification_data['media_name'])) {
-                                        $extension = explode('.', $notification_data['media_name']);
-                                        if (isset($extension) && isset($extension[1]) && in_array($extension[1], $this->video_extensions_arr)) {
-                                            ?>
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <div>
-                                                        <a href="<?php echo offer_media_path . $notification_data['media_name'] ?>" class="btn btn-info btn-lg" target="_blank"><i class="icon-video-camera2"></i> View Video</a>
+                                <div class="col-md-4">
+                                    <div class="form-group offer_text_section">
+                                        <label>Offer Text <span class="text-danger">*</span></label>
+                                        <div>
+                                            <textarea class="form-control" rows="5" placeholder="Type here appears in the announcement section in mobile app" name="content" id="content"><?php echo (isset($notification_data['content'])) ? $notification_data['content'] : set_value('content'); ?></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group offer_video_section">
+                                        <label>Upload Video <span class="text-danger">*</span></label>
+                                        <div>
+                                            <input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name" accept="video/*">
+                                            <input type="hidden" name="is_valid" id="is_valid" value="1">
+                                            <div id="media_errors_wrapper" class="alert alert-danger alert-bordered display-none">
+                                                <span id="media_errors"></span>
+                                            </div>
+                                            <label id="media_name-error" class="validation-error-label" for="media_name" style=""></label>
+                                        </div>
+                                    </div>
+                                    <div class="offer_video_section">
+                                        <?php
+                                        if (isset($notification_data['media_name']) && !empty($notification_data['media_name'])) {
+                                            $extension = explode('.', $notification_data['media_name']);
+                                            if (isset($extension) && isset($extension[1]) && in_array($extension[1], $this->video_extensions_arr)) {
+                                                ?>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div>
+                                                            <a href="<?php echo offer_media_path . $notification_data['media_name'] ?>" class="btn btn-info btn-lg" target="_blank"><i class="icon-video-camera2"></i> View Video</a>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <?php
+                                                <?php
+                                            }
                                         }
-                                    }
-                                    ?>
+                                        ?>
+                                    </div>
+                                    <div class="form-group offer_image_section desktop_view">
+                                        <label>Upload Image(s)<span class="text-danger">*</span></label>                                    
+                                    </div>                                    
                                 </div>
+                            </div>
+                        <?php } else { ?>
+                            <div class="col-xs-12">                            
+                                <div class="col-md-4">
+                                    <?php if (isset($notification_data) && sizeof($notification_data) > 0) { ?>
+                                        <div class="form-group">
+                                            <label>Content Type <span class="text-danger">*</span></label>
+                                            <div class="disabled">
+                                                <div class="radio-inline">
+                                                    <label>
+                                                        <input type="radio" name="expire_time_type1" class="styled" required="required"  checked="checked" readonly="">
+                                                        <?php
+                                                        if ($notification_data['expire_time_type'] == EXPIRE_TIME_FIXED)
+                                                            echo 'Fixed expire date';
+                                                        elseif ($notification_data['expire_time_type'] == EXPIRE_TIME_LIMITED)
+                                                            echo 'Limited Offer';
+                                                        ?>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="expire_time_type" id="expire_time_type12" value="<?php echo $notification_data['expire_time_type']; ?>">
+                                            <div class="input-group">
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default btn-icon" id="expire_date_icon"><i class="icon-calendar3"></i></button>
+                                                </span>
+                                                <?php
+                                                $expiry_time = '';
+                                                if (isset($notification_data) && isset($notification_data['expiry_time'])) {
+                                                    if ($notification_data['expiry_time'] == '0000-00-00 00:00:00') {
+                                                        $expiry_time = '';
+                                                    } else {
+                                                        $expiry_time = date_create($notification_data['expiry_time']);
+                                                        $expiry_time = date_format($expiry_time, "Y-m-d");
+                                                        $expiry_time = date('d-m-Y', strtotime(get_country_wise_date($expiry_time, $this->loggedin_user_country_data['timezone'])));
+                                                    }
+                                                } else {
+//                                                        $expiry_time = date('d-m-Y', strtotime('+10 minutes', strtotime(get_country_wise_date(date('d-m-Y'), $this->loggedin_user_country_data['timezone']))));
+                                                }
+                                                ?>
+                                                <input type="text" class="form-control" placeholder="Expire Date" name="expiry_time" id="expire_date_time" value="<?php echo $expiry_time; ?>">                                                    
+                                            </div>
+                                        </div>
+                                    <?php } else { ?>
+                                        <div class="form-group">
+                                            <label>Expire Date <span class="text-danger">*</span></label>
+                                            <div>
+                                                <div>
+                                                    <label>
+                                                        <input type="radio" name="expire_time_type" id="fixed_expire_date" class="styled expire_time_type" required="required"  value="<?php echo EXPIRE_TIME_FIXED; ?>" <?php echo (isset($notification_data) && isset($notification_data['expire_time_type']) && $notification_data['expire_time_type'] == EXPIRE_TIME_FIXED) ? 'checked="checked"' : (!isset($notification_data)) ? 'checked="checked"' : ''; ?>>
+                                                        Fixed expire date
+                                                    </label> 
+                                                    &nbsp;&nbsp;
+                                                    <label>
+                                                        <input type="radio" name="expire_time_type" id="limited_expire_date" class="styled expire_time_type" value="<?php echo EXPIRE_TIME_LIMITED; ?>" <?php echo (isset($notification_data) && isset($notification_data['expire_time_type']) && $notification_data['expire_time_type'] == EXPIRE_TIME_LIMITED) ? 'checked="checked"' : ''; ?>>
+                                                        Limited Offer
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-btn">
+                                                            <button type="button" class="btn btn-default btn-icon" id="expire_date_icon"><i class="icon-calendar3"></i></button>
+                                                        </span>
+                                                        <?php
+                                                        $expiry_time = '';
+                                                        if (isset($notification_data) && isset($notification_data['expiry_time'])) {
+                                                            if ($notification_data['expiry_time'] == '0000-00-00 00:00:00') {
+                                                                $expiry_time = '';
+                                                            } else {
+                                                                $expiry_time = date_create($notification_data['expiry_time']);
+                                                                $expiry_time = date_format($expiry_time, "Y-m-d");
+                                                                $expiry_time = date('d-m-Y', strtotime(get_country_wise_date($expiry_time, $this->loggedin_user_country_data['timezone'])));
+                                                            }
+                                                        } else {
+//                                                        $expiry_time = date('d-m-Y', strtotime('+10 minutes', strtotime(get_country_wise_date(date('d-m-Y'), $this->loggedin_user_country_data['timezone']))));
+                                                        }
+                                                        ?>
+                                                        <input type="text" class="form-control" placeholder="Expire Date" name="expiry_time" id="expire_date_time" value="<?php echo $expiry_time; ?>">                                                    
+                                                    </div> 
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group offer_text_section">
+                                        <label>Offer Text <span class="text-danger">*</span></label>
+                                        <div>
+                                            <textarea class="form-control" rows="5" placeholder="Type here appears in the offers section in mobile app" name="content" id="content"><?php echo (isset($notification_data['content'])) ? $notification_data['content'] : set_value('content'); ?></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group offer_video_section">
+                                        <label>Upload Video <span class="text-danger">*</span></label>
+                                        <div>
+                                            <input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name" accept="video/*">
+                                            <input type="hidden" name="is_valid" id="is_valid" value="1">
+                                            <div id="media_errors_wrapper" class="alert alert-danger alert-bordered display-none">
+                                                <span id="media_errors"></span>
+                                            </div>
+                                            <label id="media_name-error" class="validation-error-label" for="media_name" style=""></label>
+                                        </div>
+                                    </div>
+                                    <div class="offer_video_section">
+                                        <?php
+                                        if (isset($notification_data['media_name']) && !empty($notification_data['media_name'])) {
+                                            $extension = explode('.', $notification_data['media_name']);
+                                            if (isset($extension) && isset($extension[1]) && in_array($extension[1], $this->video_extensions_arr)) {
+                                                ?>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div>
+                                                            <a href="<?php echo offer_media_path . $notification_data['media_name'] ?>" class="btn btn-info btn-lg" target="_blank"><i class="icon-video-camera2"></i> View Video</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                    </div>
 
-                                <?php if (isset($notification_type) && $notification_type == 'offers') { ?>
                                     <div class="responsive_view_status">
                                         <div class="form-group">
                                             <label>Push Notification Summary <span class="text-danger">*</span></label>
@@ -201,12 +301,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                <?php } ?>
-                                <div class="form-group offer_image_section desktop_view">
-                                    <label>Upload Image(s)<span class="text-danger">*</span></label>                                    
-                                </div>                                    
-                            </div>
-                            <?php if (isset($notification_type) && $notification_type == 'offers') { ?>
+
+                                    <div class="form-group offer_image_section desktop_view">
+                                        <label>Upload Image(s)<span class="text-danger">*</span></label>                                    
+                                    </div>                                    
+                                </div>
+
                                 <div class="col-md-4 desktop_view">
                                     <div class="form-group">
                                         <label>Push Notification Summary <span class="text-danger">*</span></label>
@@ -214,16 +314,28 @@
                                             <input type="text" class="form-control" placeholder="Appears in push notification" name="push_message" id="push_message" required="required" value="<?php echo (isset($notification_data['push_message'])) ? $notification_data['push_message'] : set_value('push_message'); ?>">
                                         </div>
                                     </div>
-                                </div>
-                            <?php } ?>
-                            <!--<div class="form-group offer_image_section responsive_view_status"></div>  -->
-                        </div>
+                                </div>	
+                            </div>                            
+                        <?php } ?>
+                        
                         <div class="text-right btn_end">
                             <a href="<?php echo $back_url; ?>" class="btn bg-grey-300 btn-labeled"><b><i class="icon-arrow-left13"></i></b>Back</a>
                             <button type="submit" id="offer_submit" name="offer_submit" class="btn bg-teal btn-labeled btn-labeled-right"><b><i class="icon-arrow-right14"></i></b>Save</button>
                             <input type="hidden" name="uploaded_images_data" id="uploaded_images_data">
                         </div>
-                    </form>
+                        <?php if (isset($notification_type) && $notification_type == 'offers') { ?>
+                            <div class="col-xs-12">                            
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Optional Text</label>
+                                        <div>                                        
+                                            <textarea class="form-control" rows="5" placeholder="Optional Text" name="expire_text" id="expire_text"><?php echo (isset($notification_data['expire_text'])) ? $notification_data['expire_text'] : set_value('expire_text'); ?></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </form>                    
                     <form method="POST" action="<?php echo $upload_url; ?>" enctype="multipart/form-data" class="form-validate-jquery" name="fileupload" id="fileupload">
                         <input type="hidden" name="uploaded_images_arr" id="uploaded_images_arr">
                         <div class="row fileupload-buttonbar">

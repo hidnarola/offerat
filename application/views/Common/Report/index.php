@@ -44,7 +44,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Added Date</th>
-                                                    <th>Broadcast Date</th>
+                                                    <th>Post Date & Time</th>
                                                     <th>Expiry Date</th>
                                                     <th>Notification Type</th>                                                                                                                        
                                                     <th>Impressions</th>
@@ -53,7 +53,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th>Added Date</th>
-                                                    <th>Broadcast Date</th>
+                                                    <th>Post Date & Time</th>
                                                     <th>Expiry Date</th>
                                                     <th>Notification Type</th>
                                                     <th>Impressions</th>
@@ -126,7 +126,7 @@ $this->load->view('Common/Notifications/details_modal');
         $('#notification_dttable thead tr:eq(0) th').each(function () {
             var title = $(this).text();
             if (title !== 'Actions') {
-                if (title === 'Added Date' || title === 'Broadcast Date' || title === 'Expiry Date') {
+                if (title === 'Added Date' || title === 'Post Date & Time' || title === 'Expiry Date') {
                     $(this).html('<input type="text" class="form-control daterange-basic-datatable" placeholder="' + title + '" />');
                 } else {
                     $(this).html('<input type="text" class="form-control" placeholder="' + title + '" />');
