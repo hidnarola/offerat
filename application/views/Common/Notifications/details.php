@@ -78,7 +78,7 @@
                         if (isset($notification_details['expiry_time']) && !empty($notification_details['expiry_time']) && $notification_details['expiry_time'] != '0000-00-00 00:00:00') {
                             $expiry_time = new DateTime($notification_details['expiry_time'], new DateTimeZone(date_default_timezone_get()));
                             $expiry_time->setTimezone(new DateTimeZone($this->loggedin_user_country_data['timezone']));
-                            $expiry_time_text = $expiry_time->format('d-m-Y');
+                            $expiry_time_text = $expiry_time->format('d-m-Y H:i');
                             echo $expiry_time_text;
                         } else
                             echo '-';

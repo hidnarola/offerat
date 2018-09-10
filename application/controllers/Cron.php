@@ -485,8 +485,8 @@ class Cron extends CI_Controller {
                     );
 
                     $users_list = $this->Common_model->master_select($select_user);
-                    query();
-                    pr($users_list, 1);
+//                    query();
+//                    pr($users_list, 1);
                     $user_group = array_chunk($users_list, 50);
 //                pr($user_group, 1);
                     if (isset($user_group) && sizeof($user_group) > 0) {

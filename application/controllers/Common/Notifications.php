@@ -321,7 +321,7 @@ class Notifications extends MY_Controller {
                         if ($this->input->post('expiry_time', TRUE) != '') {
                             $expiry_time = new DateTime($this->input->post('expiry_time', TRUE), new DateTimeZone($this->loggedin_user_country_data['timezone']));
                             $expiry_time->setTimezone(new DateTimeZone(date_default_timezone_get()));
-                            $expiry_time_text = $expiry_time->format('Y-m-d 00:00:00');
+                            $expiry_time_text = $expiry_time->format('Y-m-d H:i:00');
                         } else
                             $expiry_time_text = '0000-00-00 00:00:00';
 
@@ -604,7 +604,7 @@ class Notifications extends MY_Controller {
     function custom_expiry_time_check($expire_time) {
 //        return true;
         $expire_time = strtotime($expire_time);
-        $today_time = strtotime(date('Y-m-d'));
+        $today_time = strtotime(date('Y-m-d H:i'));
 
         if (!empty($expire_time) && $expire_time > $today_time) {
             return TRUE;

@@ -1,5 +1,5 @@
 <?php
-$expire_time_display = date('d-m-Y', strtotime('+7 days', strtotime(get_country_wise_date(date('d-m-Y'), $this->loggedin_user_country_data['timezone']))));
+$expire_time_display = date('d-m-Y 23:59', strtotime('+7 days', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone']))));
 ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <!-- The Templates plugin is included to render the upload/download listings -->

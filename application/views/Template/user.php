@@ -165,8 +165,9 @@
                     $("#expire_date_time").val("").change();
                 });
                 $('#expire_date_icon, #expire_date_time').click(function (e) {
-                    $('#expire_date_time').AnyTime_noPicker().AnyTime_picker({format: "%d-%m-%Z"}).focus();
-//                    $('#expire_date_time').AnyTime_noPicker().AnyTime_picker({format: "%d-%m-%Z %H:%i"}).focus();
+//                    $('#expire_date_time').AnyTime_noPicker().AnyTime_picker({format: "%d-%m-%Z"}).focus();
+                    $('#expire_date_time').AnyTime_noPicker().AnyTime_picker({format: "%d-%m-%Z %H:%i"}).focus();
+//                    $('#expire_date_time').AnyTime_noPicker().AnyTime_picker({format: "%d-%m-%Z 23:59"}).focus();
 //                    $(document).find('.AnyTime-min1-btn, .AnyTime-min2-btn, .AnyTime-min3-btn, .AnyTime-min4-btn, .AnyTime-min5-btn, .AnyTime-min6-btn, .AnyTime-min7-btn, .AnyTime-min8-btn, .AnyTime-min9-btn ').remove()
                 });
                 $('#broad_cast_icon, #broad_cast_date_time').click(function (e) {

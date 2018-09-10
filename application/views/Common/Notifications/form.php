@@ -207,8 +207,8 @@
                                                         $expiry_time = '';
                                                     } else {
                                                         $expiry_time = date_create($notification_data['expiry_time']);
-                                                        $expiry_time = date_format($expiry_time, "Y-m-d");
-                                                        $expiry_time = date('d-m-Y', strtotime(get_country_wise_date($expiry_time, $this->loggedin_user_country_data['timezone'])));
+                                                        $expiry_time = date_format($expiry_time, "Y-m-d H:i");
+                                                        $expiry_time = date('d-m-Y H:i', strtotime(get_country_wise_date($expiry_time, $this->loggedin_user_country_data['timezone'])));
                                                     }
                                                 } else {
 //                                                        $expiry_time = date('d-m-Y', strtotime('+10 minutes', strtotime(get_country_wise_date(date('d-m-Y'), $this->loggedin_user_country_data['timezone']))));
@@ -242,8 +242,8 @@
                                                                 $expiry_time = '';
                                                             } else {
                                                                 $expiry_time = date_create($notification_data['expiry_time']);
-                                                                $expiry_time = date_format($expiry_time, "Y-m-d");
-                                                                $expiry_time = date('d-m-Y', strtotime(get_country_wise_date($expiry_time, $this->loggedin_user_country_data['timezone'])));
+                                                                $expiry_time = date_format($expiry_time, "Y-m-d H:i");
+                                                                $expiry_time = date('d-m-Y H:i', strtotime(get_country_wise_date($expiry_time, $this->loggedin_user_country_data['timezone'])));
                                                             }
                                                         } else {
 //                                                        $expiry_time = date('d-m-Y', strtotime('+10 minutes', strtotime(get_country_wise_date(date('d-m-Y'), $this->loggedin_user_country_data['timezone']))));
