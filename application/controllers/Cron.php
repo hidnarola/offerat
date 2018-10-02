@@ -362,7 +362,7 @@ class Cron extends CI_Controller {
         );
 
         $offers_list = $this->Common_model->master_select($select_offer);
-        
+
         if (isset($offers_list) && sizeof($offers_list) > 0) {
             foreach ($offers_list as $list) {
 
@@ -461,6 +461,19 @@ class Cron extends CI_Controller {
 //                    var_dump($messageArray);
 //                    echo '<br>';
 //                    die("hello");
+
+                    if ((int) $list['id_store'] > 0) {
+                        $where_with_sign = array(
+                            'favorite.id_store = ' . $list['id_store'],
+                            'device_token != ""'
+                        );
+                    } elseif ((int) $list['id_mall'] > 0) {
+                        $where_with_sign = array(
+                            'favorite.id_mall = ' . $list['id_mall'],
+                            'device_token != ""'
+                        );
+                    }
+
                     $select_user = array(
                         'table' => tbl_user . ' user',
                         'where' => array(
@@ -468,12 +481,10 @@ class Cron extends CI_Controller {
                             'user.user_type' => NORMAL_USER_TYPE,
                             'user.status' => ACTIVE_STATUS,
                             'favorite.is_delete' => IS_NOT_DELETED_STATUS,
-                            'favorite.is_notification_enable' => NOTIFICATION_ENABLED
+                            'favorite.is_notification_enable' => NOTIFICATION_ENABLED,
+                            'favorite.is_favorite' => FAVORITE_TYPE
                         ),
-                        'where_with_sign' => array(
-                            '(favorite.id_store = ' . $list['id_store'] . ' OR favorite.id_mall = ' . $list['id_mall'] . ')',
-                            'device_token != ""'
-                        ),
+                        'where_with_sign' => $where_with_sign,
                         'join' => array(
                             array(
                                 'table' => tbl_favorite . ' as favorite',

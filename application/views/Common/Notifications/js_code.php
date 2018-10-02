@@ -338,7 +338,7 @@ $expire_time_display = date('d-m-Y 23:59', strtotime('+7 days', strtotime(get_co
     }
 
     $(document).on('click', '#fixed_expire_date', function () {
-        $(document).find('#expire_date_time').val('');
+        $(document).find('#expire_date_time').val('<?php echo $expire_time_display; ?>');        
     });
 
     $(document).on('click', '#limited_expire_date', function () {

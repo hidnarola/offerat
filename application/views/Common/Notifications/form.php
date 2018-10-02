@@ -247,6 +247,7 @@
                                                             }
                                                         } else {
 //                                                        $expiry_time = date('d-m-Y', strtotime('+10 minutes', strtotime(get_country_wise_date(date('d-m-Y'), $this->loggedin_user_country_data['timezone']))));
+                                                            $expiry_time = date('d-m-Y 23:59', strtotime('+7 days', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone']))));
                                                         }
                                                         ?>
                                                         <input type="text" class="form-control" placeholder="Expire Date" name="expiry_time" id="expire_date_time" value="<?php echo $expiry_time; ?>">                                                    
@@ -317,7 +318,7 @@
                                 </div>	
                             </div>                            
                         <?php } ?>
-                        
+
                         <div class="text-right btn_end">
                             <a href="<?php echo $back_url; ?>" class="btn bg-grey-300 btn-labeled"><b><i class="icon-arrow-left13"></i></b>Back</a>
                             <button type="submit" id="offer_submit" name="offer_submit" class="btn bg-teal btn-labeled btn-labeled-right"><b><i class="icon-arrow-right14"></i></b>Save</button>
