@@ -12,8 +12,6 @@ class Notifications extends MY_Controller {
             'title' => 'Posts',
         );
 
-//        $this->load->library('UploadHandler');
-
         if (!in_array($this->loggedin_user_type, array(COUNTRY_ADMIN_USER_TYPE, STORE_OR_MALL_ADMIN_USER_TYPE)))
             override_404();
     }
@@ -241,6 +239,7 @@ class Notifications extends MY_Controller {
 
             if ($this->input->post()) {
 
+//                pr($_POST, 1);
                 $validate_fields = array(
                     'store_mall_id',
                     'offer_type',
@@ -437,6 +436,7 @@ class Notifications extends MY_Controller {
             $this->data['remove_image_url'] = $remove_image_url;
             $this->data['max_image_upload_count'] = $max_image_upload_count;
             $this->template->load('user', 'Common/Notifications/form', $this->data);
+//            $this->template->load('user', 'Common/Notifications/test', $this->data);
         } else {
             dashboard_redirect($this->loggedin_user_type);
         }

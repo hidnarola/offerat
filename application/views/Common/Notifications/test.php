@@ -131,9 +131,7 @@
                                     <div class="form-group">
                                         <label>Optional Text</label>
                                         <div>
-                                            <p class="lead emoji-picker-container">
-                                                <textarea class="form-control " rows="5" placeholder="Optional Text" name="expire_text" id="expire_text" data-emojiable="true"><?php echo (isset($notification_data['expire_text'])) ? $notification_data['expire_text'] : set_value('expire_text'); ?></textarea>
-                                            </p>
+                                            <textarea class="form-control" rows="5" placeholder="Optional Text" name="expire_text" id="expire_text"><?php echo (isset($notification_data['expire_text'])) ? $notification_data['expire_text'] : set_value('expire_text'); ?></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -301,7 +299,7 @@
                                             <label>Push Notification Summary <span class="text-danger">*</span></label>
                                             <div>
                                                 <p class="lead emoji-picker-container">
-                                                    <input type="text" class="form-control" placeholder="Appears in push notification" name="push_message" id="push_message" data-emojiable="true" value="<?php echo (isset($notification_data['push_message'])) ? $notification_data['push_message'] : set_value('push_message'); ?>">
+                                                    <input type="text" class="form-control" placeholder="Appears in push notification" name="push_message" id="push_message" required="required" value="<?php echo (isset($notification_data['push_message'])) ? $notification_data['push_message'] : set_value('push_message'); ?>" data-emojiable="true">
                                                 </p>
                                             </div>
                                         </div>
@@ -317,7 +315,7 @@
                                         <label>Push Notification Summary <span class="text-danger">*</span></label>
                                         <div>
                                             <p class="lead emoji-picker-container">
-                                                <input type="text" class="form-control " placeholder="Appears in push notification" name="push_message" id="push_message" data-emojiable="true" value="<?php echo (isset($notification_data['push_message'])) ? $notification_data['push_message'] : set_value('push_message'); ?>">
+                                                <input type="text" class="form-control Unicode" placeholder="Appears in push notification" name="push_message" id="push_message" required="required" value="<?php echo (isset($notification_data['push_message'])) ? $notification_data['push_message'] : set_value('push_message'); ?>" data-emojiable="true" data-emoji-input="unicode">
                                             </p>
                                         </div>
                                     </div>
@@ -337,7 +335,7 @@
                                         <label>Optional Text</label>
                                         <div>   
                                             <p class="lead emoji-picker-container">
-                                                <textarea class="form-control " rows="5" placeholder="Optional Text" name="expire_text" id="expire_text" data-emojiable="true"><?php echo (isset($notification_data['expire_text'])) ? $notification_data['expire_text'] : set_value('expire_text'); ?></textarea>
+                                                <textarea class="form-control" rows="5" placeholder="Optional Text" name="expire_text" id="expire_text" data-emojiable="true"><?php echo (isset($notification_data['expire_text'])) ? $notification_data['expire_text'] : set_value('expire_text'); ?></textarea>
                                             </p>
                                         </div>
                                     </div>
@@ -392,6 +390,22 @@
         </div>
     </div>
 </div>
-<?php $this->load->view('Common/Notifications/script'); ?>
-<?php $this->load->view('Common/message_alert'); ?>
-<?php $this->load->view('Common/Notifications/js_code'); ?>
+<script src="assets/user/emojis_lib/js/config.js"></script>
+<script src="assets/user/emojis_lib/js/util.js"></script>
+<script src="assets/user/emojis_lib/js/jquery.emojiarea.js"></script>
+<script src="assets/user/emojis_lib/js/emoji-picker.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Initializes and creates emoji set from sprite sheet
+        window.emojiPicker = new EmojiPicker({
+            emojiable_selector: '[data-emojiable=true]',
+            assetsPath: 'assets/user/emojis_lib/img',
+            popupButtonClasses: 'fa fa-smile-o'
+        });
+        // Finds all elements with `emojiable_selector` and converts them to rich emoji input fields
+        // You may want to delay this step if you have dynamically created input fields that appear later in the loading process
+        // It can be called as many times as necessary; previously converted input fields will not be converted again
+        window.emojiPicker.discover();
+    });
+</script>   

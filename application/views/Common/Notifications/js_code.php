@@ -1,6 +1,25 @@
 <?php
 $expire_time_display = date('d-m-Y 23:59', strtotime('+7 days', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone']))));
 ?>
+
+<script src="assets/user/emojis_lib/js/config.js"></script>
+<script src="assets/user/emojis_lib/js/util.js"></script>
+<script src="assets/user/emojis_lib/js/jquery.emojiarea.js"></script>
+<script src="assets/user/emojis_lib/js/emoji-picker.js"></script>
+<script>
+    $(document).ready(function () {
+        // Initializes and creates emoji set from sprite sheet
+        window.emojiPicker = new EmojiPicker({
+            emojiable_selector: '[data-emojiable=true]',
+            assetsPath: 'assets/user/emojis_lib/img',
+            popupButtonClasses: 'fa fa-smile-o'
+        });
+        // Finds all elements with `emojiable_selector` and converts them to rich emoji input fields
+        // You may want to delay this step if you have dynamically created input fields that appear later in the loading process
+        // It can be called as many times as necessary; previously converted input fields will not be converted again
+        window.emojiPicker.discover();
+    });
+</script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <!-- The Templates plugin is included to render the upload/download listings -->
 <script src="https://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
@@ -338,7 +357,7 @@ $expire_time_display = date('d-m-Y 23:59', strtotime('+7 days', strtotime(get_co
     }
 
     $(document).on('click', '#fixed_expire_date', function () {
-        $(document).find('#expire_date_time').val('<?php echo $expire_time_display; ?>');        
+        $(document).find('#expire_date_time').val('<?php echo $expire_time_display; ?>');
     });
 
     $(document).on('click', '#limited_expire_date', function () {
@@ -348,4 +367,7 @@ $expire_time_display = date('d-m-Y 23:59', strtotime('+7 days', strtotime(get_co
 <?php if ($notification_type == 'offers') { ?>
         $(document).find('.upload_up').css('margin-top', '-220px');
 <?php } ?>
+
+
+
 </script>
