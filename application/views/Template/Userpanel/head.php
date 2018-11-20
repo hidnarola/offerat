@@ -5,6 +5,8 @@
 <title><?php echo @$title; ?></title>
 <base href="<?php echo base_url('user'); ?>">
 
+<link rel="shortcut icon" type="image/png" href="<?= favicon_icon ?>" />
+
 <!-- Global stylesheets -->
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
 <!--<link href="https://www.ama3.com/anytime/anytime.5.2.0.css" rel="stylesheet" type="text/css">-->
@@ -20,6 +22,7 @@
 <link rel="stylesheet" href="https://blueimp.github.io/Gallery/css/blueimp-gallery.min.css"> 
 <link rel="stylesheet" href="assets/user/css/file_upload/jquery.fileupload.css">
 <link rel="stylesheet" href="assets/user/css/file_upload/jquery.fileupload-ui.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css">
 
 <noscript><link rel="stylesheet" href="assets/user/css/file_upload/jquery.fileupload-noscript.css"></noscript>
 <noscript><link rel="stylesheet" href="assets/user/css/file_upload/jquery.fileupload-ui-noscript.css"></noscript>
@@ -29,6 +32,7 @@
 <link href="assets/user/emojis_lib/css/emoji.css" rel="stylesheet">
 
 <link href="assets/user/css/custom.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" />
 
 <noscript><META HTTP-EQUIV="Refresh" CONTENT="0; URL=js_disabled"></noscript>
 <!-- Core JS files -->
@@ -36,6 +40,9 @@
 <script type="text/javascript" src="assets/user/js/core/libraries/jquery.min.js"></script>
 <script type="text/javascript" src="assets/user/js/core/libraries/bootstrap.min.js"></script>
 <script type="text/javascript" src="assets/user/js/plugins/loaders/blockui.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script> 
 <!-- /core JS files -->
 
 <script type="text/javascript">

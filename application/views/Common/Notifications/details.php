@@ -8,8 +8,10 @@
                     if (isset($notification_details['type'])) {
                         if ($notification_details['type'] == OFFER_OFFER_TYPE)
                             echo '<span class="label label-info label-rounded">Offer</span>';
-                        else
+                        elseif ($notification_details['type'] == ANNOUNCEMENT_OFFER_TYPE)
                             echo '<span class="label label-success label-rounded">Announcement</span>';
+                        elseif ($notification_details['type'] == CATALOG_OFFER_TYPE)
+                            echo '<span class="label label-success label-rounded">Catalog</span>';
                     } else {
                         echo '-';
                     }

@@ -1,4 +1,5 @@
 <?php
+
 //echo phpinfo();
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -131,12 +132,13 @@ class Stores extends MY_Controller {
         $filter_array['fields'][] = 'DATE_FORMAT(CONVERT_TZ(' . tbl_store . '.created_date,"' . $current_time_zone_offeset . '","' . $logged_in_country_zone_offset . '"),"%Y-%m-%d %H:%i") as store_created_date';
         $filter_array['fields'][] = 'GROUP_CONCAT(DISTINCT mall.mall_name) mall_list';
 
-        $filter_array['order_by'] = array(tbl_store . '.id_store' => 'DESC');
-        $filter_array['group_by'] = array(tbl_store . '.id_store');
+        $filter_array['order_by'] = array(tbl_store . '.id_store' => 'DESC', tbl_store_location . 'id_store_location' => 'DESC');
+        $filter_array['group_by'] = array(tbl_store . '.id_store', tbl_store_location . '.id_store');
         $filter_array['where'] = array(
             tbl_store . '.is_delete' => IS_NOT_DELETED_STATUS,
             tbl_user . '.is_delete' => IS_NOT_DELETED_STATUS,
             tbl_country . '.is_delete' => IS_NOT_DELETED_STATUS,
+//            tbl_store_location . '.is_delete' => IS_NOT_DELETED_STATUS,
             tbl_user . '.status' => ACTIVE_STATUS,
         );
 
@@ -186,7 +188,6 @@ class Stores extends MY_Controller {
         );
 
         $filter_records = $this->Common_model->get_filtered_records(tbl_store, $filter_array);
-//        query();
         $total_filter_records = $this->Common_model->get_filtered_records(tbl_store, $filter_array, 1);
 
         $output = array(
@@ -212,7 +213,7 @@ class Stores extends MY_Controller {
 
             $select_store = array(
                 'table' => tbl_store . ' store',
-                'fields' => array('store.store_name', 'store.store_logo store_store_logo', 'store.status store_status', 'store.created_date store_created_date', 'store.telephone store_telephone', 'store.website store_website', 'store.facebook_page store_facebook_page', 'user.first_name user_first_name', 'user.last_name user_last_name', 'user.email_id user_email_id', 'user.mobile user_mobile'),
+                'fields' => array('store.store_name', 'store.store_logo store_store_logo', 'store.status store_status', 'store.created_date store_created_date', 'store.telephone store_telephone', 'store.website store_website', 'store.facebook_page store_facebook_page', 'user.first_name user_first_name', 'user.last_name user_last_name', 'user.email_id user_email_id', 'user.mobile user_mobile', 'store.group_text', 'store.note_text', 'store.contact_email'),
                 'where' => array('store.id_store' => $store_id, 'store.is_delete' => IS_NOT_DELETED_STATUS),
                 'join' => array(
                     array(
@@ -245,8 +246,15 @@ class Stores extends MY_Controller {
                 );
                 $store_categories = $this->Common_model->master_select($select_store_category);
 
+                $select_store_contacts = array(
+                    'table' => tbl_store_contact_details,
+                    'where' => array('id_store' => $store_id, 'is_delete' => IS_NOT_DELETED_STATUS)
+                );
+                $store_contacts = $this->Common_model->master_select($select_store_contacts);
+
                 $this->data['store_details'] = $store_details;
                 $this->data['store_categories'] = $store_categories;
+                $this->data['store_contacts'] = $store_contacts;
 
                 $html = $this->load->view('Common/Store/details', $this->data, TRUE);
                 $response = array(
@@ -263,7 +271,6 @@ class Stores extends MY_Controller {
      */
 
     public function save($id = NULL) {
-
         $date = date('Y-m-d h:i:s');
         $back_url = '';
         $img_name = $image_name = '';
@@ -371,9 +378,16 @@ class Stores extends MY_Controller {
                     $this->data['store_malls_list'] = $store_malls_list;
                 }
 
+                $select_store_contacts = array(
+                    'table' => tbl_store_contact_details,
+                    'where' => array('id_store' => $id, 'is_delete' => IS_NOT_DELETED_STATUS)
+                );
+                $store_contacts = $this->Common_model->master_select($select_store_contacts);
+
                 $this->data['store_details'] = $store_details;
                 $this->data['store_categories'] = $store_categories;
                 $this->data['sales_trends'] = $sales_trends;
+                $this->data['store_contacts'] = $store_contacts;
             } else {
                 override_404();
             }
@@ -390,7 +404,6 @@ class Stores extends MY_Controller {
         }
 
         if ($this->input->post()) {
-
             $file_name = '';
 
             $validate_fields = array(
@@ -417,6 +430,7 @@ class Stores extends MY_Controller {
             if ($this->_validate_form($validate_fields, $country_id)) {
                 $user_id = 0;
                 $delete_store_category = array();
+                $delete_store_contacts = array();
                 $delete_store_place = array();
                 $delete_store_sales_trend = array();
 
@@ -441,6 +455,13 @@ class Stores extends MY_Controller {
                             $this->data['image_errors'] = $this->upload->display_errors();
                         } else {
                             $image_name = $img_name;
+
+                            /* 12-11-2018 03:44 PM: Resize Image to 10kb size */
+                            $image_size = $_FILES['store_logo']['size'];
+                            $source_image = $image_path . $image_name;
+                            $new_image = $image_path;
+
+                            $this->Common_model->resize_image($image_size, $source_image, $new_image);
                         }
                     } else {
                         if (!empty($_FILES['store_logo']['tmp_name'])) {
@@ -457,7 +478,10 @@ class Stores extends MY_Controller {
                         'website' => $this->input->post('website', TRUE),
                         'facebook_page' => $this->input->post('facebook_page', TRUE),
                         'telephone' => ($this->input->post('mobile', TRUE) != '') ? $this->input->post('mobile', TRUE) : ' ',
-                        'id_country' => $country_id
+                        'id_country' => $country_id,
+                        'group_text' => $this->input->post('group_text', TRUE),
+                        'note_text' => $this->input->post('note_text', TRUE),
+                        'contact_email' => $this->input->post('contact_email', TRUE)
                     );
 
                     if ($this->input->post('email_id', TRUE) != '') {
@@ -517,7 +541,6 @@ class Stores extends MY_Controller {
                     $store_data['id_users'] = $user_id;
 
                     if ($id) {
-
                         if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
                             $store_data['status'] = $store_details['store_status'];
 
@@ -587,6 +610,27 @@ class Stores extends MY_Controller {
                             }
                         }
 
+                        if (isset($store_contacts) && sizeof($store_contacts) > 0) {
+                            foreach ($store_contacts as $contacts_val) {
+                                if ($this->input->post('existed_store_contact_id_' . $contacts_val['id_store_contact'], TRUE) != '') {
+                                    $update_store_contacts = array(
+                                        'contact_number' => $this->input->post('existed_store_contact_number_' . $contacts_val['id_store_contact'], TRUE),
+                                        'modified_date' => $date
+                                    );
+
+                                    $where_store_category = array('id_store_contact' => $contacts_val['id_store_contact']);
+                                    $this->Common_model->master_update(tbl_store_contact_details, $update_store_contacts, $where_store_category);
+                                } else
+                                    $delete_store_contacts[] = $contacts_val['id_store_contact'];
+                            }
+
+                            if (isset($delete_store_contacts) && sizeof($delete_store_contacts) > 0) {
+                                $update_store_category_data = 'is_delete = ' . IS_DELETED_STATUS . ' , modified_date = "' . $date . '"';
+                                $where_store_category_data = 'id_store_contact IN (' . implode(',', $delete_store_contacts) . ')';
+                                $this->Common_model->master_update(tbl_store_contact_details, $update_store_category_data, $where_store_category_data, TRUE);
+                            }
+                        }
+
                         if (isset($sales_trends) && sizeof($sales_trends) > 0) {
                             foreach ($sales_trends as $trend) {
                                 if ($this->input->post('exist_from_date_' . $trend['id_sales_trend'], TRUE) != '') {
@@ -647,22 +691,29 @@ class Stores extends MY_Controller {
                         $this->session->set_flashdata('success_msg', 'Store added successfully');
                     }
 
+                    /*
+                     * Add/Update store contacts details
+                     * Date: 13-11-2018 09:52:37
+                     */
+                    $this->add_store_contacts($date, $store_id);
+
                     if (!is_null($store_id) && $store_id > 0 && isset($_FILES['location_excel'])) {
-                        
+
                         if (($_FILES['location_excel']['size']) > 0) {
-                            
+
                             $file_path = $_SERVER['DOCUMENT_ROOT'] . location_excel_img_path;
                             if (!file_exists($file_path)) {
                                 $this->Common_model->created_directory($file_path);
                             }
                             $supported_files = 'xlsx';
                             $new_file_name = $store_id . '_' . date('Y_m_d_h_i_s');
+
                             $uplaoded_file_name = $this->Common_model->upload_file('location_excel', $file_path, $supported_files, $new_file_name);
-                            
-                            if (empty($uplaoded_file_name)) {                                
+
+                            if (empty($uplaoded_file_name)) {
                                 $do_location_file_has_error = true;
 //                                $this->data['file_errors'] = $this->upload->display_errors();
-                            } else {                                
+                            } else {
                                 $file_name = $uplaoded_file_name;
                                 $this->load->library('Excel');
                                 PHPExcel_Settings::setZipClass(PHPExcel_Settings::PCLZIP);
@@ -671,21 +722,28 @@ class Stores extends MY_Controller {
                                 $objReader = PHPExcel_IOFactory::createReader($file_type);
                                 $objPHPExcel = $objReader->load($file_location);
                                 $sheet_data = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
-                                
-                                foreach ($sheet_data as $key => $data) {
 
-                                    if (isset($data['A']) && isset($data['B']) && !empty($data['A']) && !empty($data['B']) && $key > 1) {
-                                        $latitude = $data['A'];
-                                        $longitude = $data['B'];
+                                foreach ($sheet_data as $key => $data) {
+                                    if (isset($data['A']) && isset($data['B']) && isset($data['C']) && isset($data['D']) && isset($data['E']) && !empty($data['A']) && !empty($data['B'] && !empty($data['C']) && !empty($data['D']) && !empty($data['E'])) && $key > 1) {
+                                        $branch_name = $data['A'];
+                                        $contact_number = $data['B'];
+                                        $email = $data['C'];
+                                        $latitude = $data['D'];
+                                        $longitude = $data['E'];
+
                                         $select_location = array(
                                             'table' => tbl_store_location,
                                             'where' => array(
                                                 'id_store' => $store_id,
                                                 'is_delete' => IS_NOT_DELETED_STATUS,
                                                 'latitude' => $latitude,
-                                                'longitude' => $longitude
+                                                'longitude' => $longitude,
+                                                'branch_name' => $branch_name,
+                                                'contact_number' => $contact_number,
+                                                'email' => $email,
                                             )
                                         );
+
                                         $locations = $this->Common_model->master_single_select($select_location);
 
                                         if (isset($locations) && sizeof($locations) > 0) {
@@ -697,7 +755,10 @@ class Stores extends MY_Controller {
                                                 'longitude' => $longitude,
                                                 'id_location' => 0,
                                                 'location_type' => STORE_LOCATION_TYPE,
-                                                'contact_number' => $this->input->post('mobile', TRUE),
+//                                                'contact_number' => $this->input->post('mobile', TRUE),
+                                                'branch_name' => $branch_name,
+                                                'contact_number' => $contact_number,
+                                                'email' => $email,
                                                 'created_date' => $date,
                                                 'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
                                                 'is_delete' => IS_NOT_DELETED_STATUS
@@ -714,8 +775,6 @@ class Stores extends MY_Controller {
 //                                $this->data['file_errors'] = 'Invalid File';
                             }
                         }
-                        
-//                        die();
                     }
 
                     if (isset($store_data['status']) && $store_data['status'] == NOT_VERIFIED_STATUS && is_null($id)) {
@@ -998,12 +1057,14 @@ class Stores extends MY_Controller {
 
         $location_count = $this->input->post('location_count', TRUE);
         for ($i = 0; $i <= $location_count; $i++) {
-
             if ($this->input->post('latitude_' . $i, TRUE) != '' && $this->input->post('longitude_' . $i, TRUE) != '') {
                 $in_store_location_data = array(
                     'id_store' => $store_id,
                     'latitude' => $this->input->post('latitude_' . $i, TRUE),
                     'longitude' => $this->input->post('longitude_' . $i, TRUE),
+                    'branch_name' => $this->input->post('branch_' . $i, TRUE),
+                    'contact_number' => $this->input->post('telephone_' . $i, TRUE),
+                    'email' => $this->input->post('email_' . $i, TRUE),
                     'id_location' => 0,
                     'location_type' => STORE_LOCATION_TYPE,
                     'contact_number' => ($this->input->post('mobile', TRUE) != '') ? $this->input->post('mobile', TRUE) : ' ',
@@ -1012,6 +1073,30 @@ class Stores extends MY_Controller {
                     'is_delete' => IS_NOT_DELETED_STATUS
                 );
                 $this->Common_model->master_save(tbl_store_location, $in_store_location_data);
+            }
+        }
+    }
+
+    /*
+     * Add Locatiosn at time of Add Store
+     * @param date date : Today's Date
+     * @param store_id : Store ID      
+     */
+
+    function add_store_contacts($date = NULL, $store_id = NULL) {
+        $contact_ids = array();
+        $contact_no_count = $this->input->post('contact_no_count', TRUE);
+
+        for ($i = 0; $i <= $contact_no_count; $i++) {
+            if ($this->input->post('contact_number_' . $i, TRUE) != '') {
+                $in_store_contact_data = array(
+                    'id_store' => $store_id,
+                    'contact_number' => $this->input->post('contact_number_' . $i, TRUE),
+                    'created_date' => $date,
+                    'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
+                    'is_delete' => IS_NOT_DELETED_STATUS
+                );
+                $this->Common_model->master_save(tbl_store_contact_details, $in_store_contact_data);
             }
         }
     }
@@ -1058,7 +1143,7 @@ class Stores extends MY_Controller {
         if (!is_null($id) && $id > 0) {
             $select_store_locatons = array(
                 'table' => tbl_store_location . ' store_location',
-                'fields' => array('store.id_store', 'store_location.latitude', 'store_location.longitude', 'store_location.is_delete', 'store.store_name'),
+                'fields' => array('store.id_store', 'store_location.branch_name', 'store_location.email', 'store_location.contact_number', 'store_location.latitude', 'store_location.longitude', 'store_location.is_delete', 'store.store_name'),
                 'where' => array(
                     'store_location.is_delete' => IS_NOT_DELETED_STATUS,
                     'store.id_store' => $id,
@@ -1074,15 +1159,16 @@ class Stores extends MY_Controller {
             );
 
             $store_locations = $this->Common_model->master_select($select_store_locatons);
+
             $columnHeader = '';
-            $columnHeader = "Latitude" . "\t" . "Longitude" . "\t" . "Status" . "\t";
+            $columnHeader = "Branch Name" . "\t" . "Telephone Number" . "\t" . "Email" . "\t" . "Latitude" . "\t" . "Longitude" . "\t" . "Status" . "\t";
             $setData = '';
             $rowData = '';
             $store_name = '';
             if (isset($store_locations) && sizeof($store_locations) > 0) {
                 foreach ($store_locations as $value) {
                     $store_name = $value['store_name'];
-                    $value = '"' . $value['latitude'] . '"' . "\t" . '"' . $value['longitude'] . '"' . "\t" . '"' . (($value['is_delete'] == IS_NOT_DELETED_STATUS) ? 'Active' : 'Deleted') . '"' . "\t" . "\n";
+                    $value = '"' . $value['branch_name'] . '"' . "\t" . '"' . $value['contact_number'] . '"' . "\t" . '"' . $value['email'] . '"' . "\t" . '"' . $value['latitude'] . '"' . "\t" . '"' . $value['longitude'] . '"' . "\t" . '"' . (($value['is_delete'] == IS_NOT_DELETED_STATUS) ? 'Active' : 'Deleted') . '"' . "\t" . "\n";
                     $rowData .= $value;
                 }
                 $setData .= trim($rowData) . "\n";
@@ -1211,7 +1297,7 @@ class Stores extends MY_Controller {
      */
 
     function sponsored($id = NULL) {
-        
+
         $back_url = '';
         $this->data['store_id'] = $id;
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)

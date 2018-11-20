@@ -42,7 +42,6 @@ class Sponsored extends MY_Controller {
         );
 
         $stores_list = $this->Common_model->master_select($select_store);
-
 //        pr($stores_list);
         $this->data['stores_list'] = $stores_list;
 

@@ -108,6 +108,7 @@ define('tbl_offer_announcement_image', 'offer_announcement_image');
 define('tbl_store', 'store');
 define('tbl_store_category', 'store_category');
 define('tbl_store_location', 'store_location');
+define('tbl_store_contact_details', 'store_contact_details');
 define('tbl_sub_category', 'sub_category');
 define('tbl_user', 'user');
 define('tbl_verification', 'verification');
@@ -116,11 +117,13 @@ define('tbl_sales_trend', 'sales_trend');
 define('tbl_click_store', 'click_store');
 define('tbl_sponsored_log', 'sponsored_log');
 define('tbl_offer_cron', 'offer_cron');
+define('tbl_store_offer_category', 'store_offer_category');
 
 /* define('country_img_path', 'assets/images/country/');
   define('category_img_path', 'assets/images/category/');
   define('sub_category_img_path', 'assets/images/subcategory/');
   define('store_img_path', 'assets/images/store/'); */
+  define('favicon_icon', 'assets/user/favicon/favicon-lg.png');
 
 define('default_img_path', 'assets/user/images/');
 
@@ -172,6 +175,7 @@ define('IS_DELETED_STATUS', 1);
 
 define('OFFER_OFFER_TYPE', 0);
 define('ANNOUNCEMENT_OFFER_TYPE', 1);
+define('CATALOG_OFFER_TYPE', 2);
 
 define('UNFAVORITE_TYPE', 0);
 define('FAVORITE_TYPE', 1);

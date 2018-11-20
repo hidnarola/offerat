@@ -4,6 +4,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1.0, user-scalable=0">
 <title><?php echo @$title; ?></title>
 <base href="<?php echo base_url('user'); ?>">
+
+<link rel="shortcut icon" type="image/png" href="<?= favicon_icon ?>" />
+
 <!-- Global stylesheets -->
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
 <link href="assets/user/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">

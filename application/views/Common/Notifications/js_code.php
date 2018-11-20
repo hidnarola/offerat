@@ -1,5 +1,6 @@
 <?php
 $expire_time_display = date('d-m-Y 23:59', strtotime('+7 days', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone']))));
+$limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone']))));
 ?>
 
 <script src="assets/user/emojis_lib/js/config.js"></script>
@@ -48,6 +49,8 @@ $expire_time_display = date('d-m-Y 23:59', strtotime('+7 days', strtotime(get_co
 <!-- The File Upload jQuery UI plugin -->
 <script src="assets/user/js/file_upload/jquery.fileupload-jquery-ui.js"></script>
 <!-- The main application script -->
+
+<script type="text/javascript" src="assets/user/js/plugins/forms/styling/uniform.min.js"></script>
 <!--<script src="assets/user/js/file_upload/main.js"></script>-->
 
 <script>
@@ -242,9 +245,18 @@ $expire_time_display = date('d-m-Y 23:59', strtotime('+7 days', strtotime(get_co
 <?php } ?>
         }
     });
+    $(document).find('.video_file_type').change(function () {
+        var type = $(this).val();
+        if (type == "file") {
+            $("#url_type").addClass('hide');
+            $("#file_type").removeClass('hide');
+        } else if (type == "url") {
+            $("#file_type").addClass('hide');
+            $("#url_type").removeClass('hide');
+        }
+    });
 
     $(function () {
-
 //        jQuery(window).resize(function () {
         if (jQuery(window).width() <= 1024) {
             $(document).find('.desktop_view').prop("disabled", true);
@@ -361,7 +373,7 @@ $expire_time_display = date('d-m-Y 23:59', strtotime('+7 days', strtotime(get_co
     });
 
     $(document).on('click', '#limited_expire_date', function () {
-        $(document).find('#expire_date_time').val('<?php echo $expire_time_display; ?>');
+        $(document).find('#expire_date_time').val('<?php echo $limited_time_display; ?>');
     });
 
 <?php if ($notification_type == 'offers') { ?>
@@ -369,5 +381,67 @@ $expire_time_display = date('d-m-Y 23:59', strtotime('+7 days', strtotime(get_co
 <?php } ?>
 
 
+    $('.styled, .multiselect-container input').uniform({
+        radioClass: 'choice'
+    });
 
+    /*
+     * @param {type} store_id, offer_id
+     * @returns {undefined}
+     */
+    $(document).on("change", "#store_mall_id", function () {
+        var store_id = $(this).find("option:selected").attr('data-id');
+
+        if (store_id) {
+            storeCategory(store_id);
+            $(document).find('.sub_category_id').multiselect('rebuild');
+            $(document).find('.sub_category_id').multiselect('refresh');
+        }
+    });
+
+    var store_id = $("#store_mall_id").find("option:selected").attr('data-id');
+    if (store_id) {
+        storeCategory(store_id);
+    }
+
+    function storeCategory(store_id) {
+        var url = base_url + 'country-admin/notifications/store/category/get';
+        var offer_id = '<?= (isset($notification_data) && $notification_data['id_offer']) ? $notification_data['id_offer'] : 0 ?>';
+        $.ajax({
+            url: url,
+            data: {
+                store_id: store_id,
+                offer_id: offer_id
+            },
+            type: 'POST',
+            success: function (response) {
+                $('.sub_category_id').empty();
+                if (response) {
+                    $(document).find('.sub_category_id').append(response);
+                    $('.sub_category_id').multiselect('rebuild');
+                    $('.styled, .multiselect-container input').uniform({
+                        radioClass: 'choice'
+                    });
+                }
+            }
+        });
+    }
+
+    $('.sub_category_id').multiselect({
+        nonSelectedText: 'Select Category',
+        enableFiltering: true,
+        enableCaseInsensitiveFiltering: true,
+        buttonWidth: '340px',
+        onChange: function () {
+            $.uniform.update();
+        }
+    });
 </script>
+
+<?php
+$parent_cat = $sub_cat = [];
+if (isset($offer_category_data)) {
+    $parent_cat = array_column($offer_category_data, 'id_category');
+    $sub_cat = array_column($offer_category_data, 'id_sub_category');
+}
+?>

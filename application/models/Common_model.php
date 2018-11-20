@@ -600,7 +600,7 @@ class Common_model extends CI_Model {
         $randname = time() . '.' . $extension;
 
         if (in_array($extension, array('jpeg', 'jpg', 'png')))
-            $randname = time() . '_image.' . $extension;        
+            $randname = time() . '_image.' . $extension;
 
         if (is_null($file_extensions))
             $file_extensions = 'gif|jpg|png|jpeg|pdf';
@@ -622,7 +622,7 @@ class Common_model extends CI_Model {
         }
         return $imgname;
     }
-    
+
     function upload_video($video_name, $video_path, $file_extensions = NULL) {
         $CI = & get_instance();
         $extension = substr(strrchr($_FILES[$video_name]['name'], '.'), 1);
@@ -648,7 +648,7 @@ class Common_model extends CI_Model {
         }
         return $imgname;
     }
-    
+
     function upload_file($file_name, $file_path, $file_extensions = NULL, $new_file_name = NULL) {
         $CI = & get_instance();
         $extension = substr(strrchr($_FILES[$file_name]['name'], '.'), 1);
@@ -787,6 +787,26 @@ class Common_model extends CI_Model {
             }
         }
         return $zones_array;
+    }
+
+    function resize_image($image_size, $source_image, $new_image) {
+        $max_size = 10240;
+
+        if ($image_size > $max_size) {
+            $config['image_library'] = 'gd2';
+            $config['source_image'] = $source_image;
+            $config['maintain_ratio'] = true;
+            $config['width'] = 100;
+            $config['height'] = 100;
+            $config['new_image'] = $new_image;
+
+            $this->load->library('image_lib', $config);
+            if (!$this->image_lib->resize()) {
+                return $this->data['image_errors'] = $this->image_lib->display_errors();
+            }else{
+                return true;
+            }
+        }
     }
 
 }

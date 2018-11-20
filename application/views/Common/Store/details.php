@@ -100,6 +100,35 @@
         </div>  
         <hr>
         <div class="row">
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <label>Group : </label>
+                <span class="text-semibold">
+                    <?php
+                    echo (isset($store_details['group_text']) && !empty($store_details['group_text'])) ? $store_details['group_text'] : '-';
+                    ?>
+                </span>
+            </div>
+
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <label>Note : </label>
+                <span class="text-semibold">
+                    <?php
+                    echo (isset($store_details['note_text']) && !empty($store_details['note_text'])) ? $store_details['note_text'] : '-';
+                    ?>
+                </span>
+            </div>
+
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <label>Contact Email : </label>
+                <span class="text-semibold">
+                    <?php
+                    echo (isset($store_details['contact_email']) && !empty($store_details['contact_email'])) ? $store_details['contact_email'] : '-';
+                    ?>
+                </span>
+            </div>
+        </div>  
+        <hr>
+        <div class="row">
             <div class="col-md-6 col-sm-12 col-xs-12">                
                 <h6 class="text-semibold">Business Categories : </h6>
                 <?php if (isset($store_categories) && sizeof($store_categories) > 0) { ?>
@@ -115,11 +144,44 @@
                             </li>                                            
                         <?php } ?>
                     </ul>
-                <?php
+                    <?php
                 } else {
                     echo 'No results found';
                 }
                 ?>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">                
+                <h6 class="text-semibold">Contact Numbers : </h6>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Telephone Number</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if (isset($store_contacts) && sizeof($store_contacts) > 0) {
+                            foreach ($store_contacts as $contact) {
+                                ?>
+                                <tr>
+                                    <td><?= $contact['contact_number'] ?></td>
+                                    <td><?= date('d-m-Y H:i:s', strtotime($contact['created_date'])) ?></td>
+                                </tr>
+                                <?php
+                            }
+                        } else {
+                            ?>
+                            <tr>
+                                <td colspan="2" class="text-center">No contact(s) found</td>
+                            </tr>
+                        <?php }
+                        ?>
+                    </tbody>
+                </table>
             </div>
         </div>                
     </div>                    

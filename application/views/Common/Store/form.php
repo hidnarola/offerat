@@ -56,6 +56,22 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
+                                        <label>Group</label>
+                                        <div>
+                                            <input type="text" class="form-control text-length" name="group_text" id="group_text"  placeholder="Group that the store belong to" value="<?php echo (isset($store_details['group_text'])) ? $store_details['group_text'] : set_value('group_text'); ?>">
+                                        </div>
+                                    </div>        
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Notes</label>
+                                        <div>
+                                            <input type="text" class="form-control text-length" name="note_text" id="note_text"  placeholder="Notes" value="<?php echo (isset($store_details['note_text'])) ? $store_details['note_text'] : set_value('note_text'); ?>">
+                                        </div>
+                                    </div>        
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
                                         <label> </label>
                                         <div>
                                             <?php
@@ -109,9 +125,10 @@
                                     </div> 
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>Mobile Number</label>
+                                            <label>Contact Number</label>
                                             <div>
-                                                <input type="text" class="form-control" name="mobile" id="mobile"  placeholder="Mobile Number" value="<?php echo (isset($store_details['mobile'])) ? $store_details['mobile'] : set_value('mobile'); ?>">
+                                                <input type="text" class="form-control number-only" name="mobile" id="mobile"  placeholder="Contact Number" value="<?php echo (isset($store_details['mobile'])) ? $store_details['mobile'] : set_value('mobile'); ?>">
+                                                <label id="mobile-error" class="validation-error-label"></label>
                                             </div>
                                         </div>
                                     </div>
@@ -120,13 +137,6 @@
                         <?php } ?>
                         <fieldset class="content-group">
                             <legend class="text-bold">Business</legend>
-                            <div class="col-xs-12">                                                                
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <button id="category_selection_btn" type="button" class="pull-left margin-left-5 btn-primary labeled"><b><i class="icon-plus22"></i></b>Add More Category</button>
-                                    </div>
-                                </div>
-                            </div>
                             <div id="category_selection_wrapper" class="clear-float row_add_div">
                                 <?php
                                 $categoryCloneNumber = 1;
@@ -219,6 +229,14 @@
                                     </div>
                                 <?php } ?>
                             </div>
+
+                            <div class="col-xs-12">                                                                
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <button id="category_selection_btn" type="button" class="pull-left margin-left-5 btn-primary labeled"><b><i class="icon-plus22"></i></b>Add More Category</button>
+                                    </div>
+                                </div>
+                            </div>
                         </fieldset>                            
                         <?php
                         $storeLocationCloneNumber = 1;
@@ -241,11 +259,6 @@
                                             </div>
                                         </div>
                                     </div> 
-                                    <div class="col-md-5">
-                                        <div class="form-group">
-                                            <button id="location_btn" type="button" class="pull-left margin-left-5 btn-primary labeled"><b><i class="icon-plus22"></i></b>Add More Branch</button>
-                                        </div>
-                                    </div>
                                 </div>
                                 <div id="location_wrapper" class="clear-float row_add_div"> 
                                     <?php
@@ -292,6 +305,13 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <div>
+                                                            <input type="text" class="form-control text-length" name="branch_0" id="branch_0" placeholder="Branch" value="<?php echo set_value('branch_0'); ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <div>
                                                             <input type="text" class="form-control" name="latitude_0" id="latitude_0" placeholder="Latitude" value="<?php echo set_value('latitude_0'); ?>">
                                                         </div>
                                                     </div>
@@ -303,7 +323,22 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-2">
+                                                    <div class="form-group">                                                         
+                                                        <div>
+                                                            <input type="text" class="form-control number-only" name="telephone_0" id="telephone_0" placeholder="Telephone" value="<?php echo set_value('telephone_0'); ?>">
+                                                            <label id="telephone_0-error" class="validation-error-label"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">                                                         
+                                                        <div>
+                                                            <input type="email" class="form-control" name="email_0" id="email_0" placeholder="Email" value="<?php echo set_value('email_0'); ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
                                                     <div class="form-group">                                        
                                                         <div>
                                                             <button type="button" class="btn btn-danger btn-icon location_remove_btn" id="location_remove_btn_0" character="" data-clone-number="0"><i class="icon-cross3"></i></button>
@@ -315,6 +350,100 @@
                                     <?php } ?>
                                 </div>
 
+                                <div class="col-xs-12">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <button id="location_btn" type="button" class="pull-left margin-left-5 btn-primary labeled"><b><i class="icon-plus22"></i></b>Add More Branch</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="content-group">
+                                <div class="col-md-12">
+                                    <div class="col-md-12">
+                                        <label>Contact Number</label>
+                                    </div>
+
+                                    <div id="contact_number_wrapper" class="clear-float row_add_div">
+                                        <?php
+                                        $contactCloneNumber = 1;
+
+                                        if (isset($store_contacts) && count($store_contacts) > 0) {
+                                            foreach ($store_contacts as $contact_key => $contact) {
+                                                ?>
+                                                <div id="contact_number_block_<?= $contact_key ?>" data-clone-number="<?= $contact_key ?>" class="clear-float col-md-4">
+                                                    <div class="business_category_div">                                                                                
+                                                        <div class="col-md-10">
+                                                            <div class="form-group">
+                                                                <div>
+                                                                    <input type="hidden" name="existed_store_contact_id_<?= $contact['id_store_contact'] ?>" id="existed_store_contact_id_<?= $contact['id_store_contact'] ?>" value="<?php echo $contact['id_store_contact']; ?>">
+                                                                    <input type="text" class="form-control number-only" name="existed_store_contact_number_<?= $contact['id_store_contact'] ?>" id="existed_store_contact_number_<?= $contact['id_store_contact'] ?>" placeholder="Telephone" value="<?php echo $contact['contact_number']; ?>">
+                                                                    <label id="existed_store_contact_number_<?= $contact['id_store_contact'] ?>-error" class="validation-error-label"></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">                                        
+                                                                <div>
+                                                                    <button type="button" class="btn btn-danger btn-icon contact_number_remove_btn" id="contact_remove_btn_<?= $contact_key ?>" character="" data-clone-number="<?= $contact_key ?>"><i class="icon-cross3"></i></button>
+                                                                </div>
+                                                            </div>        
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <?php
+                                                $contactCloneNumber++;
+                                            }
+                                        } else {
+                                            ?> 
+                                            <div id="contact_number_block_0" data-clone-number="0" class="clear-float col-md-4 ">
+                                                <div class="business_category_div">                                                                                
+                                                    <div class="col-md-10">
+                                                        <div class="form-group">
+                                                            <div>
+                                                                <input type="text" class="form-control number-only" name="contact_number_0" id="contact_number_0" placeholder="Telephone" value="<?php echo set_value('contact_number_0'); ?>">
+                                                                <label id="contact_number_0-error" class="validation-error-label"></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">                                        
+                                                            <div>
+                                                                <button type="button" class="btn btn-danger btn-icon contact_number_remove_btn" id="contact_remove_btn_0" character="" data-clone-number="0"><i class="icon-cross3"></i></button>
+                                                            </div>
+                                                        </div>        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <button id="add_contact_number_btn" type="button" class="pull-left margin-left-5 btn-primary labeled"><b><i class="icon-plus22"></i></b>Add More Number</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="content-group">     
+                                <div class="col-xs-12">
+                                    <div class="col-md-3">
+                                        <label>Contact Email</label>
+                                        <div class="col-xs-12">
+                                            <div class="form-group">
+                                                <div>
+                                                    <input type="email" class="form-control" name="contact_email" id="contact_email" placeholder="Contact Email" value="<?php echo (isset($store_details['contact_email'])) ? $store_details['contact_email'] : set_value('contact_email'); ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>     
+                            <fieldset class="content-group">     
                                 <div class="col-xs-12">
                                     <div class="col-md-3">
                                         <div class="form-group">
@@ -347,7 +476,7 @@
                             </fieldset>
                         <?php } ?>
 
-                        <fieldset class="content-group">
+                        <fieldset class="content-group hide">
                             <legend class="text-bold">Mall Presence</legend>
                             <div class="col-xs-12">
                                 <div class="col-md-5">
@@ -483,6 +612,7 @@
                         <div class="text-right">
                             <input type="hidden" name="category_count" id="category_count" value="<?php echo $categoryCloneNumber; ?>">
                             <input type="hidden" name="location_count" id="location_count" value="<?php echo $storeLocationCloneNumber; ?>">
+                            <input type="hidden" name="contact_no_count" id="contact_no_count" value="<?php echo $contactCloneNumber; ?>">
                             <input type="hidden" name="sales_trend_count" id="sales_trend_count" value="<?php echo @$salesTrendCloneNumber; ?>">
                             <a href="<?php echo $back_url ?>" class="btn bg-grey-300 btn-labeled"><b><i class="icon-arrow-left13"></i></b>Back</a>
                             <button type="submit" class="btn bg-teal btn-labeled btn-labeled-right"><b><i class="icon-arrow-right14"></i></b>Save</button>
@@ -508,6 +638,7 @@
     var categoryCloneNumber = 1;
     var locationCloneNumber = 1;
     var salesTrendNumber = 1;
+    var contactCloneNumber = 1;
 <?php if ($categoryCloneNumber > 0) { ?>
         categoryCloneNumber = '<?php echo $categoryCloneNumber; ?>';
 <?php } if ($storeLocationCloneNumber > 0) { ?>
@@ -524,10 +655,14 @@ if (isset($store_details)) {
         $(document).find('#id_country').attr('disabled', 'disabled');
 <?php } ?>
 
+<?php if ($contactCloneNumber > 0) { ?>
+        contactCloneNumber = '<?= $contactCloneNumber; ?>';
+<?php } ?>
+
     $(document).on('click', '#location_btn', function () {
 
         var countryId = '<?php echo @$country_id ?>';
-        console.log(countryId);
+//        console.log(countryId);
         $.ajax({
             method: 'POST',
             url: base_url + 'storeregistration/show_mall',
@@ -618,6 +753,13 @@ if (isset($store_details)) {
         html += '<div class="col-md-2">';
         html += '<div class="form-group">';
         html += '<div>';
+        html += '<input type="text" class="form-control text-length" name="branch_' + cloneNumber + '" id="branch_' + cloneNumber + '" placeholder="Branch" value="">';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '<div class="col-md-2">';
+        html += '<div class="form-group">';
+        html += '<div>';
         html += '<input type="text" class="form-control" name="latitude_' + cloneNumber + '" id="latitude_' + cloneNumber + '" placeholder="Latitude" value="">';
         html += '</div>';
         html += '</div>';
@@ -629,10 +771,59 @@ if (isset($store_details)) {
         html += '</div>';
         html += '</div>';
         html += '</div>';
-        html += '<div class="col-md-3">';
+        html += '<div class="col-md-2">';
+        html += '<div class="form-group">';
+        html += '<div>';
+        html += '<input type="text" class="form-control number-only" name="telephone_' + cloneNumber + '" id="telephone_' + cloneNumber + '" placeholder="Telephone" value="">';
+        html += '<label id="telephone_' + cloneNumber + '-error" class="validation-error-label"></label>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '<div class="col-md-2">';
+        html += '<div class="form-group">';
+        html += '<div>';
+        html += '<input type="email" class="form-control" name="email_' + cloneNumber + '" id="email_' + cloneNumber + '" placeholder="Email" value="">';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '<div class="col-md-2">';
         html += '<div class="form-group">';
         html += '<div>';
         html += '<button type="button" class="btn btn-danger btn-icon location_remove_btn" id="location_remove_btn_' + cloneNumber + '" character="" data-clone-number="' + cloneNumber + '"><i class="icon-cross3"></i></button>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        return html;
+    }
+
+    $(document).on('click', '#add_contact_number_btn', function () {
+        var html = generateContactsBlock(contactCloneNumber);
+
+        if (contactCloneNumber <= 2) {
+            $(document).find('#contact_number_wrapper').append(html);
+            contactCloneNumber++;
+            $(document).find('#contact_no_count').val(contactCloneNumber);
+        }
+    });
+
+    function generateContactsBlock(cloneNumber) {
+        var html = '';
+        html += '<div id="contact_number_block_' + cloneNumber + '" data-clone-number="' + cloneNumber + '" class="clear-float col-md-4">';
+        html += '<div class=" business_category_div">';
+        html += '<div class="col-md-10">';
+        html += '<div class="form-group">';
+        html += '<div>';
+        html += '<input type="text" class="form-control number-only" name="contact_number_' + cloneNumber + '" id="contact_number_' + cloneNumber + '" placeholder="Telephone" value="">';
+        html += '<label id="contact_number_' + cloneNumber + '-error" class="validation-error-label"></label>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '<div class="col-md-2">';
+        html += '<div class="form-group">';
+        html += '<div>';
+        html += '<button type="button" class="btn btn-danger btn-icon contact_number_remove_btn" id="contact_remove_btn_' + cloneNumber + '" character="" data-clone-number="' + cloneNumber + '"><i class="icon-cross3"></i></button>';
         html += '</div>';
         html += '</div>';
         html += '</div>';

@@ -23,8 +23,8 @@
                             <?php
                             foreach ($store_locations as $loc) {
                                 ?>                            
-                                <div class="col-md-3 col-xs-12">
-                                    <div class="col-md-2 col-xs-2">
+                                <div class="col-md-12 col-xs-12">
+                                    <div class="col-md-1 col-xs-2">
                                         <div class="form-group">                                                
                                             <div class="checkbox img-checkbox">
                                                 <!--styled-checkbox-1-->
@@ -32,20 +32,41 @@
                                             </div>
                                         </div>        
                                     </div>
-                                    <div class="col-md-5 col-xs-5">
+                                    <div class="col-md-2 col-xs-5">
                                         <div class="form-group">                                            
                                             <div>
-                                                <input type="text" class="form-control" placeholder="Latitude"  value="<?php echo $loc['latitude']; ?>" readonly>
+                                                <input type="text" class="form-control" placeholder="Branch Name"  value="<?php echo $loc['branch_name']; ?>" readonly>
                                             </div>
                                         </div>        
                                     </div>
-                                    <div class="col-md-5 col-xs-5">
+                                    <div class="col-md-3 col-xs-5">
+                                        <div class="form-group">                                            
+                                            <div>
+                                                <input type="text" class="form-control" placeholder="Email"  value="<?php echo $loc['email']; ?>" readonly>
+                                            </div>
+                                        </div>
+                                    </div>                                     
+                                    <div class="col-md-2 col-xs-5">
+                                        <div class="form-group">                                            
+                                            <div>
+                                                <input type="text" class="form-control" placeholder="Contact Number"  value="<?php echo $loc['contact_number']; ?>" readonly>
+                                            </div>
+                                        </div>
+                                    </div>                                     
+                                    <div class="col-md-2 col-xs-5">
                                         <div class="form-group">                                            
                                             <div>
                                                 <input type="text" class="form-control" placeholder="Longitude"  value="<?php echo $loc['longitude']; ?>" readonly>
                                             </div>
                                         </div>
                                     </div>                                     
+                                    <div class="col-md-2 col-xs-5">
+                                        <div class="form-group">                                            
+                                            <div>
+                                                <input type="text" class="form-control" placeholder="Latitude"  value="<?php echo $loc['latitude']; ?>" readonly>
+                                            </div>
+                                        </div>        
+                                    </div>
                                 </div>
                             <?php } ?>
                             <div class="text-right">

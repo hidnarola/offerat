@@ -51,7 +51,8 @@ ul.ap_store_btn li:last-child {margin-bottom: 0;}
 .page-container {padding: 0 !important;}
 .panel_login_head {background: #F14150;padding: 20px;}
 .panel_login_head svg {width: 200px;height: auto;margin: 0 auto;}
-.form_login_wrapper {padding-top: 70px;padding-bottom: 70px;}
+.form_login_wrapper {padding-top: 70px;padding-bottom: 20px;}
+/*.form_login_wrapper {padding-top: 70px;padding-bottom: 70px;}*/
 .form_login_wrapper .login-form {border: 0;max-width: 400px;margin: 0px auto !important;padding: 35px 25px 30px 25px;background: #fff;width: 100% !important;border-top: 0px solid #F14150;box-shadow: 0 0 30px 0 #f4f4f4;}
 .form_login_wrapper h5 {margin: 0;padding: 0;font-size: 24px;color: #F14150;font-family: muli;line-height: normal;font-weight: 500;text-align: center;}
 a.f_pass {margin-top: 10px;float: left;font-size: 14px;color: #F14150;}
@@ -91,6 +92,8 @@ span.img_view img {width: 100%;height: 68px;}
 #fileupload table.table-striped tr td > span .ui-button {background: #fff;border: medium none transparent;border-radius: 0;bottom: 0;color: #333;padding: 0;position: relative;width: auto;vertical-align: top;margin: 0 5px 0 0;}
 #fileupload table.table-striped tr td > span .ui-button i {top: -1px;font-size: 14px;}
 .fileupload-buttonbar .btn, .fileupload-buttonbar .toggle {margin: 0 10px 10px 0;float: left;}
+span.btn.btn-success.fileinput-button.ui-button.ui-corner-all.ui-widget.catalog-span {margin: -79px 10px 10px 0px;float: left;}
+.catalog-image-form-control {margin-top: -45px;}
 #fileupload table.table-striped tr.template-upload canvas {margin: 5px auto 4px;width: 70px;}
 #fileupload table.table-striped tr.template-upload button.ui-button {position: absolute;bottom: -13px;background: transparent;left: 50%;margin-left: -7px;}
 #fileupload table.table-striped tr.template-upload span.text-danger {font-size: 12px;position: absolute;left: 50%;bottom: -23px;margin-left: -54px;width: 100%;}
@@ -144,6 +147,12 @@ ul.ul_list_wrapper li img {width: 100%;}
 .checkbox.img-checkbox {margin: 0; padding: 0; position: absolute; top: 10px;left: 10px;}
 /*.ui-state-active, .ui-state-active:hover{background-color: #26A69A;color: #fff;border-radius: 3px;}*/
 .AnyTime-dom-btn-empty {display: table-cell;}
+
+.dataTables_wrapper .dt-buttons { float: none; text-align: center; }
+li.sub-category {margin-left: 35px !important;}
+.multiselect-container {
+    width: 100%;
+}
 
 /** media start here ***/
 @media (max-width:1024px){

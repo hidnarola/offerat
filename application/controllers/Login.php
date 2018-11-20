@@ -4,13 +4,36 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Login extends CI_Controller {
 
-    public function __construct() {
+    public $fb;
+
+    function __construct() {
         parent::__construct();
+
+        require_once 'vendor/facebook/php-sdk-v4/src/Facebook/autoload.php';
+
+        // now we only need to build the object...
+        $this->fb = new Facebook\Facebook([
+            'app_id' => $this->config->item('facebook_app_id'),
+            'app_secret' => $this->config->item('facebook_app_secret'),
+            'default_graph_version' => 'v2.5'
+        ]);
+
         $this->load->model('Common_model', '', TRUE);
         $this->load->model('Email_template_model', '', TRUE);
+        $this->load->helper('html');
     }
 
     public function index() {
+        $helper = $this->fb->getRedirectLoginHelper();
+        $permissions = ['public_profile', 'email'];
+
+        $img = array(
+            'src' => 'assets/images/icons/fb-sign-in-button.png',
+            'alt' => 'Login With Facebook',
+            'width' => '170px'
+        );
+
+        $this->data['facebook_url'] = anchor($helper->getLoginUrl(base_url().'/user/facebook', $permissions), img($img));
 
         is_logged_in();
         $this->data['title'] = $this->data['page_header'] = 'Login';

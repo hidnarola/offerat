@@ -23,8 +23,7 @@ class Notifications extends MY_Controller {
      */
 
     public function index($notification_type = NULL, $list_type = NULL) {
-
-        if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements')) && (($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming'))) || ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming', 'expired'))))) {
+        if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements', 'catalogs')) && (($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming'))) || ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming', 'expired'))))) {
 
             $list_url = '';
             $add_url = '';
@@ -49,6 +48,7 @@ class Notifications extends MY_Controller {
                 $filter_list_url = 'mall-store-user/filter_notifications/' . $notification_type . '/' . $list_type;
                 $notification_details_url = 'mall-store-user/notifications/get_notification_details/';
             }
+
 
             $this->bread_crum[] = array(
                 'url' => '',
@@ -78,7 +78,7 @@ class Notifications extends MY_Controller {
      */
     public function filter_notifications($notification_type = NULL, $list_type = NULL) {
 
-        if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements')) && (($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming'))) || ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming', 'expired'))))) {
+        if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements', 'catalogs')) && (($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming'))) || ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming', 'expired'))))) {
 
             $date = date('Y-m-d h:i:s');
             $current_time_zone_today_date = new DateTime($date);
@@ -105,6 +105,8 @@ class Notifications extends MY_Controller {
                 $filter_array['where'][tbl_offer_announcement . '.type'] = OFFER_OFFER_TYPE;
             elseif ($notification_type == 'announcements')
                 $filter_array['where'][tbl_offer_announcement . '.type'] = ANNOUNCEMENT_OFFER_TYPE;
+            elseif ($notification_type == 'catalogs')
+                $filter_array['where'][tbl_offer_announcement . '.type'] = CATALOG_OFFER_TYPE;
 
             if ($notification_type == 'offers') {
                 if (!is_null($list_type)) {
@@ -162,7 +164,7 @@ class Notifications extends MY_Controller {
 
     public function save($notification_type = NULL, $id = NULL, $list_type = NULL) {
 
-        if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements'))) {
+        if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements', 'catalogs'))) {
             $image_count = 0;
             $max_image_upload_count = MAX_OFFER_IMAGE_UPLOAD;
             $m_name = $media_name = '';
@@ -175,6 +177,9 @@ class Notifications extends MY_Controller {
             $upload_url = '';
             $images_list_url = '';
             $remove_image_url = '';
+            $offer_category_data = array();
+            $data_last_posted_offer = array();
+
             if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
                 $back_url = 'country-admin/notifications/' . $notification_type . '/' . $list_type;
                 $upload_url = 'country-admin/upload/index';
@@ -225,10 +230,35 @@ class Notifications extends MY_Controller {
                     $where_image = array('is_delete' => IS_NOT_DELETED_STATUS, 'id_offer' => $id);
                     $image_count = $this->Common_model->master_count(tbl_offer_announcement_image, $where_image);
                     $max_image_upload_count = $max_image_upload_count - $image_count;
+
+                    //Get Category-Sub Category Details
+                    $select_offer_category = array(
+                        'table' => tbl_store_offer_category,
+                        'where' => array(
+                            'is_delete' => IS_NOT_DELETED_STATUS,
+                            'id_offer_announcement' => $id
+                        )
+                    );
+
+                    $offer_category_data = $this->Common_model->master_select($select_offer_category);
                 } else {
                     redirect($back_url);
                 }
             } else {
+                if ($notification_type == "announcements" || $notification_type == "offers") {
+                    //Get Category-Sub Category Details
+                    $select_last_posted_offer = array(
+                        'table' => tbl_offer_announcement,
+                        'where' => array(
+                            'offer_type !=' => CATALOG_OFFER_TYPE,
+                            'is_delete' => IS_NOT_DELETED_STATUS,
+                        ),
+                        'order_by' => array('id_offer' => 'DESC'),
+                    );
+
+                    $data_last_posted_offer = $this->Common_model->master_single_select($select_last_posted_offer);
+                }
+
                 $this->bread_crum[] = array(
                     'url' => '',
                     'title' => 'Add ' . ucfirst($notification_type),
@@ -238,8 +268,8 @@ class Notifications extends MY_Controller {
             }
 
             if ($this->input->post()) {
+                $sub_category_id = $this->input->post('sub_category_id');
 
-//                pr($_POST, 1);
                 $validate_fields = array(
                     'store_mall_id',
                     'offer_type',
@@ -310,6 +340,8 @@ class Notifications extends MY_Controller {
                         $date = date('Y-m-d h:i:s');
                         $store_id = 0;
                         $mall_id = 0;
+                        $type = '';
+
                         $store_mall_id = $this->input->post('store_mall_id', TRUE);
                         $store_mall_text = explode('_', $store_mall_id);
                         if ($store_mall_text[0] == 'store')
@@ -336,8 +368,16 @@ class Notifications extends MY_Controller {
                             $content = '';
                         }
 
+                        if ($notification_type == 'offers') {
+                            $type = OFFER_OFFER_TYPE;
+                        } elseif ($notification_type == 'announcements') {
+                            $type = ANNOUNCEMENT_OFFER_TYPE;
+                        } elseif ($notification_type == 'catalogs') {
+                            $type = CATALOG_OFFER_TYPE;
+                        }
+
                         $notification_data = array(
-                            'type' => ($notification_type == 'offers') ? OFFER_OFFER_TYPE : ANNOUNCEMENT_OFFER_TYPE,
+                            'type' => $type,
                             'offer_type' => $offer_type,
                             'id_mall' => $mall_id,
                             'id_store' => $store_id,
@@ -365,6 +405,12 @@ class Notifications extends MY_Controller {
                             $notification_data['modified_date'] = $date;
                             $is_updated = $this->Common_model->master_update(tbl_offer_announcement, $notification_data, $where);
                             if ($is_updated) {
+                                if (!empty($this->input->post('sub_category_id'))) {
+                                    $this->db->where('id_offer_announcement', $id);
+                                    $this->db->delete(tbl_store_offer_category);
+
+                                    $notification_id = $id;
+                                }
                                 $this->upload_images($id, $date, $max_image_upload_count, $image_count + 1);
                                 $this->session->set_flashdata('success_msg', ucfirst($notification_type) . ' Updated Successfully!');
                             }
@@ -375,9 +421,32 @@ class Notifications extends MY_Controller {
 
                             $notification_id = $this->Common_model->master_save(tbl_offer_announcement, $notification_data);
                             if ($notification_id > 0) {
-
                                 $this->upload_images($notification_id, $date, $max_image_upload_count, 1);
                                 $this->session->set_flashdata('success_msg', ucfirst($notification_type) . ' Added Successfully!');
+                            }
+                        }
+
+                        if (!empty($this->input->post('sub_category_id'))) {
+                            $id = $notification_id;
+
+                            foreach ($sub_category_id as $sub_cat_id) {
+                                if (!empty($sub_cat_id)) {
+                                    $sub_main_category_id = explode('|', $sub_cat_id);
+
+                                    $category_id = $sub_main_category_id[0];
+                                    $sub_category_id = $sub_main_category_id[1];
+
+                                    $store_offer_category_data = array(
+                                        'id_offer_announcement' => $id,
+                                        'id_category' => $category_id,
+                                        'id_sub_category' => $sub_category_id,
+                                        'created_date' => $date,
+                                        'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
+                                        'is_delete' => IS_NOT_DELETED_STATUS,
+                                    );
+
+                                    $this->Common_model->master_save(tbl_store_offer_category, $store_offer_category_data);
+                                }
                             }
                         }
                         redirect($back_url);
@@ -435,6 +504,9 @@ class Notifications extends MY_Controller {
             $this->data['images_list_url'] = $images_list_url;
             $this->data['remove_image_url'] = $remove_image_url;
             $this->data['max_image_upload_count'] = $max_image_upload_count;
+            $this->data['offer_category_data'] = $offer_category_data;
+            $this->data['data_last_posted_offer'] = $data_last_posted_offer;
+            
             $this->template->load('user', 'Common/Notifications/form', $this->data);
 //            $this->template->load('user', 'Common/Notifications/test', $this->data);
         } else {
@@ -647,7 +719,7 @@ class Notifications extends MY_Controller {
 
     function delete($notification_type = NULL, $id = null, $list_type = NULL) {
         $can_delete = TRUE;
-        if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements')) && !is_null($id) && $id > 0) {
+        if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements', 'catalogs')) && !is_null($id) && $id > 0) {
 
             $select_notification = array(
                 'table' => tbl_offer_announcement,
@@ -808,6 +880,11 @@ class Notifications extends MY_Controller {
                 $edit_url = 'country-admin/notifications/announcements/save/' . $id;
                 $edit_label = 'Edit Announcement';
                 $notification_type = 'announcements';
+            } elseif ($image_list[0]['type'] == CATALOG_OFFER_TYPE) {
+                $back_url = 'country-admin/notifications/catalogs/';
+                $edit_url = 'country-admin/notifications/catalogs/save/' . $id;
+                $edit_label = 'Edit Catalog';
+                $notification_type = 'catalogs';
             }
 
             if ($this->input->post()) {
@@ -861,6 +938,102 @@ class Notifications extends MY_Controller {
             }
             return true;
         }
+    }
+
+    public function get_categories() {
+        $store_category_data = array();
+        $offer_category_data = array();
+        $parent_cat = $sub_cat = [];
+        $main_selected = '';
+        $html_data = '';
+
+        $store_id = $this->input->post('store_id');
+        $offer_id = $this->input->post('offer_id');
+
+        if ($offer_id > 0) {
+            //Get Category-Sub Category Details
+            $select_offer_category = array(
+                'table' => tbl_store_offer_category,
+                'where' => array(
+                    'is_delete' => IS_NOT_DELETED_STATUS,
+                    'id_offer_announcement' => $offer_id
+                )
+            );
+
+            $offer_category_data = $this->Common_model->master_select($select_offer_category);
+        }
+
+        $select_category = array(
+            'table' => tbl_store_category . ' sc',
+            'fields' => array('sc.id_store,sc.id_category,sc.id_sub_category,c.category_name,subc.sub_category_name'),
+            'where' => array('sc.id_store' => $store_id),
+            'join' => array(
+                array(
+                    'table' => tbl_category . ' as c',
+                    'condition' => 'sc.id_category = c.id_category',
+                    'join' => 'left',
+                ),
+                array(
+                    'table' => tbl_sub_category . ' as subc',
+                    'condition' => 'subc.id_sub_category = sc.id_sub_category AND sc.id_sub_category != 0',
+                    'join' => 'left',
+                )
+            ),
+        );
+
+        $categories = $this->Common_model->master_select($select_category);
+
+        foreach ($categories as $value) {
+            if (!isset($store_category_data[$value['id_category']])) {
+                $store_category_data[$value['id_category']] = ['category_name' => $value['category_name'], 'category_id' => $value['id_category']];
+            }
+
+            if ($value['id_sub_category'] > 0) {
+                $store_category_data[$value['id_category']]['subs'][] = ['sub_category_name' => $value['sub_category_name'], 'sub_category_id' => $value['id_sub_category']];
+            } else {
+                $store_category_data[$value['id_category']]['subs'][] = [];
+            }
+        }
+
+        if (isset($offer_category_data)) {
+            $parent_cat = array_column($offer_category_data, 'id_category');
+            $sub_cat = array_column($offer_category_data, 'id_sub_category');
+        }
+        if (!empty($store_category_data)) {
+            foreach ($store_category_data as $category) {
+                if (empty($category['subs'])) {
+                    $val = $category['category_id'] . '|0';
+                } else {
+                    $val = '';
+                }
+
+                $main_selected = '';
+                if (!empty($parent_cat)) {
+                    if (in_array($category['category_id'], $parent_cat))
+                        $main_selected = 'selected';
+                }else {
+                    $main_selected = 'selected';
+                }
+
+                $html_data .= '<option class="category-option" value="' . $val . '" ' . $main_selected . ' >' . $category['category_name'] . '</option>';
+
+                if ($category['subs']) {
+                    foreach ($category['subs'] as $sub_category) {
+                        $sub_selected = '';
+                        if (!empty($sub_cat)) {
+                            if (in_array($sub_category['sub_category_id'], $sub_cat))
+                                $sub_selected = 'selected';
+                        }else {
+                            $sub_selected = 'selected';
+                        }
+                        $html_data .= '<option class="sub-category" ' . $sub_selected . ' value="' . $category['category_id'] . '|' . $sub_category['sub_category_id'] . '">' . $sub_category['sub_category_name'] . '</option>';
+                    }
+                }
+            }
+        }
+
+        echo $html_data;
+        exit;
     }
 
 }

@@ -7,6 +7,7 @@ class Malls extends MY_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('Common_model', '', TRUE);
+        $this->load->model('Email_template_model', '', TRUE);
 
         $this->bread_crum[] = array(
             'url' => '',
@@ -611,31 +612,15 @@ class Malls extends MY_Controller {
     function delete($id) {
 
         if (!is_null($id) && $id > 0 && $this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+            $update_data = array('is_delete' => IS_DELETED_STATUS);
+            $where_data = array('is_delete' => IS_NOT_DELETED_STATUS, 'id_mall' => $id);
 
-            $select_mall_location = array(
-                'table' => tbl_mall_location,
-                'where' => array(
-                    'is_delete' => IS_NOT_DELETED_STATUS,
-                    'id_location' => $id,
-                    'location_type' => MALL_LOCATION_TYPE
-                )
-            );
+            $is_updated = $this->Common_model->master_update(tbl_mall, $update_data, $where_data);
+            if ($is_updated)
+                $this->session->set_flashdata('success_msg', 'Mall deleted successfully.');
+            else
+                $this->session->set_flashdata('error_msg', 'Invalid request sent to delete Mall. Please try again later.');
 
-            $mall_locations = $this->Common_model->master_single_select($select_mall_location);
-
-            if (isset($mall_locations) && sizeof($mall_locations) > 0) {
-
-                $this->session->set_flashdata('error_msg', 'Store is using this Mall, You can not delete this Mall.');
-            } else {
-                $update_data = array('is_delete' => IS_DELETED_STATUS);
-                $where_data = array('is_delete' => IS_NOT_DELETED_STATUS, 'id_mall' => $id);
-
-                $is_updated = $this->Common_model->master_update(tbl_mall, $update_data, $where_data);
-                if ($is_updated)
-                    $this->session->set_flashdata('success_msg', 'Mall deleted successfully.');
-                else
-                    $this->session->set_flashdata('error_msg', 'Invalid request sent to delete Mall. Please try again later.');
-            }
             redirect('country-admin/malls');
         } else {
             override_404();

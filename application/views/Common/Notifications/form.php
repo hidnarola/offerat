@@ -34,14 +34,14 @@
                                             <?php if (isset($stores_list) && sizeof($stores_list) > 0) { ?>
                                                 <optgroup label="Stores">
                                                     <?php foreach ($stores_list as $list) { ?>
-                                                        <option value="store_<?php echo $list['id_store']; ?>" <?php echo (isset($notification_data) && isset($notification_data['id_store']) && $list['id_store'] == $notification_data['id_store']) ? 'selected=selected' : ''; ?> <?php echo ($list['id_store'] == $store_id) ? 'selected=selected' : ''; ?>><?php echo $list['store_name']; ?></option>
+                                                        <option data-id="<?= $list['id_store']; ?>" value="store_<?php echo $list['id_store']; ?>" <?php echo (isset($notification_data) && isset($notification_data['id_store']) && $list['id_store'] == $notification_data['id_store']) ? 'selected=selected' : ''; ?> <?php echo ($list['id_store'] == $store_id) ? 'selected=selected' : ''; ?>><?php echo $list['store_name']; ?></option>
                                                     <?php } ?>
                                                 </optgroup>
                                             <?php } ?>
                                             <?php if (isset($malls_list) && sizeof($malls_list) > 0) { ?>
                                                 <optgroup label="Malls">
                                                     <?php foreach ($malls_list as $list) { ?>
-                                                        <option value="mall_<?php echo $list['id_mall']; ?>" <?php echo (isset($notification_data) && isset($notification_data['id_mall']) && $list['id_mall'] == $notification_data['id_mall']) ? 'selected=selected' : ''; ?> <?php echo ($list['id_mall'] == $mall_id) ? 'selected=selected' : ''; ?>><?php echo $list['mall_name']; ?></option>
+                                                        <option data-id="<?= $list['id_mall']; ?>" value="mall_<?php echo $list['id_mall']; ?>" <?php echo (isset($notification_data) && isset($notification_data['id_mall']) && $list['id_mall'] == $notification_data['id_mall']) ? 'selected=selected' : ''; ?> <?php echo ($list['id_mall'] == $mall_id) ? 'selected=selected' : ''; ?>><?php echo $list['mall_name']; ?></option>
                                                     <?php } ?>
                                                 </optgroup>
                                             <?php } ?>
@@ -80,22 +80,32 @@
                                                         Image(s)
                                                     </label>
                                                 </div>
-                                                <div class="radio-inline">
-                                                    <label>
-                                                        <input type="radio" name="offer_type" class="styled offer_type" value="<?php echo VIDEO_OFFER_CONTENT_TYPE; ?>" <?php echo (isset($notification_data) && isset($notification_data['offer_type']) && $notification_data['offer_type'] == VIDEO_OFFER_CONTENT_TYPE) ? 'checked="checked"' : ''; ?>>
-                                                        Video
-                                                    </label>
-                                                </div>
-                                                <div class="radio-inline">
-                                                    <label>
-                                                        <input type="radio" name="offer_type" class="styled offer_type" value="<?php echo TEXT_OFFER_CONTENT_TYPE; ?>" <?php echo (isset($notification_data) && isset($notification_data['offer_type']) && $notification_data['offer_type'] == TEXT_OFFER_CONTENT_TYPE) ? 'checked="checked"' : ''; ?>>
-                                                        Text
-                                                    </label>
-                                                </div>
+                                                <?php if (isset($notification_type) && $notification_type != 'catalogs') { ?>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="offer_type" class="styled offer_type" value="<?php echo VIDEO_OFFER_CONTENT_TYPE; ?>" <?php echo (isset($notification_data) && isset($notification_data['offer_type']) && $notification_data['offer_type'] == VIDEO_OFFER_CONTENT_TYPE) ? 'checked="checked"' : ''; ?>>
+                                                            Video
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="offer_type" class="styled offer_type" value="<?php echo TEXT_OFFER_CONTENT_TYPE; ?>" <?php echo (isset($notification_data) && isset($notification_data['offer_type']) && $notification_data['offer_type'] == TEXT_OFFER_CONTENT_TYPE) ? 'checked="checked"' : ''; ?>>
+                                                            Text
+                                                        </label>
+                                                    </div>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                     <?php } ?>
                                 </div>
+
+                                <?php
+                                $is_hide = '';
+
+//                                if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
+//                                    $is_hide = 'hide';
+//                                }
+                                ?>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Post Date & Time <span class="text-danger">*</span></label>
@@ -147,6 +157,43 @@
                                     <div class="form-group offer_video_section">
                                         <label>Upload Video <span class="text-danger">*</span></label>
                                         <div>
+                                            <div class="form-group">
+                                                <div>
+                                                    <?php if (isset($notification_data['media_name']) && !empty($notification_data['media_name'])) { ?>
+                                                        <div class="radio-inline">
+                                                            <label>
+                                                                <input type="radio" name="video_file_type" class="styled video_file_type" required="required" checked value="url">
+                                                                URL
+                                                            </label>
+                                                        </div>
+                                                    <?php } elseif (isset($notification_data['video_url']) && !empty($notification_data['video_url'])) { ?>
+                                                        <div class="radio-inline">
+                                                            <label>
+                                                                <input type="radio" name="video_file_type" class="styled video_file_type" value="file" checked>
+                                                                File
+                                                            </label>
+                                                        </div>
+                                                    <?php } else { ?> 
+                                                        <div class="radio-inline">
+                                                            <label>
+                                                                <input type="radio" name="video_file_type" class="styled video_file_type" required="required" checked value="url">
+                                                                URL
+                                                            </label>
+                                                        </div>
+                                                        <div class="radio-inline">
+                                                            <label>
+                                                                <input type="radio" name="video_file_type" class="styled video_file_type" value="file">
+                                                                File
+                                                            </label>
+                                                        </div>
+                                                    <?php } ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="url_type">
+                                            <input type="url" class="form-control" placeholder="Video URL" name="video_url" id="video_url" required="required" value="<?= (isset($notification_data['video_url']) && !empty($notification_data['video_url'])) ? $notification_data['video_url'] : '' ?>" />
+                                        </div>
+                                        <div id="file_type" class="hide">
                                             <input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name" accept="video/*">
                                             <input type="hidden" name="is_valid" id="is_valid" value="1">
                                             <div id="media_errors_wrapper" class="alert alert-danger alert-bordered display-none">
@@ -170,12 +217,29 @@
                                                 </div>
                                                 <?php
                                             }
+                                        } else if (isset($notification_data['video_url']) && !empty($notification_data['video_url'])) {
+                                            ?>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div>
+                                                        <a href="<?php echo $notification_data['video_url'] ?>" class="btn btn-info btn-lg" target="_blank"><i class="icon-video-camera2"></i> View Video</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <?php
                                         }
                                         ?>
                                     </div>
                                     <div class="form-group offer_image_section desktop_view">
                                         <label>Upload Image(s)<span class="text-danger">*</span></label>                                    
                                     </div>                                    
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group" id="store_category_div">
+                                        <label>Select Category</label>
+                                        <select class="form-control sub_category_id" id="sub_category_id" name="sub_category_id[]" required="required" multiple>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         <?php } else { ?>
@@ -219,45 +283,51 @@
                                                 <input type="text" class="form-control" placeholder="Expire Date" name="expiry_time" id="expire_date_time" value="<?php echo $expiry_time; ?>">                                                    
                                             </div>
                                         </div>
-                                    <?php } else { ?>
-                                        <div class="form-group">
-                                            <label>Expire Date <span class="text-danger">*</span></label>
-                                            <div>
+                                        <?php
+                                    } else {
+                                        if (isset($notification_type) && $notification_type != 'catalogs') {
+                                            ?>
+                                            <div class="form-group">
+                                                <label>Expire Date <span class="text-danger">*</span></label>
                                                 <div>
-                                                    <label>
-                                                        <input type="radio" name="expire_time_type" id="fixed_expire_date" class="styled expire_time_type" required="required"  value="<?php echo EXPIRE_TIME_FIXED; ?>" <?php echo (isset($notification_data) && isset($notification_data['expire_time_type']) && $notification_data['expire_time_type'] == EXPIRE_TIME_FIXED) ? 'checked="checked"' : (!isset($notification_data)) ? 'checked="checked"' : ''; ?>>
-                                                        Fixed expire date
-                                                    </label> 
-                                                    &nbsp;&nbsp;
-                                                    <label>
-                                                        <input type="radio" name="expire_time_type" id="limited_expire_date" class="styled expire_time_type" value="<?php echo EXPIRE_TIME_LIMITED; ?>" <?php echo (isset($notification_data) && isset($notification_data['expire_time_type']) && $notification_data['expire_time_type'] == EXPIRE_TIME_LIMITED) ? 'checked="checked"' : ''; ?>>
-                                                        Limited Offer
-                                                    </label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-btn">
-                                                            <button type="button" class="btn btn-default btn-icon" id="expire_date_icon"><i class="icon-calendar3"></i></button>
-                                                        </span>
-                                                        <?php
-                                                        $expiry_time = '';
-                                                        if (isset($notification_data) && isset($notification_data['expiry_time'])) {
-                                                            if ($notification_data['expiry_time'] == '0000-00-00 00:00:00') {
-                                                                $expiry_time = '';
+                                                    <div>
+                                                        <label>
+                                                            <input type="radio" name="expire_time_type" id="fixed_expire_date" class="styled expire_time_type" required="required"  value="<?php echo EXPIRE_TIME_FIXED; ?>" <?php echo (isset($notification_data) && isset($notification_data['expire_time_type']) && $notification_data['expire_time_type'] == EXPIRE_TIME_FIXED) ? 'checked="checked"' : (!isset($notification_data)) ? 'checked="checked"' : ''; ?>>
+                                                            Fixed expire date
+                                                        </label> 
+                                                        &nbsp;&nbsp;
+                                                        <label>
+                                                            <input type="radio" name="expire_time_type" id="limited_expire_date" class="styled expire_time_type" value="<?php echo EXPIRE_TIME_LIMITED; ?>" <?php echo (isset($notification_data) && isset($notification_data['expire_time_type']) && $notification_data['expire_time_type'] == EXPIRE_TIME_LIMITED) ? 'checked="checked"' : ''; ?>>
+                                                            Limited Offer
+                                                        </label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-btn">
+                                                                <button type="button" class="btn btn-default btn-icon" id="expire_date_icon"><i class="icon-calendar3"></i></button>
+                                                            </span>
+                                                            <?php
+                                                            $expiry_time = '';
+                                                            if (isset($notification_data) && isset($notification_data['expiry_time'])) {
+                                                                if ($notification_data['expiry_time'] == '0000-00-00 00:00:00') {
+                                                                    $expiry_time = '';
+                                                                } else {
+                                                                    $expiry_time = date_create($notification_data['expiry_time']);
+                                                                    $expiry_time = date_format($expiry_time, "Y-m-d H:i");
+                                                                    $expiry_time = date('d-m-Y H:i', strtotime(get_country_wise_date($expiry_time, $this->loggedin_user_country_data['timezone'])));
+                                                                }
                                                             } else {
-                                                                $expiry_time = date_create($notification_data['expiry_time']);
-                                                                $expiry_time = date_format($expiry_time, "Y-m-d H:i");
-                                                                $expiry_time = date('d-m-Y H:i', strtotime(get_country_wise_date($expiry_time, $this->loggedin_user_country_data['timezone'])));
-                                                            }
-                                                        } else {
 //                                                        $expiry_time = date('d-m-Y', strtotime('+10 minutes', strtotime(get_country_wise_date(date('d-m-Y'), $this->loggedin_user_country_data['timezone']))));
-                                                            $expiry_time = date('d-m-Y 23:59', strtotime('+7 days', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone']))));
-                                                        }
-                                                        ?>
-                                                        <input type="text" class="form-control" placeholder="Expire Date" name="expiry_time" id="expire_date_time" value="<?php echo $expiry_time; ?>">                                                    
-                                                    </div> 
+                                                                $expiry_time = date('d-m-Y 23:59', strtotime('+7 days', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone']))));
+                                                            }
+                                                            ?>
+                                                            <input type="text" class="form-control" placeholder="Expire Date" name="expiry_time" id="expire_date_time" value="<?php echo $expiry_time; ?>">                                                    
+                                                        </div> 
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    <?php } ?>
+                                            <?php
+                                        }
+                                    }
+                                    ?>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group offer_text_section">
@@ -266,9 +336,47 @@
                                             <textarea class="form-control" rows="5" placeholder="Type here appears in the offers section in mobile app" name="content" id="content"><?php echo (isset($notification_data['content'])) ? $notification_data['content'] : set_value('content'); ?></textarea>
                                         </div>
                                     </div>
+
                                     <div class="form-group offer_video_section">
                                         <label>Upload Video <span class="text-danger">*</span></label>
                                         <div>
+                                            <div class="form-group">
+                                                <div>
+                                                    <?php if (isset($notification_data['media_name']) && !empty($notification_data['media_name'])) { ?>
+                                                        <div class="radio-inline">
+                                                            <label>
+                                                                <input type="radio" name="video_file_type" class="styled video_file_type" required="required" checked value="url">
+                                                                URL
+                                                            </label>
+                                                        </div>
+                                                    <?php } elseif (isset($notification_data['video_url']) && !empty($notification_data['video_url'])) { ?>
+                                                        <div class="radio-inline">
+                                                            <label>
+                                                                <input type="radio" name="video_file_type" class="styled video_file_type" value="file" checked>
+                                                                File
+                                                            </label>
+                                                        </div>
+                                                    <?php } else { ?> 
+                                                        <div class="radio-inline">
+                                                            <label>
+                                                                <input type="radio" name="video_file_type" class="styled video_file_type" required="required" checked value="url">
+                                                                URL
+                                                            </label>
+                                                        </div>
+                                                        <div class="radio-inline">
+                                                            <label>
+                                                                <input type="radio" name="video_file_type" class="styled video_file_type" value="file">
+                                                                File
+                                                            </label>
+                                                        </div>
+                                                    <?php } ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="url_type">
+                                            <input type="url" class="form-control" placeholder="Video URL" name="video_url" id="video_url" required="required" value="<?= (isset($notification_data['video_url']) && !empty($notification_data['video_url'])) ? $notification_data['video_url'] : '' ?>" />
+                                        </div>
+                                        <div id="file_type" class="hide">
                                             <input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name" accept="video/*">
                                             <input type="hidden" name="is_valid" id="is_valid" value="1">
                                             <div id="media_errors_wrapper" class="alert alert-danger alert-bordered display-none">
@@ -292,6 +400,16 @@
                                                 </div>
                                                 <?php
                                             }
+                                        } else if (isset($notification_data['video_url']) && !empty($notification_data['video_url'])) {
+                                            ?>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div>
+                                                        <a href="<?php echo $notification_data['video_url'] ?>" class="btn btn-info btn-lg" target="_blank"><i class="icon-video-camera2"></i> View Video</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <?php
                                         }
                                         ?>
                                     </div>
@@ -312,16 +430,21 @@
                                     </div>                                    
                                 </div>
 
-                                <div class="col-md-4 desktop_view">
-                                    <div class="form-group">
-                                        <label>Push Notification Summary <span class="text-danger">*</span></label>
-                                        <div>
-                                            <p class="lead emoji-picker-container">
-                                                <input type="text" class="form-control " placeholder="Appears in push notification" name="push_message" id="push_message" data-emojiable="true" value="<?php echo (isset($notification_data['push_message'])) ? $notification_data['push_message'] : set_value('push_message'); ?>">
-                                            </p>
+                                <?php if (isset($notification_type) && $notification_type != 'catalogs') { ?>
+                                    <div class="col-md-4 desktop_view">
+                                        <div class="form-group">
+                                            <label>Push Notification Summary <span class="text-danger">*</span></label>
+                                            <div>
+                                                <p class="lead emoji-picker-container">
+                                                    <input type="text" class="form-control " placeholder="Appears in push notification" name="push_message" id="push_message" data-emojiable="true" value="<?php echo (isset($notification_data['push_message'])) ? $notification_data['push_message'] : set_value('push_message'); ?>">
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>	
+
+                                    <?php
+                                }
+                                ?>
                             </div>                            
                         <?php } ?>
 
@@ -330,8 +453,8 @@
                             <button type="submit" id="offer_submit" name="offer_submit" class="btn bg-teal btn-labeled btn-labeled-right"><b><i class="icon-arrow-right14"></i></b>Save</button>
                             <input type="hidden" name="uploaded_images_data" id="uploaded_images_data">
                         </div>
-                        <?php if (isset($notification_type) && $notification_type == 'offers') { ?>
-                            <div class="col-xs-12">                            
+                        <?php if (isset($notification_type) && $notification_type == 'offers' || $notification_type == 'catalogs') { ?>
+                            <div class="col-xs-12 <?= ($notification_type == 'catalogs') ? 'catalog-image-form-control' : '' ?>">                            
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Optional Text</label>
@@ -342,6 +465,16 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <?php if ($notification_type == 'offers') { ?> 
+                                    <div class="col-md-4">
+                                        <div class="form-group" id="store_category_div">
+                                            <label>Select Category</label>
+                                            <select class="form-control sub_category_id" id="sub_category_id" name="sub_category_id[]" required="required" multiple>
+                                            </select>
+                                        </div>
+                                    </div>
+                                <?php } ?>
                             </div>
                         <?php } ?>
                     </form>                    

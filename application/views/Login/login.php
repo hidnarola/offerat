@@ -20,9 +20,12 @@
             <a href="reset-password" class="f_pass">Forgot password?</a>
             <button type="submit" class="btn btn-primary btn-block">Sign in <i class="icon-circle-right2 position-right"></i></button>
         </div>
-
     </div>
 </form>
+<div class="text-center">
+    <?= $facebook_url ?>
+</div>
+
 <script type="text/javascript">
     $(function () {
         jqueryValidate();

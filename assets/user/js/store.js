@@ -66,6 +66,7 @@ $(document).on('click', '.location_remove_btn', function () {
     var cloneNumber = $(this).data('cloneNumber');
     var character = $(this).attr('character');
     $(document).find('#mall_selection_block_' + cloneNumber).remove();
+    $(document).find('#location_block_' + cloneNumber).remove();
     $(document).find('#location_count').val(cloneNumber);
 });
 $(document).on('click', '.sales_trend_remove_btn', function () {
@@ -73,6 +74,11 @@ $(document).on('click', '.sales_trend_remove_btn', function () {
     var character = $(this).attr('character');
     $(document).find('#sales_trend_block_' + cloneNumber).remove();
     $(document).find('#sales_trend_count').val(cloneNumber);
+});
+$(document).on('click', '.contact_number_remove_btn', function () {
+    var cloneNumber = $(this).data('cloneNumber');
+    $(document).find('#contact_number_block_' + cloneNumber).remove();
+    $(document).find('#contact_no_count').val(cloneNumber);
 });
 
 function errorMgsToDefault() {
@@ -127,3 +133,31 @@ function validate_logo(control) {
         return false;
     }
 }
+
+$(document).on('keypress', '.number-only', function () {
+    var ele = $(this)[0];
+    var input_name = ele.name;
+    var text = '';
+
+    ele.onkeypress = function (e) {
+        if (isNaN(this.value + "" + String.fromCharCode(e.charCode))) {
+            $("#" + input_name + "-error").text('Please enter numeric value only');
+            return false;
+        } else {
+            $("#" + input_name + "-error").text(text);
+        }
+    }
+    ele.onpaste = function (e) {
+        e.preventDefault();
+    }
+
+    if (this.value.length > 13) {
+        return false;
+    }
+});
+
+$(document).on('keypress', '.text-length', function () {
+    if (this.value.length > 120) {
+        return false;
+    }
+});

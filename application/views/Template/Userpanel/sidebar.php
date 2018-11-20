@@ -48,6 +48,7 @@ $controller = $this->uri->segment(2);
                             <ul>
                                 <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'offers') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/offers"><i class="icon-bubble-notification"></i> <span>Offers</span></a></li>
                                 <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'announcements') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/announcements"><i class="icon-volume-medium"></i> <span>Announcements</span></a></li>
+                                <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'catalogs') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/catalogs"><i class="icon-book"></i> <span>Catalog</span></a></li>
                             </ul>
                         </li>
                         <li>
