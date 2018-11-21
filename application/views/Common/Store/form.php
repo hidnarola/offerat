@@ -801,11 +801,9 @@ if (isset($store_details)) {
     $(document).on('click', '#add_contact_number_btn', function () {
         var html = generateContactsBlock(contactCloneNumber);
 
-        if (contactCloneNumber <= 2) {
-            $(document).find('#contact_number_wrapper').append(html);
-            contactCloneNumber++;
-            $(document).find('#contact_no_count').val(contactCloneNumber);
-        }
+        $(document).find('#contact_number_wrapper').append(html);
+        contactCloneNumber++;
+        $(document).find('#contact_no_count').val(contactCloneNumber);
     });
 
     function generateContactsBlock(cloneNumber) {

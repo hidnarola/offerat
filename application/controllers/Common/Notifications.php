@@ -249,6 +249,7 @@ class Notifications extends MY_Controller {
                     //Get Category-Sub Category Details
                     $select_last_posted_offer = array(
                         'table' => tbl_offer_announcement,
+                        'fields' => array('created_date'),
                         'where' => array(
                             'offer_type !=' => CATALOG_OFFER_TYPE,
                             'is_delete' => IS_NOT_DELETED_STATUS,

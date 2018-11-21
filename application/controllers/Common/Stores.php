@@ -724,12 +724,12 @@ class Stores extends MY_Controller {
                                 $sheet_data = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
 
                                 foreach ($sheet_data as $key => $data) {
-                                    if (isset($data['A']) && isset($data['B']) && isset($data['C']) && isset($data['D']) && isset($data['E']) && !empty($data['A']) && !empty($data['B'] && !empty($data['C']) && !empty($data['D']) && !empty($data['E'])) && $key > 1) {
-                                        $branch_name = $data['A'];
-                                        $contact_number = $data['B'];
-                                        $email = $data['C'];
-                                        $latitude = $data['D'];
-                                        $longitude = $data['E'];
+                                    if (isset($data['D']) && isset($data['E']) && !empty($data['D']) && !empty($data['E']) && $key > 1) {
+                                        $branch_name = !empty($data['A']) ? $data['A'] : '';
+                                        $contact_number = !empty($data['B']) ? $data['B'] : '';
+                                        $email = !empty($data['C']) ? $data['C'] : '';;
+                                        $latitude = !empty($data['D']) ? $data['D'] : '';;
+                                        $longitude = !empty($data['E']) ? $data['E'] : '';;
 
                                         $select_location = array(
                                             'table' => tbl_store_location,
