@@ -584,6 +584,7 @@ class Stores extends MY_Controller {
                             }
                         }
 
+
                         $this->add_category_sub_category($date, $id);
                         $this->add_locations($date, $id);
                         $this->add_sales_trend($date, $id);
@@ -727,9 +728,12 @@ class Stores extends MY_Controller {
                                     if (isset($data['D']) && isset($data['E']) && !empty($data['D']) && !empty($data['E']) && $key > 1) {
                                         $branch_name = !empty($data['A']) ? $data['A'] : '';
                                         $contact_number = !empty($data['B']) ? $data['B'] : '';
-                                        $email = !empty($data['C']) ? $data['C'] : '';;
-                                        $latitude = !empty($data['D']) ? $data['D'] : '';;
-                                        $longitude = !empty($data['E']) ? $data['E'] : '';;
+                                        $email = !empty($data['C']) ? $data['C'] : '';
+                                        ;
+                                        $latitude = !empty($data['D']) ? $data['D'] : '';
+                                        ;
+                                        $longitude = !empty($data['E']) ? $data['E'] : '';
+                                        ;
 
                                         $select_location = array(
                                             'table' => tbl_store_location,
@@ -1054,8 +1058,8 @@ class Stores extends MY_Controller {
      */
 
     function add_locations($date = NULL, $store_id = NULL) {
-
         $location_count = $this->input->post('location_count', TRUE);
+
         for ($i = 0; $i <= $location_count; $i++) {
             if ($this->input->post('latitude_' . $i, TRUE) != '' && $this->input->post('longitude_' . $i, TRUE) != '') {
                 $in_store_location_data = array(
@@ -1067,11 +1071,11 @@ class Stores extends MY_Controller {
                     'email' => $this->input->post('email_' . $i, TRUE),
                     'id_location' => 0,
                     'location_type' => STORE_LOCATION_TYPE,
-                    'contact_number' => ($this->input->post('mobile', TRUE) != '') ? $this->input->post('mobile', TRUE) : ' ',
                     'created_date' => $date,
                     'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
                     'is_delete' => IS_NOT_DELETED_STATUS
                 );
+
                 $this->Common_model->master_save(tbl_store_location, $in_store_location_data);
             }
         }

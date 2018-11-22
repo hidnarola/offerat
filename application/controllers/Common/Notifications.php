@@ -178,7 +178,6 @@ class Notifications extends MY_Controller {
             $images_list_url = '';
             $remove_image_url = '';
             $offer_category_data = array();
-            $data_last_posted_offer = array();
 
             if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
                 $back_url = 'country-admin/notifications/' . $notification_type . '/' . $list_type;
@@ -245,21 +244,6 @@ class Notifications extends MY_Controller {
                     redirect($back_url);
                 }
             } else {
-                if ($notification_type == "announcements" || $notification_type == "offers") {
-                    //Get Category-Sub Category Details
-                    $select_last_posted_offer = array(
-                        'table' => tbl_offer_announcement,
-                        'fields' => array('created_date'),
-                        'where' => array(
-                            'offer_type !=' => CATALOG_OFFER_TYPE,
-                            'is_delete' => IS_NOT_DELETED_STATUS,
-                        ),
-                        'order_by' => array('id_offer' => 'DESC'),
-                    );
-
-                    $data_last_posted_offer = $this->Common_model->master_single_select($select_last_posted_offer);
-                }
-
                 $this->bread_crum[] = array(
                     'url' => '',
                     'title' => 'Add ' . ucfirst($notification_type),
@@ -269,6 +253,38 @@ class Notifications extends MY_Controller {
             }
 
             if ($this->input->post()) {
+                $store_mall_id = $this->input->post('store_mall_id', TRUE);
+
+                if ($notification_type == "catalogs") {
+                    $store_mall_text = explode('_', $store_mall_id);
+                    if ($store_mall_text[0] == 'store') {
+                        $store_mall_id = $store_mall_text[1];
+                        $field = 'id_store';
+                    }
+
+                    if ($store_mall_text[0] == 'mall') {
+                        $store_mall_id = $store_mall_text[1];
+                        $field = 'id_mall';
+                    }
+
+                    $select_last_posted_offer = array(
+                        'table' => tbl_offer_announcement,
+                        'where' => array(
+                            $field => $store_mall_id,
+                            'type' => CATALOG_OFFER_TYPE,
+                            'is_delete' => IS_NOT_DELETED_STATUS,
+                        ),
+                        'order_by' => array('id_offer' => 'DESC'),
+                    );
+
+                    $check_store_mall_catalog = $this->Common_model->master_select($select_last_posted_offer);
+
+                    if (count($check_store_mall_catalog) >= 1) {
+                        $this->session->set_flashdata('error_msg', 'Store must has only  one catalog!');
+                        redirect($back_url . '/save');
+                    }
+                }
+
                 $sub_category_id = $this->input->post('sub_category_id');
 
                 $validate_fields = array(
@@ -506,8 +522,7 @@ class Notifications extends MY_Controller {
             $this->data['remove_image_url'] = $remove_image_url;
             $this->data['max_image_upload_count'] = $max_image_upload_count;
             $this->data['offer_category_data'] = $offer_category_data;
-            $this->data['data_last_posted_offer'] = $data_last_posted_offer;
-            
+
             $this->template->load('user', 'Common/Notifications/form', $this->data);
 //            $this->template->load('user', 'Common/Notifications/test', $this->data);
         } else {
@@ -1034,6 +1049,44 @@ class Notifications extends MY_Controller {
         }
 
         echo $html_data;
+        exit;
+    }
+
+    function last_posted_date() {
+        $last_posted_date = '';
+        $store_mall_id = $this->input->post('store_id');
+        
+        $store_mall_text = explode('_', $store_mall_id);
+        if ($store_mall_text[0] == 'store') {
+            $id = $store_mall_text[1];
+            $field = 'id_store';
+        }
+
+        if ($store_mall_text[0] == 'mall') {
+            $id = $store_mall_text[1];
+            $field = 'id_mall';
+        }
+
+        //Get Category-Sub Category Details
+        $select_last_posted_offer = array(
+            'table' => tbl_offer_announcement,
+            'fields' => array('created_date'),
+            'where' => array(
+                $field => $id,
+                'offer_type !=' => CATALOG_OFFER_TYPE,
+                'is_delete' => IS_NOT_DELETED_STATUS,
+            ),
+            'order_by' => array('id_offer' => 'DESC'),
+        );
+
+        $data_last_posted_offer = $this->Common_model->master_single_select($select_last_posted_offer);
+
+        if (!empty($data_last_posted_offer)) {
+            $last_posted_date = date('d-m-Y H:i A', strtotime($data_last_posted_offer['created_date']));
+        }
+
+
+        echo $last_posted_date;
         exit;
     }
 

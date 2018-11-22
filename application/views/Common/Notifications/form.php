@@ -13,19 +13,12 @@
                 <div class="panel-body panel_offer">
                     <form method="POST" action="" enctype="multipart/form-data" class="form-validate-jquery" name="frm_profile" id="frm_profile">
                     <!--<form method="POST" action="<?php echo $upload_url; ?>" enctype="multipart/form-data" class="form-validate-jquery" name="fileupload" id="fileupload">-->
-                        <?php if (empty($notification_data) > 0 && !empty($data_last_posted_offer) && ($notification_type == 'offers' || $notification_type == 'announcements')) { ?>
-                            <div class="col-md-12">
+                        <?php if (empty($notification_data) > 0&& ($notification_type == 'offers' || $notification_type == 'announcements')) { ?>
+                            <div class="col-md-12 hide" id="last_posted_date_div">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Last Posted Date</label>
-                                        <?php
-                                        $date = new DateTime($data_last_posted_offer['created_date']);
-                                        $last_posted_date = $date->format('d-m-Y h:i A');
-                                        ?>
-                                        <input type="text" 
-                                               readonly="readonly" 
-                                               class="form-control" 
-                                               value="<?= $last_posted_date ?>" />
+                                        <input type="text" readonly="readonly" id="last_posted_text" class="form-control" value="" />
                                     </div>
                                 </div>
                             </div>
@@ -262,7 +255,7 @@
                         <?php } else { ?>
                             <div class="col-xs-12">                            
                                 <div class="col-md-4">
-                                    <?php if (isset($notification_data) && sizeof($notification_data) > 0) { ?>
+                                    <?php if ((isset($notification_data) && sizeof($notification_data) > 0) && (isset($notification_type) && $notification_type != 'catalogs')) { ?>
                                         <div class="form-group">
                                             <label>Content Type <span class="text-danger">*</span></label>
                                             <div class="disabled">

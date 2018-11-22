@@ -116,6 +116,7 @@ $route['country-admin/dashboard/filter_notifications'] = 'Countryadmin/dashboard
 $route['country-admin/notifications/(:any)/delete/(:any)/(:any)'] = 'Common/notifications/delete/$1/$2/$3';
 $route['country-admin/notifications/(:any)/delete/(:any)'] = 'Common/notifications/delete/$1/$2';
 $route['country-admin/notifications/store/category/get'] = 'Common/notifications/get_categories';
+$route['country-admin/notifications/store/posted_date/get'] = 'Common/notifications/last_posted_date';
 
 $route['country-admin/stores'] = 'Common/stores/index';
 $route['country-admin/stores/filter_stores'] = 'Common/stores/filter_stores';

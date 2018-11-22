@@ -393,6 +393,25 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
         var store_id = $(this).find("option:selected").attr('data-id');
 
         if (store_id) {
+            var selected_store_id = $(this).find("option:selected").val();
+            //Get Last Posted Date
+            var url = base_url + 'country-admin/notifications/store/posted_date/get';
+
+            $.ajax({
+                url: url,
+                data: {
+                    store_id: selected_store_id,
+                },
+                type: 'POST',
+                success: function (response) {
+                    if (response) {
+                        $("#last_posted_date_div").removeClass('hide');
+                        $("#last_posted_text").val(response);
+                    }
+                }
+            });
+
+            //For Category-Sub Category Drop-down
             storeCategory(store_id);
             $(document).find('.sub_category_id').multiselect('rebuild');
             $(document).find('.sub_category_id').multiselect('refresh');

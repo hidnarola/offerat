@@ -33,7 +33,7 @@ class Login extends CI_Controller {
             'width' => '170px'
         );
 
-        $this->data['facebook_url'] = anchor($helper->getLoginUrl(base_url().'/user/facebook', $permissions), img($img));
+        $this->data['facebook_url'] = anchor($helper->getLoginUrl(base_url() . '/login/facebook', $permissions), img($img));
 
         is_logged_in();
         $this->data['title'] = $this->data['page_header'] = 'Login';
@@ -420,6 +420,163 @@ class Login extends CI_Controller {
                 $this->session->set_flashdata('error_msg', 'Invalid Request');
                 redirect('/');
             }
+        }
+    }
+
+    public function facebook() {
+        $helper = $this->fb->getRedirectLoginHelper();
+        $_SESSION['FBRLH_state'] = $this->input->get('state');
+
+        try {
+            $accessToken = $helper->getAccessToken();
+        } catch (Facebook\Exceptions\FacebookResponseException $e) {
+            // When Graph returns an error  
+            // echo 'Graph returned an error: ' . $e->getMessage();
+            $this->session->set_flashdata('error_msg', 'Something went wrong.');
+            redirect('login');
+        } catch (Facebook\Exceptions\FacebookSDKException $e) {
+            // When validation fails or other local issues  
+            // echo 'Facebook SDK returned an error: ' . $e->getMessage();    
+            $this->session->set_flashdata('error_msg', 'Something went wrong.');
+            redirect('login');
+        }
+
+        try {
+            $response = $this->fb->get('/me?fields=id,name,email,first_name,last_name,birthday,location,gender', $accessToken);
+        } catch (Facebook\Exceptions\FacebookResponseException $e) {
+            // echo 'ERROR: Graph ' . $e->getMessage();
+            $this->session->set_flashdata('error_msg', 'Something went wrong.');
+            redirect('login');
+        } catch (Facebook\Exceptions\FacebookSDKException $e) {
+            $this->session->set_flashdata('error_msg', 'Your account validation has been failed.');
+            redirect('login');
+        }
+
+        $fbUserData = $response->getGraphUser();
+
+        if (!empty($fbUserData)) {
+            $fb_user_email = $fbUserData->getProperty('email');
+            $fb_user_id = $fbUserData->getProperty('id');
+
+            $email = $fbUserData->getProperty('email');
+
+            $select_data_user = array(
+                'table' => tbl_user,
+                'where' => array(
+                    'email_id' => $email,
+                    'status' => ACTIVE_STATUS,
+                    'is_delete' => IS_NOT_DELETED_STATUS,
+                )
+            );
+
+            $user = $this->Common_model->master_single_select($select_data_user);
+
+            if (isset($user) && sizeof($user) > 0) {
+                if (in_array($user['user_type'], array(SUPER_ADMIN_USER_TYPE, COUNTRY_ADMIN_USER_TYPE, STORE_OR_MALL_ADMIN_USER_TYPE))) {
+                    //manage session
+                    $session_user_type = '';
+                    if ($user['user_type'] == SUPER_ADMIN_USER_TYPE)
+                        $session_user_type = SUPER_ADMIN_USER_TYPE;
+                    elseif ($user['user_type'] == COUNTRY_ADMIN_USER_TYPE) {
+                        $session_user_type = COUNTRY_ADMIN_USER_TYPE;
+                        $select_country = array(
+                            'table' => tbl_country,
+                            'fields' => array('id_country', 'country_name', 'timezone'),
+                            'where' => array('is_delete' => IS_NOT_DELETED_STATUS, 'id_users' => $user['id_user'], 'status' => ACTIVE_STATUS)
+                        );
+
+                        $country_details = $this->Common_model->master_single_select($select_country);
+                        if (isset($country_details) && sizeof($country_details) > 0) {
+                            $this->session->set_userdata('loggedin_user_country_data', $country_details);
+                        } else {
+                            $this->session->set_flashdata('error_msg', 'Invalid Request for Login');
+                            redirect('login');
+                        }
+                    } elseif ($user['user_type'] == STORE_OR_MALL_ADMIN_USER_TYPE) {
+                        $session_user_type = STORE_OR_MALL_ADMIN_USER_TYPE;
+
+                        $select_country = array(
+                            'table' => tbl_country . ' country',
+                            'fields' => array('country.id_country', 'country.country_name', 'country.timezone'),
+                            'where' => array(
+                                'country.is_delete' => IS_NOT_DELETED_STATUS,
+                                'country.status' => ACTIVE_STATUS
+                            ),
+                            'where_with_sign' => array(
+                                '(country.id_country = mall.id_country OR country.id_country = store.id_country)',
+                                '(mall.id_users = ' . $user['id_user'] . ' OR store.id_users = ' . $user['id_user'] . ')'
+                            ),
+                            'join' => array(
+                                array(
+                                    'table' => tbl_mall . ' as mall',
+                                    'condition' => 'mall.id_country = country.id_country',
+                                    'join_type' => 'left',
+                                ),
+                                array(
+                                    'table' => tbl_store . ' as store',
+                                    'condition' => 'store.id_country = country.id_country',
+                                    'join_type' => 'left',
+                                )
+                            )
+                        );
+
+                        $country_details = $this->Common_model->master_single_select($select_country);
+                        if (isset($country_details) && sizeof($country_details) > 0) {
+                            $this->session->set_userdata('loggedin_user_country_data', $country_details);
+                        } else {
+                            $this->session->set_flashdata('error_msg', 'Invalid Request for Login');
+                            redirect('login');
+                        }
+                    }
+
+                    $session_user_data = array(
+                        'user_id' => $user['id_user'],
+                        'email_id' => $user['email_id']
+                    );
+
+                    $this->session->set_userdata('loggedin_user_type', $session_user_type);
+                    $this->session->set_userdata('loggedin_user_data', $session_user_data);
+
+                    $this->saveFacebookId($fb_user_id, $user['id_user']);
+
+                    //update login time
+                    $update_user_data = array('last_login_at' => $date);
+                    $where_user_data = array('id_user' => $user['id_user']);
+
+                    $this->Common_model->master_update(tbl_user, $update_user_data, $where_user_data);
+
+                    if ($user['user_type'] == SUPER_ADMIN_USER_TYPE)
+                        redirect('super-admin/dashboard');
+                    elseif ($user['user_type'] == COUNTRY_ADMIN_USER_TYPE)
+                        redirect('country-admin/dashboard');
+                    elseif ($user['user_type'] == STORE_OR_MALL_ADMIN_USER_TYPE)
+                        redirect('mall-store-user/dashboard');
+                } elseif ($user['status'] != ACTIVE_STATUS) {
+                    $this->session->set_flashdata('error_msg', 'Your Account is inactivated.');
+                    redirect('login');
+                } elseif ($user['is_delete'] != IS_NOT_DELETED_STATUS) {
+                    $this->session->set_flashdata('error_msg', 'Your Account has been deleted earlier.');
+                    redirect('login');
+                } else {
+                    $this->session->set_flashdata('error_msg', 'Invalid Request for Login');
+                    redirect('login');
+                }
+            } else {
+                $this->session->set_flashdata('error_msg', 'Invalid Login Credentials');
+                redirect('login');
+            }
+        }
+    }
+
+    function saveFacebookId($facebook_id, $user_id) {
+        $update_data = array('facebook_id' => $facebook_id);
+        $where_data = array('id_user' => $user_id);
+        $is_updated = $this->Common_model->master_update(tbl_user, $update_data, $where_data);
+
+        if ($is_updated) {
+            return TRUE;
+        } else {
+            return FALSE;
         }
     }
 
