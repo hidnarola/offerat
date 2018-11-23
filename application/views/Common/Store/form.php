@@ -302,31 +302,79 @@
                                         ?>
                                         <div id="location_block_0" data-clone-number="0" class="clear-float">
                                             <div class="col-xs-12 business_category_div">                                                                                
-                                                <div class="col-md-2">
+                                                <!--<div class="col-md-1">
                                                     <div class="form-group">
                                                         <div>
                                                             <input type="text" class="form-control text-length" name="branch_0" id="branch_0" placeholder="Branch" value="<?php echo set_value('branch_0'); ?>">
                                                         </div>
                                                     </div>
+                                                </div>-->
+                                                <div class="col-md-1">
+                                                    <div class="form-group">
+                                                        <div>
+                                                            <select class="form-control select-city-mall" id="is_mall_0" data-id="0" name="is_mall_0" data-placeholder="Select Mall / City" required="required" data-live-search="true" >
+                                                                <option value="1">Yes</option>
+                                                                <option value="0" selected>No</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <div>
+                                                            <div id="city_div_0">
+                                                                <input type="text" class="form-control" name="location_city_0" id="location_city_0" placeholder="City" value="<?php echo set_value('location_city_0'); ?>">
+                                                            </div>
+                                                            <div id="mall_div_0" class="hide">
+                                                                <select class="form-control select-search" id="location_mall_id_0" name="location_mall_id_0" data-placeholder="Select Mall" required="required" data-live-search="true" >
+                                                                    <?php
+                                                                    if (isset($malls_list) && sizeof($malls_list) > 0) {
+                                                                        foreach ($malls_list as $list) {
+                                                                            ?>
+                                                                            <option data-id="<?= $list['id_mall']; ?>" value="<?= $list['id_mall']; ?>" <?php echo (isset($notification_data) && isset($notification_data['id_mall']) && $list['id_mall'] == $notification_data['id_mall']) ? 'selected=selected' : ''; ?>><?= $list['mall_name']; ?></option>
+                                                                            <?php
+                                                                        }
+                                                                    }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
                                                     <div class="form-group">
                                                         <div>
                                                             <input type="text" class="form-control" name="latitude_0" id="latitude_0" placeholder="Latitude" value="<?php echo set_value('latitude_0'); ?>">
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2">
+                                                <div class="col-md-1">
                                                     <div class="form-group">                                                         
                                                         <div>
                                                             <input type="text" class="form-control" name="longitude_0" id="longitude_0" placeholder="Longitude" value="<?php echo set_value('longitude_0'); ?>">
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2">
+                                                <div class="col-md-1">
                                                     <div class="form-group">                                                         
                                                         <div>
-                                                            <input type="text" class="form-control number-only" name="telephone_0" id="telephone_0" placeholder="Telephone" value="<?php echo set_value('telephone_0'); ?>">
+                                                            <input type="text" class="form-control number-only" name="telephone_0" id="telephone_0" placeholder="Telephone 1" value="<?php echo set_value('telephone_0'); ?>">
+                                                            <label id="telephone_0-error" class="validation-error-label"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="form-group">                                                         
+                                                        <div>
+                                                            <input type="text" class="form-control number-only" name="telephoneA_0" id="telephoneA_0" placeholder="Telephone 2" value="<?php echo set_value('telephoneA_0'); ?>">
+                                                            <label id="telephone_0-error" class="validation-error-label"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="form-group">                                                         
+                                                        <div>
+                                                            <input type="text" class="form-control number-only" name="telephoneB_0" id="telephoneB_0" placeholder="Telephone 3" value="<?php echo set_value('telephoneB_0'); ?>">
                                                             <label id="telephone_0-error" class="validation-error-label"></label>
                                                         </div>
                                                     </div>
@@ -338,7 +386,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2">
+                                                <div class="col-md-1">
                                                     <div class="form-group">                                        
                                                         <div>
                                                             <button type="button" class="btn btn-danger btn-icon location_remove_btn" id="location_remove_btn_0" character="" data-clone-number="0"><i class="icon-cross3"></i></button>
@@ -662,12 +710,11 @@ if (isset($store_details)) {
     $(document).on('click', '#location_btn', function () {
 
         var countryId = '<?php echo @$country_id ?>';
-//        console.log(countryId);
+        //        console.log(countryId);
         $.ajax({
             method: 'POST',
             url: base_url + 'storeregistration/show_mall',
-            data: {country_id: countryId},
-            success: function (response) {
+            data: {country_id: countryId}, success: function (response) {
                 $(document).find('.mall_selection_dropdown').html(response);
             },
             error: function () {
@@ -750,35 +797,92 @@ if (isset($store_details)) {
         var html = '';
         html += '<div id="location_block_' + cloneNumber + '" data-clone-number="' + cloneNumber + '" class="clear-float">';
         html += '<div class="col-xs-12 business_category_div">';
+
+        /*html += '<div class="col-md-1">';
+         html += '<div class="form-group">';
+         html += '<div>';
+         html += '<input type="text" class="form-control text-length" name="branch_' + cloneNumber + '" id="branch_' + cloneNumber + '" placeholder="Branch" value="">';
+         html += '</div>';
+         html += '</div>';
+         html += '</div>'; */
+
+        html += '<div class="col-md-1">';
+        html += '<div class="form-group">';
+        html += '<div>' +
+                '<select class="form-control select-city-mall" id="is_mall_' + cloneNumber + '" data-id="' + cloneNumber + '" name="is_mall_' + cloneNumber + '" data-placeholder="Select Mall / City" required="required" data-live-search="true" aria-required="true" aria-invalid="false">' +
+                '<option value="1">Yes</option>' +
+                '<option value="0" selected="">No</option>' +
+                '</select>' +
+                '</div>';
+        html += '</div>';
+        html += '</div>';
+
         html += '<div class="col-md-2">';
         html += '<div class="form-group">';
         html += '<div>';
-        html += '<input type="text" class="form-control text-length" name="branch_' + cloneNumber + '" id="branch_' + cloneNumber + '" placeholder="Branch" value="">';
+        html += '<div id="city_div_' + cloneNumber + '">';
+        html += '<input type="text" class="form-control" name="location_city_' + cloneNumber + '" id="location_city_' + cloneNumber + '" placeholder="City" value="">';
+        html += '</div>';
+        html += '<div id="mall_div_' + cloneNumber + '" class="hide">';
+        html += '<select class="form-control select-search" id="location_mall_id_' + cloneNumber + '" name="location_mall_id_' + cloneNumber + '" data-placeholder="Select Mall" required="required" data-live-search="true" >';
+<?php
+if (isset($malls_list) && sizeof($malls_list) > 0) {
+    foreach ($malls_list as $list) {
+        ?>
+                html += '<option data-id="<?= $list['id_mall']; ?>" value="<?= $list['id_mall']; ?>" ><?= $list['mall_name']; ?></option>';
+        <?php
+    }
+}
+?>
+        html += '</select>';
         html += '</div>';
         html += '</div>';
         html += '</div>';
-        html += '<div class="col-md-2">';
+        html += '</div>';
+
+        html += '<div class="col-md-1">';
         html += '<div class="form-group">';
         html += '<div>';
         html += '<input type="text" class="form-control" name="latitude_' + cloneNumber + '" id="latitude_' + cloneNumber + '" placeholder="Latitude" value="">';
         html += '</div>';
         html += '</div>';
         html += '</div>';
-        html += '<div class="col-md-2">';
+
+        html += '<div class="col-md-1">';
         html += '<div class="form-group">';
         html += '<div>';
         html += '<input type="text" class="form-control" name="longitude_' + cloneNumber + '" id="longitude_' + cloneNumber + '" placeholder="Longitude" value="">';
         html += '</div>';
         html += '</div>';
         html += '</div>';
-        html += '<div class="col-md-2">';
+
+        html += '<div class="col-md-1">';
         html += '<div class="form-group">';
         html += '<div>';
-        html += '<input type="text" class="form-control number-only" name="telephone_' + cloneNumber + '" id="telephone_' + cloneNumber + '" placeholder="Telephone" value="">';
+        html += '<input type="text" class="form-control number-only" name="telephone_' + cloneNumber + '" id="telephone_' + cloneNumber + '" placeholder="Telephone 1" value="">';
         html += '<label id="telephone_' + cloneNumber + '-error" class="validation-error-label"></label>';
         html += '</div>';
         html += '</div>';
         html += '</div>';
+
+        html += '<div class="col-md-1">';
+        html += '<div class="form-group">';
+        html += '<div>';
+        html += '<input type="text" class="form-control number-only" name="telephoneA_' + cloneNumber + '" id="telephoneA_' + cloneNumber + '" placeholder="Telephone 2" value="">';
+        html += '<label id="telephoneA_' + cloneNumber + '-error" class="validation-error-label"></label>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+
+        html += '<div class="col-md-1">';
+        html += '<div class="form-group">';
+        html += '<div>';
+        html += '<input type="text" class="form-control number-only" name="telephoneB_' + cloneNumber + '" id="telephoneB_' + cloneNumber + '" placeholder="Telephone 3" value="">';
+        html += '<label id="telephoneB_' + cloneNumber + '-error" class="validation-error-label"></label>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+
         html += '<div class="col-md-2">';
         html += '<div class="form-group">';
         html += '<div>';
@@ -786,13 +890,15 @@ if (isset($store_details)) {
         html += '</div>';
         html += '</div>';
         html += '</div>';
-        html += '<div class="col-md-2">';
+
+        html += '<div class="col-md-1">';
         html += '<div class="form-group">';
         html += '<div>';
         html += '<button type="button" class="btn btn-danger btn-icon location_remove_btn" id="location_remove_btn_' + cloneNumber + '" character="" data-clone-number="' + cloneNumber + '"><i class="icon-cross3"></i></button>';
         html += '</div>';
         html += '</div>';
         html += '</div>';
+
         html += '</div>';
         html += '</div>';
         return html;
@@ -829,4 +935,19 @@ if (isset($store_details)) {
         html += '</div>';
         return html;
     }
+
+    $(document).on('change', '.select-city-mall', function () {
+        var checked_val = $(this).find('option:selected').val();
+        var column_no = $(this).attr('data-id');
+
+        console.log(column_no);
+
+        if (checked_val == 0) {
+            $("#mall_div_" + column_no).addClass('hide');
+            $("#city_div_" + column_no).removeClass('hide');
+        } else if (checked_val == 1) {
+            $("#city_div_" + column_no).addClass('hide');
+            $("#mall_div_" + column_no).removeClass('hide');
+        }
+    });
 </script>

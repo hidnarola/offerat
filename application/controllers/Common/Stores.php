@@ -725,15 +725,14 @@ class Stores extends MY_Controller {
                                 $sheet_data = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
 
                                 foreach ($sheet_data as $key => $data) {
-                                    if (isset($data['D']) && isset($data['E']) && !empty($data['D']) && !empty($data['E']) && $key > 1) {
+                                    if (isset($data['F']) && isset($data['G']) && !empty($data['F']) && !empty($data['G']) && $key > 1) {
                                         $branch_name = !empty($data['A']) ? $data['A'] : '';
                                         $contact_number = !empty($data['B']) ? $data['B'] : '';
-                                        $email = !empty($data['C']) ? $data['C'] : '';
-                                        ;
-                                        $latitude = !empty($data['D']) ? $data['D'] : '';
-                                        ;
-                                        $longitude = !empty($data['E']) ? $data['E'] : '';
-                                        ;
+                                        $contact_number_1 = !empty($data['C']) ? $data['C'] : '';
+                                        $contact_number_2 = !empty($data['D']) ? $data['D'] : '';
+                                        $email = !empty($data['E']) ? $data['E'] : '';
+                                        $latitude = !empty($data['F']) ? $data['F'] : '';
+                                        $longitude = !empty($data['G']) ? $data['G'] : '';
 
                                         $select_location = array(
                                             'table' => tbl_store_location,
@@ -762,12 +761,13 @@ class Stores extends MY_Controller {
 //                                                'contact_number' => $this->input->post('mobile', TRUE),
                                                 'branch_name' => $branch_name,
                                                 'contact_number' => $contact_number,
+                                                'contact_number_1' => $contact_number_1,
+                                                'contact_number_2' => $contact_number_2,
                                                 'email' => $email,
                                                 'created_date' => $date,
                                                 'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
                                                 'is_delete' => IS_NOT_DELETED_STATUS
                                             );
-
                                             $this->Common_model->master_save(tbl_store_location, $in_store_location);
                                         }
                                     }
@@ -1058,6 +1058,9 @@ class Stores extends MY_Controller {
      */
 
     function add_locations($date = NULL, $store_id = NULL) {
+//        pr($this->input->post(), 1);
+        $in_store_location_data = array();
+
         $location_count = $this->input->post('location_count', TRUE);
 
         for ($i = 0; $i <= $location_count; $i++) {
@@ -1066,8 +1069,9 @@ class Stores extends MY_Controller {
                     'id_store' => $store_id,
                     'latitude' => $this->input->post('latitude_' . $i, TRUE),
                     'longitude' => $this->input->post('longitude_' . $i, TRUE),
-                    'branch_name' => $this->input->post('branch_' . $i, TRUE),
                     'contact_number' => $this->input->post('telephone_' . $i, TRUE),
+                    'contact_number_1' => $this->input->post('telephoneA_' . $i, TRUE),
+                    'contact_number_2' => $this->input->post('telephoneB_' . $i, TRUE),
                     'email' => $this->input->post('email_' . $i, TRUE),
                     'id_location' => 0,
                     'location_type' => STORE_LOCATION_TYPE,
@@ -1075,6 +1079,17 @@ class Stores extends MY_Controller {
                     'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
                     'is_delete' => IS_NOT_DELETED_STATUS
                 );
+
+                if ($this->input->post('is_mall_' . $i, TRUE) == 1) {
+                    $location_mall_id = $this->input->post('location_mall_id_' . $i, TRUE);
+                    $in_store_location_data['id_location'] = $location_mall_id;
+                    $in_store_location_data['location_type'] = 0;
+                }
+
+                if ($this->input->post('is_mall_' . $i, TRUE) == 0) {
+                    $location_city = $this->input->post('location_city_' . $i, TRUE);
+                    $in_store_location_data['branch_name'] = $location_city;
+                }
 
                 $this->Common_model->master_save(tbl_store_location, $in_store_location_data);
             }
@@ -1147,17 +1162,22 @@ class Stores extends MY_Controller {
         if (!is_null($id) && $id > 0) {
             $select_store_locatons = array(
                 'table' => tbl_store_location . ' store_location',
-                'fields' => array('store.id_store', 'store_location.branch_name', 'store_location.email', 'store_location.contact_number', 'store_location.latitude', 'store_location.longitude', 'store_location.is_delete', 'store.store_name'),
+                'fields' => array('mall.mall_name', 'store.id_store', 'store_location.contact_number_1', 'store_location.contact_number_2', 'store_location.branch_name', 'store_location.email', 'store_location.contact_number', 'store_location.latitude', 'store_location.longitude', 'store_location.is_delete', 'store.store_name'),
                 'where' => array(
                     'store_location.is_delete' => IS_NOT_DELETED_STATUS,
                     'store.id_store' => $id,
-                    'store_location.location_type' => STORE_LOCATION_TYPE
+//                    'store_location.location_type' => STORE_LOCATION_TYPE
                 ),
                 'join' => array(
                     array(
                         'table' => tbl_store . ' as store',
                         'condition' => tbl_store . '.id_store = ' . tbl_store_location . '.id_store',
                         'join' => 'left'
+                    ),
+                    array(
+                        'table' => tbl_mall . ' as mall',
+                        'condition' => 'store_location.id_location = mall.id_mall',
+                        'join' => 'left',
                     )
                 )
             );
@@ -1165,19 +1185,27 @@ class Stores extends MY_Controller {
             $store_locations = $this->Common_model->master_select($select_store_locatons);
 
             $columnHeader = '';
-            $columnHeader = "Branch Name" . "\t" . "Telephone Number" . "\t" . "Email" . "\t" . "Latitude" . "\t" . "Longitude" . "\t" . "Status" . "\t";
+            $columnHeader = "Mall Name" . "\t" . "Branch Name" . "\t" . "Telephone Number" . "\t" . "Telephone Number 1" . "\t" . "Telephone Number 2" . "\t" . "Email" . "\t" . "Latitude" . "\t" . "Longitude" . "\t" . "Status" . "\t";
             $setData = '';
             $rowData = '';
             $store_name = '';
             if (isset($store_locations) && sizeof($store_locations) > 0) {
                 foreach ($store_locations as $value) {
                     $store_name = $value['store_name'];
-                    $value = '"' . $value['branch_name'] . '"' . "\t" . '"' . $value['contact_number'] . '"' . "\t" . '"' . $value['email'] . '"' . "\t" . '"' . $value['latitude'] . '"' . "\t" . '"' . $value['longitude'] . '"' . "\t" . '"' . (($value['is_delete'] == IS_NOT_DELETED_STATUS) ? 'Active' : 'Deleted') . '"' . "\t" . "\n";
+                    $value = '"' . $value['mall_name'] . '"' . "\t" .
+                            '"' . $value['branch_name'] . '"' . "\t" .
+                            '"' . $value['contact_number'] . '"' . "\t" .
+                            '"' . $value['contact_number_1'] . '"' . "\t" .
+                            '"' . $value['contact_number_2'] . '"' . "\t" .
+                            '"' . $value['email'] . '"' . "\t" .
+                            '"' . $value['latitude'] . '"' . "\t" .
+                            '"' . $value['longitude'] . '"' . "\t" .
+                            '"' . (($value['is_delete'] == IS_NOT_DELETED_STATUS) ? 'Active' : 'Deleted') . '"' . "\t" . "\n";
                     $rowData .= $value;
                 }
                 $setData .= trim($rowData) . "\n";
                 header("Content-type: application/octet-stream");
-                header("Content-Disposition: attachment; filename=" . $store_name . "_" . date('Y_m_d_h_i_s') . ".xls");
+                header("Content-Disposition: attachment; filename=" . $store_name . "_" . date('Y_m_d_h_i_s') . ".xlsx");
                 header("Pragma: no-cache");
                 header("Expires: 0");
 
@@ -1270,12 +1298,20 @@ class Stores extends MY_Controller {
                 );
 
                 $select_store_location = array(
-                    'table' => tbl_store_location,
+                    'table' => tbl_store_location . ' store_location',
+                    'field' => 'store_location.*, mall.mall_name',
                     'where' => array(
-                        'id_store' => $id,
-                        'is_delete' => IS_NOT_DELETED_STATUS,
-                        'location_type' => STORE_LOCATION_TYPE,
-                        'id_location' => 0
+                        'store_location.id_store' => $id,
+                        'store_location.is_delete' => IS_NOT_DELETED_STATUS,
+//                        'location_type' => STORE_LOCATION_TYPE,
+//                        'id_location' => 0
+                    ),
+                    'join' => array(
+                        array(
+                            'table' => tbl_mall . ' as mall',
+                            'condition' => 'store_location.id_location = mall.id_mall',
+                            'join' => 'left',
+                        )
                     )
                 );
 

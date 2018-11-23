@@ -20,7 +20,52 @@
                                     </div>
                                 </div>        
                             </div>
+                            <div class="col-md-12 col-xs-12">
+                                <div class="col-md-1 col-xs-2">
+                                    <div class="form-group">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                                <div class="col-md-1 col-xs-2">
+                                    <div class="form-group">
+                                        Branch / Mall
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-xs-2">
+                                    <div class="form-group">
+                                        Email
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-xs-2">
+                                    <div class="form-group">
+                                        Contact Number
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-xs-2">
+                                    <div class="form-group">
+                                        Contact Number 1
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-xs-2">
+                                    <div class="form-group">
+                                        Contact Number 2
+                                    </div>
+                                </div>
+                                <div class="col-md-1 col-xs-2">
+                                    <div class="form-group">
+                                        Longitude
+                                    </div>
+                                </div>
+                                <div class="col-md-1 col-xs-2">
+                                    <div class="form-group">
+                                        Latitude
+                                    </div>
+                                </div>
+                            </div>
                             <?php
+                            $placeholder = 'Branch Name / Mall';
+                            $field_val = '';
+
                             foreach ($store_locations as $loc) {
                                 ?>                            
                                 <div class="col-md-12 col-xs-12">
@@ -32,14 +77,25 @@
                                             </div>
                                         </div>        
                                     </div>
-                                    <div class="col-md-2 col-xs-5">
+                                    <div class="col-md-1 col-xs-5">
                                         <div class="form-group">                                            
                                             <div>
-                                                <input type="text" class="form-control" placeholder="Branch Name"  value="<?php echo $loc['branch_name']; ?>" readonly>
+                                                <?php
+                                                if (!empty($loc['mall_name'])) {
+                                                    $placeholder = 'Mall';
+                                                    $field_val = $loc['mall_name'];
+                                                }
+
+                                                if (!empty($loc['branch_name'])) {
+                                                    $placeholder = 'Branch';
+                                                    $field_val = $loc['branch_name'];
+                                                }
+                                                ?>
+                                                <input type="text" class="form-control" placeholder="<?= $placeholder ?>"  value="<?= $field_val ?>" title="<?= $placeholder . ' - ' . $field_val ?>" readonly>
                                             </div>
                                         </div>        
                                     </div>
-                                    <div class="col-md-3 col-xs-5">
+                                    <div class="col-md-2 col-xs-5">
                                         <div class="form-group">                                            
                                             <div>
                                                 <input type="text" class="form-control" placeholder="Email"  value="<?php echo $loc['email']; ?>" readonly>
@@ -56,11 +112,25 @@
                                     <div class="col-md-2 col-xs-5">
                                         <div class="form-group">                                            
                                             <div>
-                                                <input type="text" class="form-control" placeholder="Longitude"  value="<?php echo $loc['longitude']; ?>" readonly>
+                                                <input type="text" class="form-control" placeholder="Contact Number 1"  value="<?php echo $loc['contact_number_1']; ?>" readonly>
                                             </div>
                                         </div>
                                     </div>                                     
                                     <div class="col-md-2 col-xs-5">
+                                        <div class="form-group">                                            
+                                            <div>
+                                                <input type="text" class="form-control" placeholder="Contact Number 2"  value="<?php echo $loc['contact_number_2']; ?>" readonly>
+                                            </div>
+                                        </div>
+                                    </div>                                     
+                                    <div class="col-md-1 col-xs-5">
+                                        <div class="form-group">                                            
+                                            <div>
+                                                <input type="text" class="form-control" placeholder="Longitude"  value="<?php echo $loc['longitude']; ?>" readonly>
+                                            </div>
+                                        </div>
+                                    </div>                                     
+                                    <div class="col-md-1 col-xs-5">
                                         <div class="form-group">                                            
                                             <div>
                                                 <input type="text" class="form-control" placeholder="Latitude"  value="<?php echo $loc['latitude']; ?>" readonly>
