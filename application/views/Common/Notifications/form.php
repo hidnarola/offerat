@@ -13,7 +13,7 @@
                 <div class="panel-body panel_offer">
                     <form method="POST" action="" enctype="multipart/form-data" class="form-validate-jquery" name="frm_profile" id="frm_profile">
                     <!--<form method="POST" action="<?php echo $upload_url; ?>" enctype="multipart/form-data" class="form-validate-jquery" name="fileupload" id="fileupload">-->
-                        <?php if (empty($notification_data) > 0&& ($notification_type == 'offers' || $notification_type == 'announcements')) { ?>
+                        <?php if (empty($notification_data) > 0 && ($notification_type == 'offers' || $notification_type == 'announcements')) { ?>
                             <div class="col-md-12 hide" id="last_posted_date_div">
                                 <div class="col-md-4">
                                     <div class="form-group">
@@ -487,11 +487,15 @@
                                 <?php } ?>
                             </div>
                         <?php } ?>
-                    </form>                    
+                    </form>    
                     <form method="POST" action="<?php echo $upload_url; ?>" enctype="multipart/form-data" class="form-validate-jquery" name="fileupload" id="fileupload">
                         <input type="hidden" name="uploaded_images_arr" id="uploaded_images_arr">
                         <div class="row fileupload-buttonbar">
-                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                <?php if ($notification_type == 'offers') { ?> 
+                                    <div id="dropzone" class="fade well"><i class="fa fa-image fa-lg"></i>&nbsp;&nbsp;Drop files here</div>
+                                <?php } ?>
+                            </div>
 
                             <div class="col-md-4 upload_up">
                                 <!-- The fileinput-button span is used to style the file input field as button -->
@@ -508,6 +512,13 @@
                                     <a href="<?php echo $images_list_url . $notification_data['id_offer']; ?>" target="_blank" class="btn btn-primary">Images List</a>
                                 <?php } ?>                                
                             </div>
+
+                            <?php if ($notification_type != 'offers') { ?> 
+                                <div class="col-md-4">
+                                    <div id="dropzone" class="fade well"><i class="fa fa-image fa-lg"></i>&nbsp;&nbsp;Drop files here</div>
+                                </div>
+                            <?php } ?>
+
                             <!-- The global progress state -->
                             <div class="col-lg-5 fileupload-progress fade display-none">
                                 <!-- The global progress bar -->

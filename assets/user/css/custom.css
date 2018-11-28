@@ -150,8 +150,43 @@ ul.ul_list_wrapper li img {width: 100%;}
 
 .dataTables_wrapper .dt-buttons { float: none; text-align: center; }
 li.sub-category {margin-left: 35px !important;}
-.multiselect-container {
-    width: 100%;
+.multiselect-container { width: 100%; }
+
+/*Dropzone - File Upload - Jquery*/
+#dropzone {
+    background: #4caf50;
+    width: 210px;
+    height: 100%;
+    /*line-height: 50px;*/
+    text-align: center;
+    font-weight: 500;
+    color: #fff;
+    font-size: 15px;
+}
+
+/*#dropzone {
+    background: #4caf50;
+    width: 212px !important;
+    text-align: center;
+    font-weight: 400;
+    color: white;
+}*/
+#dropzone.in {
+    width: 600px;
+    height: 200px;
+    line-height: 200px;
+    font-size: larger;
+}
+#dropzone.hover {
+    background: #71d275;
+}
+#dropzone.fade {
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+    opacity: 1;
 }
 
 /** media start here ***/

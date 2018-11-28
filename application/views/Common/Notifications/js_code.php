@@ -62,25 +62,60 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
         // Change this to the location of your server-side upload handler:
         //        var url = window.location.hostname === 'blueimp.github.io' ?
         //                '//jquery-file-upload.appspot.com/' : 'server/php/',
-        var url = window.location.hostname === '<?php echo $upload_url; ?>',
-                uploadButton = $('<button/>')
+        var url = window.location.hostname === '<?php echo $upload_url; ?>', uploadButton = $('<button/>')
                 .addClass('btn btn-primary')
                 .prop('disabled', true)
                 .text('Processing...')
                 .on('click', function () {
                     var $this = $(this),
                             data = $this.data();
-                    $this
-                            .off('click')
-                            .text('Abort')
-                            .on('click', function () {
-                                $this.remove();
-                                data.abort();
-                            });
+                    $this.off('click').text('Abort').on('click', function () {
+                        $this.remove();
+                        data.abort();
+                    });
                     data.submit().always(function () {
                         $this.remove();
                     });
                 });
+
+        $(document).bind('dragover', function (e) {
+            var dropZone = $('#dropzone'),
+                    timeout = window.dropZoneTimeout;
+            if (timeout) {
+                clearTimeout(timeout);
+            } else {
+                dropZone.addClass('in');
+            }
+            var hoveredDropZone = $(e.target).closest(dropZone);
+            dropZone.toggleClass('hover', hoveredDropZone.length);
+            window.dropZoneTimeout = setTimeout(function () {
+                window.dropZoneTimeout = null;
+                dropZone.removeClass('in hover');
+            }, 100);
+        });
+
+        $(document).bind('dragover', function (e) {
+            var dropZones = $('#dropzone'),
+                    timeout = window.dropZoneTimeout;
+            if (timeout) {
+                clearTimeout(timeout);
+            } else {
+                dropZones.addClass('in');
+            }
+            var hoveredDropZone = $(e.target).closest(dropZones);
+            dropZones.not(hoveredDropZone).removeClass('hover');
+            hoveredDropZone.addClass('hover');
+            window.dropZoneTimeout = setTimeout(function () {
+                window.dropZoneTimeout = null;
+                dropZones.removeClass('in hover');
+            }, 100);
+        });
+
+        $(document).bind('drop dragover', function (e) {
+            e.preventDefault();
+        });
+
+
         $('#fileupload').fileupload({
             dropZone: $('#dropzone'),
             url: url,
@@ -97,6 +132,23 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
             previewMaxWidth: 100,
             previewMaxHeight: 100,
             previewCrop: true,
+            process: [
+                {
+                    action: 'load',
+                    fileTypes: /^image\/(jpe?g|jpg|png)$/,
+                    maxFileSize: 250000 // 20MB
+                },
+                {
+                    action: 'resize',
+                    maxWidth: 250,
+                    maxHeight: 250,
+                    minWidth: 80,
+                    minHeight: 80
+                },
+                {
+                    action: 'save'
+                }
+            ],
             messages: {
                 maxNumberOfFiles: 'Sorry, You can upload <?php echo $max_image_upload_count; ?> Images,Please remove unneccessary files',
             },

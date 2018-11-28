@@ -1090,7 +1090,7 @@ class Stores extends MY_Controller {
                     $location_city = $this->input->post('location_city_' . $i, TRUE);
                     $in_store_location_data['branch_name'] = $location_city;
                 }
-
+                
                 $this->Common_model->master_save(tbl_store_location, $in_store_location_data);
             }
         }

@@ -311,12 +311,14 @@
                                                 </div>-->
                                                 <div class="col-md-1">
                                                     <div class="form-group">
-                                                        <div>
-                                                            <select class="form-control select-city-mall" id="is_mall_0" data-id="0" name="is_mall_0" data-placeholder="Select Mall / City" required="required" data-live-search="true" >
-                                                                <option value="1">Yes</option>
-                                                                <option value="0" selected>No</option>
-                                                            </select>
-                                                        </div>
+                                                        <label for="offer_type">
+                                                            <div class="checkbox">
+                                                                <span>
+                                                                    <input type="checkbox" id="is_mall_0" data-id="0" class="select-city-mall" value="0" />
+                                                                    <input type="hidden" name="is_mall_0" id="input_is_mall_0" value="0" />
+                                                                </span>
+                                                            </div>
+                                                        </label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
@@ -728,6 +730,24 @@ if (isset($store_details)) {
         $(document).find('#location_count').val(locationCloneNumber);
     });
 
+    $(document).on('click', '.select-city-mall', function () {
+        var box_value = 0;
+        var column_no = $(this).attr('data-id');
+
+        if ($(this).is(':checked')) {
+            box_value = 1;
+            $("#city_div_" + column_no).addClass('hide');
+            $("#mall_div_" + column_no).removeClass('hide');
+        } else {
+            box_value = 0;
+            $("#mall_div_" + column_no).addClass('hide');
+            $("#city_div_" + column_no).removeClass('hide');
+        }
+
+        $(this).val(box_value);
+        $("#input_is_mall_"+column_no).val(box_value);
+    });
+
     function generateSalesTrendBlock(cloneNumber) {
         var html = '';
         html += '<div id="sales_trend_wrapper" class="clear-float row_add_div">';
@@ -808,12 +828,14 @@ if (isset($store_details)) {
 
         html += '<div class="col-md-1">';
         html += '<div class="form-group">';
-        html += '<div>' +
-                '<select class="form-control select-city-mall" id="is_mall_' + cloneNumber + '" data-id="' + cloneNumber + '" name="is_mall_' + cloneNumber + '" data-placeholder="Select Mall / City" required="required" data-live-search="true" aria-required="true" aria-invalid="false">' +
-                '<option value="1">Yes</option>' +
-                '<option value="0" selected="">No</option>' +
-                '</select>' +
-                '</div>';
+        html += '<label for="is_mall_' + cloneNumber + '">';
+        html += '<div class="checkbox">';
+        html += '<span>';
+        html += '<input type="checkbox" id="is_mall_' + cloneNumber + '" data-id="' + cloneNumber + '" class="styled select-city-mall" value="0" />';
+        html += '<input type="hidden" name="is_mall_' + cloneNumber + '" id="input_is_mall_' + cloneNumber + '" value="0" />';
+        html += '</span>';
+        html += '</div>';
+        html += '</label>';
         html += '</div>';
         html += '</div>';
 
@@ -936,18 +958,16 @@ if (isset($malls_list) && sizeof($malls_list) > 0) {
         return html;
     }
 
-    $(document).on('change', '.select-city-mall', function () {
-        var checked_val = $(this).find('option:selected').val();
-        var column_no = $(this).attr('data-id');
-
-        console.log(column_no);
-
-        if (checked_val == 0) {
-            $("#mall_div_" + column_no).addClass('hide');
-            $("#city_div_" + column_no).removeClass('hide');
-        } else if (checked_val == 1) {
-            $("#city_div_" + column_no).addClass('hide');
-            $("#mall_div_" + column_no).removeClass('hide');
-        }
-    });
+//    $(document).on('change', '.select-city-mall', function () {
+//        var checked_val = $(this).find('option:selected').val();
+//        var column_no = $(this).attr('data-id');
+//
+//        if (checked_val == 0) {
+//            $("#mall_div_" + column_no).addClass('hide');
+//            $("#city_div_" + column_no).removeClass('hide');
+//        } else if (checked_val == 1) {
+//            $("#city_div_" + column_no).addClass('hide');
+//            $("#mall_div_" + column_no).removeClass('hide');
+//        }
+//    });
 </script>
