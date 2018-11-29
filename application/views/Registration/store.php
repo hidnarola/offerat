@@ -8,13 +8,13 @@
             </div>            
             <div class="form-group">
                 <label class="control-label col-lg-2">Website URL</label>
-                <input type="text" class="form-control" name="website" id="website"  placeholder="Website URL" value="<?php echo set_value('website'); ?>">
+                <input type="text" class="form-control" name="website" id="website"  placeholder="Example www.store.com" value="<?php echo set_value('website'); ?>">
             </div>
         </div>
         <div class="form_grp_inline">
             <div class="form-group">
                 <label class="control-label col-lg-2">Facebook Page <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="facebook_page" id="facebook_page" required="required" placeholder="Facebook Page URL" value="<?php echo set_value('facebook_page'); ?>">
+                <input type="text" class="form-control" name="facebook_page" id="facebook_page" required="required" placeholder="Example www.facebook.com/store/" value="<?php echo set_value('facebook_page'); ?>">
             </div>
             <div class="form-group upload-store-logo-div">
                 <label class="control-label col-lg-2">Logo</label>
@@ -46,12 +46,12 @@
         </div>
         <div class="form_grp_inline">
             <div class="form-group">
-                <label class="control-label col-lg-2">Contact Number <span class="text-danger">*</span></label>                
-                <input type="text" class="form-control" name="telephone" id="telephone"  placeholder="Contact Number"  required="required" value="<?php echo set_value('telephone'); ?>">                
+                <label class="control-label col-lg-2">Contact Number</label>                
+                <input type="text" class="form-control" name="telephone" id="telephone"  placeholder="Contact Number" value="<?php echo set_value('telephone'); ?>">                
             </div>            
         </div>
 
-        <legend class="text-bold">Business</legend>
+<!--        <legend class="text-bold">Business</legend>
 
         <div class="add_desc">
             <button id="category_selection_btn" type="button" class="pull-right margin-left-5 btn-primary labeled"><b><i class="icon-plus22"></i></b>Add More Category</button>
@@ -87,7 +87,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <legend class="text-bold">Location</legend>
         <div class="col-lg-6 col_mobile_pad">
@@ -110,12 +110,12 @@
         <div id="mall_selection_wrapper" class="clear-float row_add_div">  
 
         </div>
-        <div class="form-group checkbox_reg">            
+<!--        <div class="form-group checkbox_reg">            
             <input type="checkbox" class="styled-checkbox-1" name="terms_condition" required="required"/>                
             <span class="text-size-mini">  Yes, I agree with <a href="terms-and-conditions" target="_blank"><span>Terms And Conditions</span></a></span>            
             <label id="terms_condition-error" class="validation-error-label" for="terms_condition"></label>
 
-        </div>
+        </div>-->
         <div class="form-group btn_center">            
             <input type="hidden" name="category_count" id="category_count" value="1">
             <input type="hidden" name="location_count" id="location_count" value="1">
