@@ -429,7 +429,7 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
     });
 
 <?php if ($notification_type == 'offers') { ?>
-        $(document).find('.upload_up').css('margin-top', '-220px');
+        $(document).find('.upload_up').css('margin-top', '-247px');
 <?php } ?>
 
 

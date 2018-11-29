@@ -492,9 +492,6 @@
                         <input type="hidden" name="uploaded_images_arr" id="uploaded_images_arr">
                         <div class="row fileupload-buttonbar">
                             <div class="col-md-4">
-                                <?php if ($notification_type == 'offers') { ?> 
-                                    <div id="dropzone" class="fade well"><i class="fa fa-image fa-lg"></i>&nbsp;&nbsp;Drop files here</div>
-                                <?php } ?>
                             </div>
 
                             <div class="col-md-4 upload_up">
@@ -504,6 +501,9 @@
                                     <span id="load_image_label">Load Image(s)</span>
                                     <input type="file" name="files[]" id="" multiple class="form-control" required="required">
                                 </span>
+
+                                <div id="dropzone" class="fade well"><i class="fa fa-image fa-lg"></i>&nbsp;&nbsp;Drop files here</div>
+
                                 <div class="upload-div" style="display:none;" id="update_div">
                                     <button type="button" class="delete">Delete</button>
                                     <input type="checkbox" class="toggle styled-checkbox-1">
@@ -512,12 +512,6 @@
                                     <a href="<?php echo $images_list_url . $notification_data['id_offer']; ?>" target="_blank" class="btn btn-primary">Images List</a>
                                 <?php } ?>                                
                             </div>
-
-                            <?php if ($notification_type != 'offers') { ?> 
-                                <div class="col-md-4">
-                                    <div id="dropzone" class="fade well"><i class="fa fa-image fa-lg"></i>&nbsp;&nbsp;Drop files here</div>
-                                </div>
-                            <?php } ?>
 
                             <!-- The global progress state -->
                             <div class="col-lg-5 fileupload-progress fade display-none">

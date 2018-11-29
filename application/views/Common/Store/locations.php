@@ -21,125 +21,47 @@
                                 </div>        
                             </div>
                             <div class="col-md-12 col-xs-12">
-                                <div class="col-md-1 col-xs-2">
-                                    <div class="form-group">
-                                        &nbsp;
-                                    </div>
-                                </div>
-                                <div class="col-md-1 col-xs-2">
-                                    <div class="form-group">
-                                        Branch / Mall
-                                    </div>
-                                </div>
-                                <div class="col-md-2 col-xs-2">
-                                    <div class="form-group">
-                                        Email
-                                    </div>
-                                </div>
-                                <div class="col-md-2 col-xs-2">
-                                    <div class="form-group">
-                                        Contact Number
-                                    </div>
-                                </div>
-                                <div class="col-md-2 col-xs-2">
-                                    <div class="form-group">
-                                        Contact Number 1
-                                    </div>
-                                </div>
-                                <div class="col-md-2 col-xs-2">
-                                    <div class="form-group">
-                                        Contact Number 2
-                                    </div>
-                                </div>
-                                <div class="col-md-1 col-xs-2">
-                                    <div class="form-group">
-                                        Longitude
-                                    </div>
-                                </div>
-                                <div class="col-md-1 col-xs-2">
-                                    <div class="form-group">
-                                        Latitude
-                                    </div>
-                                </div>
+                                <table class="table table-hover table-bordered table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Branch</th>
+                                            <th>Mall</th>
+                                            <th>Email</th>
+                                            <th>Contact 1</th>
+                                            <th>Contact 2</th>
+                                            <th>Contact 3</th>
+                                            <th>Longitude</th>
+                                            <th>Latitude</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($store_locations as $loc) { ?>
+                                            <tr>
+                                                <td>
+                                                    <div class="checkbox">
+                                                        <input type="checkbox" class="checkbox" name="delete_location_ids[]" id="delete_location_id<?php echo $loc['id_store_location']; ?>" placeholder="" value="<?php echo $loc['id_store_location']; ?>"><label for="delete_location_id<?php echo $loc['id_store_location']; ?>"></label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <?= (!empty($loc['branch_name'])) ? $loc['branch_name'] : '---' ?>
+                                                </td>
+                                                <td>
+                                                    <?= (!empty($loc['mall_name'])) ? $loc['mall_name'] : '---' ?>
+                                                </td>
+                                                <td><?= (!empty($loc['email']) ? $loc['email'] : '---') ?></td>
+                                                <td><?= (!empty($loc['contact_number']) ? $loc['contact_number'] : '---') ?></td>
+                                                <td><?= (!empty($loc['contact_number_1']) ? $loc['contact_number_1'] : '---') ?></td>
+                                                <td><?= (!empty($loc['contact_number_2']) ? $loc['contact_number_2'] : '---') ?></td>
+                                                <td><?= (!empty($loc['longitude']) ? $loc['longitude'] : '---') ?></td>
+                                                <td><?= (!empty($loc['latitude']) ? $loc['latitude'] : '---') ?></td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
                             </div>
-                            <?php
-                            $placeholder = 'Branch Name / Mall';
-                            $field_val = '';
-
-                            foreach ($store_locations as $loc) {
-                                ?>                            
-                                <div class="col-md-12 col-xs-12">
-                                    <div class="col-md-1 col-xs-2">
-                                        <div class="form-group">                                                
-                                            <div class="checkbox img-checkbox">
-                                                <!--styled-checkbox-1-->
-                                                <input type="checkbox" class="checkbox" name="delete_location_ids[]" id="delete_location_id<?php echo $loc['id_store_location']; ?>" placeholder="" value="<?php echo $loc['id_store_location']; ?>"><label for="delete_location_id<?php echo $loc['id_store_location']; ?>"></label>
-                                            </div>
-                                        </div>        
-                                    </div>
-                                    <div class="col-md-1 col-xs-5">
-                                        <div class="form-group">                                            
-                                            <div>
-                                                <?php
-                                                if (!empty($loc['mall_name'])) {
-                                                    $placeholder = 'Mall';
-                                                    $field_val = $loc['mall_name'];
-                                                }
-
-                                                if (!empty($loc['branch_name'])) {
-                                                    $placeholder = 'Branch';
-                                                    $field_val = $loc['branch_name'];
-                                                }
-                                                ?>
-                                                <input type="text" class="form-control" placeholder="<?= $placeholder ?>"  value="<?= $field_val ?>" title="<?= $placeholder . ' - ' . $field_val ?>" readonly>
-                                            </div>
-                                        </div>        
-                                    </div>
-                                    <div class="col-md-2 col-xs-5">
-                                        <div class="form-group">                                            
-                                            <div>
-                                                <input type="text" class="form-control" placeholder="Email"  value="<?php echo $loc['email']; ?>" readonly>
-                                            </div>
-                                        </div>
-                                    </div>                                     
-                                    <div class="col-md-2 col-xs-5">
-                                        <div class="form-group">                                            
-                                            <div>
-                                                <input type="text" class="form-control" placeholder="Contact Number"  value="<?php echo $loc['contact_number']; ?>" readonly>
-                                            </div>
-                                        </div>
-                                    </div>                                     
-                                    <div class="col-md-2 col-xs-5">
-                                        <div class="form-group">                                            
-                                            <div>
-                                                <input type="text" class="form-control" placeholder="Contact Number 1"  value="<?php echo $loc['contact_number_1']; ?>" readonly>
-                                            </div>
-                                        </div>
-                                    </div>                                     
-                                    <div class="col-md-2 col-xs-5">
-                                        <div class="form-group">                                            
-                                            <div>
-                                                <input type="text" class="form-control" placeholder="Contact Number 2"  value="<?php echo $loc['contact_number_2']; ?>" readonly>
-                                            </div>
-                                        </div>
-                                    </div>                                     
-                                    <div class="col-md-1 col-xs-5">
-                                        <div class="form-group">                                            
-                                            <div>
-                                                <input type="text" class="form-control" placeholder="Longitude"  value="<?php echo $loc['longitude']; ?>" readonly>
-                                            </div>
-                                        </div>
-                                    </div>                                     
-                                    <div class="col-md-1 col-xs-5">
-                                        <div class="form-group">                                            
-                                            <div>
-                                                <input type="text" class="form-control" placeholder="Latitude"  value="<?php echo $loc['latitude']; ?>" readonly>
-                                            </div>
-                                        </div>        
-                                    </div>
-                                </div>
-                            <?php } ?>
-                            <div class="text-right">
+                            <div class="col-md-12">&nbsp;</div>
+                            <div class="col-md-12 text-right">
                                 <input type="hidden" id="checked_val" name="checked_val"/>
                                 <a href="<?php echo $back_url ?>" class="btn bg-grey-300 btn-labeled"><b><i class="icon-arrow-left13"></i></b>Back</a>
                                 <button type="submit" id="delete_locations" class="btn bg-danger btn-labeled btn-labeled-right"><b><i class="icon-arrow-right14"></i></b>Delete</button>

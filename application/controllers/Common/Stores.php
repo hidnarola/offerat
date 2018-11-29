@@ -1058,13 +1058,13 @@ class Stores extends MY_Controller {
      */
 
     function add_locations($date = NULL, $store_id = NULL) {
-//        pr($this->input->post(), 1);
+        // pr($this->input->post(), 1);
         $in_store_location_data = array();
 
         $location_count = $this->input->post('location_count', TRUE);
 
         for ($i = 0; $i <= $location_count; $i++) {
-            if ($this->input->post('latitude_' . $i, TRUE) != '' && $this->input->post('longitude_' . $i, TRUE) != '') {
+            if (!empty($this->input->post('latitude_' . $i, TRUE)) && !empty($this->input->post('longitude_' . $i, TRUE))) {
                 $in_store_location_data = array(
                     'id_store' => $store_id,
                     'latitude' => $this->input->post('latitude_' . $i, TRUE),
@@ -1077,7 +1077,7 @@ class Stores extends MY_Controller {
                     'location_type' => STORE_LOCATION_TYPE,
                     'created_date' => $date,
                     'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
-                    'is_delete' => IS_NOT_DELETED_STATUS
+                    'is_delete' => IS_NOT_DELETED_STATUS,
                 );
 
                 if ($this->input->post('is_mall_' . $i, TRUE) == 1) {
@@ -1090,8 +1090,8 @@ class Stores extends MY_Controller {
                     $location_city = $this->input->post('location_city_' . $i, TRUE);
                     $in_store_location_data['branch_name'] = $location_city;
                 }
-                
-                $this->Common_model->master_save(tbl_store_location, $in_store_location_data);
+
+                $is_saved = $this->Common_model->master_save(tbl_store_location, $in_store_location_data);
             }
         }
     }
@@ -1299,7 +1299,7 @@ class Stores extends MY_Controller {
 
                 $select_store_location = array(
                     'table' => tbl_store_location . ' store_location',
-                    'field' => 'store_location.*, mall.mall_name',
+                    'fields' => array('store_location.*','mall.mall_name'),
                     'where' => array(
                         'store_location.id_store' => $id,
                         'store_location.is_delete' => IS_NOT_DELETED_STATUS,
@@ -1309,7 +1309,7 @@ class Stores extends MY_Controller {
                     'join' => array(
                         array(
                             'table' => tbl_mall . ' as mall',
-                            'condition' => 'store_location.id_location = mall.id_mall',
+                            'condition' => 'store_location.id_location = mall.id_mall and location_type = 0',
                             'join' => 'left',
                         )
                     )
