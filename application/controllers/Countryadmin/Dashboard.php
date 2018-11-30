@@ -89,7 +89,6 @@ class Dashboard extends MY_Controller {
         );
 
         $filter_records = $this->Common_model->get_filtered_records(tbl_store, $filter_array);
-//        query();
         $total_filter_records = $this->Common_model->get_filtered_records(tbl_store, $filter_array, 1);
 
         $output = array(
@@ -124,6 +123,7 @@ class Dashboard extends MY_Controller {
         $filter_array['order_by'] = array(tbl_offer_announcement . '.id_offer' => 'DESC');
         $filter_array['group_by'] = array(tbl_offer_announcement . '.id_offer');
         $filter_array['where'] = array(
+            tbl_offer_announcement . '.type !=' => CATALOG_OFFER_TYPE,
             tbl_offer_announcement . '.is_delete' => IS_NOT_DELETED_STATUS,
             tbl_offer_announcement . '.expiry_time' => '0000-00-00 00:00:00'
         );
@@ -149,7 +149,7 @@ class Dashboard extends MY_Controller {
             $filter_array['where_with_sign'][] = '(FIND_IN_SET("' . $this->loggedin_user_data['user_id'] . '", country.id_users) <> 0)';
 
         $filter_records = $this->Common_model->get_filtered_records(tbl_offer_announcement, $filter_array);
-//            query();
+        
         $total_filter_records = $this->Common_model->get_filtered_records(tbl_offer_announcement, $filter_array, 1);
 
         $output = array(

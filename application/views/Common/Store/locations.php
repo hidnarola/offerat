@@ -27,12 +27,12 @@
                                             <th>#</th>
                                             <th>Branch</th>
                                             <th>Mall</th>
-                                            <th>Email</th>
+                                            <th>Longitude</th>
+                                            <th>Latitude</th>
                                             <th>Contact 1</th>
                                             <th>Contact 2</th>
                                             <th>Contact 3</th>
-                                            <th>Longitude</th>
-                                            <th>Latitude</th>
+                                            <th>Email</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -49,12 +49,12 @@
                                                 <td>
                                                     <?= (!empty($loc['mall_name'])) ? $loc['mall_name'] : '---' ?>
                                                 </td>
-                                                <td><?= (!empty($loc['email']) ? $loc['email'] : '---') ?></td>
+                                                <td><?= (!empty($loc['longitude']) ? $loc['longitude'] : '---') ?></td>
+                                                <td><?= (!empty($loc['latitude']) ? $loc['latitude'] : '---') ?></td>
                                                 <td><?= (!empty($loc['contact_number']) ? $loc['contact_number'] : '---') ?></td>
                                                 <td><?= (!empty($loc['contact_number_1']) ? $loc['contact_number_1'] : '---') ?></td>
                                                 <td><?= (!empty($loc['contact_number_2']) ? $loc['contact_number_2'] : '---') ?></td>
-                                                <td><?= (!empty($loc['longitude']) ? $loc['longitude'] : '---') ?></td>
-                                                <td><?= (!empty($loc['latitude']) ? $loc['latitude'] : '---') ?></td>
+                                                <td><?= (!empty($loc['email']) ? $loc['email'] : '---') ?></td>
                                             </tr>
                                         <?php } ?>
                                     </tbody>

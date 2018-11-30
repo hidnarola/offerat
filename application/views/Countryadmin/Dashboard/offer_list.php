@@ -155,7 +155,7 @@
             initComplete: function () {
                 var tableColumns = table.settings().init().columns;
                 this.api().columns().every(function (index) {
-                    if (tableColumns[index].name == 'offer_announcement.type') {                        
+                    if (tableColumns[index].name == 'offer_announcement.type') {
                         var column = this;
                         var select = $('<select class="form-control"><option value="">Select</option></select>')
                                 .appendTo($('#notification_dttable_wrapper .dataTables_scroll .dataTables_scrollHead .dataTables_scrollHeadInner .datatable-basic th:nth-child(' + (index + 1) + '):first').empty())

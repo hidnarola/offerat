@@ -79,22 +79,6 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
                 });
 
         $(document).bind('dragover', function (e) {
-            var dropZone = $('#dropzone'),
-                    timeout = window.dropZoneTimeout;
-            if (timeout) {
-                clearTimeout(timeout);
-            } else {
-                dropZone.addClass('in');
-            }
-            var hoveredDropZone = $(e.target).closest(dropZone);
-            dropZone.toggleClass('hover', hoveredDropZone.length);
-            window.dropZoneTimeout = setTimeout(function () {
-                window.dropZoneTimeout = null;
-                dropZone.removeClass('in hover');
-            }, 100);
-        });
-
-        $(document).bind('dragover', function (e) {
             var dropZones = $('#dropzone'),
                     timeout = window.dropZoneTimeout;
             if (timeout) {
@@ -114,7 +98,74 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
         $(document).bind('drop dragover', function (e) {
             e.preventDefault();
         });
+        
+        /*
+         * @author HGA
+         * @added 30-11-2018 11:33 AM
+         * @param {type} b64Data
+         * @param {type} contentType
+         * @param {type} sliceSize
+         * @returns {Blob}
+         * @comment Convert Facebook Image URL to Blog files.
+         */
+        $(document).bind('drop', function (e) {
+            var url = $(e.originalEvent.dataTransfer.getData('text/html')).filter('img').attr('src');
 
+            if (url) {
+                var xhr = new XMLHttpRequest();
+
+                xhr.responseType = "arraybuffer";
+                xhr.open("GET", url);
+
+                xhr.onload = function () {
+                    var base64, binary, bytes, mediaType;
+
+                    bytes = new Uint8Array(xhr.response);
+                    binary = [].map.call(bytes, function (byte) {
+                        return String.fromCharCode(byte);
+                    }).join('');
+
+                    mediaType = xhr.getResponseHeader('content-type');
+
+                    base64 = [
+                        'data:',
+                        mediaType ? mediaType + ';' : '',
+                        'base64,',
+                        btoa(binary)
+                    ].join('');
+
+                    var blob_file = b64toBlob(btoa(binary), mediaType);
+
+                    if (blob_file) {
+                        $('#fileupload').fileupload('add', {files: [blob_file]});
+                    }
+                };
+                xhr.send();
+            }
+        });
+
+        function b64toBlob(b64Data, contentType, sliceSize) {
+            contentType = contentType || '';
+            sliceSize = sliceSize || 512;
+
+            var byteCharacters = atob(b64Data);
+            var byteArrays = [];
+
+            for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                var slice = byteCharacters.slice(offset, offset + sliceSize);
+                var byteNumbers = new Array(slice.length);
+                
+                for (var i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+
+                var byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+
+            var blob = new Blob(byteArrays, {type: contentType});
+            return blob;
+        }
 
         $('#fileupload').fileupload({
             dropZone: $('#dropzone'),
@@ -122,7 +173,6 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
             dataType: 'json',
             autoUpload: true,
             acceptFileTypes: /(\.|\/)(jpe?g|jpg|png)$/i,
-            maxFileSize: 250000,
             maxNumberOfFiles: <?php echo $max_image_upload_count; ?>,
             // Enable image resizing, except for Android and Opera,
             // which actually support image resizing, but fail to
@@ -142,8 +192,8 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
                     action: 'resize',
                     maxWidth: 250,
                     maxHeight: 250,
-                    minWidth: 80,
-                    minHeight: 80
+                    minWidth: 100,
+                    minHeight: 100
                 },
                 {
                     action: 'save'
@@ -153,7 +203,6 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
                 maxNumberOfFiles: 'Sorry, You can upload <?php echo $max_image_upload_count; ?> Images,Please remove unneccessary files',
             },
             success: function (response) {
-
                 $("#error_img").html("");
                 var table_content = $(document).find(".table .table-striped").html();
                 img_arr.push(window.btoa(response.files[0].name));

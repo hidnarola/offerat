@@ -168,7 +168,8 @@ class Stores extends MY_Controller {
         );
         $filter_array['join'][] = array(
             'table' => tbl_mall . ' as mall',
-            'condition' => tbl_mall . '.id_mall = ' . tbl_store_location . '.id_location',
+//            'condition' => tbl_mall . '.id_mall = ' . tbl_store_location . '.id_location AND ' . tbl_store_location . '.location_type = 0',
+            'condition' => tbl_store_location . '.id_location = ' . tbl_mall . '.id_mall AND ' . tbl_store_location . '.location_type = 0 AND '. tbl_store_location . '.is_delete = 0',
             'join_type' => 'left',
         );
         $filter_array['join'][] = array(
@@ -1299,7 +1300,7 @@ class Stores extends MY_Controller {
 
                 $select_store_location = array(
                     'table' => tbl_store_location . ' store_location',
-                    'fields' => array('store_location.*','mall.mall_name'),
+                    'fields' => array('store_location.*', 'mall.mall_name'),
                     'where' => array(
                         'store_location.id_store' => $id,
                         'store_location.is_delete' => IS_NOT_DELETED_STATUS,
