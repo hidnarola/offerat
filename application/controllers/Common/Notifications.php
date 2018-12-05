@@ -1055,7 +1055,7 @@ class Notifications extends MY_Controller {
     function last_posted_date() {
         $last_posted_date = '';
         $store_mall_id = $this->input->post('store_id');
-        
+
         $store_mall_text = explode('_', $store_mall_id);
         if ($store_mall_text[0] == 'store') {
             $id = $store_mall_text[1];
@@ -1088,6 +1088,54 @@ class Notifications extends MY_Controller {
 
         echo $last_posted_date;
         exit;
+    }
+
+    public function save_non_store_category_to_offers() {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
+
+        $flag = FALSE;
+        $date = date('Y-m-d h:i:s');
+
+        $query = 'SELECT oa.id_offer,sc.id_category, sc.id_sub_category '
+                . 'FROM ' . tbl_offer_announcement . ' oa '
+                . 'LEFT JOIN ' . tbl_store_category . ' as sc ON sc.id_store = oa.id_store '
+                . 'LEFT JOIN ' . tbl_category . ' as c ON c.id_category = sc.id_category AND c.is_delete = ' . IS_NOT_DELETED_STATUS . ' '
+                . 'LEFT JOIN ' . tbl_sub_category . ' as subc ON subc.id_sub_category = sc.id_sub_category AND subc.is_delete = ' . IS_NOT_DELETED_STATUS . ' '
+                . 'WHERE oa.is_delete = ' . IS_NOT_DELETED_STATUS . ' '
+                . 'AND oa.id_store > 0 '
+                . 'AND sc.id_sub_category != 0 '
+                . 'AND oa.id_offer NOT IN( SELECT soc.id_offer_announcement FROM store_offer_category as soc ) '
+                . 'ORDER BY oa.id_offer ASC';
+
+        //Get Non-category offers
+        $not_category_offers = $this->db->query($query);
+        $not_category_offers_data = $not_category_offers->result_array();
+
+        if (!empty($not_category_offers_data)) {
+            foreach ($not_category_offers_data as $offer_anouncement_id) {
+                $store_offer_category_data = array(
+                    'id_offer_announcement' => $offer_anouncement_id['id_offer'],
+                    'id_category' => $offer_anouncement_id['id_category'],
+                    'id_sub_category' => $offer_anouncement_id['id_sub_category'],
+                    'created_date' => $date,
+                    'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
+                    'is_delete' => IS_NOT_DELETED_STATUS,
+                );
+
+                $is_saved = $this->Common_model->master_save(tbl_store_offer_category, $store_offer_category_data);
+
+                if ($is_saved) {
+                    $flag = TRUE;
+                }
+            }
+        }
+
+        if ($flag == TRUE) {
+            echo 'Categroy details has been saved in offer announcements.';
+        } else {
+            echo 'Categroy details has not been saved or already exists in offer announcement.';
+        }
     }
 
 }

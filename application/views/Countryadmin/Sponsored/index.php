@@ -16,14 +16,20 @@
                     <div class="panel-body"> 
                         <fieldset class="content-group">                                                                                                    
                             <div class="col-md-3">
-                                <?php if (isset($stores_list) && sizeof($stores_list) > 0) { ?>
-                                    <select id="store_id" name="store_id" class="form-control select-search">
-                                        <option class="">Select Store</option>
-                                        <?php foreach ($stores_list as $list) { ?>
+                                <select id="store_id" name="store_id" class="form-control select-search">
+                                    <option class="">Select Store</option>
+                                    <?php
+                                    if (isset($stores_list) && sizeof($stores_list) > 0) {
+                                        foreach ($stores_list as $list) {
+                                            ?>
                                             <option value="<?php echo $list['id_store']; ?>"><?php echo $list['store_name']; ?></option>
-                                        <?php } ?>
-                                    </select>
-                                <?php } ?>
+                                            <?php
+                                        }
+                                    } else {
+                                        ?>
+                                        <option value="">Store Not Found</option>
+                                    <?php } ?>
+                                </select>
                             </div>                                            
                         </fieldset>
                         <div class="data-sponsored-display"></div>                            
