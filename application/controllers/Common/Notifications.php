@@ -267,7 +267,7 @@ class Notifications extends MY_Controller {
                         $field = 'id_mall';
                     }
 
-                    $select_last_posted_offer = array(
+                    /*$select_last_posted_offer = array(
                         'table' => tbl_offer_announcement,
                         'where' => array(
                             $field => $store_mall_id,
@@ -282,7 +282,7 @@ class Notifications extends MY_Controller {
                     if (count($check_store_mall_catalog) >= 1) {
                         $this->session->set_flashdata('error_msg', 'Store must has only  one catalog!');
                         redirect($back_url . '/save');
-                    }
+                    }*/
                 }
 
                 $sub_category_id = $this->input->post('sub_category_id');

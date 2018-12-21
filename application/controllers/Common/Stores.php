@@ -169,7 +169,7 @@ class Stores extends MY_Controller {
         $filter_array['join'][] = array(
             'table' => tbl_mall . ' as mall',
 //            'condition' => tbl_mall . '.id_mall = ' . tbl_store_location . '.id_location AND ' . tbl_store_location . '.location_type = 0',
-            'condition' => tbl_store_location . '.id_location = ' . tbl_mall . '.id_mall AND ' . tbl_store_location . '.location_type = 0 AND '. tbl_store_location . '.is_delete = 0',
+            'condition' => tbl_store_location . '.id_location = ' . tbl_mall . '.id_mall AND ' . tbl_store_location . '.location_type = 0 AND ' . tbl_store_location . '.is_delete = 0',
             'join_type' => 'left',
         );
         $filter_array['join'][] = array(
@@ -726,7 +726,7 @@ class Stores extends MY_Controller {
                                 $sheet_data = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
 
                                 foreach ($sheet_data as $key => $data) {
-                                    if (isset($data['F']) && isset($data['G']) && !empty($data['F']) && !empty($data['G']) && $key > 1) {
+                                    if (isset($data['A']) && isset($data['A']) && $key > 1) {
                                         $branch_name = !empty($data['A']) ? $data['A'] : '';
                                         $contact_number = !empty($data['B']) ? $data['B'] : '';
                                         $contact_number_1 = !empty($data['C']) ? $data['C'] : '';
@@ -1059,39 +1059,39 @@ class Stores extends MY_Controller {
      */
 
     function add_locations($date = NULL, $store_id = NULL) {
-        // pr($this->input->post(), 1);
         $in_store_location_data = array();
 
         $location_count = $this->input->post('location_count', TRUE);
 
         for ($i = 0; $i <= $location_count; $i++) {
-            if (!empty($this->input->post('latitude_' . $i, TRUE)) && !empty($this->input->post('longitude_' . $i, TRUE))) {
-                $in_store_location_data = array(
-                    'id_store' => $store_id,
-                    'latitude' => $this->input->post('latitude_' . $i, TRUE),
-                    'longitude' => $this->input->post('longitude_' . $i, TRUE),
-                    'contact_number' => $this->input->post('telephone_' . $i, TRUE),
-                    'contact_number_1' => $this->input->post('telephoneA_' . $i, TRUE),
-                    'contact_number_2' => $this->input->post('telephoneB_' . $i, TRUE),
-                    'email' => $this->input->post('email_' . $i, TRUE),
-                    'id_location' => 0,
-                    'location_type' => STORE_LOCATION_TYPE,
-                    'created_date' => $date,
-                    'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
-                    'is_delete' => IS_NOT_DELETED_STATUS,
-                );
+            $in_store_location_data = array(
+                'id_store' => $store_id,
+                'latitude' => $this->input->post('latitude_' . $i, TRUE),
+                'longitude' => $this->input->post('longitude_' . $i, TRUE),
+                'contact_number' => $this->input->post('telephone_' . $i, TRUE),
+                'contact_number_1' => $this->input->post('telephoneA_' . $i, TRUE),
+                'contact_number_2' => $this->input->post('telephoneB_' . $i, TRUE),
+                'email' => $this->input->post('email_' . $i, TRUE),
+                'id_location' => 0,
+                'location_type' => STORE_LOCATION_TYPE,
+                'created_date' => $date,
+                'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
+                'is_delete' => IS_NOT_DELETED_STATUS,
+            );
 
-                if ($this->input->post('is_mall_' . $i, TRUE) == 1) {
-                    $location_mall_id = $this->input->post('location_mall_id_' . $i, TRUE);
-                    $in_store_location_data['id_location'] = $location_mall_id;
-                    $in_store_location_data['location_type'] = 0;
-                }
+            if ($this->input->post('is_mall_' . $i, TRUE) == 1) {
+                $location_mall_id = $this->input->post('location_mall_id_' . $i, TRUE);
+                $in_store_location_data['id_location'] = $location_mall_id;
+                $in_store_location_data['location_type'] = 0;
+            }
 
-                if ($this->input->post('is_mall_' . $i, TRUE) == 0) {
-                    $location_city = $this->input->post('location_city_' . $i, TRUE);
-                    $in_store_location_data['branch_name'] = $location_city;
-                }
+            if ($this->input->post('is_mall_' . $i, TRUE) == 0) {
+                $location_city = $this->input->post('location_city_' . $i, TRUE);
+                $in_store_location_data['branch_name'] = $location_city;
+            }
 
+
+            if (!empty($in_store_location_data['branch_name']) || !empty($in_store_location_data['id_location'])) {
                 $is_saved = $this->Common_model->master_save(tbl_store_location, $in_store_location_data);
             }
         }
