@@ -402,7 +402,7 @@ class Notifications extends MY_Controller {
                             'content' => $content,
                             'broadcasting_time' => $broadcasting_time_text,
                             'expiry_time' => $expiry_time_text,
-                            'expire_text' => $this->input->post('expire_text', TRUE)
+                            'expire_text' => htmlspecialchars_decode($this->input->post('expire_text', TRUE))
                         );
                         if ($notification_type == 'offers')
                             $notification_data['expire_time_type'] = $this->input->post('expire_time_type', TRUE);
