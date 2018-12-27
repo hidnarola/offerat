@@ -253,6 +253,15 @@ class Notifications extends MY_Controller {
             }
 
             if ($this->input->post()) {
+
+                pr($_POST);
+
+                echo html_entity_decode($this->input->post('expire_text', TRUE));
+                echo '<br>';
+                echo html_entity_decode($this->input->post('expire_text', TRUE));
+
+
+//                die();
                 $store_mall_id = $this->input->post('store_mall_id', TRUE);
 
                 if ($notification_type == "catalogs") {
@@ -267,22 +276,22 @@ class Notifications extends MY_Controller {
                         $field = 'id_mall';
                     }
 
-                    /*$select_last_posted_offer = array(
-                        'table' => tbl_offer_announcement,
-                        'where' => array(
-                            $field => $store_mall_id,
-                            'type' => CATALOG_OFFER_TYPE,
-                            'is_delete' => IS_NOT_DELETED_STATUS,
-                        ),
-                        'order_by' => array('id_offer' => 'DESC'),
-                    );
+                    /* $select_last_posted_offer = array(
+                      'table' => tbl_offer_announcement,
+                      'where' => array(
+                      $field => $store_mall_id,
+                      'type' => CATALOG_OFFER_TYPE,
+                      'is_delete' => IS_NOT_DELETED_STATUS,
+                      ),
+                      'order_by' => array('id_offer' => 'DESC'),
+                      );
 
-                    $check_store_mall_catalog = $this->Common_model->master_select($select_last_posted_offer);
+                      $check_store_mall_catalog = $this->Common_model->master_select($select_last_posted_offer);
 
-                    if (count($check_store_mall_catalog) >= 1) {
-                        $this->session->set_flashdata('error_msg', 'Store must has only  one catalog!');
-                        redirect($back_url . '/save');
-                    }*/
+                      if (count($check_store_mall_catalog) >= 1) {
+                      $this->session->set_flashdata('error_msg', 'Store must has only  one catalog!');
+                      redirect($back_url . '/save');
+                      } */
                 }
 
                 $sub_category_id = $this->input->post('sub_category_id');
@@ -402,7 +411,8 @@ class Notifications extends MY_Controller {
                             'content' => $content,
                             'broadcasting_time' => $broadcasting_time_text,
                             'expiry_time' => $expiry_time_text,
-                            'expire_text' => htmlspecialchars_decode($this->input->post('expire_text', TRUE))
+//                            'expire_text' => htmlspecialchars_decode($this->input->post('expire_text', TRUE))
+                            'expire_text' => html_entity_decode($this->input->post('expire_text', TRUE))
                         );
                         if ($notification_type == 'offers')
                             $notification_data['expire_time_type'] = $this->input->post('expire_time_type', TRUE);
@@ -415,7 +425,7 @@ class Notifications extends MY_Controller {
                         }
 
                         if ($notification_type == 'offers')
-                            $notification_data['push_message'] = $this->input->post('push_message', TRUE);
+                            $notification_data['push_message'] = html_entity_decode($this->input->post('push_message', TRUE));
 
                         if (isset($id) && $id > 0) {
                             $where = array('id_offer' => $id);
