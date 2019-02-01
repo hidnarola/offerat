@@ -51,43 +51,43 @@
             </div>            
         </div>
 
-<!--        <legend class="text-bold">Business</legend>
-
-        <div class="add_desc">
-            <button id="category_selection_btn" type="button" class="pull-right margin-left-5 btn-primary labeled"><b><i class="icon-plus22"></i></b>Add More Category</button>
-        </div>
-        <div class="row">
-            <div id="category_selection_wrapper" class="clear-float row_add_div">  
-                <div id="category_selection_block_0" data-clone-number="0" class="clear-float">
-                    <div class="col-md-12 business_category_div">
-                        <div class="col-md-5">
-                            <div class="form-group">
-                                <div>
-                                    <select id="category_0" name="category_0" class="select category_selection_dropdown form-control" data-clone-number="0" required="required">
-                                        <option value="">Select Category</option>
-                                        <?php foreach ($category_list as $list) { ?>
-                                            <option value="<?php echo $list['id_category']; ?>"><?php echo $list['category_name']; ?></option>
-                                        <?php } ?>
+        <!--        <legend class="text-bold">Business</legend>
+        
+                <div class="add_desc">
+                    <button id="category_selection_btn" type="button" class="pull-right margin-left-5 btn-primary labeled"><b><i class="icon-plus22"></i></b>Add More Category</button>
+                </div>
+                <div class="row">
+                    <div id="category_selection_wrapper" class="clear-float row_add_div">  
+                        <div id="category_selection_block_0" data-clone-number="0" class="clear-float">
+                            <div class="col-md-12 business_category_div">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <div>
+                                            <select id="category_0" name="category_0" class="select category_selection_dropdown form-control" data-clone-number="0" required="required">
+                                                <option value="">Select Category</option>
+        <?php foreach ($category_list as $list) { ?>
+                                                                                                                        <option value="<?php echo $list['id_category']; ?>"><?php echo $list['category_name']; ?></option>
+        <?php } ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 sub_cat_section_0">
+                                    <select id="sub_category_0" name="sub_category_0" class="select sub_category_selection_dropdown form-control" data-clone-number="0">
+                                        <option value="">Select Sub Category</option>
                                     </select>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-5 sub_cat_section_0">
-                            <select id="sub_category_0" name="sub_category_0" class="select sub_category_selection_dropdown form-control" data-clone-number="0">
-                                <option value="">Select Sub Category</option>
-                            </select>
-                        </div>
-                        <div class="col-md-1 product-selection-remove-prod-btn">
-                            <div class="form-group">
-                                <div>
-                                    <button type="button" class="btn btn-danger btn-icon category_selection_remove_btn" data-clone-number="0"><i class="icon-cross3"></i></button>
+                                <div class="col-md-1 product-selection-remove-prod-btn">
+                                    <div class="form-group">
+                                        <div>
+                                            <button type="button" class="btn btn-danger btn-icon category_selection_remove_btn" data-clone-number="0"><i class="icon-cross3"></i></button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>-->
+                </div>-->
 
         <legend class="text-bold">Location</legend>
         <div class="col-lg-6 col_mobile_pad">
@@ -110,12 +110,12 @@
         <div id="mall_selection_wrapper" class="clear-float row_add_div">  
 
         </div>
-<!--        <div class="form-group checkbox_reg">            
-            <input type="checkbox" class="styled-checkbox-1" name="terms_condition" required="required"/>                
-            <span class="text-size-mini">  Yes, I agree with <a href="terms-and-conditions" target="_blank"><span>Terms And Conditions</span></a></span>            
-            <label id="terms_condition-error" class="validation-error-label" for="terms_condition"></label>
-
-        </div>-->
+        <!--        <div class="form-group checkbox_reg">            
+                    <input type="checkbox" class="styled-checkbox-1" name="terms_condition" required="required"/>                
+                    <span class="text-size-mini">  Yes, I agree with <a href="terms-and-conditions" target="_blank"><span>Terms And Conditions</span></a></span>            
+                    <label id="terms_condition-error" class="validation-error-label" for="terms_condition"></label>
+        
+                </div>-->
         <div class="form-group btn_center">            
             <input type="hidden" name="category_count" id="category_count" value="1">
             <input type="hidden" name="location_count" id="location_count" value="1">
@@ -127,6 +127,12 @@
 
 <script type="text/javascript" src="assets/front/js/store.js"></script>
 <script>
+    $(document).ready(function () {
+        setInterval(function () {
+            $(".file-caption-name").text('Load square logo');
+        }, 10);
+    });
+
     function generatecategorySelectionBlock(cloneNumber) {
         var html = '';
         html += '<div id="category_selection_block_' + cloneNumber + '" data-clone-number="' + cloneNumber + '" class="clear-float">';

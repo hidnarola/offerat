@@ -25,7 +25,7 @@ class Storeregistration extends CI_Controller {
                 'telephone',
                 'category_count',
                 'id_country',
-                'terms_condition'
+//                'terms_condition'
             );
 
             if ($this->_validate_form($validate_fields)) {

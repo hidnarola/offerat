@@ -42,7 +42,7 @@ div#category_selection_wrapper {padding-bottom: 15px;}
 .row_add_div {clear: both;}
 .upload-store-logo-div .btn.btn-primary.btn-file{height: 40px;}
 .upload-store-logo-div button.btn.btn-default.fileinput-remove.fileinput-remove-button {height: 40px;}
-.file-caption-name{text-overflow: ellipsis;overflow: hidden;width: 100px;white-space: nowrap;}
+.file-caption-name{text-overflow: ellipsis;overflow: hidden;width: 110px;white-space: nowrap;}
 .validation-error-label, .validation-valid-label {display: inline;}
 
 @media (min-width:992px) and (max-width:1199px){
