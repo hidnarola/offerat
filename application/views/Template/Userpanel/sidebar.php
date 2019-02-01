@@ -39,6 +39,7 @@ $controller = $this->uri->segment(2);
                         <li <?php echo (in_array($controller, array('category', 'sub-category'))) ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/category"><i class="icon-atom"></i> <span>Categories</span></a></li>
                         <li <?php echo ($controller === 'change-password') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-password"><i class="icon-lock2"></i> <span>Change Password</span></a></li>
                         <li <?php echo ($controller === 'change-information') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/change-information"><i class="fa fa-user"></i> <span>Change Information</span></a></li>
+                        <li <?php echo ($controller === 'terms-conditions') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/terms-conditions"><i class="fa fa-files-o"></i> <span>Pages</span></a></li>
                     </ul>
                 <?php } elseif ($logged_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
                     <ul class="navigation navigation-main navigation-accordion">

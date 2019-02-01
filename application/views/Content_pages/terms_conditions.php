@@ -1,8 +1,16 @@
-<?php
-
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+<div class="panel-body">
+    <div class="summernote">
+        <?php
+        if (!empty($pages)) {
+            foreach ($pages as $page) {
+                ?>
+                <h4><strong><?= $page['page_title'] ?></strong></h4>
+                <p><?= $page['page_content'] ?></p>
+                <br>
+                <?php
+            }
+        }
+        ?>
+        <?php ?>
+    </div>
+</div>

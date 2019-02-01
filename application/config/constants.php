@@ -118,6 +118,7 @@ define('tbl_click_store', 'click_store');
 define('tbl_sponsored_log', 'sponsored_log');
 define('tbl_offer_cron', 'offer_cron');
 define('tbl_store_offer_category', 'store_offer_category');
+define('tbl_terms_conditions', 'terms_conditions');
 
 /* define('country_img_path', 'assets/images/country/');
   define('category_img_path', 'assets/images/category/');

@@ -82,11 +82,18 @@ $route['super-admin/category/save'] = 'Superadmin/category/save';
 $route['super-admin/category/save/(:any)'] = 'Superadmin/category/save/$1';
 $route['superadmin/category/delete/(:any)'] = 'Superadmin/category/delete/$1';
 
+//Terms & Condition
+$route['super-admin/terms-conditions'] = 'Superadmin/TermsCondition';
+$route['super-admin/terms-conditions/edit/(:any)'] = 'Superadmin/TermsCondition/save/$1';
+$route['super-admin/terms-conditions/save/(:any)'] = 'Superadmin/TermsCondition/save/$1';
+$route['super-admin/terms-conditions/filter_terms_condition'] = 'Superadmin/TermsCondition/filter_terms_condition';
+
 //Sub-category
 $route['super-admin/sub-category/(:any)'] = 'Superadmin/subcategory/index/$1';
 $route['super-admin/sub-category/save/(:any)'] = 'Superadmin/subcategory/save/$1';
 $route['super-admin/sub-category/save/(:any)/(:any)'] = 'Superadmin/subcategory/save/$1/$2';
 $route['superadmin/subcategory/delete/(:any)/(:any)'] = 'Superadmin/subcategory/delete/$1/$2';
+
 
 
 //Country Admin Routes =================================
@@ -190,7 +197,7 @@ $route['email-change-verify'] = 'login/change_verify';
 
 $route['about-us'] = 'Content_pages/about_us';
 $route['contact-us'] = 'Content_pages/contact_us';
-$route['terms-and-conditions'] = 'Content_pages/terms_conditions';
+$route['tc'] = 'Content_pages/terms_conditions';
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
