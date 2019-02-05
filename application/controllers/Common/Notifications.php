@@ -178,6 +178,7 @@ class Notifications extends MY_Controller {
             $images_list_url = '';
             $remove_image_url = '';
             $offer_category_data = array();
+            $data_last_posted_offer = array();
 
             if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
                 $back_url = 'country-admin/notifications/' . $notification_type . '/' . $list_type;
@@ -244,6 +245,21 @@ class Notifications extends MY_Controller {
                     redirect($back_url);
                 }
             } else {
+                if ($notification_type == "announcements" || $notification_type == "offers") {
+                    //Get Category-Sub Category Details
+                    $select_last_posted_offer = array(
+                        'table' => tbl_offer_announcement,
+                        'fields' => array('created_date'),
+                        'where' => array(
+                            'offer_type !=' => CATALOG_OFFER_TYPE,
+                            'is_delete' => IS_NOT_DELETED_STATUS,
+                        ),
+                        'order_by' => array('id_offer' => 'DESC'),
+                    );
+
+                    $data_last_posted_offer = $this->Common_model->master_single_select($select_last_posted_offer);
+                }
+
                 $this->bread_crum[] = array(
                     'url' => '',
                     'title' => 'Add ' . ucfirst($notification_type),
@@ -253,15 +269,6 @@ class Notifications extends MY_Controller {
             }
 
             if ($this->input->post()) {
-
-                pr($_POST);
-
-                echo html_entity_decode($this->input->post('expire_text', TRUE));
-                echo '<br>';
-                echo html_entity_decode($this->input->post('expire_text', TRUE));
-
-
-//                die();
                 $store_mall_id = $this->input->post('store_mall_id', TRUE);
 
                 if ($notification_type == "catalogs") {
@@ -532,6 +539,7 @@ class Notifications extends MY_Controller {
             $this->data['remove_image_url'] = $remove_image_url;
             $this->data['max_image_upload_count'] = $max_image_upload_count;
             $this->data['offer_category_data'] = $offer_category_data;
+            $this->data['data_last_posted_offer'] = $data_last_posted_offer;
 
             $this->template->load('user', 'Common/Notifications/form', $this->data);
 //            $this->template->load('user', 'Common/Notifications/test', $this->data);
@@ -545,10 +553,7 @@ class Notifications extends MY_Controller {
         if ($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE && $this->input->post('uploaded_images_data', TRUE) != '') {
 
             $uploaded_images_data = explode(',', $this->input->post('uploaded_images_data', TRUE));
-//            pr($uploaded_images_data);
-//            pr($uploaded_images_data);
-//            echo count($uploaded_images_data);
-//            die();
+            
             if (isset($uploaded_images_data) && sizeof($uploaded_images_data) > 0 && count($uploaded_images_data) <= $max_image_upload_count) {
                 $image_data = array();
                 foreach ($uploaded_images_data as $image) {

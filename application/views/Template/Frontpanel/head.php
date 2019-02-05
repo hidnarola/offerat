@@ -12,6 +12,7 @@
 <link href="assets/user/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
 <link href="assets/user/css/icons/fontawesome/styles.min.css" rel="stylesheet" type="text/css">
 <link href="assets/front/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="assets/front/css/login.css" rel="stylesheet" type="text/css">
 <link href="assets/user/css/core.min.css" rel="stylesheet" type="text/css">
 <link href="assets/user/css/components.min.css" rel="stylesheet" type="text/css">
 <link href="assets/user/css/colors.min.css" rel="stylesheet" type="text/css">

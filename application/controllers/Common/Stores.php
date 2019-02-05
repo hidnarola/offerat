@@ -1558,4 +1558,72 @@ class Stores extends MY_Controller {
         }
     }
 
+    public function get_ajax_store_location_data() {
+        if ($this->input->post()) {
+            $id_store_location = $this->input->post('id_store_location');
+
+            $select_mall = array(
+                'table' => tbl_mall,
+                'fields' => array('mall.*'),
+                'where' => array(
+                    'is_delete' => IS_NOT_DELETED_STATUS,
+                )
+            );
+
+            $data['mall_list'] = $this->Common_model->master_select($select_mall);
+
+            $select_store_location = array(
+                'table' => tbl_store_location . ' store_location',
+                'fields' => array('store_location.*', 'mall.mall_name'),
+                'where' => array(
+                    'store_location.id_store_location' => $id_store_location,
+                    'store_location.is_delete' => IS_NOT_DELETED_STATUS,
+                ),
+                'join' => array(
+                    array(
+                        'table' => tbl_mall . ' as mall',
+                        'condition' => 'store_location.id_location = mall.id_mall and location_type = 0',
+                        'join' => 'left',
+                    )
+                )
+            );
+
+            $data['store_locations_list'] = $this->Common_model->master_single_select($select_store_location);
+
+            return $this->load->view('Common/Store/edit_location', $data);
+        }
+    }
+
+    public function update_store_location() {
+        $condition = array(
+            'id_store_location' => $this->input->post('id_store_location'),
+        );
+
+        $data = array(
+            'latitude' => $this->input->post('latitude'),
+            'longitude' => $this->input->post('longitude'),
+            'contact_number' => $this->input->post('contact_number'),
+            'contact_number_1' => $this->input->post('contact_number_1'),
+            'contact_number_2' => $this->input->post('contact_number_2'),
+            'email' => $this->input->post('email'),
+        );
+
+        if (!empty($this->input->post('id_location'))) {
+            $data['id_location'] = $this->input->post('id_location');
+        }
+
+        if (!empty($this->input->post('branch_name'))) {
+            $data['branch_name'] = $this->input->post('branch_name');
+        }
+
+        $is_location_updated = $this->Common_model->master_update_batch(tbl_store_location, $data, $condition);
+
+        if ($is_location_updated)
+            $this->session->set_flashdata('success_msg', 'Store location has been updated successfully.');
+        else
+            $this->session->set_flashdata('error_msg', 'Something went wrong');
+
+        redirect('country-admin/stores/locations/' . $this->input->post('id_store'));
+    }
+
 }

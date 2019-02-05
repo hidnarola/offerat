@@ -14,11 +14,17 @@
                     <form method="POST" action="" enctype="multipart/form-data" class="form-validate-jquery" name="frm_profile" id="frm_profile">
                     <!--<form method="POST" action="<?php echo $upload_url; ?>" enctype="multipart/form-data" class="form-validate-jquery" name="fileupload" id="fileupload">-->
                         <?php if (empty($notification_data) > 0 && ($notification_type == 'offers' || $notification_type == 'announcements')) { ?>
-                            <div class="col-md-12 hide" id="last_posted_date_div">
+                            <div class="col-md-12" id="last_posted_date_div">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Last Posted Date</label>
-                                        <input type="text" readonly="readonly" id="last_posted_text" class="form-control" value="" />
+                                        <?php
+                                        $last_posted_date = date('d-m-Y H:i', strtotime(get_country_wise_date($data_last_posted_offer['created_date'], $this->loggedin_user_country_data['timezone'])))
+                                        ?>
+                                        <input type="text" 
+                                               readonly="readonly" 
+                                               class="form-control" 
+                                               value="<?= $last_posted_date ?>" />
                                     </div>
                                 </div>
                             </div>
@@ -98,7 +104,7 @@
                                                             Video
                                                         </label>
                                                     </div>
-                                                    <div class="radio-inline">
+                                                    <div class="radio-inline hide">
                                                         <label>
                                                             <input type="radio" name="offer_type" class="styled offer_type" value="<?php echo TEXT_OFFER_CONTENT_TYPE; ?>" <?php echo (isset($notification_data) && isset($notification_data['offer_type']) && $notification_data['offer_type'] == TEXT_OFFER_CONTENT_TYPE) ? 'checked="checked"' : ''; ?>>
                                                             Text
@@ -302,12 +308,12 @@
                                                 <div>
                                                     <div>
                                                         <label>
-                                                            <input type="radio" name="expire_time_type" id="fixed_expire_date" class="styled expire_time_type" required="required"  value="<?php echo EXPIRE_TIME_FIXED; ?>" <?php echo (isset($notification_data) && isset($notification_data['expire_time_type']) && $notification_data['expire_time_type'] == EXPIRE_TIME_FIXED) ? 'checked="checked"' : (!isset($notification_data)) ? 'checked="checked"' : ''; ?>>
+                                                            <input type="radio" name="expire_time_type" id="fixed_expire_date" class="styled expire_time_type" required="required"  value="<?php echo EXPIRE_TIME_FIXED; ?>" <?php echo (isset($notification_data) && isset($notification_data['expire_time_type']) && $notification_data['expire_time_type'] == EXPIRE_TIME_FIXED) ? 'checked="checked"' : '' ?>>
                                                             Fixed expire date
                                                         </label> 
                                                         &nbsp;&nbsp;
                                                         <label>
-                                                            <input type="radio" name="expire_time_type" id="limited_expire_date" class="styled expire_time_type" value="<?php echo EXPIRE_TIME_LIMITED; ?>" <?php echo (isset($notification_data) && isset($notification_data['expire_time_type']) && $notification_data['expire_time_type'] == EXPIRE_TIME_LIMITED) ? 'checked="checked"' : ''; ?>>
+                                                            <input type="radio" name="expire_time_type" id="limited_expire_date" class="styled expire_time_type" value="<?php echo EXPIRE_TIME_LIMITED; ?>" <?php echo (isset($notification_data) && isset($notification_data['expire_time_type']) && $notification_data['expire_time_type'] == EXPIRE_TIME_LIMITED) ? 'checked="checked"' : (!isset($notification_data)) ? 'checked="checked"' : ''; ?>>
                                                             Limited Offer
                                                         </label>
                                                         <div class="input-group">

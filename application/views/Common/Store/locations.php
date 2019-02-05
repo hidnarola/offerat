@@ -33,6 +33,7 @@
                                             <th>Contact 2</th>
                                             <th>Contact 3</th>
                                             <th>Email</th>
+                                            <th width='20%'>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -55,6 +56,10 @@
                                                 <td><?= (!empty($loc['contact_number_1']) ? $loc['contact_number_1'] : '---') ?></td>
                                                 <td><?= (!empty($loc['contact_number_2']) ? $loc['contact_number_2'] : '---') ?></td>
                                                 <td><?= (!empty($loc['email']) ? $loc['email'] : '---') ?></td>
+                                                <td>
+                                                    <a title="Edit Location" data-id="<?= $loc['id_store_location'] ?>" class="btn btn-info edit_location_button button-xs"><i class="fa fa-pencil"></i></a>&nbsp;
+                                                    <a href="https://www.google.com/search?q=<?= $loc['latitude'].'+'.$loc['longitude'] ?>" target="_blank" title="Show Location" data-latitude="<?= $loc['latitude'] ?>" data-longitude="<?= $loc['longitude'] ?>" class="btn btn-primary button-xs"><i class="fa fa-location-arrow"></i></a>
+                                                </td>
                                             </tr>
                                         <?php } ?>
                                     </tbody>
@@ -78,10 +83,46 @@
         </div>
     </form>
 </div>
+
+<div class="modal fade hide" id="store_location_modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Location</h4>
+            </div>
+            <div class="modal-body">
+                <div id="store-location-map" style="width: 100%; height: 350px;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade hide" id="edit_location_modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Terms & Conditions</h4>
+            </div>
+            <div class="modal-body" id="edit_location_modal_body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php
 $this->load->view('Common/delete_alert');
 $this->load->view('Common/message_alert');
 ?>
+
 <script language="javascript">
     var select_all = document.getElementById("select_all");
     var checkboxes = document.getElementsByClassName("checkbox");
@@ -114,12 +155,8 @@ $this->load->view('Common/message_alert');
 
         $('#checked_val').val(checkedValues);
 
-        console.log(checkedValues);
-
         if ($('#checked_val').val() != '') {
-
             $(document).find("#deleteConfirm").modal('show');
-
             $(document).on("click", ".yes_i_want_delete", function (e) {
                 var val = $(this).val();
                 if (val == 'yes') {
@@ -132,6 +169,56 @@ $this->load->view('Common/message_alert');
             $("#alert_message").html("Please select Record to Delete");
             return false;
         }
-
     });
+
+
+    $(document).ready(function () {
+        // Edit Location
+        $('.edit_location_button').click(function () {
+            var id = $(this).attr('data-id');
+            var url = base_url + 'country-admin/stores/get_ajax_store_location_data';
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {id_store_location: id},
+                dataType: 'HTML',
+                success: function (data) {
+                    $("#edit_location_modal_body").empty().html(data);
+                    $("#edit_location_modal").removeClass("hide");
+                    $("#edit_location_modal").modal('show');
+                }
+            });
+        });
+
+        //Show store location in map
+        $(".show-location-on-map").click(function () {
+            var latitude = $(this).attr('data-latitude');
+            var longitude = $(this).attr('data-longitude');
+
+            initMap(latitude, longitude);
+            $("#store_location_modal").removeClass("hide");
+            $("#store_location_modal").modal("show");
+        });
+    });
+
+    function initMap(latitude, longitude) {
+        latitude = parseFloat(latitude);
+        longitude = parseFloat(longitude);
+
+        var myLatLng = {lat: latitude, lng: longitude};
+
+        var map = new google.maps.Map(document.getElementById('store-location-map'), {
+            zoom: 7,
+            center: myLatLng
+        });
+
+        var marker = new google.maps.Marker({
+            position: myLatLng,
+            animation: google.maps.Animation.DROP,
+            map: map,
+        });
+    }
 </script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=<?= GOOGLE_API_KEY ?>&callback=initMap"></script>

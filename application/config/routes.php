@@ -154,6 +154,8 @@ $route['country-admin/malls/save/(:any)'] = 'Common/malls/save/$1';
 $route['country-admin/report/(:any)/(:any)'] = 'Common/report/index/$1/$2';
 $route['country-admin/report/push_notifications/(:any)/(:any)'] = 'Common/report/filter_notifications/$1/$2';
 $route['country-admin/upload/index'] = 'Common/Uploads/index';
+$route['country-admin/stores/get_ajax_store_location_data'] = 'Common/stores/get_ajax_store_location_data';
+$route['country-admin/stores/location/update'] = 'Common/stores/update_store_location';
 
 //Country Mall Store User Routes =================================
 $route['mall-store-user'] = 'Mall_store/dashboard';

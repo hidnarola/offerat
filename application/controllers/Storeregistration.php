@@ -11,9 +11,7 @@ class Storeregistration extends CI_Controller {
     }
 
     function index() {
-
         if ($this->input->post()) {
-
             $validate_fields = array(
                 'store_name',
                 'website',
@@ -25,7 +23,7 @@ class Storeregistration extends CI_Controller {
                 'telephone',
                 'category_count',
                 'id_country',
-//                'terms_condition'
+                'terms_condition'
             );
 
             if ($this->_validate_form($validate_fields)) {
@@ -118,9 +116,7 @@ class Storeregistration extends CI_Controller {
                         'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
                         'is_delete' => IS_NOT_DELETED_STATUS
                     );
-//                    echo 'in_user_data';
-//                    pr($in_user_data);
-//                    $user_id = 1;
+
                     $email_id = $this->input->post('email_id', TRUE);
                     $user_id = $this->Common_model->master_save(tbl_user, $in_user_data);
 
@@ -142,9 +138,6 @@ class Storeregistration extends CI_Controller {
                     'is_delete' => IS_NOT_DELETED_STATUS
                 );
                 $store_id = $this->Common_model->master_save(tbl_store, $in_store_data);
-//                $store_id = 1;                
-//                echo 'in_store_data';
-//                pr($in_store_data);
 
                 $category_count = $this->input->post('category_count', TRUE);
                 for ($i = 0; $i <= $category_count; $i++) {
@@ -158,8 +151,7 @@ class Storeregistration extends CI_Controller {
                             'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
                             'is_delete' => IS_NOT_DELETED_STATUS
                         );
-//                        echo 'in_category_data';
-//                        pr($in_category_data);
+
                         $this->Common_model->master_save(tbl_store_category, $in_category_data);
                     }
                 }
@@ -234,6 +226,7 @@ class Storeregistration extends CI_Controller {
                 }
             }
         }
+
         $this->data['title'] = $this->data['page_header'] = 'Store Registration';
         $this->data['sub_header'] = 'Add New Store';
 
@@ -243,6 +236,12 @@ class Storeregistration extends CI_Controller {
             'order_by' => array('sort_order' => 'ASC')
         );
         $this->data['category_list'] = $this->Common_model->master_select($select_category);
+
+        $select_terms_condition = array(
+            'table' => tbl_terms_conditions,
+            'where' => array('page_type' => 'Terms', 'is_delete' => IS_NOT_DELETED_STATUS),
+        );
+        $this->data['terms_conditions'] = $this->Common_model->master_select($select_terms_condition);
 
         $select_country = array(
             'table' => tbl_country,
@@ -517,7 +516,7 @@ class Storeregistration extends CI_Controller {
                 $this->form_validation->set_message('custom_store_logo', 'The {field} contain invalid image size.');
                 return FALSE;
             }
-        } 
+        }
 //        else {
 //            $this->form_validation->set_message('custom_store_logo', 'The {field} field is required.');
 //            return FALSE;
