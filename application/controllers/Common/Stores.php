@@ -116,7 +116,6 @@ class Stores extends MY_Controller {
      */
 
     public function filter_stores() {
-
         $filter_array = $this->Common_model->create_datatable_request($this->input->post());
 
         $date = date('Y-m-d h:i:s');
@@ -188,9 +187,10 @@ class Stores extends MY_Controller {
             'join_type' => 'left',
         );
 
+        
         $filter_records = $this->Common_model->get_filtered_records(tbl_store, $filter_array);
         $total_filter_records = $this->Common_model->get_filtered_records(tbl_store, $filter_array, 1);
-
+        
         $output = array(
             "draw" => $this->input->post('draw'),
             "recordsTotal" => $this->Common_model->master_count(tbl_store),
@@ -1560,12 +1560,15 @@ class Stores extends MY_Controller {
 
     public function get_ajax_store_location_data() {
         if ($this->input->post()) {
+            $country_id = $this->loggedin_user_country_data['id_country'];
+            
             $id_store_location = $this->input->post('id_store_location');
 
             $select_mall = array(
                 'table' => tbl_mall,
                 'fields' => array('mall.*'),
                 'where' => array(
+                    'id_country' => $country_id,
                     'is_delete' => IS_NOT_DELETED_STATUS,
                 )
             );

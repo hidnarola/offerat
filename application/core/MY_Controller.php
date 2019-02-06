@@ -14,7 +14,7 @@ class MY_Controller extends CI_Controller {
         $this->loggedin_user_type = $this->session->userdata('loggedin_user_type');
         $this->loggedin_user_data = $this->session->userdata('loggedin_user_data');
         $this->loggedin_user_country_data = @$this->session->userdata('loggedin_user_country_data');
-//        pr($this->loggedin_user_data);
+//        pr($this->loggedin_user_country_data);
         $this->image_extensions_arr = array('jpeg', 'jpg', 'png');
         $this->video_extensions_arr = array('mp4', 'webm', 'ogg', 'ogv', 'wmv', 'vob', 'swf', 'mov', 'm4v', 'flv');
         $this->image_video_extensions_arr = array($this->image_extensions_arr, $this->video_extensions_arr);

@@ -78,16 +78,13 @@ class Content_pages extends CI_Controller {
 
     public function terms_conditions() {
         $this->data['title'] = $this->data['page'] = $this->data['page_header'] = $this->data['sub_header'] = 'Terms & Conditions';
-
-        //check email id exist or not
+        
         $page_select = array(
             'table' => tbl_terms_conditions,
-//            'where in' => array('page_type' => ['Terms']),
-            'where' => array('is_delete' => 0),
+            'where' => array('is_delete' => 0,'page_type' => 'Privacy'),
         );
-        
         $this->data['pages'] = $this->Common_model->master_select($page_select);
-
+        
         $this->template->load('front', 'Content_pages/terms_conditions', $this->data);
     }
 

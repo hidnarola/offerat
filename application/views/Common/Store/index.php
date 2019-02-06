@@ -147,9 +147,9 @@ $(document).on('click', '.view_store_details', function() {
 
 $(document).ready(function() {
     var status_arr = {
-        '-1': "Not Verified",
-        '0': "Active",
-        '1': "Inactive"
+        '-1' : "Not Verified",
+        '0' : "Active",
+        '1' : "Inactive"
     };
     // Setup - add a text input to each footer cell
     $('#store_dttable thead tr:eq(0) th').each(function() {
@@ -340,9 +340,13 @@ $(document).ready(function() {
                     var select = $('<select class="form-control"><option value="">Select</option></select>')
                         .appendTo($('#store_dttable_wrapper_row th:nth-child(' + (index + 1) + '):first').empty())
                         .on('change', function() {
-                            var val = $.fn.dataTable.util.escapeRegex(
-                                $(this).val()
-                            );
+                            
+//                            var val = $.fn.dataTable.util.escapeRegex(
+//                                $(this).val()
+//                            );
+                    
+                            var val = $(this).val();
+                    
                             column
                                 .search(val ? val : '', true, false)
                                 .draw();
