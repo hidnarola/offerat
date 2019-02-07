@@ -176,7 +176,7 @@
                                             <div class="form-group">
                                                 <div>
                                                     <?php if (isset($notification_data['media_name']) && !empty($notification_data['media_name'])) { ?>
-                                                        <div class="radio-inline">
+                                                        <div class="radio-inline hide">
                                                             <label>
                                                                 <input type="radio" name="video_file_type" class="styled video_file_type" required="required" checked value="url">
                                                                 URL
@@ -190,15 +190,15 @@
                                                             </label>
                                                         </div>
                                                     <?php } else { ?> 
-                                                        <div class="radio-inline">
+                                                        <div class="radio-inline hide">
                                                             <label>
-                                                                <input type="radio" name="video_file_type" class="styled video_file_type" required="required" checked value="url">
+                                                                <input type="radio" name="video_file_type" class="styled video_file_type hide" required="required" checked value="url">
                                                                 URL
                                                             </label>
                                                         </div>
                                                         <div class="radio-inline">
                                                             <label>
-                                                                <input type="radio" name="video_file_type" class="styled video_file_type" value="file">
+                                                                <input type="radio" name="video_file_type" class="styled video_file_type" checked value="file">
                                                                 File
                                                             </label>
                                                         </div>
@@ -373,7 +373,7 @@
                                                             </label>
                                                         </div>
                                                     <?php } else { ?> 
-                                                        <div class="radio-inline">
+                                                        <div class="radio-inline hide">
                                                             <label>
                                                                 <input type="radio" name="video_file_type" class="styled video_file_type" required="required" checked value="url">
                                                                 URL
@@ -381,7 +381,7 @@
                                                         </div>
                                                         <div class="radio-inline">
                                                             <label>
-                                                                <input type="radio" name="video_file_type" class="styled video_file_type" value="file">
+                                                                <input type="radio" name="video_file_type" class="styled video_file_type" value="file" checked>
                                                                 File
                                                             </label>
                                                         </div>
@@ -390,9 +390,9 @@
                                             </div>
                                         </div>
                                         <div id="url_type">
-                                            <input type="url" class="form-control" placeholder="Video URL" name="video_url" id="video_url" required="required" value="<?= (isset($notification_data['video_url']) && !empty($notification_data['video_url'])) ? $notification_data['video_url'] : '' ?>" />
+                                            <input type="url" class="form-control hide" placeholder="Video URL" name="video_url" id="video_url" required="required" value="<?= (isset($notification_data['video_url']) && !empty($notification_data['video_url'])) ? $notification_data['video_url'] : '' ?>" />
                                         </div>
-                                        <div id="file_type" class="hide">
+                                        <div id="file_type">
                                             <input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name" accept="video/*">
                                             <input type="hidden" name="is_valid" id="is_valid" value="1">
                                             <div id="media_errors_wrapper" class="alert alert-danger alert-bordered display-none">

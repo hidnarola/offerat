@@ -351,10 +351,11 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
         if (type == "file") {
             $("#url_type").addClass('hide');
             $("#file_type").removeClass('hide');
-        } else if (type == "url") {
-            $("#file_type").addClass('hide');
-            $("#url_type").removeClass('hide');
-        }
+        } 
+//        else if (type == "url") {
+//            $("#file_type").addClass('hide');
+//            $("#url_type").removeClass('hide');
+//        }
     });
 
     $(function () {

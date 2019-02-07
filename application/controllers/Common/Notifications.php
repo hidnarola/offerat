@@ -1050,14 +1050,16 @@ class Notifications extends MY_Controller {
 
                 if ($category['subs']) {
                     foreach ($category['subs'] as $sub_category) {
-                        $sub_selected = '';
-                        if (!empty($sub_cat)) {
-                            if (in_array($sub_category['sub_category_id'], $sub_cat))
-                                $sub_selected = 'selected';
-                        }else {
-                            $sub_selected = 'selected';
+                        if(!empty($sub_category)){
+	                        $sub_selected = '';
+	                        if (!empty($sub_cat)) {
+	                            if (in_array($sub_category['sub_category_id'], $sub_cat))
+	                                $sub_selected = 'selected';
+	                        }else {
+	                            $sub_selected = 'selected';
+	                        }
+	                        $html_data .= '<option class="sub-category" ' . $sub_selected . ' value="' . $category['category_id'] . '|' . $sub_category['sub_category_id'] . '">' . $sub_category['sub_category_name'] . '</option>';
                         }
-                        $html_data .= '<option class="sub-category" ' . $sub_selected . ' value="' . $category['category_id'] . '|' . $sub_category['sub_category_id'] . '">' . $sub_category['sub_category_name'] . '</option>';
                     }
                 }
             }
