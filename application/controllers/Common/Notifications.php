@@ -553,7 +553,7 @@ class Notifications extends MY_Controller {
         if ($this->input->post('offer_type', TRUE) == IMAGE_OFFER_CONTENT_TYPE && $this->input->post('uploaded_images_data', TRUE) != '') {
 
             $uploaded_images_data = explode(',', $this->input->post('uploaded_images_data', TRUE));
-            
+
             if (isset($uploaded_images_data) && sizeof($uploaded_images_data) > 0 && count($uploaded_images_data) <= $max_image_upload_count) {
                 $image_data = array();
                 foreach ($uploaded_images_data as $image) {
@@ -1050,15 +1050,15 @@ class Notifications extends MY_Controller {
 
                 if ($category['subs']) {
                     foreach ($category['subs'] as $sub_category) {
-                        if(!empty($sub_category)){
-	                        $sub_selected = '';
-	                        if (!empty($sub_cat)) {
-	                            if (in_array($sub_category['sub_category_id'], $sub_cat))
-	                                $sub_selected = 'selected';
-	                        }else {
-	                            $sub_selected = 'selected';
-	                        }
-	                        $html_data .= '<option class="sub-category" ' . $sub_selected . ' value="' . $category['category_id'] . '|' . $sub_category['sub_category_id'] . '">' . $sub_category['sub_category_name'] . '</option>';
+                        if (!empty($sub_category)) {
+                            $sub_selected = '';
+                            if (!empty($sub_cat)) {
+                                if (in_array($sub_category['sub_category_id'], $sub_cat))
+                                    $sub_selected = 'selected';
+                            }else {
+                                $sub_selected = 'selected';
+                            }
+                            $html_data .= '<option class="sub-category" ' . $sub_selected . ' value="' . $category['category_id'] . '|' . $sub_category['sub_category_id'] . '">' . $sub_category['sub_category_name'] . '</option>';
                         }
                     }
                 }
@@ -1153,6 +1153,32 @@ class Notifications extends MY_Controller {
         } else {
             echo 'Categroy details has not been saved or already exists in offer announcement.';
         }
+    }
+
+    public function get_store_offer_last_posted_date() {
+        $id = $this->input->post('store_id');
+
+        $select_last_posted_offer = array(
+            'table' => tbl_offer_announcement,
+            'fields' => array('created_date'),
+            'where' => array(
+                'offer_type !=' => CATALOG_OFFER_TYPE,
+                'id_store' => $id,
+                'is_delete' => IS_NOT_DELETED_STATUS,
+            ),
+            'order_by' => array('id_offer' => 'DESC'),
+        );
+
+        $data_last_posted_offer = $this->Common_model->master_single_select($select_last_posted_offer);
+
+        if (!empty($data_last_posted_offer)) {
+            $last_posted_date = date('d-m-Y H:i', strtotime(get_country_wise_date($data_last_posted_offer['created_date'], $this->loggedin_user_country_data['timezone'])));
+        } else {
+            $last_posted_date = '---';
+        }
+        $data['created_date'] = $last_posted_date;
+        echo json_encode($data);
+        exit;
     }
 
 }

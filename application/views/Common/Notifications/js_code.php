@@ -98,7 +98,7 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
         $(document).bind('drop dragover', function (e) {
             e.preventDefault();
         });
-        
+
         /*
          * @author HGA
          * @added 30-11-2018 11:33 AM
@@ -154,7 +154,7 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
             for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
                 var slice = byteCharacters.slice(offset, offset + sliceSize);
                 var byteNumbers = new Array(slice.length);
-                
+
                 for (var i = 0; i < slice.length; i++) {
                     byteNumbers[i] = slice.charCodeAt(i);
                 }
@@ -321,7 +321,7 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
             $(document).find('#fileupload').show();
             $(document).find('.upload_up').show();
 <?php if (!isset($notification_data)) { ?>
-                $(document).find('#media_name').attr('required', 'required');
+                responsive_view_status_text$(document).find('#media_name').attr('required', 'required');
                 $(document).find('#content').removeAttr('required');
 <?php } ?>
         } else if (offer_content_type == '<?php echo VIDEO_OFFER_CONTENT_TYPE; ?>') {
@@ -351,7 +351,7 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
         if (type == "file") {
             $("#url_type").addClass('hide');
             $("#file_type").removeClass('hide');
-        } 
+        }
 //        else if (type == "url") {
 //            $("#file_type").addClass('hide');
 //            $("#url_type").removeClass('hide');
@@ -363,11 +363,17 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
         if (jQuery(window).width() <= 1024) {
             $(document).find('.desktop_view').prop("disabled", true);
             $(document).find('.desktop_view').hide();
+            $(document).find('.desktop_view').remove();
+//            $(document).find('.desktop_view_text').removeAttr('name').removeAttr('id');
+            
             $(document).find('.responsive_view_status').prop("disabled", false);
             $(document).find('.responsive_view_status').show();
         } else {
             $(document).find('.responsive_view_status').prop("disabled", true);
             $(document).find('.responsive_view_status').hide();
+            $(document).find('.responsive_view_status').remove();
+            
+//            $(document).find('.responsive_view_status_text').removeAttr('name').removeAttr('id');
             $(document).find('.desktop_view').prop("disabled", false);
             $(document).find('.desktop_view').show();
         }
@@ -544,6 +550,18 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
                         radioClass: 'choice'
                     });
                 }
+            }
+        });
+
+        $.ajax({
+            url: base_url + 'country-admin/notifications/store/offer/last-post-date/get',
+            data: {
+                store_id: store_id
+            },
+            type: 'POST',
+            success: function (response) {
+                response = jQuery.parseJSON(response);
+                $("#text_last_posted_date").val(response.created_date);
             }
         });
     }

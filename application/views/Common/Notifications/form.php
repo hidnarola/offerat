@@ -18,13 +18,10 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Last Posted Date</label>
-                                        <?php
-                                        $last_posted_date = date('d-m-Y H:i', strtotime(get_country_wise_date($data_last_posted_offer['created_date'], $this->loggedin_user_country_data['timezone'])))
-                                        ?>
                                         <input type="text" 
                                                readonly="readonly" 
                                                class="form-control" 
-                                               value="<?= $last_posted_date ?>" />
+                                               value="---" id="text_last_posted_date" />
                                     </div>
                                 </div>
                             </div>
@@ -457,7 +454,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <?php
                                 }
                                 ?>

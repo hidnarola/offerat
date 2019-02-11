@@ -113,7 +113,6 @@ $route['country-admin/notifications/update_images_sort_order/(:any)'] = 'Common/
 $route['country-admin/notifications/(:any)/save'] = 'Common/notifications/save/$1';
 $route['country-admin/notifications/(:any)/save/(:any)'] = 'Common/notifications/save/$1/$2';
 
-
 $route['country-admin/notifications/(:any)/save/(:any)/(:any)'] = 'Common/notifications/save/$1/$2/$3';
 $route['country-admin/notifications/(:any)'] = 'Common/notifications/index/$1';
 $route['country-admin/notifications/(:any)/(:any)'] = 'Common/notifications/index/$1/$2';
@@ -124,7 +123,8 @@ $route['country-admin/notifications/(:any)/delete/(:any)/(:any)'] = 'Common/noti
 $route['country-admin/notifications/(:any)/delete/(:any)'] = 'Common/notifications/delete/$1/$2';
 $route['country-admin/notifications/store/category/get'] = 'Common/notifications/get_categories';
 $route['country-admin/notifications/store/posted_date/get'] = 'Common/notifications/last_posted_date';
-$route['country-admin/notifications/story/offer/category/save'] = 'Common/notifications/save_non_store_category_to_offers';
+$route['country-admin/notifications/store/offer/category/save'] = 'Common/notifications/save_non_store_category_to_offers';
+$route['country-admin/notifications/store/offer/last-post-date/get'] = 'Common/notifications/get_store_offer_last_posted_date';
 
 $route['country-admin/stores'] = 'Common/stores/index';
 $route['country-admin/stores/filter_stores'] = 'Common/stores/filter_stores';
