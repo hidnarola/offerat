@@ -187,10 +187,10 @@ class Stores extends MY_Controller {
             'join_type' => 'left',
         );
 
-        
+
         $filter_records = $this->Common_model->get_filtered_records(tbl_store, $filter_array);
         $total_filter_records = $this->Common_model->get_filtered_records(tbl_store, $filter_array, 1);
-        
+
         $output = array(
             "draw" => $this->input->post('draw'),
             "recordsTotal" => $this->Common_model->master_count(tbl_store),
@@ -1060,14 +1060,11 @@ class Stores extends MY_Controller {
 
     function add_locations($date = NULL, $store_id = NULL) {
         $in_store_location_data = array();
-
         $location_count = $this->input->post('location_count', TRUE);
 
         for ($i = 0; $i <= $location_count; $i++) {
             $in_store_location_data = array(
                 'id_store' => $store_id,
-                'latitude' => $this->input->post('latitude_' . $i, TRUE),
-                'longitude' => $this->input->post('longitude_' . $i, TRUE),
                 'contact_number' => $this->input->post('telephone_' . $i, TRUE),
                 'contact_number_1' => $this->input->post('telephoneA_' . $i, TRUE),
                 'contact_number_2' => $this->input->post('telephoneB_' . $i, TRUE),
@@ -1083,13 +1080,25 @@ class Stores extends MY_Controller {
                 $location_mall_id = $this->input->post('location_mall_id_' . $i, TRUE);
                 $in_store_location_data['id_location'] = $location_mall_id;
                 $in_store_location_data['location_type'] = 0;
+
+                $select_data = array(
+                    'table' => tbl_mall,
+                    'where' => array(
+                        'id_mall' => $location_mall_id
+                    )
+                );
+                $get_mall_locations = $this->Common_model->master_single_select($select_data);
+
+                $in_store_location_data['latitude'] = $get_mall_locations['latitude'];
+                $in_store_location_data['longitude'] = $get_mall_locations['longitude'];
             }
 
             if ($this->input->post('is_mall_' . $i, TRUE) == 0) {
                 $location_city = $this->input->post('location_city_' . $i, TRUE);
                 $in_store_location_data['branch_name'] = $location_city;
+                $in_store_location_data['latitude'] = $this->input->post('latitude_' . $i, TRUE);
+                $in_store_location_data['longitude'] = $this->input->post('longitude_' . $i, TRUE);
             }
-
 
             if (!empty($in_store_location_data['branch_name']) || !empty($in_store_location_data['id_location'])) {
                 $is_saved = $this->Common_model->master_save(tbl_store_location, $in_store_location_data);
@@ -1561,7 +1570,7 @@ class Stores extends MY_Controller {
     public function get_ajax_store_location_data() {
         if ($this->input->post()) {
             $country_id = $this->loggedin_user_country_data['id_country'];
-            
+
             $id_store_location = $this->input->post('id_store_location');
 
             $select_mall = array(

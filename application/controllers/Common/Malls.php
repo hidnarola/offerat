@@ -837,13 +837,19 @@ class Malls extends MY_Controller {
     }
 
     public function edit_store($mall_id) {
+        $mall_id = base64_decode($mall_id);
         $data['title'] = $data['page_header'] = 'Edit Store Location';
+
+        $this->bread_crum[] = array(
+            'url' => site_url('country-admin/malls/save/' . $mall_id),
+            'title' => ' Edit Mall',
+        );
+
         $this->bread_crum[] = array(
             'url' => '',
             'title' => 'Edit Store Location',
         );
 
-        $mall_id = base64_decode($mall_id);
 
         $select_mall = array(
             'table' => tbl_store_location . ' location',
@@ -882,15 +888,20 @@ class Malls extends MY_Controller {
     }
 
     public function edit_store_location($mall_id) {
-        $data['title'] = $data['page_header'] = 'Store Location Map';
+        $mall_id = base64_decode($mall_id);
+
+        $data['title'] = $data['page_header'] = 'Edit Store Locations';
+        $this->bread_crum[] = array(
+            'url' => site_url('country-admin/malls/save/' . $mall_id),
+            'title' => ' Edit Mall',
+        );
         $this->bread_crum[] = array(
             'url' => '',
-            'title' => 'Store Location Map',
+            'title' => 'Edit Store Locations',
         );
 
         $map_locations = [];
 
-        $mall_id = base64_decode($mall_id);
 
         $select_mall = array(
             'table' => tbl_store_location . ' location',
@@ -923,30 +934,18 @@ class Malls extends MY_Controller {
         exit;
     }
 
-    public function upload_store_image() {
+    public function update_store_locations() {
         $is_updated = false;
 
-        $store_id = $this->input->post('store_id');
-        $encrypted_image = base64_decode($this->input->post('encrypted_image'));
+        $latitude = $this->input->post('latitude');
+        $longitude = $this->input->post('longitude');
+        $id_store_location = $this->input->post('id_store_location');
 
-        $image_parts = explode(";base64,", $encrypted_image);
-        $image_type_aux = explode("image/", $image_parts[0]);
-        $image_type = $image_type_aux[1];
+        $result = $this->db->query('UPDATE ' . tbl_store_location . ' SET latitude=' . $latitude .
+                ', longitude=' . $longitude . ' WHERE id_store_location = ' . $id_store_location);
 
-        $image_base64 = base64_decode($image_parts[1]);
-        $file_upload_path = './media/StoreLogo/';
-        $file_name = time() . '_imqge.' . $image_type;
-        $file_path = $file_upload_path . $file_name;
-
-        file_put_contents($file_path, $image_base64);
-
-        if (file_exists($file_path)) {
-            $result = $this->db->query('UPDATE ' . tbl_store . ' SET store_logo="' . $file_name .
-                    '" WHERE id_store = ' . $store_id);
-
-            if ($result) {
-                $is_updated = true;
-            }
+        if ($result) {
+            $is_updated = true;
         }
 
         echo $is_updated;

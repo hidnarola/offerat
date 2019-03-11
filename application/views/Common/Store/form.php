@@ -497,7 +497,7 @@
                                 <div class="col-xs-12">
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label>Upload from Excel</label>
+                                            <label>Upload City Branches From Excel</label>
                                             <div>                                                
                                                 <input type="file" class="form-control file-input" name="location_excel" id="location_excel">
                                             </div>
@@ -738,10 +738,16 @@ if (isset($store_details)) {
             box_value = 1;
             $("#city_div_" + column_no).addClass('hide');
             $("#mall_div_" + column_no).removeClass('hide');
+            
+            $("#latitude_" + column_no).addClass('hide');
+            $("#longitude_" + column_no).addClass('hide');
         } else {
             box_value = 0;
             $("#mall_div_" + column_no).addClass('hide');
             $("#city_div_" + column_no).removeClass('hide');
+            
+            $("#latitude_" + column_no).removeClass('hide');
+            $("#longitude_" + column_no).removeClass('hide');
         }
 
         $(this).val(box_value);
