@@ -836,4 +836,121 @@ class Malls extends MY_Controller {
         }
     }
 
+    public function edit_store($mall_id) {
+        $data['title'] = $data['page_header'] = 'Edit Store Location';
+        $this->bread_crum[] = array(
+            'url' => '',
+            'title' => 'Edit Store Location',
+        );
+
+        $mall_id = base64_decode($mall_id);
+
+        $select_mall = array(
+            'table' => tbl_store_location . ' location',
+            'fields' => array('location.*', 'store.store_name'),
+            'where' => array('location.id_location' => $mall_id, 'location.location_type' => 0, 'location.is_delete' => IS_NOT_DELETED_STATUS),
+            'join' => array(
+                array(
+                    'table' => tbl_store . ' as store',
+                    'condition' => 'location.id_store = store.id_store',
+                    'join' => 'left'
+                )
+            )
+        );
+        $data['store_locations'] = $this->Common_model->master_select($select_mall);
+
+        $data['store_floors'] = array(-2, -1, 0, 1, 2, 3, 4);
+
+        $this->template->load('user', 'Common/Mall/edit_store_location', $data);
+    }
+
+    public function update_store_floor_number() {
+        $is_updated = false;
+
+        $store_location_id = $this->input->post('store_location_id');
+        $store_floor_no = $this->input->post('store_floor_no');
+
+        $result = $this->db->query('UPDATE ' . tbl_store_location . ' SET store_floor_no=' . $store_floor_no .
+                ' WHERE id_store_location = ' . $store_location_id);
+
+        if ($result) {
+            $is_updated = true;
+        }
+
+        echo $is_updated;
+        exit;
+    }
+
+    public function edit_store_location($mall_id) {
+        $data['title'] = $data['page_header'] = 'Store Location Map';
+        $this->bread_crum[] = array(
+            'url' => '',
+            'title' => 'Store Location Map',
+        );
+
+        $map_locations = [];
+
+        $mall_id = base64_decode($mall_id);
+
+        $select_mall = array(
+            'table' => tbl_store_location . ' location',
+            'fields' => array('location.*', 'store.*'),
+            'where' => array('location.id_location' => $mall_id, 'location.location_type' => 0, 'location.is_delete' => IS_NOT_DELETED_STATUS),
+            'join' => array(
+                array(
+                    'table' => tbl_store . ' as store',
+                    'condition' => 'location.id_store = store.id_store',
+                    'join' => 'left'
+                )
+            )
+        );
+        $data['store_locations'] = $this->Common_model->master_select($select_mall);
+
+        $this->template->load('user', 'Common/Mall/store_locations_map', $data);
+    }
+
+    public function check_file_exists() {
+        $image_name = $this->input->post('image_name');
+        $image_path = './media/StoreLogo/' . $image_name;
+
+        if (file_exists($image_path)) {
+            $image = site_url('media/StoreLogo/' . $image_name);
+        } else {
+            $image = site_url("assets/user/images/store2.png");
+        }
+
+        echo $image;
+        exit;
+    }
+
+    public function upload_store_image() {
+        $is_updated = false;
+
+        $store_id = $this->input->post('store_id');
+        $encrypted_image = base64_decode($this->input->post('encrypted_image'));
+
+        $image_parts = explode(";base64,", $encrypted_image);
+        $image_type_aux = explode("image/", $image_parts[0]);
+        $image_type = $image_type_aux[1];
+
+        $image_base64 = base64_decode($image_parts[1]);
+        $file_upload_path = './media/StoreLogo/';
+        $file_name = time() . '_imqge.' . $image_type;
+        $file_path = $file_upload_path . $file_name;
+
+        file_put_contents($file_path, $image_base64);
+
+        if (file_exists($file_path)) {
+            $result = $this->db->query('UPDATE ' . tbl_store . ' SET store_logo="' . $file_name .
+                    '" WHERE id_store = ' . $store_id);
+
+            if ($result) {
+                $is_updated = true;
+            }
+        }
+
+        echo $is_updated;
+        exit;
+    }
+
 }

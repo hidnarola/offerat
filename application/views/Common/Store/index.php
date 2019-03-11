@@ -220,7 +220,7 @@ $(document).ready(function() {
             },
             {
                 'data': 'mall_id_mall',
-                "visible": true,
+                "visible": false,
                 "name": 'mall.id_mall',
                 "render": function(data, type, full, meta) {
                     return full.mall_list;

@@ -160,7 +160,30 @@
                                     </div>
                                 </div>
                             </fieldset>
-                        <?php } ?>
+                            <?php if (!empty($mall_details)) { ?>
+                                <fieldset>
+                                    <legend class="text-bold">Stores Info</legend>
+                                    <div class="col-xs-12 clear-float">           
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <a class="btn btn-primary" href="<?= site_url('country-admin/malls/store/edit/' . base64_encode($mall_details['id_mall'])) ?>">
+                                                    <i class="fa fa-pencil"></i>&nbsp;&nbsp;Edit Store Floor No.
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <a href="<?= site_url('country-admin/malls/store/location/edit/' . base64_encode($mall_details['id_mall'])) ?>" class="btn btn-primary">
+                                                    <i class="fa fa-pencil"></i>&nbsp;&nbsp;Edit Store Location
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <?php
+                            }
+                        }
+                        ?>
                         <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
                             <fieldset class="content-group">
                                 <legend class="text-bold">Sales Trend</legend>  
@@ -244,7 +267,7 @@
                                     <?php } ?>
                                 </div>                                    
                             </fieldset>
-                        <?php } ?>                           
+                        <?php } ?>
                         <div class="text-right">
                             <input type="hidden" name="sales_trend_count" id="sales_trend_count" value="<?php echo @$salesTrendCloneNumber; ?>">
                             <a href="<?php echo $back_url ?>" class="btn bg-grey-300 btn-labeled"><b><i class="icon-arrow-left13"></i></b>Back</a>
