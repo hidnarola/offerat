@@ -46,13 +46,33 @@
             center: new google.maps.LatLng(-33.91722, 151.23064),
         });
 
+        function check_file_exists(image_name) {
+            var result = $.ajax({
+                url: '<?= site_url('country-admin/malls/check_file_exists') ?>',
+                type: 'POST',
+                data: {
+                    image_name: image_name
+                },
+                async: false,
+
+            }).responseText;
+
+            return result;
+        }
+
         // Create markers.
         $.each(store_locations, function (key, index) {
             var id_store_location = index.id_store_location;
             var mediaType;
 
+            if (index.store_logo != '') {
+                map_icon = check_file_exists(index.store_logo);
+            } else {
+                map_icon = default_icon;
+            }
+
             var icon = {
-                url: default_icon, // url
+                url: map_icon, // url
                 scaledSize: new google.maps.Size(32, 32), // scaled size
                 origin: new google.maps.Point(0, 0), // origin
                 anchor: new google.maps.Point(0, 0) // anchor
@@ -81,7 +101,6 @@
 
             // process multiple info windows
             (function (marker, i, id_store_location) {
-
                 marker.addListener('click', function () {
                     infowindow.open(map, marker);
                 });
@@ -102,27 +121,6 @@
                         url: "<?= site_url('country-admin/malls/update_store_locations') ?>",
                         data: data,
                         success: function (response) {
-                            if (response == true) {
-                                swal({
-                                    title: "Success!",
-                                    text: "Store locations has been updated successfully.",
-                                    type: "success"
-                                }).then(function () {
-                                    window.location.reload();
-                                });
-                            } else {
-                                swal({
-                                    title: "Error",
-                                    text: "Store locations has not been updated.",
-                                    type: "error"
-                                });
-                            }
-                        }, error: function (jqXHR, textStatus, errorThrown) {
-                            swal({
-                                title: "Error",
-                                text: "Something went wrong, Please try again.",
-                                type: "error"
-                            });
                         }
                     });
                 });

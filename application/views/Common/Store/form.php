@@ -314,8 +314,8 @@
                                                         <label for="offer_type">
                                                             <div class="checkbox">
                                                                 <span>
-                                                                    <input type="checkbox" id="is_mall_0" data-id="0" class="select-city-mall" value="0" />
-                                                                    <input type="hidden" name="is_mall_0" id="input_is_mall_0" value="0" />
+                                                                    <input type="checkbox" id="is_mall_0" data-id="0" class="select-city-mall" value="1" checked />
+                                                                    <input type="hidden" name="is_mall_0" id="input_is_mall_0" value="1" />
                                                                 </span>
                                                             </div>
                                                         </label>
@@ -324,10 +324,10 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <div>
-                                                            <div id="city_div_0">
+                                                            <div id="city_div_0" class="hide">
                                                                 <input type="text" class="form-control" name="location_city_0" id="location_city_0" placeholder="City" value="<?php echo set_value('location_city_0'); ?>">
                                                             </div>
-                                                            <div id="mall_div_0" class="hide">
+                                                            <div id="mall_div_0">
                                                                 <select class="form-control select-search" id="location_mall_id_0" name="location_mall_id_0" data-placeholder="Select Mall" required="required" data-live-search="true" >
                                                                     <?php
                                                                     if (isset($malls_list) && sizeof($malls_list) > 0) {
@@ -346,14 +346,14 @@
                                                 <div class="col-md-1">
                                                     <div class="form-group">
                                                         <div>
-                                                            <input type="text" class="form-control" name="latitude_0" id="latitude_0" placeholder="Latitude" value="<?php echo set_value('latitude_0'); ?>">
+                                                            <input type="text" class="form-control hide" name="latitude_0" id="latitude_0" placeholder="Latitude" value="<?php echo set_value('latitude_0'); ?>">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-1">
                                                     <div class="form-group">                                                         
                                                         <div>
-                                                            <input type="text" class="form-control" name="longitude_0" id="longitude_0" placeholder="Longitude" value="<?php echo set_value('longitude_0'); ?>">
+                                                            <input type="text" class="form-control hide" name="longitude_0" id="longitude_0" placeholder="Longitude" value="<?php echo set_value('longitude_0'); ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -519,6 +519,36 @@
                                             <label><br></label>
                                             <div>                                                        
                                                 <a href="<?php echo $download_locations_format_url; ?>" target="_blank" class="btn bg-teal">Download File Format</a>
+                                            </div>
+                                        </div>        
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset class="content-group">     
+                                <div class="col-xs-12">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Upload Mall Branches From Excel</label>
+                                            <div>                                                
+                                                <input type="file" class="form-control file-input" name="mall_location_excel" id="mall_location_excel">
+                                            </div>
+                                        </div>        
+                                    </div>
+                                    <div class="col-md-6">
+                                        <?php if (isset($store_details)) { ?>
+                                            <div class="form-group">                                                
+                                                <label><br></label>
+                                                <div>
+                                                    <a href="" class="btn bg-brown">Export To Excel</a>
+                                                </div>
+                                            </div>        
+                                        <?php } ?>
+                                    </div>
+                                    <div class="col-md-3 text-right">
+                                        <div class="form-group">                                                
+                                            <label><br></label>
+                                            <div>                                                        
+                                                <a href="<?php echo $download_mall_format_url; ?>" target="_blank" class="btn bg-teal">Download File Format</a>
                                             </div>
                                         </div>        
                                     </div>
@@ -824,21 +854,13 @@ if (isset($store_details)) {
         html += '<div id="location_block_' + cloneNumber + '" data-clone-number="' + cloneNumber + '" class="clear-float">';
         html += '<div class="col-xs-12 business_category_div">';
 
-        /*html += '<div class="col-md-1">';
-         html += '<div class="form-group">';
-         html += '<div>';
-         html += '<input type="text" class="form-control text-length" name="branch_' + cloneNumber + '" id="branch_' + cloneNumber + '" placeholder="Branch" value="">';
-         html += '</div>';
-         html += '</div>';
-         html += '</div>'; */
-
         html += '<div class="col-md-1">';
         html += '<div class="form-group">';
         html += '<label for="is_mall_' + cloneNumber + '">';
         html += '<div class="checkbox">';
         html += '<span>';
-        html += '<input type="checkbox" id="is_mall_' + cloneNumber + '" data-id="' + cloneNumber + '" class="styled select-city-mall" value="0" />';
-        html += '<input type="hidden" name="is_mall_' + cloneNumber + '" id="input_is_mall_' + cloneNumber + '" value="0" />';
+        html += '<input type="checkbox" id="is_mall_' + cloneNumber + '" data-id="' + cloneNumber + '" checked class="styled select-city-mall" value="1" />';
+        html += '<input type="hidden" name="is_mall_' + cloneNumber + '" id="input_is_mall_' + cloneNumber + '" value="1" />';
         html += '</span>';
         html += '</div>';
         html += '</label>';
@@ -848,10 +870,10 @@ if (isset($store_details)) {
         html += '<div class="col-md-2">';
         html += '<div class="form-group">';
         html += '<div>';
-        html += '<div id="city_div_' + cloneNumber + '">';
+        html += '<div id="city_div_' + cloneNumber + '" class="hide">';
         html += '<input type="text" class="form-control" name="location_city_' + cloneNumber + '" id="location_city_' + cloneNumber + '" placeholder="City" value="">';
         html += '</div>';
-        html += '<div id="mall_div_' + cloneNumber + '" class="hide">';
+        html += '<div id="mall_div_' + cloneNumber + '">';
         html += '<select class="form-control select-search" id="location_mall_id_' + cloneNumber + '" name="location_mall_id_' + cloneNumber + '" data-placeholder="Select Mall" required="required" data-live-search="true" >';
 <?php
 if (isset($malls_list) && sizeof($malls_list) > 0) {
@@ -871,7 +893,7 @@ if (isset($malls_list) && sizeof($malls_list) > 0) {
         html += '<div class="col-md-1">';
         html += '<div class="form-group">';
         html += '<div>';
-        html += '<input type="text" class="form-control" name="latitude_' + cloneNumber + '" id="latitude_' + cloneNumber + '" placeholder="Latitude" value="">';
+        html += '<input type="text" class="form-control hide" name="latitude_' + cloneNumber + '" id="latitude_' + cloneNumber + '" placeholder="Latitude" value="">';
         html += '</div>';
         html += '</div>';
         html += '</div>';
@@ -879,7 +901,7 @@ if (isset($malls_list) && sizeof($malls_list) > 0) {
         html += '<div class="col-md-1">';
         html += '<div class="form-group">';
         html += '<div>';
-        html += '<input type="text" class="form-control" name="longitude_' + cloneNumber + '" id="longitude_' + cloneNumber + '" placeholder="Longitude" value="">';
+        html += '<input type="text" class="form-control hide" name="longitude_' + cloneNumber + '" id="longitude_' + cloneNumber + '" placeholder="Longitude" value="">';
         html += '</div>';
         html += '</div>';
         html += '</div>';

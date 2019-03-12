@@ -278,11 +278,13 @@ class Stores extends MY_Controller {
         $country_id = $this->loggedin_user_country_data['id_country'];
         $download_locations_url = '';
         $download_locations_format_url = '';
+        $download_mall_format_url = '';
 
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
             $back_url = 'country-admin/stores';
             $download_locations_url = 'country-admin/stores/loacation_excel_download/' . $id;
             $download_locations_format_url = 'country-admin/stores/loacation_excel_format_download';
+            $download_mall_format_url = 'country-admin/stores/mall_excel_format_download';
         } elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
             $back_url = 'mall-store-user/stores';
         }
@@ -694,15 +696,14 @@ class Stores extends MY_Controller {
                     }
 
                     /*
-                     * Add/Update store contacts details
+                     * Add/Update store city contacts details
                      * Date: 13-11-2018 09:52:37
                      */
                     $this->add_store_contacts($date, $store_id);
 
-                    if (!is_null($store_id) && $store_id > 0 && isset($_FILES['location_excel'])) {
+                    if (!is_null($store_id) && $store_id > 0 && !empty($_FILES['location_excel']) && !empty($_FILES['location_excel']['name'])) {
 
                         if (($_FILES['location_excel']['size']) > 0) {
-
                             $file_path = $_SERVER['DOCUMENT_ROOT'] . location_excel_img_path;
                             if (!file_exists($file_path)) {
                                 $this->Common_model->created_directory($file_path);
@@ -782,6 +783,91 @@ class Stores extends MY_Controller {
                         }
                     }
 
+                    /*
+                     * Add/Update store mall contacts details
+                     * Date: 13-11-2018 09:52:37
+                     */
+                    if (!is_null($store_id) && $store_id > 0 && isset($_FILES['mall_location_excel'])) {
+                        if (($_FILES['mall_location_excel']['size']) > 0) {
+                            $file_path = $_SERVER['DOCUMENT_ROOT'] . location_excel_img_path;
+                            if (!file_exists($file_path)) {
+                                $this->Common_model->created_directory($file_path);
+                            }
+                            $supported_files = 'xlsx';
+                            $new_file_name = $store_id . '_' . date('Y_m_d_h_i_s');
+
+                            $uplaoded_file_name = $this->Common_model->upload_file('mall_location_excel', $file_path, $supported_files, $new_file_name);
+
+                            if (empty($uplaoded_file_name)) {
+                                $do_location_file_has_error = true;
+                            } else {
+                                $file_name = $uplaoded_file_name;
+                                $this->load->library('Excel');
+                                PHPExcel_Settings::setZipClass(PHPExcel_Settings::PCLZIP);
+                                $file_location = $_SERVER['DOCUMENT_ROOT'] . location_excel_img_path . $file_name;
+                                $file_type = PHPExcel_IOFactory::identify($file_location);
+                                $objReader = PHPExcel_IOFactory::createReader($file_type);
+                                $objPHPExcel = $objReader->load($file_location);
+                                $sheet_data = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+
+                                foreach ($sheet_data as $key => $data) {
+                                    if (isset($data['A']) && isset($data['A']) && $key > 1) {
+                                        $mall_name = !empty($data['A']) ? $data['A'] : '';
+                                        $contact_number = !empty($data['B']) ? $data['B'] : '';
+                                        $contact_number_1 = !empty($data['C']) ? $data['C'] : '';
+                                        $contact_number_2 = !empty($data['D']) ? $data['D'] : '';
+                                        $email = !empty($data['E']) ? $data['E'] : '';
+
+                                        $select_mall = array(
+                                            'table' => tbl_mall,
+                                            'where' => array(
+                                                'mall_name' => $mall_name,
+                                                'is_delete' => IS_NOT_DELETED_STATUS
+                                            )
+                                        );
+
+                                        $mall_locations = $this->Common_model->master_single_select($select_mall);
+
+                                        if (!empty($mall_locations)) {
+                                            $select_mall_location = array(
+                                                'table' => tbl_store_location,
+                                                'where' => array(
+                                                    'id_store' => $store_id,
+                                                    'id_location' => $mall_locations['id_mall'],
+                                                    'is_delete' => IS_NOT_DELETED_STATUS,
+                                                )
+                                            );
+                                            $mall_location_record = $this->Common_model->master_single_select($select_mall_location);
+
+                                            if (empty($mall_location_record)) {
+                                                $mall_location = array(
+                                                    'id_store' => $store_id,
+                                                    'latitude' => $mall_locations['latitude'],
+                                                    'longitude' => $mall_locations['longitude'],
+                                                    'id_location' => $mall_locations['id_mall'],
+                                                    'location_type' => MALL_LOCATION_TYPE,
+                                                    'contact_number' => $contact_number,
+                                                    'contact_number_1' => $contact_number_1,
+                                                    'contact_number_2' => $contact_number_2,
+                                                    'email' => $email,
+                                                    'created_date' => $date,
+                                                    'is_testdata' => (ENVIRONMENT !== 'production') ? 1 : 0,
+                                                    'is_delete' => IS_NOT_DELETED_STATUS
+                                                );
+
+                                                $data = $this->Common_model->master_save(tbl_store_location, $mall_location);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            if (!empty($_FILES['mall_location_excel']['tmp_name'])) {
+                                $do_location_file_has_error = true;
+                            }
+                        }
+                    }
+
                     if (isset($store_data['status']) && $store_data['status'] == NOT_VERIFIED_STATUS && is_null($id)) {
                         //Send Email to Country Admin for added new store.
                         $country_admin_data = array(
@@ -845,6 +931,7 @@ class Stores extends MY_Controller {
         $this->data['country_id'] = $country_id;
         $this->data['download_locations_url'] = $download_locations_url;
         $this->data['download_locations_format_url'] = $download_locations_format_url;
+        $this->data['download_mall_format_url'] = $download_mall_format_url;
         $this->data['back_url'] = $back_url;
         $this->template->load('user', 'Common/Store/form', $this->data);
     }
@@ -1078,19 +1165,33 @@ class Stores extends MY_Controller {
 
             if ($this->input->post('is_mall_' . $i, TRUE) == 1) {
                 $location_mall_id = $this->input->post('location_mall_id_' . $i, TRUE);
-                $in_store_location_data['id_location'] = $location_mall_id;
-                $in_store_location_data['location_type'] = 0;
 
-                $select_data = array(
-                    'table' => tbl_mall,
+                $select_mall_location = array(
+                    'table' => tbl_store_location,
                     'where' => array(
-                        'id_mall' => $location_mall_id
+                        'id_store' => $store_id,
+                        'id_location' => $location_mall_id,
+                        'is_delete' => IS_NOT_DELETED_STATUS,
                     )
                 );
-                $get_mall_locations = $this->Common_model->master_single_select($select_data);
+                $mall_location_record = $this->Common_model->master_single_select($select_mall_location);
 
-                $in_store_location_data['latitude'] = $get_mall_locations['latitude'];
-                $in_store_location_data['longitude'] = $get_mall_locations['longitude'];
+                if(empty($mall_location_record)){
+                    $in_store_location_data['id_location'] = $location_mall_id;
+                    $in_store_location_data['location_type'] = 0;
+
+                    $select_data = array(
+                        'table' => tbl_mall,
+                        'where' => array(
+                            'id_mall' => $location_mall_id
+                        )
+                    );
+                    $get_mall_locations = $this->Common_model->master_single_select($select_data);
+
+                    $in_store_location_data['latitude'] = $get_mall_locations['latitude'];
+                    $in_store_location_data['longitude'] = $get_mall_locations['longitude'];
+                }
+
             }
 
             if ($this->input->post('is_mall_' . $i, TRUE) == 0) {
@@ -1562,6 +1663,19 @@ class Stores extends MY_Controller {
             header('Content-Disposition: attachment; filename="' . basename($filepath) . '"');
             header("Content-Length: " . filesize($filepath));
             header("Content-Type: application/octet-stream;");
+            readfile($filepath);
+            exit;
+        }
+    }
+
+    function mall_excel_format_download() {
+        $file_name = 'mall_location.xlsx';
+        $filepath = $_SERVER['DOCUMENT_ROOT'] . location_excel_img_path . $file_name;
+        if (file_exists($filepath)) {
+            header('Content-Disposition: attachment; filename="' . basename($filepath) . '"');
+            header("Content-Length: " . filesize($filepath));
+            header("Content-Type: application/octet-stream;");
+
             readfile($filepath);
             exit;
         }

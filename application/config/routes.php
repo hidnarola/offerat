@@ -142,6 +142,7 @@ $route['country-admin/malls/filter_malls'] = 'Common/malls/filter_malls';
 $route['country-admin/malls/get_mall_details/(:any)'] = 'Common/malls/get_mall_details/$1';
 $route['country-admin/stores/loacation_excel_download/(:any)'] = 'Common/stores/loacation_excel_download/$1';
 $route['country-admin/stores/loacation_excel_format_download'] = 'Common/stores/loacation_excel_format_download';
+$route['country-admin/stores/mall_excel_format_download'] = 'Common/stores/mall_excel_format_download';
 $route['country-admin/malls/delete/(:any)'] = 'Common/malls/delete/$1';
 $route['country-admin/malls/sponsored/(:any)'] = 'Common/malls/sponsored/$1';
 $route['country-admin/malls/sponsored/delete/(:any)'] = 'Common/malls/delete_sponsored/$1';
