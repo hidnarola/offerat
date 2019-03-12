@@ -535,16 +535,6 @@
                                         </div>        
                                     </div>
                                     <div class="col-md-6">
-                                        <?php if (isset($store_details)) { ?>
-                                            <div class="form-group">                                                
-                                                <label><br></label>
-                                                <div>
-                                                    <a href="" class="btn bg-brown">Export To Excel</a>
-                                                </div>
-                                            </div>        
-                                        <?php } ?>
-                                    </div>
-                                    <div class="col-md-3 text-right">
                                         <div class="form-group">                                                
                                             <label><br></label>
                                             <div>                                                        
