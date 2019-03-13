@@ -84,7 +84,7 @@ if (!empty($_SESSION['loggedin_user_data'])) {
                     </ul>
                 <?php } elseif ($logged_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) { ?>
                     <ul class="navigation navigation-main navigation-accordion">
-                        <li <?php echo ($controller === 'dashboard') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/dashboard"><i class="icon-home4"></i> <span>Dashboard</span></a></li>                        
+                        <!--<li <?php echo ($controller === 'dashboard') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/dashboard"><i class="icon-home4"></i> <span>Dashboard</span></a></li>-->               
                         <li>
                             <a href="#"><i class="icon-bell2"></i> <span>Posts</span></a>
                             <ul>

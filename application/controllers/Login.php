@@ -121,6 +121,7 @@ class Login extends CI_Controller {
 //                        );
                         
                         $session_user_data = $user;
+                        $session_user_data['user_id'] = $user['id_user'];
 
                         $this->session->set_userdata('loggedin_user_type', $session_user_type);
                         $this->session->set_userdata('loggedin_user_data', $session_user_data);
@@ -138,7 +139,7 @@ class Login extends CI_Controller {
                         elseif ($user['user_type'] == COUNTRY_ADMIN_USER_TYPE)
                             redirect('country-admin/dashboard');
                         elseif ($user['user_type'] == STORE_OR_MALL_ADMIN_USER_TYPE)
-                            redirect('mall-store-user/dashboard');
+                            redirect('mall-store-user/notifications/offers');
                     } elseif ($user['status'] != ACTIVE_STATUS) {
                         $this->session->set_flashdata('error_msg', 'Your Account is inactivated.');
                         redirect('login');
