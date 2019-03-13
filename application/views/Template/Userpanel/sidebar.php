@@ -2,6 +2,11 @@
 $uri_segment_1 = strtolower($this->uri->segment(1));
 $logged_user_type = $this->session->userdata('loggedin_user_type');
 $controller = $this->uri->segment(2);
+$session_user_data = [];
+
+if (!empty($_SESSION['loggedin_user_data'])) {
+    $session_user_data = $_SESSION['loggedin_user_data'];
+}
 ?>
 <div class="sidebar sidebar-main">
     <div class="sidebar-content">
@@ -10,7 +15,7 @@ $controller = $this->uri->segment(2);
             <div class="category-content">
                 <div class="media">                    
                     <div class="media-body">
-                        <a href="<?php echo $uri_segment_1; ?>/dashboard">
+                        <a href="<?php echo $uri_segment_1; ?>/dashboard">&nbsp;
                             <span class="media-heading text-semibold"><i class="fa fa-user fa-3x margin-right-10"></i> 
                                 <?php
                                 if ($logged_user_type == SUPER_ADMIN_USER_TYPE)
@@ -18,7 +23,7 @@ $controller = $this->uri->segment(2);
                                 elseif ($logged_user_type == COUNTRY_ADMIN_USER_TYPE)
                                     echo 'Country Admin';
                                 elseif ($logged_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
-                                    echo 'Store - Mall Admin';
+                                    echo (!empty($session_user_data)) ? $session_user_data['first_name'] . ' ' . $session_user_data['last_name'] : 'Store - Mall Admin';
                                 ?>                            
                             </span>
                         </a>
@@ -67,7 +72,7 @@ $controller = $this->uri->segment(2);
 
                             </ul>
                         </li>
-                         <li>
+                        <li>
                             <a href="#"><i class="icon-star-half"></i> <span>Sponsored</span></a>
                             <ul>
                                 <li <?php echo ($controller === 'sponsored') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/sponsored/stores"><i class="icon-store"></i> <span>Stores</span></a></li>
@@ -81,7 +86,7 @@ $controller = $this->uri->segment(2);
                     <ul class="navigation navigation-main navigation-accordion">
                         <li <?php echo ($controller === 'dashboard') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/dashboard"><i class="icon-home4"></i> <span>Dashboard</span></a></li>                        
                         <li>
-                            <a href="#"><i class="icon-bell2"></i> <span>Notifications</span></a>
+                            <a href="#"><i class="icon-bell2"></i> <span>Posts</span></a>
                             <ul>
                                 <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'offers') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/offers"><i class="icon-bubble-notification"></i> <span>Offers</span></a></li>
                                 <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'announcements') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/announcements"><i class="icon-volume-medium"></i> <span>Announcements</span></a></li>

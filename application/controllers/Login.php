@@ -115,10 +115,12 @@ class Login extends CI_Controller {
                             }
                         }
 
-                        $session_user_data = array(
-                            'user_id' => $user['id_user'],
-                            'email_id' => $user['email_id']
-                        );
+//                        $session_user_data = array(
+//                            'user_id' => $user['id_user'],
+//                            'email_id' => $user['email_id']
+//                        );
+                        
+                        $session_user_data = $user;
 
                         $this->session->set_userdata('loggedin_user_type', $session_user_type);
                         $this->session->set_userdata('loggedin_user_data', $session_user_data);

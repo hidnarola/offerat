@@ -40,15 +40,16 @@
     }
 
     CoordMapType.prototype.getTile = function (coord, zoom, ownerDocument) {
+        
         var div = ownerDocument.createElement('div');
         div.innerHTML = coord;
         div.style.width = this.tileSize.width + 'px';
         div.style.height = this.tileSize.height + 'px';
-        div.style.fontSize = '10';
+        div.style.fontSize = '0';
         div.style.borderStyle = 'solid';
         div.style.borderWidth = '1px';
         div.style.borderColor = '#AAAAAA';
-        return div;
+        return div; 
     };
 
     function initMap() {
@@ -73,7 +74,7 @@
         ];
         map.setOptions({styles: emptyStyles});
 
-        map.overlayMapTypes.insertAt(0, new CoordMapType(new google.maps.Size(256, 256)));
+        map.overlayMapTypes.insertAt(0, new CoordMapType(new google.maps.Size(86, 86)));
 
         function check_file_exists(image_name) {
             var result = $.ajax({
