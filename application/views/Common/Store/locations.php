@@ -21,49 +21,51 @@
                                 </div>        
                             </div>
                             <div class="col-md-12">
-                                <table class="table table-hover table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Branch</th>
-                                            <th>Mall</th>
-                                            <th>Latitude</th>
-                                            <th>Longitude</th>
-                                            <th>Contact 1</th>
-                                            <th>Contact 2</th>
-                                            <th>Contact 3</th>
-                                            <th>Email</th>
-                                            <th width='20%'>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($store_locations as $loc) { ?>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered">
+                                        <thead>
                                             <tr>
-                                                <td>
-                                                    <div class="checkbox">
-                                                        <input type="checkbox" class="checkbox" name="delete_location_ids[]" id="delete_location_id<?php echo $loc['id_store_location']; ?>" placeholder="" value="<?php echo $loc['id_store_location']; ?>"><label for="delete_location_id<?php echo $loc['id_store_location']; ?>"></label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <?= (!empty($loc['branch_name'])) ? $loc['branch_name'] : '---' ?>
-                                                </td>
-                                                <td>
-                                                    <?= (!empty($loc['mall_name'])) ? $loc['mall_name'] : '---' ?>
-                                                </td>
-                                                <td><?= (!empty($loc['latitude']) ? $loc['latitude'] : '---') ?></td>
-                                                <td><?= (!empty($loc['longitude']) ? $loc['longitude'] : '---') ?></td>
-                                                <td><?= (!empty($loc['contact_number']) ? $loc['contact_number'] : '---') ?></td>
-                                                <td><?= (!empty($loc['contact_number_1']) ? $loc['contact_number_1'] : '---') ?></td>
-                                                <td><?= (!empty($loc['contact_number_2']) ? $loc['contact_number_2'] : '---') ?></td>
-                                                <td><?= (!empty($loc['email']) ? $loc['email'] : '---') ?></td>
-                                                <td>
-                                                    <!--<a title="Edit Location" data-id="<?= $loc['id_store_location'] ?>" class="btn btn-info edit_location_button button-xs"><i class="fa fa-pencil"></i></a>&nbsp;-->
-                                                    <a href="https://www.google.com/search?q=<?= $loc['latitude'].'+'.$loc['longitude'] ?>" target="_blank" title="Show Location" data-latitude="<?= $loc['latitude'] ?>" data-longitude="<?= $loc['longitude'] ?>" class="btn btn-primary button-xs"><i class="fa fa-location-arrow"></i></a>
-                                                </td>
+                                                <th>#</th>
+                                                <th>Branch</th>
+                                                <th>Mall</th>
+                                                <th>Latitude</th>
+                                                <th>Longitude</th>
+                                                <th>Contact 1</th>
+                                                <th>Contact 2</th>
+                                                <th>Contact 3</th>
+                                                <th>Email</th>
+                                                <th width='20%'>Action</th>
                                             </tr>
-                                        <?php } ?>
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($store_locations as $loc) { ?>
+                                                <tr>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <input type="checkbox" class="checkbox" name="delete_location_ids[]" id="delete_location_id<?php echo $loc['id_store_location']; ?>" placeholder="" value="<?php echo $loc['id_store_location']; ?>"><label for="delete_location_id<?php echo $loc['id_store_location']; ?>"></label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <?= (!empty($loc['branch_name'])) ? $loc['branch_name'] : '---' ?>
+                                                    </td>
+                                                    <td>
+                                                        <?= (!empty($loc['mall_name'])) ? $loc['mall_name'] : '---' ?>
+                                                    </td>
+                                                    <td><?= (!empty($loc['latitude']) ? $loc['latitude'] : '---') ?></td>
+                                                    <td><?= (!empty($loc['longitude']) ? $loc['longitude'] : '---') ?></td>
+                                                    <td><?= (!empty($loc['contact_number']) ? $loc['contact_number'] : '---') ?></td>
+                                                    <td><?= (!empty($loc['contact_number_1']) ? $loc['contact_number_1'] : '---') ?></td>
+                                                    <td><?= (!empty($loc['contact_number_2']) ? $loc['contact_number_2'] : '---') ?></td>
+                                                    <td><?= (!empty($loc['email']) ? $loc['email'] : '---') ?></td>
+                                                    <td>
+                                                        <!--<a title="Edit Location" data-id="<?= $loc['id_store_location'] ?>" class="btn btn-info edit_location_button button-xs"><i class="fa fa-pencil"></i></a>&nbsp;-->
+                                                        <a href="https://www.google.com/search?q=<?= $loc['latitude'] . '+' . $loc['longitude'] ?>" target="_blank" title="Show Location" data-latitude="<?= $loc['latitude'] ?>" data-longitude="<?= $loc['longitude'] ?>" class="btn btn-primary button-xs"><i class="fa fa-location-arrow"></i></a>
+                                                    </td>
+                                                </tr>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                             <div class="col-md-12">&nbsp;</div>
                             <div class="col-md-12 text-right">
