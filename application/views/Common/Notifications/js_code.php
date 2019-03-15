@@ -1,6 +1,13 @@
 <?php
 $expire_time_display = date('d-m-Y 23:59', strtotime('+7 days', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone']))));
 $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_country_wise_date(date('d-m-Y H:i'), $this->loggedin_user_country_data['timezone']))));
+$user_type = '';
+
+if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+    $user_type = "country-admin";
+} elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
+    $user_type = "mall-store-user";
+}
 ?>
 
 <script src="assets/user/emojis_lib/js/config.js"></script>
@@ -54,6 +61,8 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
 <!--<script src="assets/user/js/file_upload/main.js"></script>-->
 
 <script>
+    var notification_url_type = '<?= $user_type ?>';
+
     var img_arr = [];
     var file_uploaded_count = 0;
     $(document).find('#load_image_label').text('Load Image(s) / ' + file_uploaded_count + ' Images Added');
@@ -365,14 +374,14 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
             $(document).find('.desktop_view').hide();
             $(document).find('.desktop_view').remove();
 //            $(document).find('.desktop_view_text').removeAttr('name').removeAttr('id');
-            
+
             $(document).find('.responsive_view_status').prop("disabled", false);
             $(document).find('.responsive_view_status').show();
         } else {
             $(document).find('.responsive_view_status').prop("disabled", true);
             $(document).find('.responsive_view_status').hide();
             $(document).find('.responsive_view_status').remove();
-            
+
 //            $(document).find('.responsive_view_status_text').removeAttr('name').removeAttr('id');
             $(document).find('.desktop_view').prop("disabled", false);
             $(document).find('.desktop_view').show();
@@ -503,7 +512,7 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
         if (store_id) {
             var selected_store_id = $(this).find("option:selected").val();
             //Get Last Posted Date
-            var url = base_url + 'country-admin/notifications/store/posted_date/get';
+            var url = base_url + notification_url_type + '/notifications/store/posted_date/get';
 
             $.ajax({
                 url: url,
@@ -532,7 +541,7 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
     }
 
     function storeCategory(store_id) {
-        var url = base_url + 'country-admin/notifications/store/category/get';
+        var url = base_url + notification_url_type + '/notifications/store/category/get';
         var offer_id = '<?= (isset($notification_data) && $notification_data['id_offer']) ? $notification_data['id_offer'] : 0 ?>';
         $.ajax({
             url: url,
@@ -554,7 +563,7 @@ $limited_time_display = date('d-m-Y 23:59', strtotime('+1 month', strtotime(get_
         });
 
         $.ajax({
-            url: base_url + 'country-admin/notifications/store/offer/last-post-date/get',
+            url: base_url + notification_url_type + '/notifications/store/offer/last-post-date/get',
             data: {
                 store_id: store_id
             },

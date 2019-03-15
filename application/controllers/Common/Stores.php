@@ -444,6 +444,19 @@ class Stores extends MY_Controller {
                 $do_store_image_has_error = false;
                 $do_location_file_has_error = false;
 
+                $captcha_insert = $this->input->post('captcha');
+                $contain_sess_captcha = $this->session->userdata('valuecaptchaCode');
+
+                if ($captcha_insert !== $contain_sess_captcha) {
+                    $this->session->set_flashdata('error_msg', 'Please enter valid captcha code.');
+
+                    if (!empty($id)) {
+                        redirect('mall-store-user/stores/save/' . $id);
+                    } else {
+                        redirect('mall-store-user/stores/save');
+                    }
+                }
+
                 //Upload Store Logo Image
                 if (isset($_FILES['store_logo'])) {
                     if (($_FILES['store_logo']['size']) > 0) {
@@ -933,6 +946,10 @@ class Stores extends MY_Controller {
         $this->data['download_locations_format_url'] = $download_locations_format_url;
         $this->data['download_mall_format_url'] = $download_mall_format_url;
         $this->data['back_url'] = $back_url;
+
+        $captcha_image = $this->get_captcha_images();
+        $this->data['captchaImg'] = $captcha_image['image'];
+
         $this->template->load('user', 'Common/Store/form', $this->data);
     }
 
@@ -1176,7 +1193,7 @@ class Stores extends MY_Controller {
                 );
                 $mall_location_record = $this->Common_model->master_single_select($select_mall_location);
 
-                if(empty($mall_location_record)){
+                if (empty($mall_location_record)) {
                     $in_store_location_data['id_location'] = $location_mall_id;
                     $in_store_location_data['location_type'] = 0;
 
@@ -1191,7 +1208,6 @@ class Stores extends MY_Controller {
                     $in_store_location_data['latitude'] = $get_mall_locations['latitude'];
                     $in_store_location_data['longitude'] = $get_mall_locations['longitude'];
                 }
-
             }
 
             if ($this->input->post('is_mall_' . $i, TRUE) == 0) {
@@ -1750,6 +1766,10 @@ class Stores extends MY_Controller {
             $this->session->set_flashdata('error_msg', 'Something went wrong');
 
         redirect('country-admin/stores/locations/' . $this->input->post('id_store'));
+    }
+
+    public function refresh_captcha() {
+        return $this->refresh();
     }
 
 }

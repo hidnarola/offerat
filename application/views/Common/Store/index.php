@@ -174,6 +174,7 @@ $(document).ready(function() {
             }
         }
     };
+    
     var table = $('#store_dttable').DataTable({
         "dom": '<"top"<"dttable_lenth_wrapper"fl>>rt<"bottom"pi><"clear">',
         "processing": true,
@@ -181,10 +182,13 @@ $(document).ready(function() {
         "scrollX": true,
         "scrollCollapse": true,
         "orderCellsTop": false,
+        "bFilter": false,
+        "searching": false,
+        "bInfo": false,
         "aaSorting": [
             [0, 'desc']
         ],
-        language: {
+        "language": {
             search: '<span>Filter :</span> _INPUT_',
             lengthMenu: '<span>Show :</span> _MENU_',
             processing: "<div id='dt_loader'><i class='icon-spinner9 spinner fa-4x' style='z-index:10'></i></div>"
@@ -426,5 +430,8 @@ $(document).ready(function() {
         minimumResultsForSearch: Infinity,
         width: 'auto'
     });
+    
+    $(".custom_dt tr:first").hide();
+    $(".buttons-page-length").hide();
 });
 </script>

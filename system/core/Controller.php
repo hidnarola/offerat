@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CodeIgniter
  *
@@ -51,46 +52,78 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class CI_Controller {
 
-	/**
-	 * Reference to the CI singleton
-	 *
-	 * @var	object
-	 */
-	private static $instance;
+    /**
+     * Reference to the CI singleton
+     *
+     * @var	object
+     */
+    private static $instance;
 
-	/**
-	 * Class constructor
-	 *
-	 * @return	void
-	 */
-	public function __construct()
-	{
-		self::$instance =& $this;
+    /**
+     * Class constructor
+     *
+     * @return	void
+     */
+    public function __construct() {
+        self::$instance = & $this;
 
-		// Assign all the class objects that were instantiated by the
-		// bootstrap file (CodeIgniter.php) to local class variables
-		// so that CI can run as one big super object.
-		foreach (is_loaded() as $var => $class)
-		{
-			$this->$var =& load_class($class);
-		}
+        // Assign all the class objects that were instantiated by the
+        // bootstrap file (CodeIgniter.php) to local class variables
+        // so that CI can run as one big super object.
+        foreach (is_loaded() as $var => $class) {
+            $this->$var = & load_class($class);
+        }
 
-		$this->load =& load_class('Loader', 'core');
-		$this->load->initialize();
-		log_message('info', 'Controller Class Initialized');
-	}
+        $this->load = & load_class('Loader', 'core');
+        $this->load->initialize();
+        log_message('info', 'Controller Class Initialized');
 
-	// --------------------------------------------------------------------
+        $this->load->library('session');
+        $this->load->helper('captcha');
+    }
 
-	/**
-	 * Get the CI singleton
-	 *
-	 * @static
-	 * @return	object
-	 */
-	public static function &get_instance()
-	{
-		return self::$instance;
-	}
+    // --------------------------------------------------------------------
+
+    /**
+     * Get the CI singleton
+     *
+     * @static
+     * @return	object
+     */
+    public static function &get_instance() {
+        return self::$instance;
+    }
+
+    public function captcha_config() {
+        return $config = array(
+            'img_url' => base_url() . 'image_for_captcha/',
+            'img_path' => 'image_for_captcha/',
+        );
+    }
+
+    public function get_captcha_images() {
+        $this->removeUnusedCaptchaImages();
+
+        $config = $this->captcha_config();
+        $captcha = create_captcha($config);
+
+        $this->session->unset_userdata('valuecaptchaCode');
+        $this->session->set_userdata('valuecaptchaCode', $captcha['word']);
+
+        return $captcha;
+    }
+
+    public function refresh() {
+        $this->removeUnusedCaptchaImages();
+        $config = $this->captcha_config();
+        $captcha = create_captcha($config);
+        $this->session->unset_userdata('valuecaptchaCode');
+        $this->session->set_userdata('valuecaptchaCode', $captcha['word']);
+        echo $captcha['image'];
+    }
+
+    public function removeUnusedCaptchaImages() {
+        delete_files('./image_for_captcha', TRUE);
+    }
 
 }

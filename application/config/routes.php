@@ -179,6 +179,7 @@ $route['mall-store-user/filter_notifications/(:any)'] = 'Common/notifications/fi
 $route['mall-store-user/filter_notifications/(:any)/(:any)'] = 'Common/notifications/filter_notifications/$1/$2';
 $route['mall-store-user/notifications/(:any)/delete/(:any)/(:any)'] = 'Common/notifications/delete/$1/$2/$3';
 $route['mall-store-user/notifications/(:any)/delete/(:any)'] = 'Common/notifications/delete/$1/$2';
+$route['mall-store-user/notifications/(:any)/save/(:any)'] = 'Common/notifications/save/$1/$2';
 
 $route['mall-store-user/stores'] = 'Common/stores/index';
 $route['mall-store-user/stores/filter_stores'] = 'Common/stores/filter_stores';
@@ -194,7 +195,12 @@ $route['mall-store-user/malls/save/(:any)'] = 'Common/malls/save/$1';
 $route['mall-store-user/report/(:any)/(:any)'] = 'Common/report/index/$1/$2';
 $route['mall-store-user/report/push_notifications/(:any)/(:any)'] = 'Common/report/filter_notifications/$1/$2';
 $route['mall-store-user/upload/index'] = 'Common/Uploads/index';
+$route['mall-store-user/stores/refresh'] = 'Common/stores/refresh_captcha';
 
+$route['mall-store-user/notifications/store/posted_date/get'] = 'Common/notifications/last_posted_date';
+$route['mall-store-user/notifications/store/category/get'] = 'Common/notifications/get_categories';
+$route['mall-store-user/notifications/store/offer/last-post-date/get'] = 'Common/notifications/get_store_offer_last_posted_date';
+$route['mall-store-user/filter_notifications/(:any)/(:any)'] = 'Common/notifications/filter_notifications/$1/$2';
 
 //Store Registration
 $route['store-registration'] = 'storeregistration/index';

@@ -184,7 +184,7 @@
                             }
                         }
                         ?>
-                        <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
+                        <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE || $this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) { ?>
                             <fieldset class="content-group">
                                 <legend class="text-bold">Sales Trend</legend>  
                                 <div class="col-xs-12">                                                                

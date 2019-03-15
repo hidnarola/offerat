@@ -46,8 +46,8 @@
         </div>
         <div class="form_grp_inline">
             <div class="form-group">
-                <label class="control-label col-lg-2">Contact Number</label>                
-                <input type="text" class="form-control" name="telephone" id="telephone"  placeholder="Contact Number" value="<?php echo set_value('telephone'); ?>">                
+                <label class="control-label col-lg-2">Contact Number  <span class="text-danger">*</span></label>                
+                <input type="text" class="form-control" name="telephone" id="telephone" required  placeholder="Contact Number" value="<?php echo set_value('telephone'); ?>">                
             </div>            
         </div>
 

@@ -15,12 +15,12 @@
 
                                     <div class="form-group">
                                         <label>Email Address <span class="text-danger">*</span></label>
-                                        <input type="text" name="email_id" value="<?php echo set_value('email_id'); ?>" placeholder="Email Address" required="required" class="form-control">
+                                        <input type="email" name="email_id" value="<?php echo set_value('email_id'); ?>" placeholder="Email Address" required="required" class="form-control">
                                     </div>
 
                                     <div class="form-group">
                                         <label>Contact Number </label>
-                                        <input type="text" name="contact_number" value="<?php echo set_value('contact_number'); ?>" placeholder="Contact Number" class="form-control">
+                                        <input type="text" maxlength="15" name="contact_number" value="<?php echo set_value('contact_number'); ?>" placeholder="Contact Number" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -30,6 +30,13 @@
                                     </div>                                
                                 </div> 
                             </div>
+                            <div class="col-md-12 text-center mb-20 mt-10">
+                                <p id="image_captcha"><?php echo $captchaImg; ?></p>
+                                <a href="javascript:void(0);" class="captcha-refresh" title="Refresh"><i class="fa fa-refresh fa-2x"></i></a>&nbsp;
+                                <input type="text" name="captcha" id="text_captcha" required class="captcha-input" value="" placeholder="Enter Captcha" />
+                                <br>
+                                <label id="text_captcha-error" class="validation-error-label" for="text_captcha"></label>
+                            </div> 
                             <div class="col-md-12">
                                 <div class="form-group btn_center">
                                     <button type="submit" class="btn btn-primary btn-block submit_btn">Submit</button>
@@ -37,9 +44,7 @@
                             </div> 
                         </form>
                     </div>                            
-                </div>
-
-                </form> 
+                </div> 
             </div>                
         </div>
     </div>
@@ -49,5 +54,11 @@
 <script>
     $(document).ready(function () {
         jqueryValidate();
+
+        $('.captcha-refresh').on('click', function () {
+            $.get('<?= site_url('Content_pages/refresh_captcha') ?>', function (data) {
+                $('#image_captcha').html(data);
+            });
+        });
     });
 </script>

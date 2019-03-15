@@ -1,3 +1,4 @@
+<?php $contactCloneNumber = 0; ?>
 <div class="col-md-12">
     <form method="POST" action="" enctype="multipart/form-data" class="form-validate-jquery" name="manage_record">
         <div class="row">
@@ -54,22 +55,24 @@
                                         </div>                                            
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Group</label>
-                                        <div>
-                                            <input type="text" class="form-control text-length" name="group_text" id="group_text"  placeholder="Group that the store belong to" value="<?php echo (isset($store_details['group_text'])) ? $store_details['group_text'] : set_value('group_text'); ?>">
-                                        </div>
-                                    </div>        
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Notes</label>
-                                        <div>
-                                            <input type="text" class="form-control text-length" name="note_text" id="note_text"  placeholder="Notes" value="<?php echo (isset($store_details['note_text'])) ? $store_details['note_text'] : set_value('note_text'); ?>">
-                                        </div>
-                                    </div>        
-                                </div>
+                                <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Group</label>
+                                            <div>
+                                                <input type="text" class="form-control text-length" name="group_text" id="group_text"  placeholder="Group that the store belong to" value="<?php echo (isset($store_details['group_text'])) ? $store_details['group_text'] : set_value('group_text'); ?>">
+                                            </div>
+                                        </div>        
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Notes</label>
+                                            <div>
+                                                <input type="text" class="form-control text-length" name="note_text" id="note_text"  placeholder="Notes" value="<?php echo (isset($store_details['note_text'])) ? $store_details['note_text'] : set_value('note_text'); ?>">
+                                            </div>
+                                        </div>        
+                                    </div>
+                                <?php } ?>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label> </label>
@@ -240,7 +243,7 @@
                         </fieldset>                            
                         <?php
                         $storeLocationCloneNumber = 1;
-                        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+                        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE || $this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
                             ?>
                             <fieldset class="content-group">
                                 <legend class="text-bold">Locations</legend>
@@ -564,7 +567,9 @@
                                 </div>
                             </div>                                    
                         </fieldset>
-                        <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
+                        <?php
+                        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+                            ?>
                             <fieldset class="content-group">
                                 <legend class="text-bold">Sales Trend</legend>  
                                 <div class="col-xs-12">                                                                                                        
@@ -647,7 +652,18 @@
                                 </div>                                    
                             </fieldset>
                         <?php } ?>
-                        <?php if (($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) || (!isset($store_details) && $this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)) { ?>
+
+                        <?php if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) { ?>
+                            <div class="col-md-12 mb-20 mt-10">
+                                <p id="image_captcha"><?php echo $captchaImg; ?></p>
+                                <a href="javascript:void(0);" class="captcha-refresh" title="Refresh"><i class="fa fa-refresh fa-2x"></i></a>&nbsp;
+                                <input type="text" name="captcha" id="text_captcha" required class="captcha-input" value="" placeholder="Enter Captcha" />
+                                <br>
+                                <label id="text_captcha-error" class="validation-error-label" for="text_captcha"></label>
+                            </div> 
+                        <?php } ?>
+
+                        <?php if (($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)) { ?>
                             <fieldset class="content-group">
                                 <legend class="text-bold">Others</legend>
                                 <div class="col-xs-12">
@@ -749,7 +765,6 @@ if (isset($store_details)) {
         reInitializeSelect2Control();
         $(document).find('#location_count').val(locationCloneNumber);
     });
-
     $(document).on('click', '.select-city-mall', function () {
         var box_value = 0;
         var column_no = $(this).attr('data-id');
@@ -758,22 +773,21 @@ if (isset($store_details)) {
             box_value = 1;
             $("#city_div_" + column_no).addClass('hide');
             $("#mall_div_" + column_no).removeClass('hide');
-            
+
             $("#latitude_" + column_no).addClass('hide');
             $("#longitude_" + column_no).addClass('hide');
         } else {
             box_value = 0;
             $("#mall_div_" + column_no).addClass('hide');
             $("#city_div_" + column_no).removeClass('hide');
-            
+
             $("#latitude_" + column_no).removeClass('hide');
             $("#longitude_" + column_no).removeClass('hide');
         }
 
         $(this).val(box_value);
-        $("#input_is_mall_"+column_no).val(box_value);
+        $("#input_is_mall_" + column_no).val(box_value);
     });
-
     function generateSalesTrendBlock(cloneNumber) {
         var html = '';
         html += '<div id="sales_trend_wrapper" class="clear-float row_add_div">';
@@ -943,7 +957,6 @@ if (isset($malls_list) && sizeof($malls_list) > 0) {
         html += '</div>';
         return html;
     }
-
     $(document).on('click', '#add_contact_number_btn', function () {
         var html = generateContactsBlock(contactCloneNumber);
 
@@ -985,7 +998,16 @@ if (isset($malls_list) && sizeof($malls_list) > 0) {
 //            $("#city_div_" + column_no).removeClass('hide');
 //        } else if (checked_val == 1) {
 //            $("#city_div_" + column_no).addClass('hide');
-//            $("#mall_div_" + column_no).removeClass('hide');
+    //            $("#mall_div_" + column_no).removeClass('hide');
 //        }
-//    });
+    //    });
+    $(document).ready(function () {
+        jqueryValidate();
+
+        $('.captcha-refresh').on('click', function () {
+            $.get('<?= site_url('mall-store-user/stores/refresh') ?>', function (data) {
+                $('#image_captcha').html(data);
+            });
+        });
+    });
 </script>

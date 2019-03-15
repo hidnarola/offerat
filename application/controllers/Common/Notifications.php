@@ -23,7 +23,7 @@ class Notifications extends MY_Controller {
      */
 
     public function index($notification_type = NULL, $list_type = NULL) {
-        if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements', 'catalogs')) && (($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming'))) || ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming', 'expired'))))) {
+        if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements', 'catalogs')) && (($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming', 'expired'))) || ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming', 'expired'))))) {
 
             $list_url = '';
             $add_url = '';
@@ -77,8 +77,8 @@ class Notifications extends MY_Controller {
      * @param String list_type : NULL, 'upcoming', 'expired' (all for Country Admin , Restrict expired for Store/Mall Admin)
      */
     public function filter_notifications($notification_type = NULL, $list_type = NULL) {
-
-        if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements', 'catalogs')) && (($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming'))) || ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming', 'expired'))))) {
+        
+        if (!is_null($notification_type) && in_array($notification_type, array('offers', 'announcements', 'catalogs')) && (($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming', 'expired'))) || ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE && in_array($list_type, array(NULL, 'upcoming', 'expired'))))) {
 
             $date = date('Y-m-d h:i:s');
             $current_time_zone_today_date = new DateTime($date);
@@ -190,8 +190,8 @@ class Notifications extends MY_Controller {
                 $upload_url = 'mall-store-user/upload/index';
                 $images_list_url = 'mall-store-user/notifications/images/';
                 $remove_image_url = 'mall-store-user/notifications/remove_image_uploaded';
-                if (!is_null($id))
-                    redirect($back_url);
+//                if (!is_null($id))
+//                    redirect($back_url);
             }
 
             $this->bread_crum[] = array(

@@ -162,7 +162,7 @@ class Storeregistration extends CI_Controller {
                     $verification_link = SITEURL . 'account-verification?verification=' . $verification_code;
                     $subject = 'Complete your registration';
                     $content = $this->Email_template_model->account_verification_format($verification_link);
-                    $response = $this->Email_template_model->send_email(NULL, $email_id, $subject, $content);
+                    $response = $this->Email_template_model->send_email('info@offerat.sale', $email_id, $subject, $content);
 
                     if (isset($response) && $response == 'yes') {
 

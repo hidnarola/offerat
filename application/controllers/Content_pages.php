@@ -11,24 +11,27 @@ class Content_pages extends CI_Controller {
     }
 
     public function contact_us() {
-
         $this->data['title'] = $this->data['page'] = $this->data['page_header'] = $this->data['sub_header'] = 'Contact Us';
 
         if ($this->input->post()) {
-            $validate_fields = array(
-                'name',
-                'email_id',
-                'contact_number',
-                'message'
-            );
+            $captcha_insert = $this->input->post('captcha');
+            $contain_sess_captcha = $this->session->userdata('valuecaptchaCode');
 
-            if ($this->_validate_contact_us_form($validate_fields)) {
-                $name = $this->input->post('name', TRUE);
-                $email_id = $this->input->post('email_id', TRUE);
-                $contact_number = $this->input->post('contact_number', TRUE);
-                $message = $this->input->post('message', TRUE);
+            if ($captcha_insert === $contain_sess_captcha) {
+                $validate_fields = array(
+                    'name',
+                    'email_id',
+                    'contact_number',
+                    'message'
+                );
 
-                $send_message = "
+                if ($this->_validate_contact_us_form($validate_fields)) {
+                    $name = $this->input->post('name', TRUE);
+                    $email_id = $this->input->post('email_id', TRUE);
+                    $contact_number = $this->input->post('contact_number', TRUE);
+                    $message = $this->input->post('message', TRUE);
+
+                    $send_message = "
                             <html>
                                 <head>
                                     <title>HTML email</title>
@@ -55,16 +58,22 @@ class Content_pages extends CI_Controller {
                                 </body>
                             </html>
                             ";
-                $response = $this->Email_template_model->send_email(NULL, site_info_email, 'Offerat | Contact US', $send_message);
-                if (isset($response) && $response == 'yes') {
-                    $this->session->set_flashdata('success_msg', 'Message sent successfully');
-                } else
-                    $this->session->set_flashdata('error_msg', 'Message not sent');
+                    $response = $this->Email_template_model->send_email(NULL, site_info_email, 'Offerat | Contact US', $send_message);
+                    if (isset($response) && $response == 'yes') {
+                        $this->session->set_flashdata('success_msg', 'Message sent successfully');
+                    } else
+                        $this->session->set_flashdata('error_msg', 'Message not sent');
 
+                    redirect('contact-us');
+                }
+            } else {
+                $this->session->set_flashdata('error_msg', 'Please enter valid captcha code.');
                 redirect('contact-us');
             }
         }
 
+        $captcha_image = $this->get_captcha_images();
+        $this->data['captchaImg'] = $captcha_image['image'];
 
         $this->template->load('front', 'Content_pages/contact_us', $this->data);
     }
@@ -78,13 +87,13 @@ class Content_pages extends CI_Controller {
 
     public function terms_conditions() {
         $this->data['title'] = $this->data['page'] = $this->data['page_header'] = $this->data['sub_header'] = 'Terms & Conditions';
-        
+
         $page_select = array(
             'table' => tbl_terms_conditions,
-            'where' => array('is_delete' => 0,'page_type' => 'Privacy'),
+            'where' => array('is_delete' => 0, 'page_type' => 'Privacy'),
         );
         $this->data['pages'] = $this->Common_model->master_select($page_select);
-        
+
         $this->template->load('front', 'Content_pages/terms_conditions', $this->data);
     }
 
@@ -126,6 +135,10 @@ class Content_pages extends CI_Controller {
 
         $this->form_validation->set_rules($validation_rules);
         return $this->form_validation->run();
+    }
+
+    public function refresh_captcha() {
+        return $this->refresh();
     }
 
 }

@@ -9,7 +9,7 @@
                                 <div class="col-md-12">
                                     <div class="row col-md-12">
                                         <div class="tbl-btn-wrap pull-right">
-                                            <a href="<?php echo $mall_list_url; ?>" class="btn bg-teal-400 btn-labeled"><b><i class="icon-sync"></i></b>Refresh</a>
+                                            <!--<a href="<?php echo $mall_list_url; ?>" class="btn bg-teal-400 btn-labeled"><b><i class="icon-sync"></i></b>Refresh</a>-->
                                             <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
                                                 <a href="<?php echo $add_mall_url; ?>" class="btn btn-primary btn-labeled"><b><i class="icon-plus22"></i></b>Add Mall</a>
                                             <?php } ?>
@@ -113,12 +113,12 @@ $this->load->view('Common/Mall/details_modal');
             }
         });
         var table = $('#mall_dttable').DataTable({
-            "dom": '<"top"<"dttable_lenth_wrapper"fl>>rt<"bottom"pi><"clear">',
+            "dom": '<"top"<"dttable_lenth_wrapper">>rt<"bottom"pi><"clear">',
             "processing": true,
             "serverSide": true,
-            "scrollX": true,
-            "scrollCollapse": true,
-            "orderCellsTop": false,
+            "scrollX": false,
+            "bFilter": true,
+            "bInfo": false,
             "aaSorting": [[0, 'desc']],
             language: {
                 search: '<span>Filter :</span> _INPUT_',
@@ -260,5 +260,7 @@ $this->load->view('Common/Mall/details_modal');
             minimumResultsForSearch: Infinity,
             width: 'auto'
         });
+
+        $("#mall_dttable tr:first").hide();
     });
 </script>

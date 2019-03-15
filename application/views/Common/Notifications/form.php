@@ -13,19 +13,25 @@
                 <div class="panel-body panel_offer">
                     <form method="POST" action="" enctype="multipart/form-data" class="form-validate-jquery" name="frm_profile" id="frm_profile">
                     <!--<form method="POST" action="<?php echo $upload_url; ?>" enctype="multipart/form-data" class="form-validate-jquery" name="fileupload" id="fileupload">-->
-                        <?php if (empty($notification_data) > 0 && ($notification_type == 'offers' || $notification_type == 'announcements')) { ?>
-                            <div class="col-md-12" id="last_posted_date_div">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Last Posted Date</label>
-                                        <input type="text" 
-                                               readonly="readonly" 
-                                               class="form-control" 
-                                               value="---" id="text_last_posted_date" />
+                        <?php
+                        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+                            if (empty($notification_data) > 0 && ($notification_type == 'offers' || $notification_type == 'announcements')) {
+                                ?>
+                                <div class="col-md-12" id="last_posted_date_div">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Last Posted Date</label>
+                                            <input type="text" 
+                                                   readonly="readonly" 
+                                                   class="form-control" 
+                                                   value="---" id="text_last_posted_date" />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        <?php } ?>
+                                <?php
+                            }
+                        }
+                        ?>
 
                         <div class="col-xs-12">
                             <div class="">
@@ -504,7 +510,7 @@
                                     <input type="file" name="files[]" id="" multiple class="form-control" required="required">
                                 </span>
 
-                                <div id="dropzone" class="fade well"><i class="fa fa-image fa-lg"></i>&nbsp;&nbsp;Drop files here</div>
+                                    <div id="dropzone" class="fade well hide"><i class="fa fa-image fa-lg"></i>&nbsp;&nbsp;Drop files here</div>
 
                                 <div class="upload-div" style="display:none;" id="update_div">
                                     <button type="button" class="delete">Delete</button>

@@ -58,7 +58,7 @@
                                                     <td><?= (!empty($loc['contact_number_2']) ? $loc['contact_number_2'] : '---') ?></td>
                                                     <td><?= (!empty($loc['email']) ? $loc['email'] : '---') ?></td>
                                                     <td>
-                                                        <!--<a title="Edit Location" data-id="<?= $loc['id_store_location'] ?>" class="btn btn-info edit_location_button button-xs"><i class="fa fa-pencil"></i></a>&nbsp;-->
+                                                        <a title="Edit Location" data-id="<?= $loc['id_store_location'] ?>" class="btn btn-info edit_location_button button-xs"><i class="fa fa-pencil"></i></a>&nbsp;
                                                         <a href="https://www.google.com/search?q=<?= $loc['latitude'] . '+' . $loc['longitude'] ?>" target="_blank" title="Show Location" data-latitude="<?= $loc['latitude'] ?>" data-longitude="<?= $loc['longitude'] ?>" class="btn btn-primary button-xs"><i class="fa fa-location-arrow"></i></a>
                                                     </td>
                                                 </tr>
