@@ -8,6 +8,8 @@ class Content_pages extends CI_Controller {
         parent::__construct();
         $this->load->model('Common_model', '', TRUE);
         $this->load->model('Email_template_model', '', TRUE);
+        $this->load->library('session');
+        $this->load->helper('captcha');
     }
 
     public function contact_us() {
@@ -137,8 +139,36 @@ class Content_pages extends CI_Controller {
         return $this->form_validation->run();
     }
 
+    public function captcha_config() {
+        return $config = array(
+            'img_url' => base_url() . 'assets/uploads/captcha/',
+            'img_path' => './assets/uploads/captcha/',
+        );
+    }
+
+    public function get_captcha_images() {
+        $this->removeUnusedCaptchaImages();
+
+        $config = $this->captcha_config();
+        $captcha = create_captcha($config);
+
+        $this->session->unset_userdata('valuecaptchaCode');
+        $this->session->set_userdata('valuecaptchaCode', $captcha['word']);
+
+        return $captcha;
+    }
+
     public function refresh_captcha() {
-        return $this->refresh();
+        $this->removeUnusedCaptchaImages();
+        $config = $this->captcha_config();
+        $captcha = create_captcha($config);
+        $this->session->unset_userdata('valuecaptchaCode');
+        $this->session->set_userdata('valuecaptchaCode', $captcha['word']);
+        echo $captcha['image'];
+    }
+
+    public function removeUnusedCaptchaImages() {
+        delete_files('./assets/uploads/captcha/', TRUE);
     }
 
 }
