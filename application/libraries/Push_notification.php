@@ -47,8 +47,8 @@ class Push_notification {
         stream_context_set_option($ctx, 'ssl', 'passphrase', $passphrase);
 
         // Open a connection to the APNS server        
-        //$iosServer = 'ssl://gateway.sandbox.push.apple.com:2195';
-        $iosServer = 'ssl://gateway.push.apple.com:2195';
+        $iosServer = 'ssl://gateway.sandbox.push.apple.com:2195';
+        // $iosServer = 'ssl://gateway.push.apple.com:2195';
 
         $fp = stream_socket_client($iosServer, $err, $errstr, 300, STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT, $ctx);
 
@@ -83,6 +83,42 @@ class Push_notification {
         // Close the connection to the server
         fclose($fp);
         return $output;
+    }
+
+    public function send_notifications_to_iphone($deviceTokens = array(), $msg = '', $url = '') {
+        $curl_url = "https://fcm.googleapis.com/fcm/send";
+        $serverKey = IOS_FCM_PUSH_NOTIFICATION_API_KEY;
+        $responses = [];
+
+        // Create the payload body
+        $body['aps'] = array(
+            'alert' => $msg,
+            'sound' => 'default'
+        );
+        $body['url'] = $url;
+        // Encode the payload as JSON        
+        $payload = $this->my_json_encode($body);
+
+        $headers = array();
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Authorization: key=' . $serverKey;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $curl_url);
+
+        foreach ($deviceTokens as $dt) {
+            $deviceToken = $dt;
+            $notification = array('title' => '', 'text' => $payload, 'sound' => 'default', 'badge' => '1');
+            $arrayToSend = array('to' => $deviceToken, 'notification' => $notification, 'priority' => 'high');
+            
+            $json = json_encode($arrayToSend);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            //Send the request
+            $responses[] = curl_exec($ch);
+        }
+
+        curl_close($ch);
     }
 
     public function my_json_encode($arr) {

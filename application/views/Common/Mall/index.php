@@ -113,12 +113,12 @@ $this->load->view('Common/Mall/details_modal');
             }
         });
         var table = $('#mall_dttable').DataTable({
-            "dom": '<"top"<"dttable_lenth_wrapper">>rt<"bottom"pi><"clear">',
+            "dom": '<"top"<"dttable_lenth_wrapper"fl>>rt<"bottom"pi><"clear">',
             "processing": true,
             "serverSide": true,
             "scrollX": false,
-            "bFilter": true,
-            "bInfo": false,
+//            "bFilter": true,
+//            "bInfo": false,
             "aaSorting": [[0, 'desc']],
             language: {
                 search: '<span>Filter :</span> _INPUT_',
@@ -261,6 +261,6 @@ $this->load->view('Common/Mall/details_modal');
             width: 'auto'
         });
 
-        $("#mall_dttable tr:first").hide();
+//        $("#mall_dttable tr:first").hide();
     });
 </script>

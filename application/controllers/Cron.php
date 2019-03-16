@@ -424,9 +424,9 @@ class Cron extends CI_Controller {
                     $messageArray['media_thumbnail'] = $list['media_thumbnail'];
                 }
 
-//                pr($messageArray);
-//                echo '<br>';
-//                die();
+                // pr($messageArray);
+                // echo '<br>';
+                // die();
                 $messageArray['action'] = 100;
                 $messageArrayJson = json_encode($messageArray);
 
@@ -499,18 +499,21 @@ class Cron extends CI_Controller {
 //                    query();
 //                    pr($users_list, 1);
                     $user_group = array_chunk($users_list, 50);
-//                pr($user_group, 1);
+
                     if (isset($user_group) && sizeof($user_group) > 0) {
                         foreach ($user_group as $key => $group) {
                             $android_device_token_ids = array();
+                            $iphone_device_token_ids = array();
                             if (isset($group) && sizeof($group) > 0) {
                                 foreach ($group as $g) {
                                     if ($g['device_type'] == ANDROID_DEVICE_TYPE)
                                         $android_device_token_ids[] = $g['device_token'];
+
+                                    if ($g['device_type'] == IOS_DEVICE_TYPE)
+                                        $iphone_device_token_ids[] = $g['device_token'];
                                 }
                             }
                             if (isset($android_device_token_ids) && sizeof($android_device_token_ids) > 0) {
-
                                 $response = $this->push_notification->sendMessageToAndroidPhone(GOOGLE_PUSH_NOTIFICATION_API_KEY, $android_device_token_ids, $messageArrayJson);
                                 $response = json_decode($response, true);
 //                                echo 'rresponse';
@@ -541,8 +544,282 @@ class Cron extends CI_Controller {
                                             $this->Common_model->master_save(tbl_offer_cron, $insert_offer_cron, TRUE);
                                     }
                                 }
-                            } elseif (isset($iphone_device_token_ids) && sizeof($iphone_device_token_ids) > 0) {
+                            } else if (!empty($iphone_device_token_ids) && sizeof($iphone_device_token_ids) > 0) {
                                 //iphone push notification
+//                                 $response = $this->push_notification->send_notifications_to_iphone($iphone_device_token_ids, $messageArrayJson, site_url());
+//                                 $response = json_decode($response, true);
+// //                                echo 'rresponse';
+// //                                pr($response);
+//                                 if (!empty($iphone_device_token_ids)) {
+//                                     $output['response'] = $response;
+//                                     $output['success_count'] = (int) $response['success'];
+//                                     $output['failure_count'] = (int) $response['failure'];
+// //                                    echo 'results';
+// //                                    pr($response['results']);
+//                                     if (isset($response['results']) && sizeof($response['results']) > 0) {
+//                                         $insert_offer_cron = array();
+//                                         foreach ($response['results'] as $key => $val) {
+//                                             $response_message = '';
+//                                             if (isset($val) && isset($val['error']))
+//                                                 $response_message = $val['error'];
+//                                             elseif (isset($val) && isset($val['message_id']))
+//                                                 $response_message = $val['message_id'];
+
+//                                             $insert_offer_cron[] = array(
+//                                                 'id_offer' => $list['id_offer'],
+//                                                 'device_token' => $iphone_device_token_ids[$key],
+//                                                 'response' => $response_message,
+//                                                 'created_date' => date('Y-m-d H:i:s')
+//                                             );
+//                                         }
+//                                         if (isset($insert_offer_cron) && sizeof($insert_offer_cron) > 0)
+//                                             $this->Common_model->master_save(tbl_offer_cron, $insert_offer_cron, TRUE);
+//                                     }
+//                                 }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public function push_notification_sample() {
+
+        $this->Common_model->master_save('test', array('id' => 1, 'created_date' => date('Y-m-d H:i:s')));
+        $this->load->library('Push_notification');
+
+        $currnt_datetime = date('Y-m-d H:i');
+
+        $currnt_datetime = new DateTime($currnt_datetime);
+        $currnt_datetime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $currnt_datetime = $currnt_datetime->format('Y-m-d H:i');
+        $get_5_min_ago_datetime = date('Y-m-d H:i', strtotime("-5 minute"));
+
+        $yesterday_date = date('Y-m-d', strtotime("-1 days"));
+        $next_date = date('Y-m-d', strtotime("+1 days"));
+
+        $select_offer = array(
+            'table' => tbl_offer_announcement . ' offer_announcement',
+            'fields' => array('offer_announcement.*', 'country.timezone', 'store.store_name', 'store.store_logo', 'mall.mall_name', 'mall.mall_logo'),
+            'where' => array(
+                'offer_announcement.is_delete' => IS_NOT_DELETED_STATUS,
+                'offer_announcement.type' => OFFER_OFFER_TYPE
+            ),
+            'where_with_sign' => array(
+                '(country.id_country = store.id_country OR country.id_country = mall.id_country)',
+                '((store.is_delete = ' . IS_NOT_DELETED_STATUS . ' AND  store.status = ' . ACTIVE_STATUS . ')  OR (mall.is_delete = ' . IS_NOT_DELETED_STATUS . ' AND  mall.status = ' . ACTIVE_STATUS . '))',
+                '(DATE_FORMAT(offer_announcement.broadcasting_time, "%Y-%m-%d") BETWEEN "' . $yesterday_date . '" AND "' . $next_date . '" )'
+            ),
+            'join' => array(
+                array(
+                    'table' => tbl_offer_announcement_image . ' as offer_announcement_image',
+                    'condition' => 'offer_announcement_image.id_offer = offer_announcement.id_offer',
+                    'join' => 'left',
+                ),
+                array(
+                    'table' => tbl_store . ' as store',
+                    'condition' => 'store.id_store = offer_announcement.id_store',
+                    'join' => 'left',
+                ),
+                array(
+                    'table' => tbl_mall . ' as mall',
+                    'condition' => 'mall.id_mall = offer_announcement.id_mall',
+                    'join' => 'left'
+                ),
+                array(
+                    'table' => tbl_country . ' as country',
+                    'condition' => '(country.id_country = store.id_country OR country.id_country = mall.id_country)',
+                    'join' => 'left'
+                )
+            ),
+            'group_by' => array('offer_announcement.id_offer'),
+        );
+
+        $offers_list = $this->Common_model->master_select($select_offer);
+
+        if (isset($offers_list) && sizeof($offers_list) > 0) {
+            foreach ($offers_list as $list) {
+
+                $messageArray = array();
+
+                $messageArray['id_offer'] = (int) $list['id_offer'];
+                $messageArray['type'] = (int) $list['type'];
+                $messageArray['offer_type'] = (int) $list['offer_type'];
+                $messageArray['id_mall'] = (int) $list['id_mall'];
+                $messageArray['id_store'] = (int) $list['id_store'];
+                $messageArray['video_url'] = null;
+                $messageArray['id_offer_announcement_image'] = (int) ($list['id_offer_announcement_image'] > 0) ? $list['id_offer_announcement_image'] : 0;
+
+                $messageArray['push_message'] = $list['push_message'];
+                $messageArray['media_height'] = ($list['offer_type'] == TEXT_OFFER_CONTENT_TYPE) ? 0 : (int) $list['media_height'];
+                $messageArray['media_width'] = ($list['offer_type'] == TEXT_OFFER_CONTENT_TYPE) ? 0 : (int) $list['media_width'];
+                $messageArray['content'] = $list['content'];
+                $messageArray['broadcasting_time'] = $list['broadcasting_time'];
+                $messageArray['expiry_time'] = $list['expiry_time'];
+                $messageArray['view_count'] = (int) $list['view_count'];
+                $messageArray['impression_count'] = (int) $list['impression_count'];
+                $messageArray['created_date'] = $list['created_date'];
+                $messageArray['modified_date'] = $list['modified_date'];
+                $messageArray['is_testdata'] = (int) $list['is_testdata'];
+                $messageArray['is_delete'] = (int) $list['is_delete'];
+
+                $messageArray['media_name'] = $list['media_name'];
+                $messageArray['media_thumbnail'] = $list['media_thumbnail'];
+
+                if ($list['id_mall'] > 0) {
+
+                    $messageArray['name'] = $list['mall_name'];
+                    $messageArray['logo'] = $list['mall_logo'];
+                } elseif ($list['id_store']) {
+                    $messageArray['name'] = $list['store_name'];
+                    $messageArray['logo'] = $list['store_logo'];
+                }
+
+                if ($list['offer_type'] == IMAGE_OFFER_CONTENT_TYPE) {
+                    $select_image = array(
+                        'table' => tbl_offer_announcement_image,
+                        'where' => array(
+                            'is_delete' => IS_NOT_DELETED_STATUS,
+                            'id_offer' => $list['id_offer']
+                        ),
+                        'order_by' => array('sort_order' => 'ASC')
+                    );
+                    $image_data = $this->Common_model->master_single_select($select_image);
+                    if (isset($image_data) && sizeof($image_data) > 0) {
+                        $messageArray['media_name'] = $image_data['image_name'];
+                        $messageArray['media_thumbnail'] = $image_data['image_thumbnail'];
+                        $messageArray['media_height'] = $image_data['image_height'];
+                        $messageArray['media_width'] = $image_data['image_width'];
+                    }
+                }
+
+                if ($list['offer_type'] == VIDEO_OFFER_CONTENT_TYPE) {
+                    $messageArray['media_name'] = $list['media_name'];
+                    $messageArray['media_thumbnail'] = $list['media_thumbnail'];
+                }
+
+                $messageArray['action'] = 100;
+                $messageArrayJson = json_encode($messageArray);
+
+                $country_zone_today_date = new DateTime($currnt_datetime);
+                $country_zone_today_date->setTimezone(new DateTimeZone($list['timezone']));
+                $country_zone_today_date->format('Y-m-d H:i');
+                $country_zone_today_date_ = strtotime($country_zone_today_date->format('Y-m-d H:i'));
+//                echo '<br>' . $country_zone_today_date->format('Y-m-d H:i');
+//                echo '<br>' . $country_zone_today_date_ = strtotime($country_zone_today_date->format('Y-m-d H:i'));
+
+                $country_zone_broacast_time = new DateTime($list['broadcasting_time']);
+                $country_zone_broacast_time->setTimezone(new DateTimeZone($list['timezone']));
+                $country_zone_broacast_time->format('Y-m-d H:i');
+                $country_zone_broacast_time_ = strtotime($country_zone_broacast_time->format('Y-m-d H:i'));
+
+                $get_5_min_ago_datetime = date('Y-m-d H:i', strtotime("-5 minute"));
+                $get_5_min_ago_datetime = new DateTime($get_5_min_ago_datetime);
+                $get_5_min_ago_datetime->setTimezone(new DateTimeZone($list['timezone']));
+                $get_5_min_ago_datetime->format('Y-m-d H:i');
+                $get_5_min_ago_datetime_ = strtotime($get_5_min_ago_datetime->format('Y-m-d H:i'));
+
+                if ($country_zone_broacast_time_ < $get_5_min_ago_datetime_ && $country_zone_broacast_time_ <= $country_zone_today_date_) {
+                    if ((int) $list['id_store'] > 0) {
+                        $where_with_sign = array(
+                            'favorite.id_store = ' . $list['id_store'],
+                            'device_token != ""'
+                        );
+                    } elseif ((int) $list['id_mall'] > 0) {
+                        $where_with_sign = array(
+                            'favorite.id_mall = ' . $list['id_mall'],
+                            'device_token != ""'
+                        );
+                    }
+
+                    $select_users = array(
+                        'table' => tbl_user,
+                        'where' => array(
+                            'id_user' => 252,
+                        )
+                    );
+
+                    $users_list = $this->Common_model->master_select($select_users);
+
+                    $user_group = array_chunk($users_list, 50);
+
+                    if (isset($user_group) && sizeof($user_group) > 0) {
+                        foreach ($user_group as $key => $group) {
+                            $android_device_token_ids = array();
+                            $iphone_device_token_ids = array();
+
+                            if (isset($group) && sizeof($group) > 0) {
+                                foreach ($group as $g) {
+                                    if ($g['device_type'] == ANDROID_DEVICE_TYPE)
+                                        $android_device_token_ids[] = $g['device_token'];
+
+                                    if ($g['device_type'] == IOS_DEVICE_TYPE)
+                                        $iphone_device_token_ids[] = $g['device_token'];
+                                }
+                            }
+
+                            if (isset($android_device_token_ids) && sizeof($android_device_token_ids) > 0) {
+                                $response = $this->push_notification->sendMessageToAndroidPhone(GOOGLE_PUSH_NOTIFICATION_API_KEY, $android_device_token_ids, $messageArrayJson);
+                                $response = json_decode($response, true);
+
+                                if (!empty($android_device_token_ids)) {
+                                    $output['response'] = $response;
+                                    $output['success_count'] = (int) $response['success'];
+                                    $output['failure_count'] = (int) $response['failure'];
+
+                                    if (isset($response['results']) && sizeof($response['results']) > 0) {
+                                        $insert_offer_cron = array();
+                                        foreach ($response['results'] as $key => $val) {
+                                            $response_message = '';
+                                            if (isset($val) && isset($val['error']))
+                                                $response_message = $val['error'];
+                                            elseif (isset($val) && isset($val['message_id']))
+                                                $response_message = $val['message_id'];
+
+                                            $insert_offer_cron[] = array(
+                                                'id_offer' => $list['id_offer'],
+                                                'device_token' => $android_device_token_ids[$key],
+                                                'response' => $response_message,
+                                                'created_date' => date('Y-m-d H:i:s')
+                                            );
+                                        }
+                                        if (isset($insert_offer_cron) && sizeof($insert_offer_cron) > 0)
+                                            $this->Common_model->master_save(tbl_offer_cron, $insert_offer_cron, TRUE);
+                                    }
+                                }
+                            } else if (!empty($iphone_device_token_ids) && sizeof($iphone_device_token_ids) > 0) {
+                                //iphone push notification
+                                $json_response = $this->push_notification->send_notifications_to_iphone($iphone_device_token_ids, $messageArrayJson, site_url());
+                                $response = json_decode($json_response);
+                                   pr($response);
+
+                                if (!empty($iphone_device_token_ids)) {
+                                    $output['response'] = $response;
+                                    $output['success_count'] = (int) $response['success'];
+                                    $output['failure_count'] = (int) $response['failure'];
+
+                                    if (isset($response['results']) && sizeof($response['results']) > 0) {
+                                        $insert_offer_cron = array();
+                                        foreach ($response['results'] as $key => $val) {
+                                            $response_message = '';
+                                            if (isset($val) && isset($val['error']))
+                                                $response_message = $val['error'];
+                                            elseif (isset($val) && isset($val['message_id']))
+                                                $response_message = $val['message_id'];
+
+                                            $insert_offer_cron[] = array(
+                                                'id_offer' => $list['id_offer'],
+                                                'device_token' => $iphone_device_token_ids[$key],
+                                                'response' => $response_message,
+                                                'created_date' => date('Y-m-d H:i:s')
+                                            );
+                                        }
+
+                                        // if (isset($insert_offer_cron) && sizeof($insert_offer_cron) > 0)
+                                        //     $this->Common_model->master_save(tbl_offer_cron, $insert_offer_cron, TRUE);
+                                    }
+                                }
                             }
                         }
                     }

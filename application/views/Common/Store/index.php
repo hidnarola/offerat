@@ -181,10 +181,10 @@ $(document).ready(function() {
         "serverSide": true,
         "scrollX": true,
         "scrollCollapse": true,
-        "orderCellsTop": false,
-        "bFilter": false,
-        "searching": false,
-        "bInfo": false,
+//        "orderCellsTop": false,
+//        "bFilter": false,
+//        "searching": false,
+//        "bInfo": false,
         "aaSorting": [
             [0, 'desc']
         ],
@@ -208,7 +208,7 @@ $(document).ready(function() {
             },
             {
                 'data': 'store_status',
-                "visible": true,
+                "visible": false,
                 "name": 'store.status',
                 "render": function(data, type, full, meta) {
                     var status = '<span class="label label-success label-rounded">' + status_arr[full.store_status] + '</span>';
@@ -232,7 +232,7 @@ $(document).ready(function() {
             },
             {
                 'data': 'category_id_category',
-                "visible": true,
+                "visible": false,
                 "name": 'category.id_category',
                 "render": function(data, type, full, meta) {
                     return '';
@@ -240,7 +240,7 @@ $(document).ready(function() {
             },
             {
                 'data': 'sub_category_id_sub_category',
-                "visible": true,
+                "visible": false,
                 "name": 'sub_category.id_sub_category',
                 "render": function(data, type, full, meta) {
                     return '';
@@ -431,7 +431,7 @@ $(document).ready(function() {
         width: 'auto'
     });
     
-    $(".custom_dt tr:first").hide();
-    $(".buttons-page-length").hide();
+//    $(".custom_dt tr:first").hide();
+//    $(".buttons-page-length").hide();
 });
 </script>

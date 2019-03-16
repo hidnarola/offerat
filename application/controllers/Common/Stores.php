@@ -447,7 +447,7 @@ class Stores extends MY_Controller {
                 $captcha_insert = $this->input->post('captcha');
                 $contain_sess_captcha = $this->session->userdata('valuecaptchaCode');
 
-                if ($captcha_insert !== $contain_sess_captcha) {
+                if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE && $captcha_insert !== $contain_sess_captcha) {
                     $this->session->set_flashdata('error_msg', 'Please enter valid captcha code.');
 
                     if (!empty($id)) {
@@ -456,7 +456,7 @@ class Stores extends MY_Controller {
                         redirect('mall-store-user/stores/save');
                     }
                 }
-
+                
                 //Upload Store Logo Image
                 if (isset($_FILES['store_logo'])) {
                     if (($_FILES['store_logo']['size']) > 0) {
@@ -912,7 +912,6 @@ class Stores extends MY_Controller {
                             $response = $this->Email_template_model->send_email(NULL, $country_admin_email_id, $subject, $content);
                         }
                     }
-
                     redirect($back_url);
                 }
             }

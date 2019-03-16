@@ -510,7 +510,9 @@
                                     <input type="file" name="files[]" id="" multiple class="form-control" required="required">
                                 </span>
 
-                                    <div id="dropzone" class="fade well hide"><i class="fa fa-image fa-lg"></i>&nbsp;&nbsp;Drop files here</div>
+                                <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
+                                    <div id="dropzone" class="fade well"><i class="fa fa-image fa-lg"></i>&nbsp;&nbsp;Drop files here</div>
+                                <?php } ?>
 
                                 <div class="upload-div" style="display:none;" id="update_div">
                                     <button type="button" class="delete">Delete</button>
