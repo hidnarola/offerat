@@ -15,7 +15,7 @@ if (!empty($_SESSION['loggedin_user_data'])) {
             <div class="category-content">
                 <div class="media">                    
                     <div class="media-body">
-                        <a href="<?php echo $uri_segment_1; ?>/dashboard">&nbsp;
+                        <a href="<?php echo $uri_segment_1; ?>/dashboard">&nbsp;&nbsp;
                             <span class="media-heading text-semibold"><i class="fa fa-user fa-3x margin-right-10"></i> 
                                 <?php
                                 if ($logged_user_type == SUPER_ADMIN_USER_TYPE)
@@ -23,7 +23,7 @@ if (!empty($_SESSION['loggedin_user_data'])) {
                                 elseif ($logged_user_type == COUNTRY_ADMIN_USER_TYPE)
                                     echo 'Country Admin';
                                 elseif ($logged_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
-                                    echo (!empty($session_user_data)) ? $session_user_data['first_name'] . ' ' . $session_user_data['last_name'] : 'Store - Mall Admin';
+                                    echo (!empty($session_user_data) && !empty($session_user_data['first_name']) && !empty($session_user_data['last_name'])) ? $session_user_data['first_name'] . ' ' . $session_user_data['last_name'] : 'Admin';
                                 ?>                            
                             </span>
                         </a>
@@ -86,7 +86,7 @@ if (!empty($_SESSION['loggedin_user_data'])) {
                     <ul class="navigation navigation-main navigation-accordion">
                         <!--<li <?php echo ($controller === 'dashboard') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/dashboard"><i class="icon-home4"></i> <span>Dashboard</span></a></li>-->               
                         <li>
-                            <a href="#"><i class="icon-bell2"></i> <span>Posts</span></a>
+                            <a href="#"><i class="fa fa-files-o"></i> <span>Posts</span></a>
                             <ul>
                                 <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'offers') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/offers"><i class="icon-bubble-notification"></i> <span>Offers</span></a></li>
                                 <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'announcements') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/announcements"><i class="icon-volume-medium"></i> <span>Announcements</span></a></li>

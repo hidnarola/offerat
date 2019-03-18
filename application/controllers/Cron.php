@@ -564,7 +564,6 @@ class Cron extends CI_Controller {
 //                                                 $response_message = $val['error'];
 //                                             elseif (isset($val) && isset($val['message_id']))
 //                                                 $response_message = $val['message_id'];
-
 //                                             $insert_offer_cron[] = array(
 //                                                 'id_offer' => $list['id_offer'],
 //                                                 'device_token' => $iphone_device_token_ids[$key],
@@ -667,13 +666,14 @@ class Cron extends CI_Controller {
                 $messageArray['media_name'] = $list['media_name'];
                 $messageArray['media_thumbnail'] = $list['media_thumbnail'];
 
-                if ($list['id_mall'] > 0) {
+                $image_url = site_url('media/StoreLogo/');
 
+                if ($list['id_mall'] > 0) {
                     $messageArray['name'] = $list['mall_name'];
-                    $messageArray['logo'] = $list['mall_logo'];
+                    $messageArray['logo'] = $image_url . $list['mall_logo'];
                 } elseif ($list['id_store']) {
                     $messageArray['name'] = $list['store_name'];
-                    $messageArray['logo'] = $list['store_logo'];
+                    $messageArray['logo'] = $image_url . $list['store_logo'];
                 }
 
                 if ($list['offer_type'] == IMAGE_OFFER_CONTENT_TYPE) {
@@ -751,48 +751,16 @@ class Cron extends CI_Controller {
 
                             if (isset($group) && sizeof($group) > 0) {
                                 foreach ($group as $g) {
-                                    if ($g['device_type'] == ANDROID_DEVICE_TYPE)
-                                        $android_device_token_ids[] = $g['device_token'];
-
                                     if ($g['device_type'] == IOS_DEVICE_TYPE)
                                         $iphone_device_token_ids[] = $g['device_token'];
                                 }
                             }
 
-                            if (isset($android_device_token_ids) && sizeof($android_device_token_ids) > 0) {
-                                $response = $this->push_notification->sendMessageToAndroidPhone(GOOGLE_PUSH_NOTIFICATION_API_KEY, $android_device_token_ids, $messageArrayJson);
-                                $response = json_decode($response, true);
-
-                                if (!empty($android_device_token_ids)) {
-                                    $output['response'] = $response;
-                                    $output['success_count'] = (int) $response['success'];
-                                    $output['failure_count'] = (int) $response['failure'];
-
-                                    if (isset($response['results']) && sizeof($response['results']) > 0) {
-                                        $insert_offer_cron = array();
-                                        foreach ($response['results'] as $key => $val) {
-                                            $response_message = '';
-                                            if (isset($val) && isset($val['error']))
-                                                $response_message = $val['error'];
-                                            elseif (isset($val) && isset($val['message_id']))
-                                                $response_message = $val['message_id'];
-
-                                            $insert_offer_cron[] = array(
-                                                'id_offer' => $list['id_offer'],
-                                                'device_token' => $android_device_token_ids[$key],
-                                                'response' => $response_message,
-                                                'created_date' => date('Y-m-d H:i:s')
-                                            );
-                                        }
-                                        if (isset($insert_offer_cron) && sizeof($insert_offer_cron) > 0)
-                                            $this->Common_model->master_save(tbl_offer_cron, $insert_offer_cron, TRUE);
-                                    }
-                                }
-                            } else if (!empty($iphone_device_token_ids) && sizeof($iphone_device_token_ids) > 0) {
+                            if (!empty($iphone_device_token_ids) && sizeof($iphone_device_token_ids) > 0) {
                                 //iphone push notification
                                 $json_response = $this->push_notification->send_notifications_to_iphone($iphone_device_token_ids, $messageArrayJson, site_url());
                                 $response = json_decode($json_response);
-                                   pr($response);
+                                pr($response);
 
                                 if (!empty($iphone_device_token_ids)) {
                                     $output['response'] = $response;

@@ -331,9 +331,12 @@
                                                                 <input type="text" class="form-control" name="location_city_0" id="location_city_0" placeholder="City" value="<?php echo set_value('location_city_0'); ?>">
                                                             </div>
                                                             <div id="mall_div_0">
-                                                                <select class="form-control select-search" id="location_mall_id_0" name="location_mall_id_0" data-placeholder="Select Mall" required="required" data-live-search="true" >
+                                                                <select class="form-control select-search" id="location_mall_id_0" name="location_mall_id_0" data-placeholder="Select Mall" data-live-search="true" >
                                                                     <?php
                                                                     if (isset($malls_list) && sizeof($malls_list) > 0) {
+                                                                        ?> 
+                                                                        <option value="">Select Mall</option>    
+                                                                        <?php
                                                                         foreach ($malls_list as $list) {
                                                                             ?>
                                                                             <option data-id="<?= $list['id_mall']; ?>" value="<?= $list['id_mall']; ?>" <?php echo (isset($notification_data) && isset($notification_data['id_mall']) && $list['id_mall'] == $notification_data['id_mall']) ? 'selected=selected' : ''; ?>><?= $list['mall_name']; ?></option>
@@ -651,16 +654,6 @@
                                     <?php } ?>
                                 </div>                                    
                             </fieldset>
-                        <?php } ?>
-
-                        <?php if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) { ?>
-                            <div class="col-md-12 mb-20 mt-10">
-                                <p id="image_captcha"><?php echo $captchaImg; ?></p>
-                                <a href="javascript:void(0);" class="captcha-refresh" title="Refresh"><i class="fa fa-refresh fa-2x"></i></a>&nbsp;
-                                <input type="text" name="captcha" id="text_captcha" required class="captcha-input" value="" placeholder="Enter Captcha" />
-                                <br>
-                                <label id="text_captcha-error" class="validation-error-label" for="text_captcha"></label>
-                            </div> 
                         <?php } ?>
 
                         <?php if (($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)) { ?>
@@ -1001,13 +994,4 @@ if (isset($malls_list) && sizeof($malls_list) > 0) {
     //            $("#mall_div_" + column_no).removeClass('hide');
 //        }
     //    });
-    $(document).ready(function () {
-        jqueryValidate();
-
-        $('.captcha-refresh').on('click', function () {
-            $.get('<?= site_url('mall-store-user/stores/refresh') ?>', function (data) {
-                $('#image_captcha').html(data);
-            });
-        });
-    });
 </script>

@@ -208,7 +208,7 @@ $(document).ready(function() {
             },
             {
                 'data': 'store_status',
-                "visible": false,
+                "visible": true,
                 "name": 'store.status',
                 "render": function(data, type, full, meta) {
                     var status = '<span class="label label-success label-rounded">' + status_arr[full.store_status] + '</span>';
@@ -224,7 +224,7 @@ $(document).ready(function() {
             },
             {
                 'data': 'mall_id_mall',
-                "visible": false,
+                "visible": true,
                 "name": 'mall.id_mall',
                 "render": function(data, type, full, meta) {
                     return full.mall_list;
@@ -232,7 +232,7 @@ $(document).ready(function() {
             },
             {
                 'data': 'category_id_category',
-                "visible": false,
+                "visible": true,
                 "name": 'category.id_category',
                 "render": function(data, type, full, meta) {
                     return '';
@@ -240,7 +240,7 @@ $(document).ready(function() {
             },
             {
                 'data': 'sub_category_id_sub_category',
-                "visible": false,
+                "visible": true,
                 "name": 'sub_category.id_sub_category',
                 "render": function(data, type, full, meta) {
                     return '';

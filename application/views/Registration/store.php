@@ -66,7 +66,7 @@
                                             <select id="category_0" name="category_0" class="select category_selection_dropdown form-control" data-clone-number="0" required="required">
                                                 <option value="">Select Category</option>
         <?php foreach ($category_list as $list) { ?>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <option value="<?php echo $list['id_category']; ?>"><?php echo $list['category_name']; ?></option>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <option value="<?php echo $list['id_category']; ?>"><?php echo $list['category_name']; ?></option>
         <?php } ?>
                                             </select>
                                         </div>
@@ -115,6 +115,13 @@
             <span class="text-size-mini">  Yes, I agree with <a href="<?= base_url('tc') ?>" target="_blank"><span>Terms And Conditions</span></a></span>            
             <label id="terms_condition-error" class="validation-error-label" for="terms_condition"></label>
         </div>
+        <div class="col-md-12 mb-20 mt-10 text-center">
+            <p id="image_captcha"><?php echo $captchaImg; ?></p>
+            <a href="javascript:void(0);" class="captcha-refresh" title="Refresh"><i class="fa fa-refresh fa-2x"></i></a>&nbsp;
+            <input type="text" name="captcha" id="text_captcha" required class="captcha-input" value="" placeholder="Enter Captcha" />
+            <br>
+            <label id="text_captcha-error" class="validation-error-label" for="text_captcha"></label>
+        </div> 
         <div class="form-group btn_center">            
             <input type="hidden" name="category_count" id="category_count" value="1">
             <input type="hidden" name="location_count" id="location_count" value="1">
@@ -164,4 +171,14 @@
         html += '</div>';
         return html;
     }
+
+    $(document).ready(function () {
+        jqueryValidate();
+
+        $('.captcha-refresh').on('click', function () {
+            $.get('<?= site_url('Storeregistration/refresh') ?>', function (data) {
+                $('#image_captcha').html(data);
+            });
+        });
+    });
 </script>

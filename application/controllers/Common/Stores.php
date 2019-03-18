@@ -443,19 +443,6 @@ class Stores extends MY_Controller {
 
                 $do_store_image_has_error = false;
                 $do_location_file_has_error = false;
-
-                $captcha_insert = $this->input->post('captcha');
-                $contain_sess_captcha = $this->session->userdata('valuecaptchaCode');
-
-                if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE && $captcha_insert !== $contain_sess_captcha) {
-                    $this->session->set_flashdata('error_msg', 'Please enter valid captcha code.');
-
-                    if (!empty($id)) {
-                        redirect('mall-store-user/stores/save/' . $id);
-                    } else {
-                        redirect('mall-store-user/stores/save');
-                    }
-                }
                 
                 //Upload Store Logo Image
                 if (isset($_FILES['store_logo'])) {
@@ -946,9 +933,6 @@ class Stores extends MY_Controller {
         $this->data['download_mall_format_url'] = $download_mall_format_url;
         $this->data['back_url'] = $back_url;
 
-        $captcha_image = $this->get_captcha_images();
-        $this->data['captchaImg'] = $captcha_image['image'];
-
         $this->template->load('user', 'Common/Store/form', $this->data);
     }
 
@@ -1179,9 +1163,8 @@ class Stores extends MY_Controller {
                 'is_delete' => IS_NOT_DELETED_STATUS,
             );
 
-            if ($this->input->post('is_mall_' . $i, TRUE) == 1) {
+            if ($this->input->post('is_mall_' . $i, TRUE) == 1 && !empty($this->input->post('location_mall_id_' . $i, TRUE))) {
                 $location_mall_id = $this->input->post('location_mall_id_' . $i, TRUE);
-
                 $select_mall_location = array(
                     'table' => tbl_store_location,
                     'where' => array(
