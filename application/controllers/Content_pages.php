@@ -8,32 +8,30 @@ class Content_pages extends CI_Controller {
         parent::__construct();
         $this->load->model('Common_model', '', TRUE);
         $this->load->model('Email_template_model', '', TRUE);
-        $this->load->library('session');
-        $this->load->helper('captcha');
     }
 
     public function contact_us() {
         $this->data['title'] = $this->data['page'] = $this->data['page_header'] = $this->data['sub_header'] = 'Contact Us';
 
         if ($this->input->post()) {
-            $captcha_insert = $this->input->post('captcha');
-            $contain_sess_captcha = $this->session->userdata('valuecaptchaCode');
 
-            if ($captcha_insert === $contain_sess_captcha) {
-                $validate_fields = array(
-                    'name',
-                    'email_id',
-                    'contact_number',
-                    'message'
-                );
+            $validate_fields = array(
+                'name',
+                'email_id',
+                'contact_number',
+                'message'
+            );
 
-                if ($this->_validate_contact_us_form($validate_fields)) {
-                    $name = $this->input->post('name', TRUE);
-                    $email_id = $this->input->post('email_id', TRUE);
-                    $contact_number = $this->input->post('contact_number', TRUE);
-                    $message = $this->input->post('message', TRUE);
+            $this->form_validation->set_rules('g-recaptcha-response', 'recaptcha validation', 'required|callback_validate_captcha');
+            $this->form_validation->set_message('validate_captcha', 'Captcha is required');
 
-                    $send_message = "
+            if ($this->_validate_contact_us_form($validate_fields)) {
+                $name = $this->input->post('name', TRUE);
+                $email_id = $this->input->post('email_id', TRUE);
+                $contact_number = $this->input->post('contact_number', TRUE);
+                $message = $this->input->post('message', TRUE);
+
+                $send_message = "
                             <html>
                                 <head>
                                     <title>HTML email</title>
@@ -60,22 +58,15 @@ class Content_pages extends CI_Controller {
                                 </body>
                             </html>
                             ";
-                    $response = $this->Email_template_model->send_email(NULL, site_info_email, 'Offerat | Contact US', $send_message);
-                    if (isset($response) && $response == 'yes') {
-                        $this->session->set_flashdata('success_msg', 'Message sent successfully');
-                    } else
-                        $this->session->set_flashdata('error_msg', 'Message not sent');
+                $response = $this->Email_template_model->send_email(NULL, site_info_email, 'Offerat | Contact US', $send_message);
+                if (isset($response) && $response == 'yes') {
+                    $this->session->set_flashdata('success_msg', 'Message sent successfully');
+                } else
+                    $this->session->set_flashdata('error_msg', 'Message not sent');
 
-                    redirect('contact-us');
-                }
-            } else {
-                $this->session->set_flashdata('error_msg', 'Please enter valid captcha code.');
                 redirect('contact-us');
             }
         }
-
-        $captcha_image = $this->get_captcha_images();
-        $this->data['captchaImg'] = $captcha_image['image'];
 
         $this->template->load('front', 'Content_pages/contact_us', $this->data);
     }
@@ -139,36 +130,29 @@ class Content_pages extends CI_Controller {
         return $this->form_validation->run();
     }
 
-    public function captcha_config() {
-        return $config = array(
-            'img_url' => base_url() . 'assets/uploads/captcha/',
-            'img_path' => './assets/uploads/captcha/',
+    function validate_captcha() {
+        $recaptcha = trim($this->input->post('g-recaptcha-response'));
+        $userIp = $this->input->ip_address();
+        $secret = GOOGLE_CAPTCHA_SECRET_KEY;
+        $data = array(
+            'secret' => "$secret",
+            'response' => "$recaptcha",
         );
-    }
 
-    public function get_captcha_images() {
-        $this->removeUnusedCaptchaImages();
+        $verify = curl_init();
+        curl_setopt($verify, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
+        curl_setopt($verify, CURLOPT_POST, true);
+        curl_setopt($verify, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($verify, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($verify, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($verify);
+        $status = json_decode($response, true);
 
-        $config = $this->captcha_config();
-        $captcha = create_captcha($config);
-
-        $this->session->unset_userdata('valuecaptchaCode');
-        $this->session->set_userdata('valuecaptchaCode', $captcha['word']);
-
-        return $captcha;
-    }
-
-    public function refresh_captcha() {
-        $this->removeUnusedCaptchaImages();
-        $config = $this->captcha_config();
-        $captcha = create_captcha($config);
-        $this->session->unset_userdata('valuecaptchaCode');
-        $this->session->set_userdata('valuecaptchaCode', $captcha['word']);
-        echo $captcha['image'];
-    }
-
-    public function removeUnusedCaptchaImages() {
-        delete_files('./assets/uploads/captcha/', TRUE);
+        if (empty($status['success'])) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
     }
 
 }

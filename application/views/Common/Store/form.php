@@ -434,7 +434,7 @@
                                                             <div class="form-group">
                                                                 <div>
                                                                     <input type="hidden" name="existed_store_contact_id_<?= $contact['id_store_contact'] ?>" id="existed_store_contact_id_<?= $contact['id_store_contact'] ?>" value="<?php echo $contact['id_store_contact']; ?>">
-                                                                    <input type="text" class="form-control number-only" name="existed_store_contact_number_<?= $contact['id_store_contact'] ?>" id="existed_store_contact_number_<?= $contact['id_store_contact'] ?>" placeholder="Telephone" value="<?php echo $contact['contact_number']; ?>">
+                                                                    <input type="text" class="form-control number-only" name="existed_store_contact_number_<?= $contact['id_store_contact'] ?>" id="existed_store_contact_number_<?= $contact['id_store_contact'] ?>" placeholder="Your call center number" value="<?php echo $contact['contact_number']; ?>">
                                                                     <label id="existed_store_contact_number_<?= $contact['id_store_contact'] ?>-error" class="validation-error-label"></label>
                                                                 </div>
                                                             </div>
@@ -459,7 +459,7 @@
                                                     <div class="col-md-10">
                                                         <div class="form-group">
                                                             <div>
-                                                                <input type="text" class="form-control number-only" name="contact_number_0" id="contact_number_0" placeholder="Telephone" value="<?php echo set_value('contact_number_0'); ?>">
+                                                                <input type="text" class="form-control number-only" name="contact_number_0" id="contact_number_0" placeholder="Your call center number" value="<?php echo set_value('contact_number_0'); ?>">
                                                                 <label id="contact_number_0-error" class="validation-error-label"></label>
                                                             </div>
                                                         </div>
@@ -492,7 +492,7 @@
                                         <div class="col-xs-12">
                                             <div class="form-group">
                                                 <div>
-                                                    <input type="email" class="form-control" name="contact_email" id="contact_email" placeholder="Contact Email" value="<?php echo (isset($store_details['contact_email'])) ? $store_details['contact_email'] : set_value('contact_email'); ?>">
+                                                    <input type="email" class="form-control" name="contact_email" id="contact_email" placeholder="Example: info@yourstore.com" value="<?php echo (isset($store_details['contact_email'])) ? $store_details['contact_email'] : set_value('contact_email'); ?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -965,7 +965,7 @@ if (isset($malls_list) && sizeof($malls_list) > 0) {
         html += '<div class="col-md-10">';
         html += '<div class="form-group">';
         html += '<div>';
-        html += '<input type="text" class="form-control number-only" name="contact_number_' + cloneNumber + '" id="contact_number_' + cloneNumber + '" placeholder="Telephone" value="">';
+        html += '<input type="text" class="form-control number-only" name="contact_number_' + cloneNumber + '" id="contact_number_' + cloneNumber + '" placeholder="Your call center number" value="">';
         html += '<label id="contact_number_' + cloneNumber + '-error" class="validation-error-label"></label>';
         html += '</div>';
         html += '</div>';

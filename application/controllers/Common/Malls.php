@@ -839,9 +839,15 @@ class Malls extends MY_Controller {
     public function edit_store($mall_id) {
         $mall_id = base64_decode($mall_id);
         $data['title'] = $data['page_header'] = 'Edit Store Location';
+        
+        if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
+            $user_url_type = 'mall-store-user';
+        } else if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+            $user_url_type = 'country-admin';
+        }
 
         $this->bread_crum[] = array(
-            'url' => site_url('country-admin/malls/save/' . $mall_id),
+            'url' => site_url($user_url_type.'/malls/save/' . $mall_id),
             'title' => ' Edit Mall',
         );
 
@@ -891,8 +897,15 @@ class Malls extends MY_Controller {
         $mall_id = base64_decode($mall_id);
 
         $data['title'] = $data['page_header'] = 'Edit Store Locations';
+
+        if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
+            $user_url_type = 'mall-store-user';
+        } else if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+            $user_url_type = 'country-admin';
+        }
+
         $this->bread_crum[] = array(
-            'url' => site_url('country-admin/malls/save/' . $mall_id),
+            'url' => site_url($user_url_type.'/malls/save/' . $mall_id),
             'title' => ' Edit Mall',
         );
         $this->bread_crum[] = array(

@@ -8,19 +8,11 @@ class Storeregistration extends CI_Controller {
         parent::__construct();
         $this->load->model('Common_model', '', TRUE);
         $this->load->model('Email_template_model', '', TRUE);
-        $this->load->library('session');
-        $this->load->helper('captcha');
     }
 
     function index() {
         if ($this->input->post()) {
-            $captcha_insert = $this->input->post('captcha');
-            $contain_sess_captcha = $this->session->userdata('valuecaptchaCode');
-
-            if ($captcha_insert !== $contain_sess_captcha) {
-                $this->session->set_flashdata('error_msg', 'Please enter valid captcha code.');
-                redirect('store-registration');
-            }
+            $recaptchaResponse = trim($this->input->post('g-recaptcha-response'));
 
             $validate_fields = array(
                 'store_name',
@@ -36,8 +28,10 @@ class Storeregistration extends CI_Controller {
                 'terms_condition'
             );
 
-            if ($this->_validate_form($validate_fields)) {
+            $this->form_validation->set_rules('g-recaptcha-response', 'recaptcha validation', 'required|callback_validate_captcha');
+            $this->form_validation->set_message('validate_captcha', 'Captcha is required');
 
+            if ($this->_validate_form($validate_fields)) {
                 $date = date('Y-m-d h:i:s');
                 $country_id = 0;
                 $do_store_image_has_error = false;
@@ -258,9 +252,6 @@ class Storeregistration extends CI_Controller {
             'where' => array('status' => ACTIVE_STATUS, 'is_delete' => IS_NOT_DELETED_STATUS)
         );
         $this->data['country_list'] = $this->Common_model->master_select($select_country);
-
-        $captcha_image = $this->get_captcha_images();
-        $this->data['captchaImg'] = $captcha_image['image'];
 
         $this->template->load('front', 'Registration/store', $this->data);
     }
@@ -571,36 +562,29 @@ class Storeregistration extends CI_Controller {
         }
     }
 
-    public function captcha_config() {
-        return $config = array(
-            'img_url' => base_url() . 'assets/uploads/captcha/',
-            'img_path' => './assets/uploads/captcha/',
+    function validate_captcha() {
+        $recaptcha = trim($this->input->post('g-recaptcha-response'));
+        $userIp = $this->input->ip_address();
+        $secret = GOOGLE_CAPTCHA_SECRET_KEY;
+        $data = array(
+            'secret' => "$secret",
+            'response' => "$recaptcha",
         );
-    }
 
-    public function get_captcha_images() {
-        $this->removeUnusedCaptchaImages();
-
-        $config = $this->captcha_config();
-        $captcha = create_captcha($config);
-
-        $this->session->unset_userdata('valuecaptchaCode');
-        $this->session->set_userdata('valuecaptchaCode', $captcha['word']);
-
-        return $captcha;
-    }
-
-    public function refresh() {
-        $this->removeUnusedCaptchaImages();
-        $config = $this->captcha_config();
-        $captcha = create_captcha($config);
-        $this->session->unset_userdata('valuecaptchaCode');
-        $this->session->set_userdata('valuecaptchaCode', $captcha['word']);
-        echo $captcha['image'];
-    }
-
-    public function removeUnusedCaptchaImages() {
-        delete_files('./assets/uploads/captcha/', TRUE);
+        $verify = curl_init();
+        curl_setopt($verify, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
+        curl_setopt($verify, CURLOPT_POST, true);
+        curl_setopt($verify, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($verify, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($verify, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($verify);
+        $status = json_decode($response, true);
+        
+        if (empty($status['success'])) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
     }
 
 }

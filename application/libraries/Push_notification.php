@@ -86,18 +86,25 @@ class Push_notification {
     }
 
     public function send_notifications_to_iphone($deviceTokens = array(), $msg = '', $url = '') {
+  
         $curl_url = "https://fcm.googleapis.com/fcm/send";
         $serverKey = IOS_FCM_PUSH_NOTIFICATION_API_KEY;
         $responses = [];
-
+		 $body = array();
+		 $alert = array();
+		/* 
+		 $alert [] = array (
+		 'title' => '',
+		 'text' => $msg
+		 );
         // Create the payload body
         $body['aps'] = array(
-            'alert' => $msg,
-            'sound' => 'default'
-        );
-        $body['url'] = $url;
-        // Encode the payload as JSON        
-        $payload = $this->my_json_encode($body);
+             'alert' => $alert[0],
+             'sound' => 'default',
+             'click_action' => 'offeratpushnoti'
+         );
+         */
+        // $body['url'] = $url;
 
         $headers = array();
         $headers[] = 'Content-Type: application/json';
@@ -107,17 +114,18 @@ class Push_notification {
 
         foreach ($deviceTokens as $dt) {
             $deviceToken = $dt;
-            $notification = array('title' => '', 'text' => $payload, 'sound' => 'default', 'badge' => '1');
-            $arrayToSend = array('to' => $deviceToken, 'notification' => $notification, 'priority' => 'high');
+            $notification = array('title' => $msg['name'],'text' => $msg['push_message'],'sound' => 'default', 'badge' => '1', 'click_action' => 'offeratpushnoti');
+            $arrayToSend = array('to' => $deviceToken,'content_available' => true, 'mutable_content'=> true, 'data' => $msg ,'notification' => $notification);
             
+            pr($arrayToSend);
             $json = json_encode($arrayToSend);
+
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             //Send the request
             $responses[] = curl_exec($ch);
         }
-
         curl_close($ch);
     }
 

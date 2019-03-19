@@ -44,22 +44,7 @@ div#category_selection_wrapper {padding-bottom: 15px;}
 .upload-store-logo-div button.btn.btn-default.fileinput-remove.fileinput-remove-button {height: 40px;}
 .file-caption-name{text-overflow: ellipsis;overflow: hidden;width: 110px;white-space: nowrap;}
 .validation-error-label, .validation-valid-label {display: inline;}
-
-.captcha-input {
-    padding: 6px 12px;
-    font-size: 14px;
-    line-height: 1.428571429;
-    color: #555555;
-    vertical-align: middle;
-    background-color: #ffffff;
-    background-image: none;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
-    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
-}
+.submit-button-margin{ margin-top: 90px; }
 
 @media (min-width:992px) and (max-width:1199px){
     .business_category_div .col-md-5 {width: 41.66666667%;}

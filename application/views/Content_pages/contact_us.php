@@ -30,14 +30,13 @@
                                     </div>                                
                                 </div> 
                             </div>
-                            <div class="col-md-12 text-center mb-20 mt-10">
-                                <p id="image_captcha"><?php echo $captchaImg; ?></p>
-                                <a href="javascript:void(0);" class="captcha-refresh" title="Refresh"><i class="fa fa-refresh fa-2x"></i></a>&nbsp;
-                                <input type="text" name="captcha" id="text_captcha" required class="captcha-input" value="" placeholder="Enter Captcha" />
-                                <br>
-                                <label id="text_captcha-error" class="validation-error-label" for="text_captcha"></label>
-                            </div> 
-                            <div class="col-md-12">
+                            <div class="col-md-12 mb-20 mt-10">
+                                <div class="col-md-4">&nbsp;</div>
+                                <div class="col-md-8 mb-10">
+                                    <div class="g-recaptcha" data-sitekey="<?= GOOGLE_CAPTCHA_KEY ?>"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 submit-button-margin">
                                 <div class="form-group btn_center">
                                     <button type="submit" class="btn btn-primary btn-block submit_btn">Submit</button>
                                 </div>
@@ -50,15 +49,4 @@
     </div>
 </div>
 </div>
-</div>    
-<script>
-    $(document).ready(function () {
-        jqueryValidate();
-
-        $('.captcha-refresh').on('click', function () {
-            $.get('<?= site_url('Content_pages/refresh_captcha') ?>', function (data) {
-                $('#image_captcha').html(data);
-            });
-        });
-    });
-</script>
+</div>

@@ -201,6 +201,11 @@ $route['mall-store-user/notifications/store/posted_date/get'] = 'Common/notifica
 $route['mall-store-user/notifications/store/category/get'] = 'Common/notifications/get_categories';
 $route['mall-store-user/notifications/store/offer/last-post-date/get'] = 'Common/notifications/get_store_offer_last_posted_date';
 $route['mall-store-user/filter_notifications/(:any)/(:any)'] = 'Common/notifications/filter_notifications/$1/$2';
+$route['mall-store-user/malls/store/location/edit/(:any)'] = 'Common/malls/edit_store_location/$1';
+$route['mall-store-user/malls/store/edit/(:any)'] = 'Common/malls/edit_store/$1';
+$route['mall-store-user/malls/update_store_floor_number'] = 'Common/malls/update_store_floor_number';
+$route['mall-store-user/malls/check_file_exists'] = 'Common/malls/check_file_exists';
+$route['mall-store-user/malls/update_store_locations'] = 'Common/malls/update_store_locations';
 
 //Store Registration
 $route['store-registration'] = 'storeregistration/index';

@@ -1,3 +1,11 @@
+<?php
+if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
+    $user_url_type = 'mall-store-user';
+} else if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+    $user_url_type = 'country-admin';
+}
+?>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.min.css" />
 
 <div class="col-md-12">
@@ -69,7 +77,7 @@
                 };
 
                 $.ajax({
-                    url: '<?= site_url("country-admin/malls/update_store_floor_number") ?>',
+                    url: '<?= site_url($user_url_type."/malls/update_store_floor_number") ?>',
                     type: 'POST',
                     data: data,
                     success: function (response) {

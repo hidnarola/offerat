@@ -7,6 +7,7 @@
         <script>
             var base_url = '<?php echo SITEURL; ?>';
         </script>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     </head>
     <body>
         <div id="site_wrapper">

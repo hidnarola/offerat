@@ -424,10 +424,10 @@ if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
     });
 
     $(document).ready(function () {
-        jqueryValidate();
-        errorMgsToDefault();
+//        jqueryValidate();
+//        errorMgsToDefault();
         $("#media_name").on("change", function () {
-            validate_logo('#media_name');
+//            validate_logo('#media_name');
         });
     });
 

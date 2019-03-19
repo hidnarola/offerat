@@ -213,7 +213,8 @@
                                             <input type="url" class="form-control" placeholder="Video URL" name="video_url" id="video_url" required="required" value="<?= (isset($notification_data['video_url']) && !empty($notification_data['video_url'])) ? $notification_data['video_url'] : '' ?>" />
                                         </div>
                                         <div id="file_type" class="hide">
-                                            <input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name" accept="video/*">
+                                            <!--<input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name" accept="video/*">-->
+                                            <input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name" >
                                             <input type="hidden" name="is_valid" id="is_valid" value="1">
                                             <div id="media_errors_wrapper" class="alert alert-danger alert-bordered display-none">
                                                 <span id="media_errors"></span>
@@ -396,7 +397,8 @@
                                             <input type="url" class="form-control hide" placeholder="Video URL" name="video_url" id="video_url" required="required" value="<?= (isset($notification_data['video_url']) && !empty($notification_data['video_url'])) ? $notification_data['video_url'] : '' ?>" />
                                         </div>
                                         <div id="file_type">
-                                            <input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name" accept="video/*">
+                                            <input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name">
+                                            <!--<input type="file" class="form-control file-input" placeholder="" name="media_name" id="media_name" accept="video/*">-->
                                             <input type="hidden" name="is_valid" id="is_valid" value="1">
                                             <div id="media_errors_wrapper" class="alert alert-danger alert-bordered display-none">
                                                 <span id="media_errors"></span>

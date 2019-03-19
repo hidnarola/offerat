@@ -546,35 +546,36 @@ class Cron extends CI_Controller {
                                 }
                             } else if (!empty($iphone_device_token_ids) && sizeof($iphone_device_token_ids) > 0) {
                                 //iphone push notification
-//                                 $response = $this->push_notification->send_notifications_to_iphone($iphone_device_token_ids, $messageArrayJson, site_url());
-//                                 $response = json_decode($response, true);
-// //                                echo 'rresponse';
-// //                                pr($response);
-//                                 if (!empty($iphone_device_token_ids)) {
-//                                     $output['response'] = $response;
-//                                     $output['success_count'] = (int) $response['success'];
-//                                     $output['failure_count'] = (int) $response['failure'];
-// //                                    echo 'results';
-// //                                    pr($response['results']);
-//                                     if (isset($response['results']) && sizeof($response['results']) > 0) {
-//                                         $insert_offer_cron = array();
-//                                         foreach ($response['results'] as $key => $val) {
-//                                             $response_message = '';
-//                                             if (isset($val) && isset($val['error']))
-//                                                 $response_message = $val['error'];
-//                                             elseif (isset($val) && isset($val['message_id']))
-//                                                 $response_message = $val['message_id'];
-//                                             $insert_offer_cron[] = array(
-//                                                 'id_offer' => $list['id_offer'],
-//                                                 'device_token' => $iphone_device_token_ids[$key],
-//                                                 'response' => $response_message,
-//                                                 'created_date' => date('Y-m-d H:i:s')
-//                                             );
-//                                         }
-//                                         if (isset($insert_offer_cron) && sizeof($insert_offer_cron) > 0)
-//                                             $this->Common_model->master_save(tbl_offer_cron, $insert_offer_cron, TRUE);
-//                                     }
-//                                 }
+                                $json_response = $this->push_notification->send_notifications_to_iphone($iphone_device_token_ids, $messageArray, site_url());
+                                $response = json_decode($json_response);
+                                // pr($response);
+
+                                if (!empty($iphone_device_token_ids)) {
+                                    $output['response'] = $response;
+                                    $output['success_count'] = (int) $response['success'];
+                                    $output['failure_count'] = (int) $response['failure'];
+
+                                    if (isset($response['results']) && sizeof($response['results']) > 0) {
+                                        $insert_offer_cron = array();
+                                        foreach ($response['results'] as $key => $val) {
+                                            $response_message = '';
+                                            if (isset($val) && isset($val['error']))
+                                                $response_message = $val['error'];
+                                            elseif (isset($val) && isset($val['message_id']))
+                                                $response_message = $val['message_id'];
+
+                                            $insert_offer_cron[] = array(
+                                                'id_offer' => $list['id_offer'],
+                                                'device_token' => $iphone_device_token_ids[$key],
+                                                'response' => $response_message,
+                                                'created_date' => date('Y-m-d H:i:s')
+                                            );
+                                        }
+
+                                        if (isset($insert_offer_cron) && sizeof($insert_offer_cron) > 0)
+                                            $this->Common_model->master_save(tbl_offer_cron, $insert_offer_cron, TRUE);
+                                    }
+                                }
                             }
                         }
                     }
@@ -584,9 +585,8 @@ class Cron extends CI_Controller {
     }
 
     public function push_notification_sample() {
-
         $this->Common_model->master_save('test', array('id' => 1, 'created_date' => date('Y-m-d H:i:s')));
-        $this->load->library('Push_notification');
+        $this->load->library('push_notification');
 
         $currnt_datetime = date('Y-m-d H:i');
 
@@ -636,7 +636,7 @@ class Cron extends CI_Controller {
         );
 
         $offers_list = $this->Common_model->master_select($select_offer);
-
+        
         if (isset($offers_list) && sizeof($offers_list) > 0) {
             foreach ($offers_list as $list) {
 
@@ -700,7 +700,7 @@ class Cron extends CI_Controller {
                 }
 
                 $messageArray['action'] = 100;
-                $messageArrayJson = json_encode($messageArray);
+                $messageArrayJson = $messageArray;
 
                 $country_zone_today_date = new DateTime($currnt_datetime);
                 $country_zone_today_date->setTimezone(new DateTimeZone($list['timezone']));
@@ -736,7 +736,7 @@ class Cron extends CI_Controller {
                     $select_users = array(
                         'table' => tbl_user,
                         'where' => array(
-                            'id_user' => 252,
+                            'id_user' => 253,
                         )
                     );
 
@@ -760,7 +760,7 @@ class Cron extends CI_Controller {
                                 //iphone push notification
                                 $json_response = $this->push_notification->send_notifications_to_iphone($iphone_device_token_ids, $messageArrayJson, site_url());
                                 $response = json_decode($json_response);
-                                pr($response);
+                                // pr($response);
 
                                 if (!empty($iphone_device_token_ids)) {
                                     $output['response'] = $response;
@@ -784,8 +784,8 @@ class Cron extends CI_Controller {
                                             );
                                         }
 
-                                        // if (isset($insert_offer_cron) && sizeof($insert_offer_cron) > 0)
-                                        //     $this->Common_model->master_save(tbl_offer_cron, $insert_offer_cron, TRUE);
+                                        if (isset($insert_offer_cron) && sizeof($insert_offer_cron) > 0)
+                                            $this->Common_model->master_save(tbl_offer_cron, $insert_offer_cron, TRUE);
                                     }
                                 }
                             }

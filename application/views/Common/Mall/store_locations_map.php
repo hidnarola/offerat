@@ -1,4 +1,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.min.css" />
+<?php
+if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
+    $user_url_type = 'mall-store-user';
+} else if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+    $user_url_type = 'country-admin';
+}
+?>
+
 <style>
     #map {
         height: 100%;
@@ -40,7 +48,7 @@
     }
 
     CoordMapType.prototype.getTile = function (coord, zoom, ownerDocument) {
-        
+
         var div = ownerDocument.createElement('div');
         div.innerHTML = coord;
         div.style.width = this.tileSize.width + 'px';
@@ -49,7 +57,7 @@
         div.style.borderStyle = 'solid';
         div.style.borderWidth = '1px';
         div.style.borderColor = '#AAAAAA';
-        return div; 
+        return div;
     };
 
     function initMap() {
@@ -78,7 +86,7 @@
 
         function check_file_exists(image_name) {
             var result = $.ajax({
-                url: '<?= site_url('country-admin/malls/check_file_exists') ?>',
+                url: '<?= site_url($user_url_type.'/malls/check_file_exists') ?>',
                 type: 'POST',
                 data: {
                     image_name: image_name
@@ -148,7 +156,7 @@
 
                     $.ajax({
                         type: 'POST',
-                        url: "<?= site_url('country-admin/malls/update_store_locations') ?>",
+                        url: "<?= site_url($user_url_type.'/malls/update_store_locations') ?>",
                         data: data,
                         success: function (response) {
                         }

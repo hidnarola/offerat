@@ -1,3 +1,10 @@
+<?php
+if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
+    $user_url_type = 'mall-store-user';
+} else if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+    $user_url_type = 'country-admin';
+}
+?>
 <div class="col-md-12">
     <form method="POST" action="" enctype="multipart/form-data" class="form-validate-jquery" name="manage_record">
         <div class="row">
@@ -118,62 +125,64 @@
                                 </div>
                             </fieldset>
                         <?php } ?>       
-                        <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
-                            <fieldset class="content-group">
-                                <legend class="text-bold">Location</legend>
-                                <div class="col-xs-12">
-                                    <div class="col-md-3 display-none">
-                                        <div class="form-group">
-                                            <div>
-                                                <?php if (isset($country_list) && sizeof($country_list) > 0) { ?>
-                                                    <select class="form-control select" name="id_country" id="id_country" required="required">
-                                                        <option value="">Select Country</option>
-                                                        <?php foreach ($country_list as $list) { ?>
-                                                            <option value="<?php echo $list['id_country']; ?>" <?php echo ((isset($mall_details['id_country'])) && $mall_details['id_country'] == $list['id_country']) ? 'selected=selected' : ''; ?>><?php echo $list['country_name']; ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                <?php } ?>
-                                            </div>
-                                        </div>
-                                    </div>                                     
-                                </div>
-                                <div id="mall_selection_wrapper" class="clear-float row_add_div">                                     
-                                    <div id="mall_selection_block_0" class="clear-float">
-                                        <div class="col-xs-12 business_category_div">                                                                            
-                                            <div class="col-md-2">
-                                                <div class="form-group">  
-                                                    <label>Latitude <span class="text-danger">*</span></label>
-                                                    <div>
-                                                        <input type="text" class="form-control" name="latitude" id="latitude" required="required"  placeholder="Latitude" value="<?php echo (isset($mall_details['latitude'])) ? $mall_details['latitude'] : set_value('latitude'); ?>">
-                                                    </div>
+                        <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE || $this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) { ?>
+                            <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
+                                <fieldset class="content-group">
+                                    <legend class="text-bold">Location</legend>
+                                    <div class="col-xs-12">
+                                        <div class="col-md-3 display-none">
+                                            <div class="form-group">
+                                                <div>
+                                                    <?php if (isset($country_list) && sizeof($country_list) > 0) { ?>
+                                                        <select class="form-control select" name="id_country" id="id_country" required="required">
+                                                            <option value="">Select Country</option>
+                                                            <?php foreach ($country_list as $list) { ?>
+                                                                <option value="<?php echo $list['id_country']; ?>" <?php echo ((isset($mall_details['id_country'])) && $mall_details['id_country'] == $list['id_country']) ? 'selected=selected' : ''; ?>><?php echo $list['country_name']; ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    <?php } ?>
                                                 </div>
                                             </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group"> 
-                                                    <label>Longitude <span class="text-danger">*</span></label>
-                                                    <div>
-                                                        <input type="text" class="form-control" name="longitude" id="longitude" required="required" placeholder="Longitude" value="<?php echo (isset($mall_details['longitude'])) ? $mall_details['longitude'] : set_value('longitude'); ?>">
+                                        </div>                                     
+                                    </div>
+                                    <div id="mall_selection_wrapper" class="clear-float row_add_div">                                     
+                                        <div id="mall_selection_block_0" class="clear-float">
+                                            <div class="col-xs-12 business_category_div">                                                                            
+                                                <div class="col-md-2">
+                                                    <div class="form-group">  
+                                                        <label>Latitude <span class="text-danger">*</span></label>
+                                                        <div>
+                                                            <input type="text" class="form-control" name="latitude" id="latitude" required="required"  placeholder="Latitude" value="<?php echo (isset($mall_details['latitude'])) ? $mall_details['latitude'] : set_value('latitude'); ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group"> 
+                                                        <label>Longitude <span class="text-danger">*</span></label>
+                                                        <div>
+                                                            <input type="text" class="form-control" name="longitude" id="longitude" required="required" placeholder="Longitude" value="<?php echo (isset($mall_details['longitude'])) ? $mall_details['longitude'] : set_value('longitude'); ?>">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </fieldset>
+                                </fieldset>
+                            <?php } ?>
                             <?php if (!empty($mall_details)) { ?>
                                 <fieldset>
                                     <legend class="text-bold">Stores Info</legend>
-                                    <div class="col-xs-12 clear-float">           
+                                    <div class="col-xs-12 clear-float">
                                         <div class="col-md-2">
                                             <div class="form-group">
-                                                <a class="btn btn-primary" href="<?= site_url('country-admin/malls/store/edit/' . base64_encode($mall_details['id_mall'])) ?>">
+                                                <a class="btn btn-primary" href="<?= site_url($user_url_type . '/malls/store/edit/' . base64_encode($mall_details['id_mall'])) ?>">
                                                     <i class="fa fa-pencil"></i>&nbsp;&nbsp;Edit Store Floor No.
                                                 </a>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">
-                                                <a href="<?= site_url('country-admin/malls/store/location/edit/' . base64_encode($mall_details['id_mall'])) ?>" class="btn btn-primary">
+                                                <a href="<?= site_url($user_url_type . '/malls/store/location/edit/' . base64_encode($mall_details['id_mall'])) ?>" class="btn btn-primary">
                                                     <i class="fa fa-pencil"></i>&nbsp;&nbsp;Edit Store Location
                                                 </a>
                                             </div>
@@ -184,7 +193,7 @@
                             }
                         }
                         ?>
-                        <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE || $this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) { ?>
+                        <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
                             <fieldset class="content-group">
                                 <legend class="text-bold">Sales Trend</legend>  
                                 <div class="col-xs-12">                                                                
