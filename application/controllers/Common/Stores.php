@@ -1339,7 +1339,7 @@ class Stores extends MY_Controller {
         elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
             $back_url = 'mall-store-user/stores';
 
-        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE || $this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
 
             $select_store = array(
                 'table' => tbl_store . ' store',

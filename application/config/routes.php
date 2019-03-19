@@ -206,6 +206,7 @@ $route['mall-store-user/malls/store/edit/(:any)'] = 'Common/malls/edit_store/$1'
 $route['mall-store-user/malls/update_store_floor_number'] = 'Common/malls/update_store_floor_number';
 $route['mall-store-user/malls/check_file_exists'] = 'Common/malls/check_file_exists';
 $route['mall-store-user/malls/update_store_locations'] = 'Common/malls/update_store_locations';
+$route['mall-store-user/stores/locations/(:any)'] = 'Common/stores/locations/$1';
 
 //Store Registration
 $route['store-registration'] = 'storeregistration/index';

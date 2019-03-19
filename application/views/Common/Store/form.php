@@ -1,4 +1,11 @@
-<?php $contactCloneNumber = 0; ?>
+<?php
+$contactCloneNumber = 0;
+if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+    $user_url_prefix = 'country-admin';
+} else if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
+    $user_url_prefix = 'mall-store-user';
+}
+?>
 <div class="col-md-12">
     <form method="POST" action="" enctype="multipart/form-data" class="form-validate-jquery" name="manage_record">
         <div class="row">
@@ -515,7 +522,7 @@
                                                 <label><br></label>
                                                 <div>
                                                     <a href="<?php echo $download_locations_url; ?>" class="btn bg-brown">Export To Excel</a>
-                                                    <a href="<?php echo 'country-admin/stores/locations/' . $store_details['id_store']; ?>" target="_blank" class="btn bg-teal">Locations List</a>
+                                                    <a href="<?php echo $user_url_prefix .'/stores/locations/' . $store_details['id_store']; ?>" target="_blank" class="btn bg-teal">Locations List</a>
                                                 </div>
                                             </div>        
                                         <?php } ?>
