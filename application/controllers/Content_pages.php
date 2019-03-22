@@ -83,7 +83,7 @@ class Content_pages extends CI_Controller {
 
         $page_select = array(
             'table' => tbl_terms_conditions,
-            'where' => array('is_delete' => 0, 'page_type' => 'Privacy'),
+            'where' => array('is_delete' => 0, 'page_type' => 'Terms'),
         );
         $this->data['pages'] = $this->Common_model->master_select($page_select);
 
