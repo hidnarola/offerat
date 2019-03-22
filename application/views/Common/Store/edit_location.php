@@ -1,4 +1,12 @@
-<form method="POST" action="<?= base_url('country-admin/stores/location/update') ?>">
+<?php
+if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+    $user_url_prefix = 'country-admin';
+} else if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
+    $user_url_prefix = 'mall-store-user';
+}
+?>
+
+<form method="POST" action="<?= base_url($user_url_prefix . '/stores/location/update') ?>">
     <input type="hidden" name="id_store_location" value="<?= $store_locations_list['id_store_location'] ?>">
     <input type="hidden" name="id_store" value="<?= $store_locations_list['id_store'] ?>">
     <?php if ($store_locations_list['location_type'] == 0) { ?>

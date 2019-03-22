@@ -6,6 +6,9 @@ if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
     $user_url_prefix = 'mall-store-user';
 }
 ?>
+
+<link rel="stylesheet" href="<?= site_url('assets/front/css/store_branch_location.css') ?>" />
+
 <div class="col-md-12">
     <form method="POST" action="" enctype="multipart/form-data" class="form-validate-jquery" name="manage_record">
         <div class="row">
@@ -401,10 +404,11 @@ if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-1">
+                                                <div class="col-md-2">
                                                     <div class="form-group">                                        
                                                         <div>
                                                             <button type="button" class="btn btn-danger btn-icon location_remove_btn" id="location_remove_btn_0" character="" data-clone-number="0"><i class="icon-cross3"></i></button>
+                                                            <button type="button" class="btn btn-info get_store_branch_location_btn hide" id="store_branch_location_0" data-clone-number="0"><i class="fa fa-map-marker"></i></button>
                                                         </div>
                                                     </div>        
                                                 </div>
@@ -522,7 +526,7 @@ if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
                                                 <label><br></label>
                                                 <div>
                                                     <a href="<?php echo $download_locations_url; ?>" class="btn bg-brown">Export To Excel</a>
-                                                    <a href="<?php echo $user_url_prefix .'/stores/locations/' . $store_details['id_store']; ?>" target="_blank" class="btn bg-teal">Locations List</a>
+                                                    <a href="<?php echo $user_url_prefix . '/stores/locations/' . $store_details['id_store']; ?>" target="_blank" class="btn bg-teal">Locations List</a>
                                                 </div>
                                             </div>        
                                         <?php } ?>
@@ -709,6 +713,30 @@ if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
         </div>
     </form>
 </div>
+
+<div class="modal fade hide" id="edit_branch_location_modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Edit Store Location</h4>
+            </div>
+            <div class="modal-body">
+                <div id="place-search-input"></div>
+                <div id="map"></div>
+
+                <input type="hidden" id="current_branch_latitude" />
+                <input type="hidden" id="current_branch_longitude" />
+                <input type="hidden" id="row_no" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="save_branch_location" class="btn btn-info">Copy Location</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript" src="assets/user/js/store.js"></script>
 <script>
     $(document).on('click', '.sales_trend_from_date', function (e) {
@@ -776,13 +804,15 @@ if (isset($store_details)) {
 
             $("#latitude_" + column_no).addClass('hide');
             $("#longitude_" + column_no).addClass('hide');
+            $("#store_branch_location_" + column_no).addClass('hide');
         } else {
             box_value = 0;
             $("#mall_div_" + column_no).addClass('hide');
             $("#city_div_" + column_no).removeClass('hide');
 
-            $("#latitude_" + column_no).removeClass('hide');
-            $("#longitude_" + column_no).removeClass('hide');
+            $("#latitude_" + column_no).val('').removeClass('hide');
+            $("#longitude_" + column_no).val('').removeClass('hide');
+            $("#store_branch_location_" + column_no).removeClass('hide');
         }
 
         $(this).val(box_value);
@@ -879,6 +909,7 @@ if (isset($store_details)) {
         html += '</div>';
         html += '<div id="mall_div_' + cloneNumber + '">';
         html += '<select class="form-control select-search" id="location_mall_id_' + cloneNumber + '" name="location_mall_id_' + cloneNumber + '" data-placeholder="Select Mall" required="required" data-live-search="true" >';
+        html += '<option value="" >Select Mall</option>';
 <?php
 if (isset($malls_list) && sizeof($malls_list) > 0) {
     foreach ($malls_list as $list) {
@@ -945,10 +976,11 @@ if (isset($malls_list) && sizeof($malls_list) > 0) {
         html += '</div>';
         html += '</div>';
 
-        html += '<div class="col-md-1">';
+        html += '<div class="col-md-2">';
         html += '<div class="form-group">';
         html += '<div>';
-        html += '<button type="button" class="btn btn-danger btn-icon location_remove_btn" id="location_remove_btn_' + cloneNumber + '" character="" data-clone-number="' + cloneNumber + '"><i class="icon-cross3"></i></button>';
+        html += '<button type="button" class="btn btn-danger btn-icon location_remove_btn" id="location_remove_btn_' + cloneNumber + '" character="" data-clone-number="' + cloneNumber + '"><i class="icon-cross3"></i></button>&nbsp;';
+        html += '<button type="button" class="btn btn-info get_store_branch_location_btn hide" id="store_branch_location_' + cloneNumber + '" data-clone-number="' + cloneNumber + '"><i class="fa fa-map-marker"></i></button>';
         html += '</div>';
         html += '</div>';
         html += '</div>';
@@ -989,16 +1021,146 @@ if (isset($malls_list) && sizeof($malls_list) > 0) {
         return html;
     }
 
-//    $(document).on('change', '.select-city-mall', function () {
-//        var checked_val = $(this).find('option:selected').val();
-//        var column_no = $(this).attr('data-id');
-//
-//        if (checked_val == 0) {
-//            $("#mall_div_" + column_no).addClass('hide');
-//            $("#city_div_" + column_no).removeClass('hide');
-//        } else if (checked_val == 1) {
-//            $("#city_div_" + column_no).addClass('hide');
-    //            $("#mall_div_" + column_no).removeClass('hide');
-//        }
-    //    });
+    // Edit Location
+    $('#save_branch_location').click(function () {
+        var current_branch_latitude = $("#current_branch_latitude").val();
+        var current_branch_longitude = $("#current_branch_longitude").val();
+        var row_no = $("#row_no").val();
+
+        $("#latitude_" + row_no).val(current_branch_latitude);
+        $("#longitude_" + row_no).val(current_branch_longitude);
+        
+        $("#edit_branch_location_modal").modal('hide');
+    });
+
+    $(document).on("click", ".get_store_branch_location_btn", function () {
+        var row_no = $(this).attr('data-clone-number');
+        $("#edit_branch_location_modal").removeClass('hide');
+
+        $("#place-search-input").empty();
+        $("#place-search-input").html('<input id="pac-input" class="controls" type="text" placeholder="Search Box">');
+
+        $("#map").empty();
+        initMap();
+
+        $("#row_no").val(row_no);
+        $("#edit_branch_location_modal").modal('show');
+    });
+
+    function initMap() {
+        var is_address_found = false;
+        var branchLatLng = {lat: -25.363, lng: 131.044};
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            center: branchLatLng,
+            zoom: 15,
+            mapTypeId: 'roadmap',
+        });
+
+        // Create the search box and link it to the UI element.
+        var input = document.getElementById('pac-input');
+
+        var searchBox = new google.maps.places.SearchBox(input);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+        // Bias the SearchBox results towards current map's viewport.
+        map.addListener('bounds_changed', function () {
+            searchBox.setBounds(map.getBounds());
+        });
+
+        var markers = [];
+        // Listen for the event fired when the user selects a prediction and retrieve
+        // more details for that place.
+        searchBox.addListener('places_changed', function () {
+            var places = searchBox.getPlaces();
+
+            if (places.length == 0) {
+                return;
+            }
+
+            // Clear out the old markers.
+            markers.forEach(function (marker) {
+                marker.setMap(null);
+            });
+
+            markers = [];
+
+            // For each place, get the icon, name and location.
+            var bounds = new google.maps.LatLngBounds();
+            places.forEach(function (place) {
+                if (place.address_components) {
+                    if (!place.geometry) {
+                        swal({
+                            title: "Error!",
+                            text: "Your searched place contains no location. Please try again.",
+                            type: "error"
+                        });
+                        return;
+                    }
+
+                    var icon = {
+                        url: place.icon,
+                        size: new google.maps.Size(71, 71),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(17, 34),
+                        scaledSize: new google.maps.Size(25, 25)
+                    };
+
+                    var current_marker = new google.maps.Marker({
+                        map: map,
+                        icon: icon,
+                        title: place.name,
+                        position: place.geometry.location,
+                        draggable: true,
+                    })
+
+                    // Create a marker for each place.
+                    markers.push(current_marker);
+                    get_location_of_dragend_marker(current_marker);
+
+                    if (place.geometry.viewport) {
+                        // Only geocodes have viewport.
+                        bounds.union(place.geometry.viewport);
+                    } else {
+                        bounds.extend(place.geometry.location);
+                    }
+
+                    var branch_location = place.geometry.location;
+                    var branch_latitude = branch_location.lat();
+                    var branch_longitude = branch_location.lng();
+
+                    save_branch_locations(branch_latitude, branch_longitude);
+
+                    is_address_found = true;
+                }
+            });
+            map.fitBounds(bounds);
+
+            if (is_address_found == false) {
+                swal({
+                    title: "Error!",
+                    text: "Your searched place contains no location. Please try again.",
+                    type: "error"
+                });
+                return;
+            }
+        });
+    }
+
+    function get_location_of_dragend_marker(marker) {
+        google.maps.event.addListener(marker, 'dragend', function (marker) {
+            var latLng = marker.latLng;
+            var branch_latitude = latLng.lat();
+            var branch_longitude = latLng.lng();
+
+            save_branch_locations(branch_latitude, branch_longitude);
+        });
+    }
+
+    function save_branch_locations(latitude, longitude) {
+        $("#current_branch_latitude").val(latitude);
+        $("#current_branch_longitude").val(longitude);
+    }
 </script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=<?= GOOGLE_API_KEY ?>&libraries=places" async defer></script>

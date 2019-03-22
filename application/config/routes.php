@@ -50,6 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   | Examples:	my-controller/index	-> my_controller/index
   |		my-controller/my-method	-> my_controller/my_method
  */
+
 $route['default_controller'] = 'home';
 $route['page_404'] = 'home/page_404';
 
@@ -162,6 +163,7 @@ $route['country-admin/report/push_notifications/(:any)/(:any)'] = 'Common/report
 $route['country-admin/upload/index'] = 'Common/Uploads/index';
 $route['country-admin/stores/get_ajax_store_location_data'] = 'Common/stores/get_ajax_store_location_data';
 $route['country-admin/stores/location/update'] = 'Common/stores/update_store_location';
+$route['country-admin/stores/branch/location/save'] = 'Common/stores/update_store_branch_locations';
 
 //Country Mall Store User Routes =================================
 $route['mall-store-user'] = 'Mall_store/dashboard';
@@ -207,6 +209,9 @@ $route['mall-store-user/malls/update_store_floor_number'] = 'Common/malls/update
 $route['mall-store-user/malls/check_file_exists'] = 'Common/malls/check_file_exists';
 $route['mall-store-user/malls/update_store_locations'] = 'Common/malls/update_store_locations';
 $route['mall-store-user/stores/locations/(:any)'] = 'Common/stores/locations/$1';
+$route['mall-store-user/stores/get_ajax_store_location_data'] = 'Common/stores/get_ajax_store_location_data';
+$route['mall-store-user/stores/location/update'] = 'Common/stores/update_store_location';
+$route['mall-store-user/stores/branch/location/save'] = 'Common/stores/update_store_branch_locations';
 
 //Store Registration
 $route['store-registration'] = 'storeregistration/index';

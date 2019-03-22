@@ -443,7 +443,7 @@ class Stores extends MY_Controller {
 
                 $do_store_image_has_error = false;
                 $do_location_file_has_error = false;
-                
+
                 //Upload Store Logo Image
                 if (isset($_FILES['store_logo'])) {
                     if (($_FILES['store_logo']['size']) > 0) {
@@ -1331,13 +1331,15 @@ class Stores extends MY_Controller {
      */
 
     function locations($id) {
-
         $back_url = '';
 
-        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE)
+        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+            $user_url_prefix = 'country-admin';
             $back_url = 'country-admin/stores/save/' . $id;
-        elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE)
+        } elseif ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
+            $user_url_prefix = 'mall-store-user';
             $back_url = 'mall-store-user/stores';
+        }
 
         if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE || $this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
 
@@ -1389,16 +1391,16 @@ class Stores extends MY_Controller {
                         $this->session->set_flashdata('success_msg', 'Location(s) deleted successfully.');
                     else
                         $this->session->set_flashdata('error_msg', 'Location(s) not deleted.');
-                    redirect('country-admin/stores/locations/' . $id);
+                    redirect($user_url_prefix . '/stores/locations/' . $id);
                 }
 
                 $this->data['title'] = $this->data['page_header'] = 'Edit Locations - ' . $store_details['store_name'];
                 $this->bread_crum[] = array(
-                    'url' => SITEURL . 'country-admin/stores',
+                    'url' => SITEURL . $user_url_prefix . '/stores',
                     'title' => 'List',
                 );
                 $this->bread_crum[] = array(
-                    'url' => SITEURL . 'country-admin/stores/save/' . $id,
+                    'url' => SITEURL . $user_url_prefix . '/stores/save/' . $id,
                     'title' => 'Edit ' . $store_details['store_name'],
                 );
                 $this->bread_crum[] = array(
@@ -1429,7 +1431,8 @@ class Stores extends MY_Controller {
                 $this->data['store_name'] = $store_details['store_name'];
                 $this->data['store_locations'] = $store_locations;
                 $this->data['back_url'] = $back_url;
-                $this->data['action_url'] = 'country-admin/stores/locations/' . $id;
+
+                $this->data['action_url'] = $user_url_prefix . '/stores/locations/' . $id;
 
                 $this->template->load('user', 'Common/Store/locations', $this->data);
             } else {
@@ -1747,11 +1750,40 @@ class Stores extends MY_Controller {
         else
             $this->session->set_flashdata('error_msg', 'Something went wrong');
 
-        redirect('country-admin/stores/locations/' . $this->input->post('id_store'));
+        if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
+            $user_url_prefix = 'country-admin';
+        } else if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
+            $user_url_prefix = 'mall-store-user';
+        }
+
+        redirect($user_url_prefix . '/stores/locations/' . $this->input->post('id_store'));
     }
 
     public function refresh_captcha() {
         return $this->refresh();
+    }
+
+    public function update_store_branch_locations() {
+        $data = [];
+        $status = 'error';
+
+        $id_store_location = $this->input->post('id_store_location');
+
+        $location_data = array(
+            'latitude' => $this->input->post('current_branch_latitude'),
+            'longitude' => $this->input->post('current_branch_longitude'),
+        );
+
+        $is_updated = $this->Common_model->master_update(tbl_store_location, $location_data, ['id_store_location' => $id_store_location]);
+
+        if ($is_updated) {
+            $status = 'success';
+        }
+
+        $data['status'] = $status;
+
+        echo json_encode($data);
+        exit;
     }
 
 }
