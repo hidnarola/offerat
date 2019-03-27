@@ -923,6 +923,12 @@ class Stores extends MY_Controller {
         );
         $malls_list = $this->Common_model->master_select($select_mall);
 
+        $select_admin_country = array(
+            'table' => tbl_country,
+            'where' => array('id_country' => $country_id)
+        );
+        $admin_country = $this->Common_model->master_single_select($select_country);
+
         $this->data['status_list'] = $status_arr;
         $this->data['category_list'] = $category_list;
         $this->data['country_list'] = $country_list;
@@ -932,6 +938,7 @@ class Stores extends MY_Controller {
         $this->data['download_locations_format_url'] = $download_locations_format_url;
         $this->data['download_mall_format_url'] = $download_mall_format_url;
         $this->data['back_url'] = $back_url;
+        $this->data['admin_country'] = $admin_country['country_name'];
 
         $this->template->load('user', 'Common/Store/form', $this->data);
     }

@@ -512,55 +512,63 @@ if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
                             </fieldset>     
                             <fieldset class="content-group">     
                                 <div class="col-xs-12">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Upload City Branches From Excel</label>
-                                            <div>                                                
-                                                <input type="file" class="form-control file-input" name="location_excel" id="location_excel">
-                                            </div>
-                                        </div>        
-                                    </div>
+                                    <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Upload City Branches From Excel</label>
+                                                <div>                                                
+                                                    <input type="file" class="form-control file-input" name="location_excel" id="location_excel">
+                                                </div>
+                                            </div>        
+                                        </div>
+                                    <?php } ?>
                                     <div class="col-md-6">
                                         <?php if (isset($store_details)) { ?>
                                             <div class="form-group">                                                
                                                 <label><br></label>
                                                 <div>
-                                                    <a href="<?php echo $download_locations_url; ?>" class="btn bg-brown">Export To Excel</a>
+                                                    <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
+                                                        <a href="<?php echo $download_locations_url; ?>" class="btn bg-brown">Export To Excel</a>
+                                                    <?php } ?>
                                                     <a href="<?php echo $user_url_prefix . '/stores/locations/' . $store_details['id_store']; ?>" target="_blank" class="btn bg-teal">Locations List</a>
                                                 </div>
                                             </div>        
                                         <?php } ?>
                                     </div>
-                                    <div class="col-md-3 text-right">
-                                        <div class="form-group">                                                
-                                            <label><br></label>
-                                            <div>                                                        
-                                                <a href="<?php echo $download_locations_format_url; ?>" target="_blank" class="btn bg-teal">Download File Format</a>
-                                            </div>
-                                        </div>        
-                                    </div>
+                                    <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
+                                        <div class="col-md-3 text-right">
+                                            <div class="form-group">                                                
+                                                <label><br></label>
+                                                <div>                                                        
+                                                    <a href="<?php echo $download_locations_format_url; ?>" target="_blank" class="btn bg-teal">Download File Format</a>
+                                                </div>
+                                            </div>        
+                                        </div>
+                                    <?php } ?>
                                 </div>
                             </fieldset>
-                            <fieldset class="content-group">     
-                                <div class="col-xs-12">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>Upload Mall Branches From Excel</label>
-                                            <div>                                                
-                                                <input type="file" class="form-control file-input" name="mall_location_excel" id="mall_location_excel">
-                                            </div>
-                                        </div>        
+                            <?php if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) { ?>
+                                <fieldset class="content-group">     
+                                    <div class="col-xs-12">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Upload Mall Branches From Excel</label>
+                                                <div>                                                
+                                                    <input type="file" class="form-control file-input" name="mall_location_excel" id="mall_location_excel">
+                                                </div>
+                                            </div>        
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">                                                
+                                                <label><br></label>
+                                                <div>                                                        
+                                                    <a href="<?php echo $download_mall_format_url; ?>" target="_blank" class="btn bg-teal">Download File Format</a>
+                                                </div>
+                                            </div>        
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">                                                
-                                            <label><br></label>
-                                            <div>                                                        
-                                                <a href="<?php echo $download_mall_format_url; ?>" target="_blank" class="btn bg-teal">Download File Format</a>
-                                            </div>
-                                        </div>        
-                                    </div>
-                                </div>
-                            </fieldset>
+                                </fieldset>
+                            <?php } ?>
                         <?php } ?>
 
                         <fieldset class="content-group hide">
@@ -730,7 +738,7 @@ if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
                 <input type="hidden" id="row_no" />
             </div>
             <div class="modal-footer">
-                <button type="button" id="save_branch_location" class="btn btn-info">Copy Location</button>
+                <button type="button" id="save_branch_location" class="btn btn-info">Save</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -1029,32 +1037,67 @@ if (isset($malls_list) && sizeof($malls_list) > 0) {
 
         $("#latitude_" + row_no).val(current_branch_latitude);
         $("#longitude_" + row_no).val(current_branch_longitude);
-        
+
         $("#edit_branch_location_modal").modal('hide');
     });
 
     $(document).on("click", ".get_store_branch_location_btn", function () {
         var row_no = $(this).attr('data-clone-number');
+        var country = "<?= $admin_country ?>";
+        var city = $("#location_city_" + row_no).val();
+
         $("#edit_branch_location_modal").removeClass('hide');
 
         $("#place-search-input").empty();
         $("#place-search-input").html('<input id="pac-input" class="controls" type="text" placeholder="Search Box">');
 
         $("#map").empty();
-        initMap();
+        initMap(city, country);
 
         $("#row_no").val(row_no);
         $("#edit_branch_location_modal").modal('show');
     });
 
-    function initMap() {
+    function initMap(city = null, country) {
         var is_address_found = false;
+        var marker, map;
+
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({'address': city + ',' + country}, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                var title = '';
+
+                if (city != '') {
+                    title += city + ', ';
+                }
+
+                if (country != '') {
+                    title += country;
+                }
+
+                var location = results[0].geometry.location;
+
+                marker = new google.maps.Marker({
+                    map: map,
+                    position: location,
+                    title: title,
+                    draggable: true,
+                });
+
+                map.setZoom(12);
+                map.panTo(marker.position);
+
+                get_location_of_dragend_marker(marker);
+                save_branch_locations(location.lat(), location.lng());
+            }
+        });
+
         var branchLatLng = {lat: -25.363, lng: 131.044};
 
-        var map = new google.maps.Map(document.getElementById('map'), {
+        map = new google.maps.Map(document.getElementById('map'), {
             center: branchLatLng,
-            zoom: 15,
-            mapTypeId: 'roadmap',
+            zoom: 2,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
         });
 
         // Create the search box and link it to the UI element.
@@ -1078,10 +1121,10 @@ if (isset($malls_list) && sizeof($malls_list) > 0) {
                 return;
             }
 
-            // Clear out the old markers.
-            markers.forEach(function (marker) {
-                marker.setMap(null);
-            });
+//            // Clear out the old markers.
+//            markers.forEach(function (marker) {
+//                marker.setMap(null);
+//            });
 
             markers = [];
 
@@ -1098,25 +1141,17 @@ if (isset($malls_list) && sizeof($malls_list) > 0) {
                         return;
                     }
 
-                    var icon = {
-                        url: place.icon,
-                        size: new google.maps.Size(71, 71),
-                        origin: new google.maps.Point(0, 0),
-                        anchor: new google.maps.Point(17, 34),
-                        scaledSize: new google.maps.Size(25, 25)
-                    };
-
-                    var current_marker = new google.maps.Marker({
-                        map: map,
-                        icon: icon,
-                        title: place.name,
-                        position: place.geometry.location,
-                        draggable: true,
-                    })
+//                    var current_marker = new google.maps.Marker({
+//                        map: map,
+//                        title: place.name,
+//                        position: place.geometry.location,
+//                        draggable: true,
+//                    })
 
                     // Create a marker for each place.
-                    markers.push(current_marker);
-                    get_location_of_dragend_marker(current_marker);
+//                    markers.push(current_marker);
+                    marker.setPosition(place.geometry.location);
+                    get_location_of_dragend_marker(marker);
 
                     if (place.geometry.viewport) {
                         // Only geocodes have viewport.
