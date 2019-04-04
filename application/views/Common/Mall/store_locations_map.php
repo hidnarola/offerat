@@ -65,9 +65,11 @@ if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
         var i = 0;
         var default_icon = '<?= site_url("assets/user/images/store2.png") ?>';
         var map_icon = '';
+        var map;
+        var markers = [];
 
         map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 2,
+            zoom: 10,
             center: new google.maps.LatLng(-33.91722, 151.23064),
             mapTypeControl: false
         });
@@ -86,7 +88,7 @@ if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
 
         function check_file_exists(image_name) {
             var result = $.ajax({
-                url: '<?= site_url($user_url_type.'/malls/check_file_exists') ?>',
+                url: '<?= site_url($user_url_type . '/malls/check_file_exists') ?>',
                 type: 'POST',
                 data: {
                     image_name: image_name
@@ -125,13 +127,17 @@ if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
                 draggable: true
             });
 
+            markers.push(marker);
+
+            var floor_no = '<p>Floor No: <b>---</b></p>';
+            if (index.store_floor_no != null) {
+                floor_no = '<p>Floor No: <b>' + index.store_floor_no + '</b></p>';
+            }
+
             var contentString = '<div id="content">' +
                     '<h1 id="firstHeading" class="firstHeading">' + index.store_name + '</h1>' +
                     '<div id="bodyContent">' +
-                    '<p><b>' + index.website + '</b></p>' +
-                    '<p><b>' + index.telephone + '</p></b>' +
-                    '</div>' +
-                    '</div>';
+                    floor_no + '</div></div>';
 
             var infowindow = new google.maps.InfoWindow({
                 content: contentString
@@ -156,7 +162,7 @@ if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
 
                     $.ajax({
                         type: 'POST',
-                        url: "<?= site_url($user_url_type.'/malls/update_store_locations') ?>",
+                        url: "<?= site_url($user_url_type . '/malls/update_store_locations') ?>",
                         data: data,
                         success: function (response) {
                         }
@@ -166,6 +172,19 @@ if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
 
             i++;
         });
+
+        var bounds = new google.maps.LatLngBounds();
+        for (i = 0; i < markers.length; i++) {
+            bounds.extend(markers[i].getPosition());
+        }
+        google.maps.event.addListenerOnce(map, 'bounds_changed', function (event) {
+            this.setZoom(map.getZoom() - 1);
+
+            if (this.getZoom() > 15) {
+                this.setZoom(18);
+            }
+        });
+        map.fitBounds(bounds);
     }
 
     function toggleBounce() {

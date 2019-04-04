@@ -860,11 +860,11 @@ class Malls extends MY_Controller {
         $select_mall = array(
             'table' => tbl_store_location . ' location',
             'fields' => array('location.*', 'store.store_name'),
-            'where' => array('location.id_location' => $mall_id, 'location.location_type' => 0, 'location.is_delete' => IS_NOT_DELETED_STATUS),
+            'where' => array('location.id_location' => $mall_id, 'location.location_type' => 0, 'location.is_delete' => IS_NOT_DELETED_STATUS, 'store.is_delete' => IS_NOT_DELETED_STATUS),
             'join' => array(
                 array(
                     'table' => tbl_store . ' as store',
-                    'condition' => 'location.id_store = store.id_store',
+                    'condition' => 'location.id_store = store.id_store AND store.status = 0',
                     'join' => 'left'
                 )
             )
@@ -919,7 +919,7 @@ class Malls extends MY_Controller {
         $select_mall = array(
             'table' => tbl_store_location . ' location',
             'fields' => array('location.*', 'store.*'),
-            'where' => array('location.id_location' => $mall_id, 'location.location_type' => 0, 'location.is_delete' => IS_NOT_DELETED_STATUS),
+            'where' => array('location.id_location' => $mall_id, 'location.location_type' => 0,'store.is_delete' => IS_NOT_DELETED_STATUS, 'location.is_delete' => IS_NOT_DELETED_STATUS),
             'join' => array(
                 array(
                     'table' => tbl_store . ' as store',
