@@ -90,6 +90,18 @@ class Content_pages extends CI_Controller {
         $this->template->load('front', 'Content_pages/terms_conditions', $this->data);
     }
 
+    public function privacy_policies() {
+        $this->data['title'] = $this->data['page'] = $this->data['page_header'] = $this->data['sub_header'] = 'Privacy & Policies';
+
+        $page_select = array(
+            'table' => tbl_terms_conditions,
+            'where' => array('is_delete' => 0, 'page_type' => 'Privacy'),
+        );
+        $this->data['pages'] = $this->Common_model->master_select($page_select);
+
+        $this->template->load('front', 'Content_pages/terms_conditions', $this->data);
+    }
+
     /*
       Validation for Contact US form
      */

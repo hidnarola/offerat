@@ -223,6 +223,7 @@ $route['email-change-verify'] = 'login/change_verify';
 $route['about-us'] = 'Content_pages/about_us';
 $route['contact-us'] = 'Content_pages/contact_us';
 $route['tc'] = 'Content_pages/terms_conditions';
+$route['privacy-policies'] = 'Content_pages/privacy_policies';
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
