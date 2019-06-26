@@ -533,6 +533,9 @@ if ($this->loggedin_user_type == COUNTRY_ADMIN_USER_TYPE) {
             $(document).find('.sub_category_id').multiselect('rebuild');
             $(document).find('.sub_category_id').multiselect('refresh');
         }
+        
+        var selected_store_name = $(this).find("option:selected").text();
+        $('#push_message').next('div').text(selected_store_name + ' Offers');
     });
 
     var store_id = $("#store_mall_id").find("option:selected").attr('data-id');

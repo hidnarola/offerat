@@ -20,7 +20,7 @@
         </div>
     <?php } ?>
     <div class="header_cstm">
-        <!--<h1 class="site_name"><?php //echo SITENAME;               ?></h1>-->
+        <!--<h1 class="site_name"><?php //echo SITENAME;                  ?></h1>-->
         <div class="svg_logo">             
             <?php $this->load->view('svg_html/home_page_logo'); ?>
         </div>
@@ -33,8 +33,8 @@
         <li><a href="about-us" class="btn btn-primary link">About Us</a><li>
     </ul>
     <ul class="ap_store_btn">
-        <li><a href="javascript:void(0);"> <img src="assets/user/images/site/app_store.png"></a></li>
-        <li><a href="javascript:void(0);"><img src="assets/user/images/site/gogle_lay.png"></a></li>
+        <li><a target="_blank" href="<?= APP_STORE_URL ?>"> <img src="assets/user/images/site/app_store.png"></a></li>
+        <li><a target="_blank" href="<?= PLAY_STORE_URL ?>"><img src="assets/user/images/site/gogle_lay.png"></a></li>
     </ul>
 </div>
 <script>

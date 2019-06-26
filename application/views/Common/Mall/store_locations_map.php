@@ -41,6 +41,9 @@ if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
 <script>
     var map;
     var store_locations = '<?php echo str_replace("'", "\'", json_encode($store_locations)); ?>';
+    
+    console.log(store_locations);
+    
     store_locations = JSON.parse(store_locations);
 
     function CoordMapType(tileSize) {
@@ -120,9 +123,9 @@ if ($this->loggedin_user_type == STORE_OR_MALL_ADMIN_USER_TYPE) {
 
             var marker = new google.maps.Marker({
                 position: new google.maps.LatLng(parseFloat(index.latitude), parseFloat(index.longitude)),
-                icon: icon,
+//                icon: icon,
                 map: map,
-                title: index.store_name,
+                title: '21212112',
                 animation: google.maps.Animation.DROP,
                 draggable: true
             });

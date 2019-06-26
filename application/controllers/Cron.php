@@ -736,7 +736,7 @@ class Cron extends CI_Controller {
                     $select_users = array(
                         'table' => tbl_user,
                         'where' => array(
-                            'id_user' => 253,
+                            'id_user' => 273,
                         )
                     );
 

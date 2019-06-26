@@ -218,3 +218,6 @@ define('EXPIRE_TIME_LIMITED', 2);
 
 define('GOOGLE_CAPTCHA_KEY', '6LetgpgUAAAAAIZCtEs5KLWi0IvLl-6RwZ3eNKws');
 define('GOOGLE_CAPTCHA_SECRET_KEY', '6LetgpgUAAAAAJSH9nnCRfnPZ28JTiqTy9MzqZqv');
+
+define('PLAY_STORE_URL', 'https://play.google.com/store/apps/details?id=com.offerat');
+define('APP_STORE_URL', 'https://itunes.apple.com/us/app/offerat/id1462874414');

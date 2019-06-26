@@ -52,8 +52,8 @@ if (!empty($_SESSION['loggedin_user_data'])) {
                         <li>
                             <a href="#"><i class="icon-bell2"></i> <span>Posts</span></a>
                             <ul>
-                                <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'offers') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/offers"><i class="icon-bubble-notification"></i> <span>Offers</span></a></li>
-                                <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'announcements') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/announcements"><i class="icon-volume-medium"></i> <span>Announcements</span></a></li>
+                                <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'offers') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/offers"><img src="<?= base_url('assets/images/icons/offer.png') ?>" style="width: 20px;" alt="Offers" />&nbsp;&nbsp;&nbsp;&nbsp;<span>Offers</span></a></li>
+                                <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'announcements') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/announcements"><img src="<?= base_url('assets/images/icons/announcement.png') ?>" style="width: 20px;" alt="Offers" />&nbsp;&nbsp;&nbsp;&nbsp;<span>Announcements</span></a></li>
                                 <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'catalogs') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/catalogs"><i class="icon-book"></i> <span>Catalog</span></a></li>
                             </ul>
                         </li>
@@ -88,8 +88,8 @@ if (!empty($_SESSION['loggedin_user_data'])) {
                         <li>
                             <a href="#"><i class="fa fa-files-o"></i> <span>Posts</span></a>
                             <ul>
-                                <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'offers') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/offers"><i class="icon-bubble-notification"></i> <span>Offers</span></a></li>
-                                <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'announcements') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/announcements"><i class="icon-volume-medium"></i> <span>Announcements</span></a></li>
+                                <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'offers') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/offers"><img src="<?= base_url('assets/images/icons/offer.png') ?>" style="width: 20px;" alt="Offers" />&nbsp;&nbsp;&nbsp;&nbsp; <span>Offers</span></a></li>
+                                <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'announcements') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/announcements"><img src="<?= base_url('assets/images/icons/announcement.png') ?>" style="width: 20px;" alt="Offers" />&nbsp;&nbsp;&nbsp;&nbsp; <span>Announcements</span></a></li>
                                 <li <?php echo ($controller === 'notifications' && isset($notification_type) && $notification_type == 'catalogs') ? 'class="active"' : '' ?>><a href="<?php echo $uri_segment_1; ?>/notifications/catalogs"><i class="icon-book"></i> <span>Catalog</span></a></li>
                             </ul>
                         </li>

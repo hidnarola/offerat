@@ -10,7 +10,6 @@ if (!defined('BASEPATH'))
 class Push_notification {
 
     public function sendMessageToAndroidPhone($API_KEY, $registrationIds, $messageText) {
-
         $headers = array();
         $headers[] = "Content-Type: application/json";
         $headers[] = 'Authorization: key=' . $API_KEY;

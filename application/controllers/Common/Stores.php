@@ -187,7 +187,6 @@ class Stores extends MY_Controller {
             'join_type' => 'left',
         );
 
-
         $filter_records = $this->Common_model->get_filtered_records(tbl_store, $filter_array);
         $total_filter_records = $this->Common_model->get_filtered_records(tbl_store, $filter_array, 1);
 
@@ -1182,7 +1181,7 @@ class Stores extends MY_Controller {
                 );
                 $mall_location_record = $this->Common_model->master_single_select($select_mall_location);
 
-                if (empty($mall_location_record)) {
+//                if (empty($mall_location_record)) {
                     $in_store_location_data['id_location'] = $location_mall_id;
                     $in_store_location_data['location_type'] = 0;
 
@@ -1196,7 +1195,7 @@ class Stores extends MY_Controller {
 
                     $in_store_location_data['latitude'] = $get_mall_locations['latitude'];
                     $in_store_location_data['longitude'] = $get_mall_locations['longitude'];
-                }
+//                }
             }
 
             if ($this->input->post('is_mall_' . $i, TRUE) == 0) {
